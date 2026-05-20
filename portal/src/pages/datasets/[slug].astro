@@ -2,7 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import CodeSnippet from "../../components/CodeSnippet.astro";
 import DataExplorer from "../../components/DataExplorer.astro";
-import { getDatasets, getDataset } from "../../lib/catalog.js";
+import { getDatasets, getDataset, buildSchemaContext } from "../../lib/catalog.js";
 import { duckdbSnippet, pandasSnippet, rSnippet, cliSnippet, cleanedUrl } from "../../lib/hf.js";
 
 export async function getStaticPaths() {
@@ -151,6 +151,7 @@ const defaultQuery = primaryTable
   : null;
 
 const crossQueries = primaryTable ? (CROSS_QUERIES[primaryTable] ?? []) : [];
+const schemaContext = primaryTable ? buildSchemaContext(primaryTable) : "";
 ---
 
 <Base title={ds.title} description={ds.description}>
@@ -220,6 +221,7 @@ const crossQueries = primaryTable ? (CROSS_QUERIES[primaryTable] ?? []) : [];
           table={primaryTable}
           defaultQuery={defaultQuery}
           crossQueries={crossQueries}
+          schemaContext={schemaContext}
         />
       </section>
     )}

@@ -45,6 +45,27 @@ export function getCatalogStats(datasets) {
   };
 }
 
+/** Carrega o schema YAML de uma tabela especifica */
+export function getTableSchema(table) {
+  try {
+    const path = resolve(`../catalog/schemas/${table}.yaml`);
+    const raw = readFileSync(path, "utf-8");
+    return yaml.load(raw);
+  } catch {
+    return null;
+  }
+}
+
+/** Gera contexto compacto de schema para o prompt de linguagem natural */
+export function buildSchemaContext(table) {
+  const schema = getTableSchema(table);
+  if (!schema) return "";
+  const cols = (schema.columns ?? [])
+    .map((c) => `- ${c.name} (${c.type}): ${c.description}${c.categories ? ". Valores possiveis: " + c.categories.join(", ") : ""}`)
+    .join("\n");
+  return `Tabela: ${table}\nDescricao: ${schema.description?.trim() ?? ""}\nColunas:\n${cols}`;
+}
+
 /** Retorna datasets agrupados por pais */
 export function byCountry(datasets) {
   const map = {};

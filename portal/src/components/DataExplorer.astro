@@ -1,7 +1,7 @@
 ---
 // DataExplorer: editor SQL com DuckDB-WASM, roda no browser
 // Lê Parquets direto do Hugging Face, exporta CSV
-const { table, defaultQuery, crossQueries = [] } = Astro.props;
+const { table, defaultQuery, crossQueries = [], schemaContext = "" } = Astro.props;
 
 const HF_BASE = "https://huggingface.co/datasets/riabr-dados/riab/resolve/main/cleaned";
 const parquetUrl = `${HF_BASE}/${table}.parquet`;
@@ -20,6 +20,29 @@ const parquetUrl = `${HF_BASE}/${table}.parquet`;
       <button class="ex-btn ex-btn--outline" id="btn-export" disabled>↓ Exportar CSV</button>
     </div>
   </div>
+
+  <!-- LINGUAGEM NATURAL -->
+  {schemaContext && (
+    <div class="explorer__nl" id="ex-nl">
+      <div class="nl-header">
+        <span class="nl-label">✦ Perguntar em português</span>
+        <button class="nl-toggle" id="nl-toggle" aria-label="expandir">▾</button>
+      </div>
+      <div class="nl-body" id="nl-body" style="display:none">
+        <textarea
+          class="nl-input"
+          id="nl-input"
+          placeholder="Ex: Quais estados produziram mais filmes nos últimos 5 anos?"
+          rows="2"
+          spellcheck="true"
+        ></textarea>
+        <div class="nl-actions">
+          <span class="nl-hint" id="nl-hint"></span>
+          <button class="ex-btn nl-gen-btn" id="btn-gen">✦ Gerar SQL</button>
+        </div>
+      </div>
+    </div>
+  )}
 
   <!-- CROSS QUERIES -->
   {crossQueries.length > 0 && (
@@ -203,11 +226,126 @@ editor.addEventListener("keydown", e => {
 initDuckDB();
 </script>
 
-<script define:vars={{ parquetUrl }}>
+<script define:vars={{ parquetUrl, schemaContext, table }}>
 // Injeta a URL do Parquet no script acima
 document.querySelector('script[type="module"]').textContent =
   document.querySelector('script[type="module"]').textContent
     .replace("PARQUET_URL_PLACEHOLDER", parquetUrl);
+
+// ── LINGUAGEM NATURAL → SQL ──────────────────────────────────
+const nlBody   = document.getElementById("nl-body");
+const nlToggle = document.getElementById("nl-toggle");
+const nlInput  = document.getElementById("nl-input");
+const btnGen   = document.getElementById("btn-gen");
+const nlHint   = document.getElementById("nl-hint");
+
+if (nlToggle) {
+  nlToggle.addEventListener("click", () => {
+    const open = nlBody.style.display !== "none";
+    nlBody.style.display = open ? "none" : "flex";
+    nlToggle.textContent = open ? "▾" : "▴";
+  });
+}
+
+const LS_KEY = "riab_anthropic_key";
+
+function getApiKey() {
+  let key = localStorage.getItem(LS_KEY);
+  if (!key) {
+    key = prompt(
+      "Para gerar SQL por linguagem natural, informe sua chave da API Anthropic (anthropic.com).\n" +
+      "A chave fica salva apenas no seu navegador e nunca é enviada a nossos servidores.",
+      ""
+    );
+    if (key) localStorage.setItem(LS_KEY, key.trim());
+  }
+  return key ? key.trim() : null;
+}
+
+async function generateSQL() {
+  const question = nlInput?.value?.trim();
+  if (!question) return;
+
+  const apiKey = getApiKey();
+  if (!apiKey) return;
+
+  btnGen.disabled = true;
+  nlHint.textContent = "Gerando...";
+
+  const systemPrompt = `Voce e um assistente especializado em gerar queries SQL para DuckDB.
+O usuario esta explorando dados audiovisuais.
+
+${schemaContext}
+
+REGRAS OBRIGATORIAS:
+1. Responda APENAS com o SQL — sem explicacoes, sem markdown, sem blocos de codigo
+2. Use os nomes exatos das colunas listados acima (snake_case)
+3. Para referencias a tabela, use sempre o nome curto: ${table}
+4. Sempre inclua LIMIT 200 a menos que seja uma agregacao total
+5. Para filtros de texto, prefira ILIKE para busca case-insensitive
+6. Nunca use funcoes nao suportadas pelo DuckDB`;
+
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
+        "anthropic-dangerous-direct-browser-access": "true",
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "claude-haiku-4-5-20251001",
+        max_tokens: 600,
+        system: systemPrompt,
+        messages: [{ role: "user", content: question }],
+      }),
+    });
+
+    if (res.status === 401) {
+      localStorage.removeItem(LS_KEY);
+      nlHint.textContent = "Chave invalida. Clique em Gerar SQL para tentar novamente.";
+      return;
+    }
+
+    if (!res.ok) {
+      nlHint.textContent = `Erro ${res.status}. Tente novamente.`;
+      return;
+    }
+
+    const data = await res.json();
+    const sql = data.content?.[0]?.text?.trim() ?? "";
+
+    if (sql) {
+      // injeta no editor e executa
+      const editor = document.getElementById("ex-editor");
+      if (editor) {
+        editor.value = sql;
+        editor.dispatchEvent(new Event("input"));
+        document.getElementById("btn-run")?.click();
+      }
+      nlHint.textContent = "SQL gerado ✓";
+    } else {
+      nlHint.textContent = "Nao foi possivel gerar SQL. Reformule a pergunta.";
+    }
+  } catch (e) {
+    nlHint.textContent = "Erro de conexao: " + e.message;
+  } finally {
+    btnGen.disabled = false;
+  }
+}
+
+if (btnGen) {
+  btnGen.addEventListener("click", generateSQL);
+}
+if (nlInput) {
+  nlInput.addEventListener("keydown", (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+      e.preventDefault();
+      generateSQL();
+    }
+  });
+}
 </script>
 
 <style>
@@ -217,6 +355,73 @@ document.querySelector('script[type="module"]').textContent =
   overflow: hidden;
   margin-bottom: 24px;
 }
+
+/* linguagem natural */
+.explorer__nl {
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.nl-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 14px;
+  cursor: pointer;
+}
+.nl-label {
+  font-size: 10px;
+  font-family: var(--font-m);
+  color: var(--br);
+  letter-spacing: .06em;
+}
+.nl-toggle {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 12px;
+  padding: 0 2px;
+  line-height: 1;
+}
+.nl-body {
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 14px 12px;
+}
+.nl-input {
+  width: 100%;
+  font-family: var(--font-s, sans-serif);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  outline: none;
+  resize: vertical;
+  min-height: 52px;
+}
+.nl-input:focus { border-color: var(--br); }
+.nl-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.nl-hint {
+  font-size: 9px;
+  color: var(--dim);
+  font-family: var(--font-m);
+  flex: 1;
+}
+.nl-gen-btn {
+  background: transparent;
+  color: var(--br);
+  border-color: var(--br);
+  font-size: 10px;
+}
+.nl-gen-btn:not(:disabled):hover { background: rgba(0,200,100,.1); }
 
 /* toolbar */
 .explorer__toolbar {
