@@ -1,0 +1,45 @@
+---
+import Base from "../../layouts/Base.astro";
+import DatasetCard from "../../components/DatasetCard.astro";
+import { getDatasets } from "../../lib/catalog.js";
+
+const datasets = getDatasets();
+
+const byCountry = datasets.reduce((acc, ds) => {
+  const c = ds.source?.country ?? "??";
+  if (!acc[c]) acc[c] = { label: c, datasets: [] };
+  acc[c].datasets.push(ds);
+  return acc;
+}, {});
+
+const LABEL = {
+  BR: "Brasil",
+  FR: "Franca",
+  AR: "Argentina",
+  UK: "Reino Unido",
+  UY: "Uruguai",
+  EU: "Europa",
+};
+
+const groups = Object.entries(byCountry).map(([code, g]) => ({
+  code,
+  label: LABEL[code] ?? code,
+  datasets: g.datasets,
+}));
+---
+
+<Base title="Datasets" description="Catalogo completo de datasets do RIAB.">
+  <div class="page-inner">
+    <h1 class="page-title">Catalogo de Datasets</h1>
+    <p class="page-sub">{datasets.length} datasets de {groups.length} paises</p>
+
+    {groups.map((group) => (
+      <section class="group-section">
+        <h2 class="group-title">{group.label} <span class="group-count">{group.datasets.length}</span></h2>
+        <div class="catalog__grid">
+          {group.datasets.map((ds) => <DatasetCard ds={ds} />)}
+        </div>
+      </section>
+    ))}
+  </div>
+</Base>

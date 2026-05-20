@@ -1,0 +1,19 @@
+---
+const { code, lang = "python", label } = Astro.props;
+---
+<div class="snippet">
+  {label && <div class="snippet__label">{label}</div>}
+  <pre class="snippet__pre"><code class={`language-${lang}`}>{code}</code></pre>
+  <button class="snippet__copy" data-code={code}>copiar</button>
+</div>
+
+<script>
+  document.querySelectorAll(".snippet__copy").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const code = btn.dataset.code ?? "";
+      await navigator.clipboard.writeText(code);
+      btn.textContent = "copiado!";
+      setTimeout(() => (btn.textContent = "copiar"), 1500);
+    });
+  });
+</script>

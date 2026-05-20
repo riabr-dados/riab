@@ -1,0 +1,692 @@
+datasets:
+
+  # ── BRASIL / ANCINE ────────────────────────────────────────────────────────
+
+  - slug: ancine-obras-nao-publicitarias
+    title: "Obras Nao Publicitarias"
+    description: >
+      Registro oficial de obras audiovisuais brasileiras nao publicitarias (filmes,
+      series, documentarios, animacoes, videomusicais, etc.). Um arquivo CSV por ano
+      de registro (2002-2026), totalizando aproximadamente 61.360 obras.
+    source_id: ancine
+    status: ativo
+    coverage: "2002-2026"
+    tags: [cinema, obras, registro, brasil, ancine, sav]
+    raw:
+      path: ancine-obras-nao-publicitarias/
+      format: csv
+      encoding: latin-1
+      delimiter: ";"
+      files: 25
+      size_bytes: 16000000
+    cleaned:
+      tables: [obras]
+    related:
+      - ancine-diretores-obras
+      - ancine-produtores-obras
+      - ancine-bilheteria-consolidada
+
+  - slug: ancine-diretores-obras
+    title: "Diretores de Obras"
+    description: >
+      Vinculos entre obras audiovisuais brasileiras nao publicitarias e seus
+      diretores. Cada linha representa um par obra-diretor. Permite identificar
+      a filmografia por diretor e os codirecionamentos.
+    source_id: ancine
+    status: ativo
+    coverage: "2002-2026"
+    tags: [cinema, obras, diretores, brasil, ancine]
+    raw:
+      path: ancine-diretores-obras/
+      format: csv
+      encoding: latin-1
+      delimiter: ";"
+      files: 1
+      size_bytes: 5055603
+    cleaned:
+      tables: [diretores]
+    related:
+      - ancine-obras-nao-publicitarias
+      - ancine-produtores-obras
+
+  - slug: ancine-produtores-obras
+    title: "Produtores de Obras"
+    description: >
+      Vinculos entre obras audiovisuais brasileiras nao publicitarias e suas
+      produtoras. Cada linha representa um par obra-produtora. Permite identificar
+      o portfolio de cada empresa e as coprocucoes.
+    source_id: ancine
+    status: ativo
+    coverage: "2002-2026"
+    tags: [cinema, obras, produtoras, brasil, ancine]
+    raw:
+      path: ancine-produtores-obras/
+      format: csv
+      encoding: latin-1
+      delimiter: ";"
+      files: 1
+      size_bytes: 7043223
+    cleaned:
+      tables: [produtores]
+    related:
+      - ancine-obras-nao-publicitarias
+      - ancine-agentes-economicos
+
+  - slug: ancine-bilheteria-consolidada
+    title: "Bilheteria Consolidada"
+    description: >
+      Historico de bilheteria do cinema brasileiro por filme. Contem os top 20
+      filmes brasileiros por publico para cada ano de lancamento (2009-2024).
+      Fonte: sistema SADIS da ANCINE.
+    source_id: ancine
+    status: ativo
+    coverage: "2009-2024"
+    tags: [cinema, bilheteria, publico, brasil, ancine]
+    raw:
+      path: ancine-bilheteria-consolidada/
+      format: xlsx
+      files: 1
+      size_bytes: 92341
+    cleaned:
+      tables: [bilheteria_domestica]
+    related:
+      - ancine-bilheteria-agregada-filme-ano
+      - ancine-preco-medio-ingresso
+      - ibge-deflator-ipca
+
+  - slug: ancine-bilheteria-agregada-filme-ano
+    title: "Bilheteria Agregada Filme x Ano"
+    description: >
+      Publico, renda e numero de sessoes por filme e por ano de exibicao no
+      mercado domestico brasileiro. Inclui filmes de todos os paises exibidos
+      no Brasil. Mais granular que a bilheteria consolidada.
+    source_id: ancine
+    status: intermitente
+    coverage: "ate 2026"
+    tags: [cinema, bilheteria, publico, renda, sessoes, brasil, ancine]
+    raw:
+      path: ancine-bilheteria-agregada-filme-ano/
+      format: csv
+      encoding: latin-1
+      delimiter: ";"
+      files: 1
+      size_bytes: 558634
+    cleaned:
+      tables: [bilheteria_domestica]
+    related:
+      - ancine-bilheteria-consolidada
+
+  - slug: ancine-fsa-projetos
+    title: "Projetos FSA"
+    description: >
+      4.588 projetos de fomento audiovisual apoiados pelo Fundo Setorial do
+      Audiovisual (FSA) entre 2008 e 2023. Contem chamada publica, CNPJ do
+      proponente, produtora, programadora, valor contratado e valor liberado.
+    source_id: ancine
+    status: ativo
+    coverage: "2008-2023"
+    tags: [fomento, fsa, financiamento, brasil, ancine]
+    raw:
+      path: ancine-fsa-projetos/
+      format: csv
+      encoding: latin-1
+      delimiter: ";"
+      files: 1
+      size_bytes: 1128551
+    cleaned:
+      tables: [fomento_fsa]
+    related:
+      - ancine-renuncia-fiscal
+      - ancine-atas-fsa
+
+  - slug: ancine-renuncia-fiscal
+    title: "Renuncia Fiscal"
+    description: >
+      Projetos habilitados a captacao via renuncia fiscal (Art. 1, 1A, 3 e 3A
+      da Lei do Audiovisual). Contem CNPJ do proponente, municipio, mecanismo
+      de fomento e valores captados por modalidade.
+    source_id: ancine
+    status: ativo
+    coverage: "ate 2026"
+    tags: [fomento, renuncia-fiscal, lei-audiovisual, brasil, ancine]
+    raw:
+      path: ancine-renuncia-fiscal/
+      format: csv
+      encoding: latin-1
+      delimiter: ";"
+      files: 1
+      size_bytes: 1472298
+    cleaned:
+      tables: [renuncia_fiscal]
+    related:
+      - ancine-fsa-projetos
+
+  - slug: ancine-agentes-economicos
+    title: "Agentes Economicos"
+    description: >
+      Cadastro de empresas e pessoas juridicas regulares no setor audiovisual
+      registradas na ANCINE. Contem CNPJ, UF, municipio, classificacao do
+      agente economico, natureza juridica e status de empresa independente.
+    source_id: ancine
+    status: ativo
+    coverage: "ate 2026"
+    tags: [empresas, registro, agentes, brasil, ancine]
+    raw:
+      path: ancine-agentes-economicos/
+      format: csv
+      encoding: latin-1
+      delimiter: ";"
+      files: 1
+      size_bytes: 3154164
+    cleaned:
+      tables: [agentes_economicos]
+    related:
+      - ancine-produtores-obras
+
+  - slug: ancine-preco-medio-ingresso
+    title: "Preco Medio do Ingresso"
+    description: >
+      Serie historica do preco medio do ingresso de cinema no Brasil (nominal
+      e deflacionado pela base 2024). Permite comparacoes reais de renda ao
+      longo do tempo quando combinado com dados de bilheteria.
+    source_id: ancine
+    status: intermitente
+    coverage: "2014-2024"
+    tags: [cinema, ingresso, preco, inflacao, brasil, ancine]
+    raw:
+      path: ancine-preco-medio-ingresso/
+      format: csv
+      encoding: utf-8
+      delimiter: ";"
+      files: 1
+      size_bytes: 925
+    cleaned:
+      tables: [preco_ingresso]
+    related:
+      - ancine-bilheteria-consolidada
+      - ibge-deflator-ipca
+
+  - slug: ancine-atas-fsa
+    title: "Atas Oficiais FSA"
+    description: >
+      Atas de resultado de chamadas publicas do FSA: PRODAV 07/2014, 2015,
+      2017, Desempenho Artistico 2018 e 2024. Documentos PDF com listas de
+      projetos habilitados e resultados finais.
+    source_id: ancine
+    status: ativo
+    coverage: "2014-2024"
+    tags: [fomento, fsa, atas, pdf, brasil, ancine]
+    raw:
+      path: ancine-atas-fsa/
+      format: pdf
+      files: 6
+      size_bytes: 3581758
+    cleaned:
+      tables: []
+      notes: "Formato PDF — sem tabela Parquet. Consulte os arquivos brutos."
+    related:
+      - ancine-fsa-projetos
+
+  # ── BRASIL / IBGE ──────────────────────────────────────────────────────────
+
+  - slug: ibge-deflator-ipca
+    title: "Deflator IPCA"
+    description: >
+      Indice mensal IPCA com fator de deflacao base 2024, construido a partir
+      das series historicas do IBGE. Essencial para comparacoes de valores
+      monetarios ao longo do tempo (bilheteria, fomento, preco do ingresso).
+    source_id: ibge
+    status: ativo
+    coverage: "serie historica"
+    tags: [deflator, ipca, inflacao, brasil, ibge]
+    raw:
+      path: ibge-deflator-ipca/
+      format: csv
+      encoding: utf-8
+      delimiter: ";"
+      files: 1
+      size_bytes: 471
+    cleaned:
+      tables: [deflator_ipca]
+    related:
+      - ancine-preco-medio-ingresso
+      - ancine-bilheteria-consolidada
+
+  # ── BRASIL / LUMIERE ───────────────────────────────────────────────────────
+
+  - slug: lumiere-cinemas-europa
+    title: "Filmes Brasileiros em Salas Europeias"
+    description: >
+      200 filmes brasileiros exibidos em salas de cinema europeias, com
+      numero de admissoes por pais e periodo (1996-2026). Fonte: base
+      Lumiere do Observatorio Europeu do Audiovisual.
+    source_id: lumiere
+    status: ativo
+    coverage: "1996-2026"
+    tags: [cinema, circulacao-internacional, europa, brasil, lumiere]
+    raw:
+      path: lumiere-cinemas-europa/
+      format: xlsx
+      files: 1
+      size_bytes: 16135
+    cleaned:
+      tables: [bilheteria_europa]
+    related:
+      - lumiere-vod-europa
+      - ancine-bilheteria-consolidada
+
+  - slug: lumiere-vod-europa
+    title: "Filmes Brasileiros em VoD Europeu"
+    description: >
+      Disponibilidade de filmes brasileiros em plataformas de video por
+      demanda (VoD) europeias, com informacoes por pais, plataforma e
+      periodo de disponibilidade.
+    source_id: lumiere
+    status: ativo
+    coverage: "ate 2026"
+    tags: [vod, circulacao-internacional, europa, brasil, lumiere]
+    raw:
+      path: lumiere-vod-europa/
+      format: xlsx
+      files: 1
+      size_bytes: 440349
+    cleaned:
+      tables: [vod_europa]
+    related:
+      - lumiere-cinemas-europa
+
+  # ── FRANCA / CNC ───────────────────────────────────────────────────────────
+
+  - slug: cnc-visas-exploitation
+    title: "Visas d'Exploitation"
+    description: >
+      95.000+ filmes autorizados para exibicao comercial na Franca desde
+      1945, incluindo 147 filmes brasileiros. O banco de dados mais completo
+      de visas de exibicao cinematografica disponivel publicamente.
+    source_id: cnc
+    status: ativo
+    coverage: "1945-2025"
+    tags: [cinema, visa, exibicao, franca, cnc]
+    raw:
+      path: cnc-visas-exploitation/
+      format: csv
+      encoding: utf-8-sig
+      delimiter: ";"
+      files: 1
+      size_bytes: 12821667
+    cleaned:
+      tables: [cnc_visas]
+    related:
+      - cnc-films-million-entrees
+      - cnc-distribution-salles
+
+  - slug: cnc-frequentation-salles
+    title: "Frequentacao de Salas"
+    description: >
+      Entradas, sessoes e receita em salas de cinema francesas, serie historica
+      longa. Permite analise de tendencias do mercado de cinema na Franca ao
+      longo de decadas.
+    source_id: cnc
+    status: ativo
+    coverage: "serie historica"
+    tags: [cinema, bilheteria, frequentacao, franca, cnc]
+    raw:
+      path: cnc-frequentation-salles/
+      format: xlsx
+      files: 1
+      size_bytes: 436623
+    cleaned:
+      tables: [cnc_frequentacao]
+    related:
+      - cnc-parc-cinematographique
+      - cnc-distribution-salles
+
+  - slug: cnc-etablissements
+    title: "Estabelecimentos Cinematograficos"
+    description: >
+      Cadastro e caracterizacao dos cinemas ativos na Franca, com informacoes
+      sobre capacidade, tipo (multiplex, arte e ensaio, itinerante), municipio
+      e historico de operacao.
+    source_id: cnc
+    status: ativo
+    coverage: "atual"
+    tags: [cinema, estabelecimentos, salas, franca, cnc]
+    raw:
+      path: cnc-etablissements/
+      format: xlsx
+      files: 1
+      size_bytes: 2640686
+    cleaned:
+      tables: [cnc_estabelecimentos]
+    related:
+      - cnc-geographie-cinema
+      - cnc-parc-cinematographique
+
+  - slug: cnc-films-million-entrees
+    title: "Filmes com Mais de 1 Milhao de Entradas"
+    description: >
+      Todos os filmes que ultrapassaram 1 milhao de espectadores na Franca,
+      com total de admissoes, distribuidora e data de estreia.
+    source_id: cnc
+    status: ativo
+    coverage: "serie historica"
+    tags: [cinema, bilheteria, blockbuster, franca, cnc]
+    raw:
+      path: cnc-films-million-entrees/
+      format: xlsx
+      files: 1
+      size_bytes: 109816
+    cleaned:
+      tables: [cnc_filmes_milhao]
+    related:
+      - cnc-frequentation-salles
+      - cnc-visas-exploitation
+
+  - slug: cnc-donnees-internationales
+    title: "Dados Internacionais do Cinema"
+    description: >
+      Indicadores comparativos do mercado audiovisual em multiplos paises:
+      bilheteria, numero de salas, admissoes per capita, quota de mercado
+      nacional, producao de filmes.
+    source_id: cnc
+    status: ativo
+    coverage: "serie historica"
+    tags: [cinema, internacional, comparativo, cnc]
+    raw:
+      path: cnc-donnees-internationales/
+      format: xlsx
+      files: 1
+      size_bytes: 87814
+    cleaned:
+      tables: [cnc_dados_internacionais]
+
+  - slug: cnc-films-agrees
+    title: "Filmes com Agrement (Producao e Distribuicao)"
+    description: >
+      Filmes aprovados para apoio a producao e distribuicao pelo CNC via
+      sistema de agrement. Contem pais de origem, produtor, distribuidor,
+      genero e valor do apoio.
+    source_id: cnc
+    status: ativo
+    coverage: "serie historica"
+    tags: [cinema, fomento, agrement, franca, cnc]
+    raw:
+      path: cnc-films-agrees/
+      format: xlsx
+      files: 1
+      size_bytes: 843119
+    cleaned:
+      tables: [cnc_filmes_aprovados]
+    related:
+      - cnc-visas-exploitation
+
+  - slug: cnc-audience-television
+    title: "Audiencia de Filmes na Televisao"
+    description: >
+      Dados de audiencia de filmes e programas na televisao francesa, por
+      canal, horario e perfil de audiencia.
+    source_id: cnc
+    status: ativo
+    coverage: "serie historica"
+    tags: [televisao, audiencia, franca, cnc]
+    raw:
+      path: cnc-audience-television/
+      format: xlsx
+      files: 1
+      size_bytes: 77505
+    cleaned:
+      tables: [cnc_audiencia_tv]
+    related:
+      - cnc-films-television
+
+  - slug: cnc-films-television
+    title: "Filmes na Televisao Francesa"
+    description: >
+      Titulos e passagens de filmes em canais da televisao francesa, com
+      numero de transmissoes e audiencia media.
+    source_id: cnc
+    status: ativo
+    coverage: "serie historica"
+    tags: [televisao, filmes, franca, cnc]
+    raw:
+      path: cnc-films-television/
+      format: xls
+      files: 1
+      size_bytes: 253628
+    cleaned:
+      tables: [cnc_filmes_tv]
+    related:
+      - cnc-audience-television
+
+  - slug: cnc-exportacao-programas-audiovisuais
+    title: "Exportacao de Programas Audiovisuais"
+    description: >
+      Exportacao de programas audiovisuais franceses por pais destino e genero.
+      Permite analisar a circulacao internacional da producao audiovisual francesa.
+    source_id: cnc
+    status: ativo
+    coverage: "serie historica"
+    tags: [exportacao, televisao, circulacao-internacional, franca, cnc]
+    raw:
+      path: cnc-exportacao-programas-audiovisuais/
+      format: xls
+      files: 1
+      size_bytes: 77796
+    cleaned:
+      tables: [cnc_exportacao]
+
+  - slug: cnc-geographie-cinema
+    title: "Geografia do Cinema Frances"
+    description: >
+      Equipamento e frequentacao de salas de cinema na Franca desagregados
+      por regiao, departamento, commune e unidade urbana. 4 arquivos XLSX.
+    source_id: cnc
+    status: ativo
+    coverage: "serie historica"
+    tags: [cinema, geografia, territorio, franca, cnc]
+    raw:
+      path: cnc-geographie-cinema/
+      format: xlsx
+      files: 4
+      size_bytes: 2822075
+    cleaned:
+      tables: [cnc_geografia]
+    related:
+      - cnc-etablissements
+      - cnc-parc-cinematographique
+
+  - slug: cnc-public-vod
+    title: "Publico de VoD na Franca"
+    description: >
+      Perfil sociodemografico do publico de plataformas de video por demanda
+      (VoD) na Franca.
+    source_id: cnc
+    status: ativo
+    coverage: "serie historica"
+    tags: [vod, publico, franca, cnc]
+    raw:
+      path: cnc-public-vod/
+      format: xlsx
+      files: 1
+      size_bytes: 65787
+    cleaned:
+      tables: [cnc_vod_publico]
+    related:
+      - cnc-referencias-ativas-vod
+      - cnc-consumo-vod
+
+  - slug: cnc-referencias-ativas-vod
+    title: "Referencias Ativas em VoD"
+    description: >
+      Catalogo de titulos atualmente disponiveis em plataformas de VoD
+      francesas, com pais de origem, genero e tipo de disponibilidade.
+    source_id: cnc
+    status: ativo
+    coverage: "atual"
+    tags: [vod, catalogo, franca, cnc]
+    raw:
+      path: cnc-referencias-ativas-vod/
+      format: xlsx
+      files: 1
+      size_bytes: 77553
+    cleaned:
+      tables: [cnc_vod_refs]
+    related:
+      - cnc-public-vod
+
+  - slug: cnc-consumo-vod
+    title: "Consumo Domestico de VoD"
+    description: >
+      Consumo de VoD por domicilios franceses: frequencia, generos preferidos,
+      plataformas utilizadas e comparacoes com outras janelas de exibicao.
+    source_id: cnc
+    status: ativo
+    coverage: "serie historica"
+    tags: [vod, consumo, domicilios, franca, cnc]
+    raw:
+      path: cnc-consumo-vod/
+      format: xlsx
+      files: 1
+      size_bytes: 71895
+    cleaned:
+      tables: [cnc_vod_consumo]
+    related:
+      - cnc-public-vod
+
+  - slug: cnc-parc-cinematographique
+    title: "Parque Cinematografico Frances"
+    description: >
+      Numero de salas, telas, capacidade e grau de digitalizacao na Franca,
+      serie historica. Inclui desagregacao por tipo de estabelecimento.
+    source_id: cnc
+    status: ativo
+    coverage: "serie historica"
+    tags: [cinema, infraestrutura, salas, digitalizacao, franca, cnc]
+    raw:
+      path: cnc-parc-cinematographique/
+      format: xlsx
+      files: 1
+      size_bytes: 420992
+    cleaned:
+      tables: [cnc_parque]
+    related:
+      - cnc-etablissements
+      - cnc-geographie-cinema
+
+  - slug: cnc-financement-television
+    title: "Financiamento da Televisao Francesa"
+    description: >
+      Aporte das emissoras de televisao a producao audiovisual francesa,
+      por canal, genero de obra e modalidade de investimento.
+    source_id: cnc
+    status: ativo
+    coverage: "serie historica"
+    tags: [televisao, financiamento, franca, cnc]
+    raw:
+      path: cnc-financement-television/
+      format: xls
+      files: 1
+      size_bytes: 78336
+    cleaned:
+      tables: [cnc_financiamento_tv]
+
+  - slug: cnc-distribution-salles
+    title: "Distribuicao de Filmes em Salas"
+    description: >
+      Filmes distribuidos em salas de cinema na Franca: distribuidoras,
+      numero de copias, admissoes por distribuidora e quota de mercado.
+    source_id: cnc
+    status: ativo
+    coverage: "serie historica"
+    tags: [cinema, distribuicao, franca, cnc]
+    raw:
+      path: cnc-distribution-salles/
+      format: xlsx
+      files: 1
+      size_bytes: 185531
+    cleaned:
+      tables: [cnc_distribuicao]
+    related:
+      - cnc-frequentation-salles
+      - cnc-visas-exploitation
+
+  - slug: cnc-public-films
+    title: "Perfil do Publico de Cinema"
+    description: >
+      Perfil sociodemografico do publico de cinema na Franca: faixa etaria,
+      genero, frequencia de ida ao cinema e preferencias de genero de filme.
+    source_id: cnc
+    status: ativo
+    coverage: "serie historica"
+    tags: [cinema, publico, sociodemografico, franca, cnc]
+    raw:
+      path: cnc-public-films/
+      format: xlsx
+      files: 1
+      size_bytes: 152164
+    cleaned:
+      tables: [cnc_publico_filmes]
+
+  # ── ARGENTINA / INCAA ──────────────────────────────────────────────────────
+
+  - slug: incaa-sector-audiovisual
+    title: "Setor Audiovisual Argentino"
+    description: >
+      Conjunto de 9 arquivos CSV sobre o setor audiovisual argentino:
+      espectadores, receita, estreias, emprego, TV por assinatura e mais.
+      Fonte: INCAA em parceria com SICA e ENACOM.
+    source_id: incaa
+    status: ativo
+    coverage: "2001-2023"
+    tags: [cinema, televisao, emprego, argentina, incaa]
+    raw:
+      path: incaa-sector-audiovisual/
+      format: csv
+      encoding: utf-8
+      delimiter: ","
+      files: 9
+      size_bytes: 14175
+    cleaned:
+      tables: [incaa_setor]
+
+  # ── REINO UNIDO / BFI ──────────────────────────────────────────────────────
+
+  - slug: bfi-statistical-yearbook-2023
+    title: "BFI Statistical Yearbook 2023"
+    description: >
+      Anuario estatistico do cinema britanico com 15 arquivos ODS cobrindo:
+      bilheteria, exibicao, video fisico e digital, televisao, emprego,
+      investimento publico e mercado global de filmes.
+    source_id: bfi
+    status: ativo
+    coverage: "2023"
+    tags: [cinema, televisao, emprego, anuario, reino-unido, bfi]
+    raw:
+      path: bfi-statistical-yearbook-2023/
+      format: ods
+      files: 15
+      size_bytes: 691861
+    cleaned:
+      tables: [bfi_anuario]
+
+  # ── URUGUAI / ACAU ─────────────────────────────────────────────────────────
+
+  - slug: acau-uruguay-apoios-audiovisual
+    title: "Apoios Audiovisuais do Uruguai"
+    description: >
+      Projetos apoiados e reembolsos da ACAU (Agencia del Cine y el Audiovisual
+      del Uruguay) entre 2013 e 2024. Permite comparacao com mecanismos de
+      fomento brasileiros e de outros paises da regiao.
+    source_id: acau
+    status: ativo
+    coverage: "2013-2024"
+    tags: [fomento, apoios, uruguai, acau]
+    raw:
+      path: acau-uruguay-apoios-audiovisual/
+      format: csv
+      encoding: utf-8
+      delimiter: ","
+      files: 1
+      size_bytes: 515065
+    cleaned:
+      tables: [acau_apoios]

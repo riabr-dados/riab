@@ -1,0 +1,53 @@
+sources:
+  - id: ancine
+    name: "ANCINE - Agencia Nacional do Cinema"
+    country: BR
+    url: https://www.gov.br/ancine/
+    data_portal: https://dados.ancine.gov.br/dados-abertos/
+    license: dados-abertos-gov-br
+    notes: >
+      Portal de dados abertos com CSVs periodicamente atualizados.
+      Sistema OCA (Observatorio do Cinema e do Audiovisual) intermitente.
+
+  - id: cnc
+    name: "CNC - Centre National du Cinema et de l'Image Animee"
+    country: FR
+    url: https://www.cnc.fr/
+    data_portal: https://www.cnc.fr/professionnels/etudes-et-rapports/statistiques/
+    license: licence-ouverte-etalab
+    notes: Dados abertos sob Licence Ouverte Etalab 2.0.
+
+  - id: bfi
+    name: "BFI - British Film Institute"
+    country: UK
+    url: https://www.bfi.org.uk/
+    data_portal: https://www.bfi.org.uk/industry-data-insights
+    license: open-government-licence
+
+  - id: incaa
+    name: "INCAA - Instituto Nacional de Cine y Artes Audiovisuales"
+    country: AR
+    url: https://www.argentina.gob.ar/incaa
+    data_portal: https://datos.gob.ar/
+    license: datos-abiertos-ar
+
+  - id: acau
+    name: "ACAU - Agencia del Cine y el Audiovisual del Uruguay"
+    country: UY
+    url: https://www.acau.gub.uy/
+    data_portal: https://www.gub.uy/agencia-cine-audiovisual-uruguay/
+    license: datos-abiertos-uy
+
+  - id: lumiere
+    name: "Observatoire Europeen de l'Audiovisuel - Lumiere"
+    country: EU
+    url: https://lumiere.obs.coe.int/
+    license: free-access
+    notes: Base publica do Conselho da Europa sobre circulacao de filmes.
+
+  - id: ibge
+    name: "IBGE - Instituto Brasileiro de Geografia e Estatistica"
+    country: BR
+    url: https://www.ibge.gov.br/
+    data_portal: https://sidra.ibge.gov.br/
+    license: dados-abertos-gov-br

@@ -1,0 +1,18 @@
+---
+const { stats } = Astro.props;
+// stats: { total_datasets, total_paises, total_fontes }
+---
+<div class="statsbar">
+  <div class="statsbar__item">
+    <span class="statsbar__val">{stats.total_datasets}</span>
+    <span class="statsbar__lbl">Datasets</span>
+  </div>
+  <div class="statsbar__item">
+    <span class="statsbar__val">{stats.total_paises}</span>
+    <span class="statsbar__lbl">Paises</span>
+  </div>
+  <div class="statsbar__item">
+    <span class="statsbar__val">{stats.total_fontes}</span>
+    <span class="statsbar__lbl">Fontes</span>
+  </div>
+</div>

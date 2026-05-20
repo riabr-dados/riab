@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>dados-audiovisual-br</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#06060f;
+  --surface:#0b0b1a;
+  --surface2:#101025;
+  --border:#18182e;
+  --border2:#24243e;
+  --text:#dcdcf0;
+  --muted:#5a5a90;
+  --dim:#1e1e40;
+  --br:#00c47a;
+  --fr:#4878e8;
+  --ar:#58aff8;
+  --uk:#f04444;
+  --uy:#28d4e0;
+  --ativo:#22c55e;
+  --interm:#f59e0b;
+  --font-d:'Bebas Neue',sans-serif;
+  --font-m:'IBM Plex Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:var(--font-m);font-size:13px;line-height:1.55;min-height:100vh;
+}
+#app{max-width:1440px;margin:0 auto;padding:0 28px}
+
+/* ── HEADER ── */
+.site-header{padding:40px 0 0;border-bottom:1px solid var(--border);margin-bottom:32px}
+.header-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;gap:20px;flex-wrap:wrap}
+.logo{font-family:var(--font-d);font-size:clamp(38px,5vw,68px);letter-spacing:3px;line-height:.9;color:var(--text)}
+.logo em{color:var(--br);font-style:normal}
+.tagline{font-size:10px;color:var(--muted);letter-spacing:.06em;margin-top:8px}
+.header-stats{display:flex;gap:28px;align-items:flex-end}
+.stat-val{font-family:var(--font-d);font-size:40px;color:var(--text);line-height:1}
+.stat-lbl{font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+.tabs{display:flex;gap:0;margin-top:20px}
+.tab-btn{
+  font-family:var(--font-m);font-size:11px;letter-spacing:.05em;
+  padding:12px 24px;background:none;border:none;
+  border-bottom:2px solid transparent;color:var(--muted);cursor:pointer;transition:all .15s;
+}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{color:var(--text);border-bottom-color:var(--br)}
+
+/* ── FILTERS ── */
+.filters{display:flex;gap:6px;margin-bottom:24px;flex-wrap:wrap;align-items:center}
+.flabel{font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-right:6px}
+.chip{
+  font-family:var(--font-m);font-size:10px;padding:4px 11px;border-radius:2px;
+  border:1px solid var(--border);background:var(--surface);color:var(--muted);
+  cursor:pointer;transition:all .15s;letter-spacing:.02em;
+}
+.chip:hover{border-color:var(--border2);color:var(--text)}
+.chip.active{background:var(--dim);color:var(--text);border-color:var(--border2)}
+.chip[data-c=BR].active{border-color:var(--br);color:var(--br)}
+.chip[data-c=FR].active{border-color:var(--fr);color:var(--fr)}
+.chip[data-c=AR].active{border-color:var(--ar);color:var(--ar)}
+.chip[data-c=UK].active{border-color:var(--uk);color:var(--uk)}
+.chip[data-c=UY].active{border-color:var(--uy);color:var(--uy)}
+
+/* ── CATALOG GRID ── */
+.catalog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1px;background:var(--border)}
+.dcard{
+  background:var(--bg);padding:18px 18px 16px 22px;
+  display:flex;flex-direction:column;gap:9px;
+  transition:background .15s;position:relative;overflow:hidden;
+  cursor:pointer;
+}
+.dcard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px}
+.dcard[data-c=BR]::before{background:var(--br)}
+.dcard[data-c=FR]::before{background:var(--fr)}
+.dcard[data-c=AR]::before{background:var(--ar)}
+.dcard[data-c=UK]::before{background:var(--uk)}
+.dcard[data-c=UY]::before{background:var(--uy)}
+.dcard:hover{background:var(--surface)}
+.dcard:hover .card-arrow{opacity:1}
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.card-inst{font-size:9px;color:var(--muted);letter-spacing:.05em;text-transform:uppercase}
+.card-right{display:flex;align-items:center;gap:8px}
+.sbadge{font-size:8px;font-weight:500;letter-spacing:.05em;text-transform:uppercase;padding:2px 6px;border-radius:2px;white-space:nowrap}
+.s-ativo{background:rgba(34,197,94,.1);color:var(--ativo)}
+.s-intermitente{background:rgba(245,158,11,.1);color:var(--interm)}
+.card-arrow{font-size:14px;color:var(--muted);opacity:0;transition:opacity .15s;margin-top:-1px}
+.card-title{font-weight:500;font-size:14px;line-height:1.3;color:var(--text)}
+.card-desc{font-size:11px;color:var(--muted);line-height:1.5}
+.card-meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
+.mi{font-size:9px;color:var(--dim)}
+.mi b{color:var(--muted);font-weight:400}
+.mi-rec{margin-left:auto}
+
+/* ── OBRAS VIEW ── */
+.obras-head{margin-bottom:24px}
+.obras-head h2{font-family:var(--font-d);font-size:30px;letter-spacing:1px;margin-bottom:4px}
+.obras-head p{font-size:10px;color:var(--muted)}
+.obras-wrap{display:grid;grid-template-columns:1fr 380px;gap:1px;background:var(--border);margin-bottom:1px}
+.panel{background:var(--bg);padding:20px}
+.ptitle{font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:6px}
+.ptitle::before{content:'//';color:var(--br)}
+.ltable{width:100%;border-collapse:collapse;font-size:11px}
+.ltable th{font-size:8px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);text-align:left;padding:5px 6px;border-bottom:1px solid var(--border)}
+.ltable td{padding:6px 6px;border-bottom:1px solid var(--border);vertical-align:top}
+.ltable tr:hover td{background:var(--surface)}
+.td-rk{font-size:9px;color:var(--dim);width:24px}
+.td-ti{font-weight:500;max-width:180px}
+.td-yr{font-size:9px;color:var(--muted)}
+.td-dir{font-size:10px;color:var(--muted);max-width:150px}
+.td-adm{font-family:var(--font-d);font-size:17px;text-align:right;white-space:nowrap;color:var(--br)}
+.badges{display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end}
+.badge{font-size:7px;font-weight:500;letter-spacing:.05em;padding:2px 4px;border-radius:2px;text-transform:uppercase}
+.bl{background:rgba(0,196,122,.12);color:var(--br)}
+.bc{background:rgba(72,120,232,.12);color:var(--fr)}
+.ba{background:rgba(168,85,247,.12);color:#a855f7}
+.blist{display:flex;flex-direction:column;gap:7px}
+.bitem{display:flex;flex-direction:column;gap:2px}
+.brow{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.btitle{font-size:10px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:185px}
+.byear{font-size:8px;color:var(--dim);white-space:nowrap}
+.bval{font-size:9px;color:var(--muted);white-space:nowrap}
+.btrack{height:3px;background:var(--border);border-radius:2px;overflow:hidden;flex:1}
+.bbar{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--br),rgba(0,196,122,.35))}
+.fsa-sec{background:var(--bg);padding:22px 20px;border-top:1px solid var(--border)}
+.fsa-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);margin:14px 0}
+.fsa-cell{background:var(--bg);padding:16px}
+.fsa-val{font-family:var(--font-d);font-size:26px;color:var(--text);line-height:1;margin-bottom:3px}
+.fsa-lbl{font-size:8px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+.chamadas{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.ctag{font-size:9px;padding:3px 9px;border-radius:2px;border:1px solid var(--border);color:var(--muted);display:flex;align-items:center;gap:5px}
+.ccount{font-weight:500;color:var(--text)}
+
+/* ── MODAL ── */
+.modal-bg{
+  position:fixed;inset:0;background:rgba(0,0,8,.85);
+  backdrop-filter:blur(4px);z-index:100;
+  opacity:0;transition:opacity .2s;pointer-events:none;
+}
+.modal-bg.open{opacity:1;pointer-events:all}
+.modal-panel{
+  position:fixed;inset:40px 28px 0 28px;
+  background:var(--surface);border:1px solid var(--border2);
+  border-bottom:none;border-radius:6px 6px 0 0;
+  z-index:101;display:flex;flex-direction:column;
+  transform:translateY(100%);transition:transform .25s cubic-bezier(.2,.8,.4,1);
+  overflow:hidden;
+}
+.modal-panel.open{transform:translateY(0)}
+.modal-head{
+  padding:16px 20px;border-bottom:1px solid var(--border);
+  display:flex;align-items:flex-start;gap:16px;flex-shrink:0;
+}
+.modal-title{font-family:var(--font-d);font-size:22px;letter-spacing:1px;flex:1}
+.modal-sub{font-size:9px;color:var(--muted);letter-spacing:.06em;margin-top:3px;text-transform:uppercase}
+.modal-meta{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
+.modal-meta span{font-size:9px;color:var(--dim)}
+.modal-meta b{color:var(--muted);font-weight:400}
+.close-btn{
+  font-family:var(--font-m);font-size:18px;color:var(--muted);background:none;border:none;
+  cursor:pointer;padding:4px 8px;transition:color .15s;flex-shrink:0;
+  border:1px solid var(--border);border-radius:2px;
+}
+.close-btn:hover{color:var(--text);border-color:var(--border2)}
+.modal-toolbar{
+  padding:10px 20px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:12px;flex-shrink:0;
+  background:var(--bg);
+}
+.search-wrap{position:relative;flex:1;max-width:400px}
+.search-wrap input{
+  width:100%;background:var(--surface);border:1px solid var(--border2);
+  color:var(--text);font-family:var(--font-m);font-size:11px;
+  padding:7px 10px 7px 30px;border-radius:2px;outline:none;
+  transition:border-color .15s;
+}
+.search-wrap input::placeholder{color:var(--muted)}
+.search-wrap input:focus{border-color:var(--br)}
+.search-icon{position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--muted);pointer-events:none}
+.row-count{font-size:10px;color:var(--muted);white-space:nowrap}
+.row-count em{color:var(--text);font-style:normal}
+.modal-note{padding:8px 20px;background:rgba(245,158,11,.07);border-bottom:1px solid rgba(245,158,11,.15);font-size:10px;color:#c8972a;flex-shrink:0}
+.modal-body{flex:1;overflow:auto;position:relative}
+.modal-body::-webkit-scrollbar{width:4px;height:4px}
+.modal-body::-webkit-scrollbar-track{background:var(--bg)}
+.modal-body::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
+.data-table{width:100%;border-collapse:collapse;font-size:11px;min-width:600px}
+.data-table thead{position:sticky;top:0;z-index:1}
+.data-table th{
+  background:var(--bg);padding:8px 12px;text-align:left;
+  font-size:8px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);border-bottom:1px solid var(--border2);
+  cursor:pointer;white-space:nowrap;user-select:none;
+  transition:color .15s;
+}
+.data-table th:hover{color:var(--text)}
+.data-table th.sort-asc::after{content:' ↑';color:var(--br)}
+.data-table th.sort-desc::after{content:' ↓';color:var(--br)}
+.data-table td{
+  padding:7px 12px;border-bottom:1px solid var(--border);
+  color:var(--text);max-width:280px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  vertical-align:middle;
+}
+.data-table tr:hover td{background:var(--surface)}
+.data-table td:first-child{color:var(--muted)}
+.no-data{padding:60px 20px;text-align:center;color:var(--muted)}
+.no-data-icon{font-size:32px;margin-bottom:12px;opacity:.4}
+.no-data-msg{font-size:11px;line-height:1.7}
+
+/* ── DOWNLOADS ── */
+.modal-downloads{
+  display:flex;gap:6px;flex-wrap:wrap;
+  margin-top:10px;padding-top:10px;
+  border-top:1px solid var(--border);
+}
+.dl-link{
+  font-size:9px;padding:4px 10px;border-radius:2px;
+  border:1px solid var(--border2);color:var(--muted);
+  text-decoration:none;display:inline-flex;align-items:center;gap:5px;
+  transition:all .15s;max-width:300px;overflow:hidden;
+}
+.dl-link:hover{color:var(--text);border-color:var(--br);background:rgba(0,196,122,.06)}
+.dl-link:active{background:rgba(0,196,122,.12)}
+.dl-ext{font-weight:500;color:var(--text);flex-shrink:0}
+.dl-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dl-size{color:var(--dim);flex-shrink:0}
+.dl-icon{flex-shrink:0;opacity:.6}
+
+/* ── FOOTER ── */
+footer{margin-top:56px;padding:18px 0;border-top:1px solid var(--border);font-size:9px;color:var(--dim);display:flex;justify-content:space-between;letter-spacing:.05em}
+footer a{color:var(--muted);text-decoration:none}
+footer a:hover{color:var(--text)}
+.hidden{display:none!important}
+
+@media(max-width:920px){.obras-wrap{grid-template-columns:1fr}.header-stats{display:none}.fsa-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.catalog-grid{grid-template-columns:1fr}#app{padding:0 16px}.modal-panel{inset:20px 0 0 0;border-radius:6px 6px 0 0}}
+</style>
+</head>
+<body>
+<div id="app">
+
+<header class="site-header">
+  <div class="header-top">
+    <div>
+      <div class="logo">dados<em>-</em>audiovisual<em>-</em>br</div>
+      <div class="tagline">hub independente de dados públicos do audiovisual &nbsp;·&nbsp; snapshot 2026-05-19 &nbsp;·&nbsp; 33 datasets · 6 países</div>
+    </div>
+    <div class="header-stats">
+      <div><div class="stat-val">33</div><div class="stat-lbl">Datasets</div></div>
+      <div><div class="stat-val">6</div><div class="stat-lbl">Países</div></div>
+      <div><div class="stat-val">7</div><div class="stat-lbl">Fontes</div></div>
+    </div>
+  </div>
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="catalog">Catálogo de Dados</button>
+    <button class="tab-btn" data-tab="obras">Obras Brasileiras</button>
+  </nav>
+</header>
+
+<section id="view-catalog">
+  <div class="filters">
+    <span class="flabel">Filtrar</span>
+    <button class="chip active" data-c="">Todos (33)</button>
+    <button class="chip" data-c="BR">🇧🇷 Brasil (13)</button>
+    <button class="chip" data-c="FR">🇫🇷 França (17)</button>
+    <button class="chip" data-c="AR">🇦🇷 Argentina (1)</button>
+    <button class="chip" data-c="UK">🇬🇧 Reino Unido (1)</button>
+    <button class="chip" data-c="UY">🇺🇾 Uruguai (1)</button>
+  </div>
+  <div class="catalog-grid" id="catalog-grid"></div>
+</section>
+
+<section id="view-obras" class="hidden">
+  <div class="obras-head">
+    <h2>Obras Brasileiras</h2>
+    <p>rastreadas através dos datasets disponíveis neste hub</p>
+  </div>
+  <div class="obras-wrap">
+    <div class="panel">
+      <div class="ptitle">Top 30 filmes brasileiros na Europa &nbsp;—&nbsp; Lumiere · EU27+GB · 1996–2026</div>
+      <table class="ltable" id="ltable"></table>
+    </div>
+    <div class="panel">
+      <div class="ptitle">Bilheteria doméstica — top 20 por público &nbsp;(ANCINE)</div>
+      <div class="blist" id="bchart"></div>
+    </div>
+  </div>
+  <div class="fsa-sec">
+    <div class="ptitle">Fomento FSA — projetos apoiados &nbsp;(ANCINE · 2008–2023)</div>
+    <div class="fsa-grid">
+      <div class="fsa-cell"><div class="fsa-val">4.588</div><div class="fsa-lbl">Projetos</div></div>
+      <div class="fsa-cell"><div class="fsa-val">R$ 3,66bi</div><div class="fsa-lbl">Valor contratado</div></div>
+      <div class="fsa-cell"><div class="fsa-val">R$ 3,58bi</div><div class="fsa-lbl">Valor liberado</div></div>
+      <div class="fsa-cell"><div class="fsa-val">16 anos</div><div class="fsa-lbl">Cobertura</div></div>
+    </div>
+    <div style="font-size:8px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">Chamadas com mais projetos</div>
+    <div class="chamadas" id="chamadas"></div>
+  </div>
+</section>
+
+<footer>
+  <span>dados-audiovisual-br &nbsp;·&nbsp; snapshot 2026-05-19 &nbsp;·&nbsp; dados públicos</span>
+  <span><a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC-BY-4.0 dados</a> &nbsp;·&nbsp; MIT código</span>
+</footer>
+
+</div><!-- /app -->
+
+<!-- MODAL -->
+<div class="modal-bg" id="modal-bg" onclick="closeModal()"></div>
+<div class="modal-panel" id="modal-panel">
+  <div class="modal-head">
+    <div style="flex:1">
+      <div class="modal-title" id="modal-title">Dataset</div>
+      <div class="modal-sub" id="modal-sub"></div>
+      <div class="modal-meta" id="modal-meta"></div>
+      <div class="modal-downloads" id="modal-downloads"></div>
+    </div>
+    <button class="close-btn" onclick="closeModal()">✕</button>
+  </div>
+  <div class="modal-toolbar">
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input type="text" id="search-input" placeholder="Filtrar por qualquer coluna..." oninput="filterTable(this.value)">
+    </div>
+    <span class="row-count" id="row-count"></span>
+  </div>
+  <div id="modal-note" class="modal-note hidden"></div>
+  <div class="modal-body" id="modal-body"></div>
+</div>
+
+<script src="data.js"></script>
+<script>
+// ── FILE MAP (slug → [{name, bytes}]) ───────────────────────
+
+const FILE_MAP = {"acau-uruguay-apoios-audiovisual":[{"name":"acau-apoios-reembolsos-projetos-audiovisuais-2013-2024.csv","bytes":515065}],"ancine-agentes-economicos":[{"name":"agentes-economicos-regulares.csv","bytes":3154164}],"ancine-atas-fsa":[{"name":"Ata-Habilit-Final-Desempenho-Artistico-2024-2o-edicao_08.08.2025-publicacao.pdf","bytes":397971},{"name":"Ata-Habilit-Final-Desempenho-Artistico-2024_26.09.2024-publicacao.pdf","bytes":1242688},{"name":"Ata-Resultado-Final_DesempenhoArtistico_2018.pdf","bytes":776776},{"name":"PRODAV-072014_resultado-final.pdf","bytes":176163},{"name":"PRODAV-072015_resultadofinal.pdf","bytes":266106},{"name":"Resultado-Final-PRODAV-07-2017.pdf","bytes":722254}],"ancine-bilheteria-agregada-filme-ano":[{"name":"por_filme_ano.csv","bytes":558634}],"ancine-bilheteria-consolidada":[{"name":"bilheteria_brasileira_consolidada.xlsx","bytes":92341}],"ancine-diretores-obras":[{"name":"diretores-de-obras-nao-publicitarias-brasileiras.csv","bytes":5055603}],"ancine-fsa-projetos":[{"name":"projetos-fsa.csv","bytes":1128551}],"ancine-obras-nao-publicitarias":[{"name":"obras-nao-pub-brasileiras-2002.csv","bytes":794},{"name":"obras-nao-pub-brasileiras-2003.csv","bytes":47708},{"name":"obras-nao-pub-brasileiras-2004.csv","bytes":171900},{"name":"obras-nao-pub-brasileiras-2005.csv","bytes":656725},{"name":"obras-nao-pub-brasileiras-2006.csv","bytes":390429},{"name":"obras-nao-pub-brasileiras-2007.csv","bytes":398595},{"name":"obras-nao-pub-brasileiras-2008.csv","bytes":344046},{"name":"obras-nao-pub-brasileiras-2009.csv","bytes":358907},{"name":"obras-nao-pub-brasileiras-2010.csv","bytes":499076},{"name":"obras-nao-pub-brasileiras-2011.csv","bytes":442269},{"name":"obras-nao-pub-brasileiras-2012.csv","bytes":405061},{"name":"obras-nao-pub-brasileiras-2013.csv","bytes":812830},{"name":"obras-nao-pub-brasileiras-2014.csv","bytes":818510},{"name":"obras-nao-pub-brasileiras-2015.csv","bytes":964879},{"name":"obras-nao-pub-brasileiras-2016.csv","bytes":913775},{"name":"obras-nao-pub-brasileiras-2017.csv","bytes":939545},{"name":"obras-nao-pub-brasileiras-2018.csv","bytes":886720},{"name":"obras-nao-pub-brasileiras-2019.csv","bytes":974849},{"name":"obras-nao-pub-brasileiras-2020.csv","bytes":809070},{"name":"obras-nao-pub-brasileiras-2021.csv","bytes":922934},{"name":"obras-nao-pub-brasileiras-2022.csv","bytes":879841},{"name":"obras-nao-pub-brasileiras-2023.csv","bytes":1037164},{"name":"obras-nao-pub-brasileiras-2024.csv","bytes":1041771},{"name":"obras-nao-pub-brasileiras-2025.csv","bytes":1070117},{"name":"obras-nao-pub-brasileiras-2026.csv","bytes":123725}],"ancine-preco-medio-ingresso":[{"name":"preco_medio_ingresso_ancine.csv","bytes":925}],"ancine-produtores-obras":[{"name":"produtores-de-obras-nao-publicitarias-brasileiras.csv","bytes":7043223}],"ancine-renuncia-fiscal":[{"name":"projetos-com-renuncia-fiscal.csv","bytes":1472298}],"bfi-statistical-yearbook-2023":[{"name":"audiences.ods","bytes":60049},{"name":"box-office-2023.ods","bytes":67643},{"name":"exhibition.ods","bytes":49245},{"name":"film-education.ods","bytes":51031},{"name":"film-industry-companies.ods","bytes":39042},{"name":"film-industry-employment.ods","bytes":43435},{"name":"film-on-digital-video.ods","bytes":44128},{"name":"film-on-physical-video.ods","bytes":41904},{"name":"film-on-television.ods","bytes":66401},{"name":"public-investment-in-film.ods","bytes":32975},{"name":"screen-sector-certification.ods","bytes":30592},{"name":"top-films-2023.ods","bytes":50762},{"name":"uk-film-economy.ods","bytes":23110},{"name":"uk-film-market.ods","bytes":35964},{"name":"uk-films-talent-worldwide.ods","bytes":52629}],"cnc-audience-television":[{"name":"audience-television.xlsx","bytes":77505}],"cnc-consumo-vod":[{"name":"consumo-menages-vod.xlsx","bytes":71895}],"cnc-distribution-salles":[{"name":"distribution-films-salles.xlsx","bytes":185531}],"cnc-donnees-internationales":[{"name":"donnees-internationales-cinema.xlsx","bytes":87814}],"cnc-etablissements":[{"name":"etablissements-cinematographiques.xlsx","bytes":2640686}],"cnc-exportacao-programas-audiovisuais":[{"name":"exportacao-programas-audiovisuais.xls","bytes":77796}],"cnc-films-agrees":[{"name":"films-agrees-production.xlsx","bytes":843119}],"cnc-films-million-entrees":[{"name":"films-plus-million-entrees.xlsx","bytes":109816}],"cnc-films-television":[{"name":"films-television.xls","bytes":253628}],"cnc-financement-television":[{"name":"financement-television.xls","bytes":78336}],"cnc-frequentation-salles":[{"name":"frequentation-salles.xlsx","bytes":436623}],"cnc-geographie-cinema":[{"name":"geographie-par-commune.xlsx","bytes":789883},{"name":"geographie-par-departement.xlsx","bytes":1244790},{"name":"geographie-par-region.xlsx","bytes":315994},{"name":"geographie-par-unite-urbaine.xlsx","bytes":472408}],"cnc-parc-cinematographique":[{"name":"parc-cinematographique.xlsx","bytes":420992}],"cnc-public-films":[{"name":"public-films.xlsx","bytes":152164}],"cnc-public-vod":[{"name":"public-vod.xlsx","bytes":65787}],"cnc-referencias-ativas-vod":[{"name":"referencias-ativas-vod.xlsx","bytes":77553}],"cnc-visas-exploitation":[{"name":"visas-exploitation-1945-2025.csv","bytes":12821667}],"ibge-deflator-ipca":[{"name":"deflator_ipca_base2024.csv","bytes":471}],"incaa-sector-audiovisual":[{"name":"a01-espectadores-cine-origen-film.csv","bytes":922},{"name":"a02-recaudacion-cine-nacional-origen-film.csv","bytes":1044},{"name":"a03-estrenos-cine-origen-film.csv","bytes":511},{"name":"a04-espectadores-cine-nivel-provincial.csv","bytes":4545},{"name":"a05-recaudacion-cine-nivel-provincial.csv","bytes":5473},{"name":"a06-participacion-espectadores-distribuidora.csv","bytes":600},{"name":"a07-puestos-trabajo-largometrajes-nacional.csv","bytes":511},{"name":"a09-accesos-servicios-tv-suscripcion.csv","bytes":271},{"name":"a10-ingresos-servicios-tv-suscripcion.csv","bytes":298}],"lumiere-cinemas-europa":[{"name":"lumiere_search.xlsx","bytes":16135}],"lumiere-vod-europa":[{"name":"lumiere_vod_search.xlsx","bytes":440349}]};
+
+function fmtBytes(b) {
+  if (b < 1024) return b + ' B';
+  if (b < 1048576) return Math.round(b/1024) + ' KB';
+  return (b/1048576).toFixed(1) + ' MB';
+}
+
+// ── STATIC DATA ─────────────────────────────────────────────
+
+const DS = [
+  {slug:'ancine-fsa-projetos',c:'BR',inst:'ANCINE / FSA',title:'Projetos FSA',desc:'4.588 projetos de fomento audiovisual apoiados pelo Fundo Setorial do Audiovisual',sz:'1.1 MB',files:1,type:'CSV',st:'ativo',per:'2008–2023',rec:'4.588 projetos'},
+  {slug:'ancine-renuncia-fiscal',c:'BR',inst:'ANCINE',title:'Renúncia Fiscal',desc:'Projetos habilitados à captação via renúncia fiscal (Art. 1º, 1ºA, 3º e 3ºA da Lei do Audiovisual)',sz:'1.5 MB',files:1,type:'CSV',st:'ativo',per:'até 2026',rec:'3.516 projetos'},
+  {slug:'ancine-obras-nao-publicitarias',c:'BR',inst:'ANCINE / SAV',title:'Obras Não Publicitárias',desc:'Registro oficial de obras audiovisuais brasileiras — um arquivo CSV por ano de registro',sz:'16 MB',files:25,type:'CSV',st:'ativo',per:'2002–2026',rec:'61.360 obras'},
+  {slug:'ancine-agentes-economicos',c:'BR',inst:'ANCINE',title:'Agentes Econômicos',desc:'Cadastro de empresas regulares do setor audiovisual registradas na ANCINE',sz:'3.1 MB',files:1,type:'CSV',st:'ativo',per:'até 2026',rec:''},
+  {slug:'ancine-diretores-obras',c:'BR',inst:'ANCINE / SAV',title:'Diretores de Obras',desc:'Vínculos obra ↔ diretor para obras audiovisuais não publicitárias brasileiras',sz:'4.9 MB',files:1,type:'CSV',st:'ativo',per:'até 2026',rec:''},
+  {slug:'ancine-produtores-obras',c:'BR',inst:'ANCINE / SAV',title:'Produtores de Obras',desc:'Vínculos obra ↔ produtora para obras audiovisuais não publicitárias brasileiras',sz:'6.8 MB',files:1,type:'CSV',st:'ativo',per:'até 2026',rec:''},
+  {slug:'ancine-bilheteria-consolidada',c:'BR',inst:'ANCINE / SADIS',title:'Bilheteria Consolidada',desc:'Histórico de bilheteria do cinema brasileiro por filme — top 20 por ano de lançamento',sz:'113 KB',files:1,type:'XLSX',st:'ativo',per:'2009–2024',rec:'2.005 filmes'},
+  {slug:'ancine-bilheteria-agregada-filme-ano',c:'BR',inst:'ANCINE / OCA',title:'Bilheteria Agregada Filme×Ano',desc:'Público, renda e número de sessões por filme e ano de exibição no mercado doméstico',sz:'569 KB',files:1,type:'CSV',st:'intermitente',per:'até 2026',rec:'8.119 registros'},
+  {slug:'ancine-preco-medio-ingresso',c:'BR',inst:'ANCINE / OCA',title:'Preço Médio do Ingresso',desc:'Série histórica do preço médio do ingresso de cinema no Brasil',sz:'25 KB',files:1,type:'CSV',st:'intermitente',per:'série histórica',rec:''},
+  {slug:'ancine-atas-fsa',c:'BR',inst:'ANCINE / FSA',title:'Atas Oficiais FSA',desc:'Atas de resultado de chamadas públicas do FSA: PRODAV 07/2014, 2015, 2017, Desempenho Artístico 2018 e 2024',sz:'3.5 MB',files:6,type:'PDF',st:'ativo',per:'2014–2024',rec:'6 documentos'},
+  {slug:'lumiere-cinemas-europa',c:'BR',inst:'Obs. Europeu do Audiovisual',title:'Filmes Brasileiros — Salas EU',desc:'200 filmes brasileiros exibidos em salas de cinema europeias, com admissões por país e período',sz:'37 KB',files:1,type:'XLSX',st:'ativo',per:'1996–2026',rec:'200 filmes'},
+  {slug:'lumiere-vod-europa',c:'BR',inst:'Obs. Europeu do Audiovisual',title:'Filmes Brasileiros — VoD EU',desc:'Disponibilidade de filmes brasileiros em plataformas VoD europeias por país e período',sz:'449 KB',files:1,type:'XLSX',st:'ativo',per:'até 2026',rec:''},
+  {slug:'ibge-deflator-ipca',c:'BR',inst:'IBGE',title:'Deflator IPCA',desc:'Índice mensal IPCA com fator de deflação base 2024, para comparações históricas de valores monetários',sz:'18 KB',files:1,type:'CSV',st:'ativo',per:'série histórica',rec:''},
+  {slug:'cnc-visas-exploitation',c:'FR',inst:'CNC',title:'Visas d\'Exploitation',desc:'95.000+ filmes autorizados para exibição comercial na França — inclui 147 filmes brasileiros',sz:'12 MB',files:1,type:'CSV',st:'ativo',per:'1945–2025',rec:'95.000+ filmes'},
+  {slug:'cnc-frequentation-salles',c:'FR',inst:'CNC',title:'Frequentação de Salas',desc:'Entradas, sessões e receita em salas de cinema francesas, série histórica longa',sz:'437 KB',files:1,type:'XLSX',st:'ativo',per:'histórico',rec:''},
+  {slug:'cnc-etablissements',c:'FR',inst:'CNC',title:'Estabelecimentos Cinematográficos',desc:'Cadastro e caracterização dos cinemas ativos na França',sz:'2.6 MB',files:1,type:'XLSX',st:'ativo',per:'atual',rec:''},
+  {slug:'cnc-films-million-entrees',c:'FR',inst:'CNC',title:'Filmes com +1M de Entradas',desc:'Todos os filmes que ultrapassaram 1 milhão de espectadores na França',sz:'110 KB',files:1,type:'XLSX',st:'ativo',per:'histórico',rec:''},
+  {slug:'cnc-donnees-internationales',c:'FR',inst:'CNC',title:'Dados Internacionais',desc:'Indicadores comparativos do mercado audiovisual em múltiplos países',sz:'88 KB',files:1,type:'XLSX',st:'ativo',per:'histórico',rec:''},
+  {slug:'cnc-films-agrees',c:'FR',inst:'CNC',title:'Filmes Aprovados (Agrément)',desc:'Filmes aprovados para apoio à produção e distribuição pelo CNC',sz:'843 KB',files:1,type:'XLSX',st:'ativo',per:'histórico',rec:''},
+  {slug:'cnc-audience-television',c:'FR',inst:'CNC',title:'Audiência Televisiva',desc:'Dados de audiência de filmes e programas na televisão francesa',sz:'78 KB',files:1,type:'XLSX',st:'ativo',per:'histórico',rec:''},
+  {slug:'cnc-films-television',c:'FR',inst:'CNC',title:'Filmes na Televisão',desc:'Títulos e passagens de filmes em canais da televisão francesa',sz:'254 KB',files:1,type:'XLS',st:'ativo',per:'histórico',rec:''},
+  {slug:'cnc-exportacao-programas-audiovisuais',c:'FR',inst:'CNC',title:'Exportação de Programas',desc:'Exportação de programas audiovisuais franceses por país destino e gênero',sz:'78 KB',files:1,type:'XLS',st:'ativo',per:'histórico',rec:''},
+  {slug:'cnc-geographie-cinema',c:'FR',inst:'CNC',title:'Geografia do Cinema',desc:'Equipamento e frequentação de salas por região, departamento e commune (4 arquivos)',sz:'2.8 MB',files:4,type:'XLSX',st:'ativo',per:'histórico',rec:''},
+  {slug:'cnc-public-vod',c:'FR',inst:'CNC',title:'Público de VoD',desc:'Perfil do público de plataformas VoD na França',sz:'66 KB',files:1,type:'XLSX',st:'ativo',per:'histórico',rec:''},
+  {slug:'cnc-referencias-ativas-vod',c:'FR',inst:'CNC',title:'Referências Ativas em VoD',desc:'Catálogo de títulos disponíveis em plataformas VoD francesas',sz:'78 KB',files:1,type:'XLSX',st:'ativo',per:'atual',rec:''},
+  {slug:'cnc-consumo-vod',c:'FR',inst:'CNC',title:'Consumo Doméstico de VoD',desc:'Consumo de VoD por domicílios franceses',sz:'72 KB',files:1,type:'XLSX',st:'ativo',per:'histórico',rec:''},
+  {slug:'cnc-parc-cinematographique',c:'FR',inst:'CNC',title:'Parque Cinematográfico',desc:'Número de salas, telas, capacidade e digitalização na França',sz:'421 KB',files:1,type:'XLSX',st:'ativo',per:'histórico',rec:''},
+  {slug:'cnc-financement-television',c:'FR',inst:'CNC',title:'Financiamento da Televisão',desc:'Aporte das emissoras de TV à produção audiovisual francesa',sz:'78 KB',files:1,type:'XLS',st:'ativo',per:'histórico',rec:''},
+  {slug:'cnc-distribution-salles',c:'FR',inst:'CNC',title:'Distribuição em Salas',desc:'Filmes distribuídos em salas de cinema na França: distribuidoras, cópias, entradas',sz:'186 KB',files:1,type:'XLSX',st:'ativo',per:'histórico',rec:''},
+  {slug:'cnc-public-films',c:'FR',inst:'CNC',title:'Perfil do Público de Filmes',desc:'Perfil sociodemográfico do público de cinema na França',sz:'152 KB',files:1,type:'XLSX',st:'ativo',per:'histórico',rec:''},
+  {slug:'incaa-sector-audiovisual',c:'AR',inst:'INCAA / SICA / ENACOM',title:'Setor Audiovisual Argentino',desc:'Espectadores, receita, estreias, emprego e TV na Argentina — 9 arquivos CSV',sz:'~500 KB',files:9,type:'CSV',st:'ativo',per:'2001–2023',rec:'9 arquivos'},
+  {slug:'bfi-statistical-yearbook-2023',c:'UK',inst:'BFI',title:'Statistical Yearbook 2023',desc:'Anuário estatístico do cinema britânico: bilheteria, exibição, vídeo, TV, emprego',sz:'~2 MB',files:15,type:'ODS',st:'ativo',per:'2023',rec:'15 arquivos'},
+  {slug:'acau-uruguay-apoios-audiovisual',c:'UY',inst:'ACAU',title:'Apoios Audiovisuais — Uruguai',desc:'Projetos apoiados e reembolsos da ACAU 2013–2024',sz:'515 KB',files:1,type:'CSV',st:'ativo',per:'2013–2024',rec:''},
+];
+
+const LUM=[
+  {r:1,t:'Central do Brasil',co:'BR,FR',y:1998,d:'Walter Salles',a:2218086,cnc:false},
+  {r:2,t:'Cidade de Deus',co:'BR,FR,US',y:2002,d:'Kátia Lund, Fernando Meirelles',a:1810560,cnc:true},
+  {r:3,t:"Noah's Ark",co:'BR,IN',y:2024,d:'Alois Di Leo, Sérgio Machado',a:545200,cnc:true},
+  {r:4,t:'O Menino e o Mundo',co:'BR',y:2013,d:'Alê Abreu',a:533467,cnc:false},
+  {r:5,t:'Que Horas Ela Volta?',co:'BR',y:2015,d:'Anna Muylaert',a:457159,cnc:false},
+  {r:6,t:'Aquarius',co:'BR,FR',y:2016,d:'Kleber Mendonça Filho',a:311538,cnc:false},
+  {r:7,t:'Tropa de Elite',co:'BR',y:2007,d:'José Padilha',a:279171,cnc:true},
+  {r:8,t:'My Penguin Friend',co:'BR,US',y:2024,d:'David Schurmann',a:246628,cnc:true},
+  {r:9,t:'Eu, Tu, Eles',co:'BR,US',y:2000,d:'Andrucha Waddington',a:178155,cnc:false},
+  {r:10,t:'The Violin Teacher',co:'BR',y:2015,d:'Sérgio Machado',a:163739,cnc:true},
+  {r:11,t:'Bacurau',co:'BR,FR',y:2019,d:'Juliano Dornelles, Kleber Mendonça Filho',a:141139,cnc:true},
+  {r:12,t:'Tieta do Agreste',co:'BR,GB',y:1996,d:'Carlos Diegues',a:120909,cnc:true},
+  {r:13,t:'Abril Despedaçado',co:'BR,FR,CH',y:2001,d:'Walter Salles',a:118985,cnc:false},
+  {r:14,t:'Nada a Perder 2',co:'BR',y:2019,d:'Alexandre Avancini, Sylvie Yarza',a:114975,cnc:false},
+  {r:15,t:'Linha de Passe',co:'BR',y:2008,d:'Walter Salles, Daniela Thomas',a:108157,cnc:false},
+  {r:16,t:'O Ano em Que Meus Pais Saíram de Férias',co:'BR',y:2006,d:'Cao Hamburger',a:97795,cnc:false},
+  {r:17,t:'Cidade dos Homens',co:'BR',y:2007,d:'Paulo Morelli',a:97109,cnc:true},
+  {r:18,t:'Estômago',co:'BR,IT',y:2007,d:'Marcos Jorge',a:96595,cnc:false},
+  {r:19,t:'Tropa de Elite 2',co:'BR',y:2010,d:'José Padilha',a:96518,cnc:false},
+  {r:20,t:'Gabriel e a Montanha',co:'BR,FR',y:2017,d:'Fellipe Barbosa',a:95487,cnc:false},
+  {r:21,t:'Do Lado de Fora',co:'BR',y:2014,d:'Alexandre Carvalho',a:81109,cnc:false},
+  {r:22,t:'Nada a Perder',co:'BR',y:2018,d:'Alexandre Avancini',a:80012,cnc:false},
+  {r:23,t:'Carandiru',co:'BR,AR',y:2003,d:'Hector Babenco',a:75106,cnc:true},
+  {r:24,t:'Lino: Uma Aventura de Sete Vidas',co:'BR',y:2017,d:'Walbercy Ribas, Rafael Ribas',a:73215,cnc:false},
+  {r:25,t:'Perlimps',co:'BR',y:2022,d:'Alê Abreu',a:64001,cnc:true},
+  {r:26,t:'Benzinho',co:'BR,UY,DE',y:2018,d:'Gustavo Pizzi',a:60939,cnc:true},
+  {r:27,t:'Madame Satã',co:'BR,FR',y:2002,d:'Karim Aïnouz',a:41931,cnc:true},
+  {r:28,t:'Como Nossos Pais',co:'BR',y:2017,d:'Laís Bodanzky',a:36866,cnc:false},
+  {r:29,t:'Um Copo de Cólera',co:'BR',y:1999,d:'Aluizio Abranches',a:36838,cnc:false},
+  {r:30,t:'Hoje Eu Quero Voltar Sozinho',co:'BR',y:2014,d:'Daniel Ribeiro',a:36402,cnc:false},
+];
+const BIL=[
+  {t:'Nada a Perder',y:2018,p:12376734},{t:'Os Dez Mandamentos',y:2016,p:11536505},
+  {t:'Tropa de Elite 2',y:2010,p:11146723},{t:'Minha Mãe É Uma Peça 3',y:2019,p:11100675},
+  {t:'Minha Mãe É Uma Peça 2',y:2016,p:9383523},{t:'Nada a Perder 2',y:2019,p:6251006},
+  {t:'Se Eu Fosse Você 2',y:2009,p:6112851},{t:'Ainda Estou Aqui',y:2024,p:5901710},
+  {t:'Minha Vida em Marte',y:2018,p:5285324},{t:'De Pernas pro Ar 2',y:2012,p:4846259},
+  {t:'Minha Mãe É Uma Peça',y:2013,p:4600145},{t:'O Auto da Compadecida 2',y:2024,p:4513450},
+  {t:'Nosso Lar',y:2010,p:4060304},{t:'Loucas pra Casar',y:2015,p:3779806},
+  {t:'De Pernas pro Ar 3',y:2019,p:3626973},{t:'De Pernas pro Ar',y:2010,p:3506552},
+  {t:'Chico Xavier',y:2010,p:3413231},{t:'Até que a Sorte nos Separe 3',y:2015,p:3379808},
+  {t:'Vai que Cola — O Filme',y:2015,p:3370738},{t:'Até que a Sorte nos Separe',y:2012,p:3324727},
+];
+const FSA_CH=[
+  {n:'Arranjos Regionais',k:735},{n:'PRODAV 01',k:487},{n:'PRODAV 06',k:425},
+  {n:'PRODAV 02 — Projeto Derivado',k:316},{n:'PRODECINE 01',k:237},
+  {n:'Fluxo Contínuo — Produção TV',k:199},{n:'PRODECINE 02',k:196},{n:'PRODAV 05',k:164},
+];
+
+// ── MODAL STATE ──────────────────────────────────────────────
+
+let _allRows = [], _filteredRows = [], _sortCol = -1, _sortDir = 1, _cols = [];
+
+function openModal(slug) {
+  const ds = DS.find(d => d.slug === slug);
+  if (!ds) return;
+
+  document.getElementById('modal-title').textContent = ds.title;
+  document.getElementById('modal-sub').textContent = ds.inst + ' · ' + ds.c;
+  document.getElementById('modal-meta').innerHTML =
+    `<span><b>${ds.type}</b></span><span><b>${ds.sz}</b></span><span><b>${ds.per}</b></span>` +
+    (ds.rec ? `<span style="color:var(--muted)">${ds.rec}</span>` : '');
+
+  document.getElementById('search-input').value = '';
+
+  // Downloads
+  const files = FILE_MAP[slug] || [];
+  const snapBase = `../datasets/${slug}/snapshots/2026-05-19/`;
+  document.getElementById('modal-downloads').innerHTML = files.map(f => {
+    const ext = f.name.split('.').pop().toUpperCase();
+    const label = f.name.length > 40 ? f.name.slice(0, 40) + '…' : f.name;
+    return `<a class="dl-link" href="${snapBase}${encodeURIComponent(f.name)}" download="${f.name}" title="${f.name}">
+      <span class="dl-icon">⬇</span>
+      <span class="dl-ext">${ext}</span>
+      <span class="dl-name">${label}</span>
+      <span class="dl-size">${fmtBytes(f.bytes)}</span>
+    </a>`;
+  }).join('');
+
+  const noteEl = document.getElementById('modal-note');
+  const preview = window.DATASET_PREVIEWS && window.DATASET_PREVIEWS[slug];
+
+  if (!preview || preview.total === 0) {
+    noteEl.textContent = (preview && preview.note) || 'Preview não disponível para este dataset.';
+    noteEl.classList.remove('hidden');
+    document.getElementById('modal-body').innerHTML = `
+      <div class="no-data">
+        <div class="no-data-icon">⬜</div>
+        <div class="no-data-msg">${(preview && preview.note) || 'Preview não disponível.'}</div>
+      </div>`;
+    document.getElementById('row-count').textContent = '';
+  } else {
+    const hasNote = preview.note && preview.sample < preview.total;
+    if (hasNote) {
+      noteEl.textContent = preview.note || `Exibindo ${preview.sample} de ${preview.total.toLocaleString('pt-BR')} registros.`;
+      noteEl.classList.remove('hidden');
+    } else {
+      noteEl.classList.add('hidden');
+    }
+    _cols = preview.cols;
+    _allRows = preview.rows;
+    _filteredRows = [..._allRows];
+    _sortCol = -1;
+    _sortDir = 1;
+    renderDataTable();
+  }
+
+  document.getElementById('modal-bg').classList.add('open');
+  document.getElementById('modal-panel').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modal-bg').classList.remove('open');
+  document.getElementById('modal-panel').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function filterTable(q) {
+  const query = q.trim().toLowerCase();
+  if (!query) {
+    _filteredRows = [..._allRows];
+  } else {
+    _filteredRows = _allRows.filter(row =>
+      row.some(cell => cell.toLowerCase().includes(query))
+    );
+  }
+  _sortCol = -1;
+  _sortDir = 1;
+  renderDataTable();
+}
+
+function sortBy(colIdx) {
+  if (_sortCol === colIdx) {
+    _sortDir *= -1;
+  } else {
+    _sortCol = colIdx;
+    _sortDir = 1;
+  }
+  _filteredRows.sort((a, b) => {
+    const av = a[colIdx] || '', bv = b[colIdx] || '';
+    const an = parseFloat(av.replace(/[.,]/g, '')), bn = parseFloat(bv.replace(/[.,]/g, ''));
+    if (!isNaN(an) && !isNaN(bn)) return (an - bn) * _sortDir;
+    return av.localeCompare(bv, 'pt-BR') * _sortDir;
+  });
+  renderDataTable(true);
+}
+
+function renderDataTable(keepScroll) {
+  const preview = window.DATASET_PREVIEWS;
+  const totalText = _allRows.length > 0 ?
+    `<em>${_filteredRows.length.toLocaleString('pt-BR')}</em> de ${_allRows.length.toLocaleString('pt-BR')} linhas` : '';
+  document.getElementById('row-count').innerHTML = totalText;
+
+  const thead = _cols.map((col, i) => {
+    const cls = i === _sortCol ? (_sortDir === 1 ? 'sort-asc' : 'sort-desc') : '';
+    return `<th class="${cls}" onclick="sortBy(${i})">${col || '—'}</th>`;
+  }).join('');
+
+  const tbody = _filteredRows.map(row => {
+    const cells = _cols.map((_, i) => {
+      const v = (row[i] !== undefined ? row[i] : '').toString();
+      return `<td title="${v.replace(/"/g,'&quot;')}">${v || '<span style="color:var(--dim)">—</span>'}</td>`;
+    }).join('');
+    return `<tr>${cells}</tr>`;
+  }).join('');
+
+  const body = document.getElementById('modal-body');
+  const scrollTop = body.scrollTop;
+  body.innerHTML = `<table class="data-table"><thead><tr>${thead}</tr></thead><tbody>${tbody}</tbody></table>`;
+  if (keepScroll) body.scrollTop = scrollTop;
+}
+
+// ── CATALOG RENDER ───────────────────────────────────────────
+
+function renderCatalog(f) {
+  const g = document.getElementById('catalog-grid');
+  const list = f ? DS.filter(d => d.c === f) : DS;
+  g.innerHTML = list.map(d => `
+    <div class="dcard" data-c="${d.c}" onclick="openModal('${d.slug}')">
+      <div class="card-top">
+        <div class="card-inst">${d.inst}</div>
+        <div class="card-right">
+          <span class="sbadge s-${d.st}">${d.st}</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </div>
+      <div class="card-title">${d.title}</div>
+      <div class="card-desc">${d.desc}</div>
+      <div class="card-meta">
+        <div class="mi"><b>${d.type}</b></div>
+        <div class="mi"><b>${d.sz}</b></div>
+        ${d.files > 1 ? `<div class="mi"><b>${d.files} arqs.</b></div>` : ''}
+        <div class="mi"><b>${d.per}</b></div>
+        ${d.rec ? `<div class="mi mi-rec" style="color:var(--muted)">${d.rec}</div>` : ''}
+      </div>
+    </div>`).join('');
+}
+
+function fmt(n){return n.toLocaleString('pt-BR')}
+
+function renderLumiere(){
+  document.getElementById('ltable').innerHTML=`
+    <thead><tr>
+      <th>#</th><th>Título</th><th>Direção</th>
+      <th style="text-align:right">Admissões EU</th><th style="text-align:right">Datasets</th>
+    </tr></thead>
+    <tbody>${LUM.map(f=>`<tr>
+      <td class="td-rk">${f.r}</td>
+      <td class="td-ti">${f.t}<div class="td-yr">${f.y} · ${f.co}</div></td>
+      <td class="td-dir">${f.d}</td>
+      <td class="td-adm">${fmt(f.a)}</td>
+      <td><div class="badges">
+        <span class="badge bl">Lumiere</span>
+        ${f.cnc?'<span class="badge bc">CNC</span>':''}
+        <span class="badge ba">ANCINE</span>
+      </div></td>
+    </tr>`).join('')}</tbody>`;
+}
+
+function renderBilheteria(){
+  const mx=BIL[0].p;
+  document.getElementById('bchart').innerHTML=BIL.map(f=>`
+    <div class="bitem">
+      <div class="brow">
+        <div class="btitle">${f.t}</div>
+        <div class="byear">${f.y}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="btrack"><div class="bbar" style="width:${(f.p/mx*100).toFixed(1)}%"></div></div>
+        <div class="bval">${(f.p/1e6).toFixed(1)}M</div>
+      </div>
+    </div>`).join('');
+}
+
+function renderFSA(){
+  document.getElementById('chamadas').innerHTML=FSA_CH.map(c=>
+    `<div class="ctag"><span class="ccount">${c.k}</span>${c.n}</div>`).join('');
+}
+
+// ── INIT ─────────────────────────────────────────────────────
+
+document.querySelectorAll('.tab-btn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    const t=b.dataset.tab;
+    document.getElementById('view-catalog').classList.toggle('hidden',t!=='catalog');
+    document.getElementById('view-obras').classList.toggle('hidden',t!=='obras');
+  });
+});
+
+document.querySelectorAll('.chip').forEach(ch=>{
+  ch.addEventListener('click',()=>{
+    document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));
+    ch.classList.add('active');
+    renderCatalog(ch.dataset.c);
+  });
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+
+renderCatalog('');
+renderLumiere();
+renderBilheteria();
+renderFSA();
+</script>
+</body>
+</html>

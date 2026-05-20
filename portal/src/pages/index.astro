@@ -1,0 +1,137 @@
+---
+import Base from "../layouts/Base.astro";
+import DatasetCard from "../components/DatasetCard.astro";
+import StatsBar from "../components/StatsBar.astro";
+import { getDatasets, getCatalogStats } from "../lib/catalog.js";
+
+const datasets = getDatasets();
+const stats = getCatalogStats(datasets);
+
+const COUNTRIES = [
+  { code: "", label: `Todos (${datasets.length})` },
+  { code: "BR", label: `Brasil` },
+  { code: "FR", label: `Franca` },
+  { code: "AR", label: `Argentina` },
+  { code: "UK", label: `Reino Unido` },
+  { code: "UY", label: `Uruguai` },
+  { code: "EU", label: `Europa` },
+];
+---
+
+<Base>
+  <section class="home-hero">
+    <div class="hero__text">
+      <h1 class="hero__title">
+        Repositorio<br />
+        Independente do<br />
+        Audiovisual<br />
+        <em>Brasileiro</em>
+      </h1>
+      <p class="hero__sub">
+        Hub de inteligencia de dados do audiovisual brasileiro e internacional.
+        Dados brutos preservados. Dados tratados em Parquet, livres para consulta.
+        Custo zero. Infraestrutura redundante.
+      </p>
+    </div>
+    <StatsBar stats={stats} />
+  </section>
+
+  <section class="home-catalog">
+    <div class="catalog__filters" id="filters">
+      {COUNTRIES.map((c) => (
+        <button
+          class={`chip${c.code === "" ? " chip--active" : ""}`}
+          data-country={c.code}
+        >
+          {c.label}
+        </button>
+      ))}
+      <input
+        class="catalog__search"
+        id="search"
+        type="search"
+        placeholder="Buscar dataset..."
+        autocomplete="off"
+      />
+    </div>
+
+    <div class="catalog__grid" id="catalog-grid">
+      {datasets.map((ds) => (
+        <div data-country={ds.source?.country ?? ""} data-tags={(ds.tags ?? []).join(" ")} data-title={ds.title.toLowerCase()}>
+          <DatasetCard ds={ds} />
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="home-quickstart">
+    <h2 class="section-title">Como usar</h2>
+    <p class="section-sub">
+      Todos os dados tratados estao disponiveis como Parquet no Hugging Face.
+      Nenhuma instalacao especial necessaria — apenas Python ou R.
+    </p>
+    <div class="quickstart-grid">
+      <div class="qs-card">
+        <div class="qs-card__lang">Python · DuckDB</div>
+        <pre class="qs-card__code">import duckdb
+duckdb.sql("""
+  SELECT titulo_original, ano_producao_inicial, tipo_obra
+  FROM 'hf://datasets/riabr-dados/riab/cleaned/obras.parquet'
+  WHERE tipo_obra = 'CINEMATOGRAFICA'
+  ORDER BY ano_producao_inicial DESC
+  LIMIT 20
+""").show()</pre>
+      </div>
+      <div class="qs-card">
+        <div class="qs-card__lang">Python · pandas</div>
+        <pre class="qs-card__code">import pandas as pd
+df = pd.read_parquet(
+  "hf://datasets/riabr-dados/riab/cleaned/obras.parquet"
+)
+print(df.shape)
+print(df.head())</pre>
+      </div>
+      <div class="qs-card">
+        <div class="qs-card__lang">R · arrow</div>
+        <pre class="qs-card__code">library(arrow)
+obras <- read_parquet(
+  "hf://datasets/riabr-dados/riab/cleaned/obras.parquet"
+)
+head(obras)</pre>
+      </div>
+    </div>
+    <a class="btn-outline" href="/riab/consulta/">Ver guia completo de consulta</a>
+  </section>
+</Base>
+
+<script>
+  // Filtro por pais
+  const chips = document.querySelectorAll(".chip[data-country]");
+  const cards = document.querySelectorAll("#catalog-grid > div");
+  const search = document.getElementById("search");
+
+  let activeCountry = "";
+
+  function applyFilters() {
+    const q = (search?.value ?? "").trim().toLowerCase();
+    cards.forEach((card) => {
+      const country = card.dataset.country ?? "";
+      const title = card.dataset.title ?? "";
+      const tags = card.dataset.tags ?? "";
+      const matchCountry = activeCountry === "" || country === activeCountry;
+      const matchSearch = q === "" || title.includes(q) || tags.includes(q);
+      (card as HTMLElement).style.display = matchCountry && matchSearch ? "" : "none";
+    });
+  }
+
+  chips.forEach((chip) => {
+    chip.addEventListener("click", () => {
+      chips.forEach((c) => c.classList.remove("chip--active"));
+      chip.classList.add("chip--active");
+      activeCountry = (chip as HTMLElement).dataset.country ?? "";
+      applyFilters();
+    });
+  });
+
+  search?.addEventListener("input", applyFilters);
+</script>

@@ -1,0 +1,65 @@
+table: bilheteria_domestica
+description: >
+  Bilheteria de filmes no mercado domestico brasileiro. Consolidado a partir
+  de dois datasets ANCINE: bilheteria consolidada (top 20 brasileiros por ano)
+  e bilheteria agregada por filme x ano (todos os paises).
+  Chave: cpb_roe + ano de exibicao.
+
+source_raw:
+  - ancine-bilheteria-consolidada
+  - ancine-bilheteria-agregada-filme-ano
+
+columns:
+  - name: cpb_roe
+    original: CPB_ROE
+    type: string
+    description: >
+      Identificador da obra para fins de bilheteria. Prefixo E = estrangeiro,
+      B = brasileiro. Corresponde ao CPB para obras brasileiras.
+    primary_key: false
+    example: "E2400179900000"
+
+  - name: titulo_brasil
+    original: TITULO_BRASIL
+    type: string
+    description: "Titulo de lancamento no Brasil"
+
+  - name: titulo_original
+    original: TITULO_ORIGINAL
+    type: string
+    description: "Titulo original da obra"
+    nullable: true
+
+  - name: pais_obra
+    original: PAIS_OBRA
+    type: string
+    description: "Pais de origem da obra"
+    example: "ESTADOS UNIDOS"
+
+  - name: ano_exibicao
+    original: ANO
+    type: int32
+    description: "Ano de exibicao (ano em que o publico foi registrado)"
+
+  - name: publico
+    original: PUBLICO
+    type: int64
+    description: "Numero de espectadores pagantes no mercado domestico naquele ano"
+
+  - name: renda_brl
+    original: "(derivado de bilheteria consolidada)"
+    type: float64
+    description: "Renda total arrecadada em reais (BRL)"
+    nullable: true
+    notes: "Disponivel apenas na bilheteria consolidada, nao na agregada"
+
+  - name: origem
+    original: "(derivado)"
+    type: string
+    description: "Dataset de origem do registro"
+    categories: ["consolidada", "agregada"]
+
+foreign_keys:
+  - column: cpb_roe
+    references: obras.cpb
+    description: "Obra brasileira correspondente (quando prefixo B)"

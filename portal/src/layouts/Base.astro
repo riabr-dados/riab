@@ -1,0 +1,48 @@
+---
+const { title, description } = Astro.props;
+const siteTitle = "RIAB — Repositorio Independente do Audiovisual Brasileiro";
+const pageTitle = title ? `${title} · RIAB` : siteTitle;
+const pageDesc = description ?? "Hub de inteligencia de dados do audiovisual brasileiro e internacional.";
+const base = import.meta.env.BASE_URL;
+---
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{pageTitle}</title>
+  <meta name="description" content={pageDesc} />
+  <meta property="og:title" content={pageTitle} />
+  <meta property="og:description" content={pageDesc} />
+  <meta property="og:type" content="website" />
+  <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href={`${base}_assets/global.css`} />
+</head>
+<body>
+  <nav class="topnav">
+    <a href={base} class="nav-logo">RIAB</a>
+    <div class="nav-links">
+      <a href={`${base}datasets/`}>Datasets</a>
+      <a href={`${base}consulta/`}>Como Consultar</a>
+      <a href={`${base}sobre/`}>Sobre</a>
+      <a href="https://github.com/riabr-dados/riab" target="_blank" rel="noopener" class="nav-gh">GitHub</a>
+    </div>
+  </nav>
+
+  <main>
+    <slot />
+  </main>
+
+  <footer class="sitefooter">
+    <span>RIAB — Repositorio Independente do Audiovisual Brasileiro</span>
+    <span>
+      <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">Dados: CC-BY-4.0</a>
+      &nbsp;·&nbsp;
+      <a href="https://github.com/riabr-dados/riab/blob/main/LICENSE-code" target="_blank">Codigo: MIT</a>
+    </span>
+  </footer>
+</body>
+</html>

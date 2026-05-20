@@ -1,0 +1,134 @@
+---
+import Base from "../layouts/Base.astro";
+import CodeSnippet from "../components/CodeSnippet.astro";
+
+const HF_BASE = "hf://datasets/riabr-dados/riab/cleaned";
+
+const EXAMPLES = [
+  {
+    titulo: "Obras brasileiras por tipo (DuckDB)",
+    lang: "python",
+    code: `import duckdb
+conn = duckdb.connect()
+conn.sql("INSTALL httpfs; LOAD httpfs;")
+conn.sql("""
+  SELECT tipo_obra, COUNT(*) as total
+  FROM '${HF_BASE}/obras.parquet'
+  GROUP BY tipo_obra
+  ORDER BY total DESC
+""").show()`,
+  },
+  {
+    titulo: "Top 20 filmes por bilheteria no Brasil (pandas)",
+    lang: "python",
+    code: `import pandas as pd
+df = pd.read_parquet("${HF_BASE}/bilheteria_domestica.parquet")
+top = df.sort_values("publico", ascending=False).head(20)
+print(top[["titulo_brasil", "pais_obra", "ano_exibicao", "publico"]])`,
+  },
+  {
+    titulo: "Filmes brasileiros que receberam apoio FSA e chegaram a Europa",
+    lang: "python",
+    code: `import duckdb
+conn = duckdb.connect()
+conn.sql("INSTALL httpfs; LOAD httpfs;")
+conn.sql("""
+  SELECT o.titulo_original, o.ano_producao_inicial,
+         f.chamada_publica, f.valor_total_liberado_brl,
+         e.admissoes_eu
+  FROM '${HF_BASE}/obras.parquet' o
+  JOIN '${HF_BASE}/fomento_fsa.parquet' f
+    ON SUBSTR(o.cpb, 1, 10) = SUBSTR(f.titulo_projeto, 1, 10)
+  JOIN '${HF_BASE}/bilheteria_europa.parquet' e
+    ON o.cpb = e.cpb_roe
+  WHERE f.valor_total_liberado_brl > 0
+  ORDER BY e.admissoes_eu DESC
+  LIMIT 20
+""").show()`,
+  },
+  {
+    titulo: "Carregar dados brutos via CLI",
+    lang: "bash",
+    code: `# Instalar o cliente HF
+pip install huggingface_hub
+
+# Baixar todos os Parquets tratados
+huggingface-cli download riabr-dados/riab \\
+  --repo-type dataset \\
+  --include "cleaned/*.parquet" \\
+  --local-dir ./dados
+
+# Baixar dados brutos de um dataset especifico
+huggingface-cli download riabr-dados/riab \\
+  --repo-type dataset \\
+  --include "raw/ancine-obras-nao-publicitarias/*" \\
+  --local-dir ./dados`,
+  },
+  {
+    titulo: "R — carregar e analisar",
+    lang: "r",
+    code: `library(arrow)
+library(dplyr)
+
+obras <- read_parquet(
+  "${HF_BASE}/obras.parquet"
+)
+
+# Obras por UF do requerente
+obras |>
+  count(uf_requerente, sort = TRUE) |>
+  head(10)`,
+  },
+];
+---
+
+<Base title="Como Consultar" description="Guia de como acessar os dados do RIAB via Python, R e DuckDB.">
+  <div class="page-inner page-inner--narrow">
+    <h1 class="page-title">Como Consultar os Dados</h1>
+    <p class="page-sub">
+      Todos os dados tratados estao no Hugging Face como arquivos Parquet.
+      Voce pode consultar direto da URL, sem baixar nada.
+    </p>
+
+    <section class="doc-section">
+      <h2>Requisitos minimos</h2>
+      <CodeSnippet lang="bash" code={`pip install pandas pyarrow duckdb huggingface_hub`} />
+    </section>
+
+    <section class="doc-section">
+      <h2>Estrutura dos dados no Hugging Face</h2>
+      <pre class="doc-pre">riabr-dados/riab  (dataset repo)
+  raw/
+    ancine-obras-nao-publicitarias/   ← dados brutos intocados
+    ancine-fsa-projetos/
+    cnc-visas-exploitation/
+    ...
+  cleaned/
+    obras.parquet                     ← dados tratados por tema
+    bilheteria_domestica.parquet
+    fomento_fsa.parquet
+    bilheteria_europa.parquet
+    ...
+    obras_completa.parquet            ← join consolidado</pre>
+    </section>
+
+    <section class="doc-section">
+      <h2>Exemplos</h2>
+      {EXAMPLES.map((ex) => (
+        <div class="doc-example">
+          <h3 class="doc-example__title">{ex.titulo}</h3>
+          <CodeSnippet code={ex.code} lang={ex.lang} />
+        </div>
+      ))}
+    </section>
+
+    <section class="doc-section">
+      <h2>Tabelas disponíveis</h2>
+      <p>
+        Consulte a pagina de cada dataset para ver quais tabelas Parquet
+        estao disponíveis e os snippets de codigo correspondentes.
+      </p>
+      <a class="btn-outline" href="/riab/datasets/">Ver catalogo de datasets</a>
+    </section>
+  </div>
+</Base>

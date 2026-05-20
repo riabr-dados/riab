@@ -1,0 +1,71 @@
+name: Novo Dataset
+description: Sugerir um novo dataset para o RIAB
+title: "[DATASET] "
+labels: ["novo-dataset"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Obrigado por contribuir! Preencha as informacoes abaixo sobre o dataset que voce quer ver no RIAB.
+
+  - type: input
+    id: nome
+    attributes:
+      label: Nome do dataset
+      placeholder: "Ex: MinC - Mapeamento das Artes Audiovisuais"
+    validations:
+      required: true
+
+  - type: input
+    id: fonte
+    attributes:
+      label: Instituicao / Fonte oficial
+      placeholder: "Ex: Ministerio da Cultura"
+    validations:
+      required: true
+
+  - type: input
+    id: url
+    attributes:
+      label: URL de acesso
+      placeholder: "https://..."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: pais
+    attributes:
+      label: Pais
+      options:
+        - Brasil
+        - Argentina
+        - Franca
+        - Reino Unido
+        - Uruguai
+        - Outro
+    validations:
+      required: true
+
+  - type: dropdown
+    id: formato
+    attributes:
+      label: Formato
+      options: [CSV, XLSX, JSON, PDF, API, Outro]
+
+  - type: textarea
+    id: descricao
+    attributes:
+      label: Descricao
+      description: O que contem esse dataset? Por que e relevante para o audiovisual?
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: contribuicao
+    attributes:
+      label: Voce pode ajudar com...
+      options:
+        - label: Escrever o pipeline de extracao (Python)
+        - label: Escrever o pipeline de transformacao (Parquet)
+        - label: Documentar o schema das colunas
+        - label: Apenas sugerir — nao tenho tempo agora

@@ -1,0 +1,191 @@
+---
+import Base from "../../layouts/Base.astro";
+import CodeSnippet from "../../components/CodeSnippet.astro";
+import { getDatasets, getDataset } from "../../lib/catalog.js";
+import { duckdbSnippet, pandasSnippet, rSnippet, cliSnippet, rawUrl, cleanedUrl } from "../../lib/hf.js";
+
+export async function getStaticPaths() {
+  const datasets = getDatasets();
+  return datasets.map((ds) => ({ params: { slug: ds.slug } }));
+}
+
+const { slug } = Astro.params;
+const ds = getDataset(slug);
+if (!ds) return Astro.redirect("/404");
+
+const allDatasets = getDatasets();
+const related = (ds.related ?? [])
+  .map((r) => allDatasets.find((d) => d.slug === r))
+  .filter(Boolean);
+
+const tables = ds.cleaned?.tables ?? [];
+const primaryTable = tables[0] ?? null;
+
+const COUNTRY_FLAG = { BR: "🇧🇷", FR: "🇫🇷", AR: "🇦🇷", UK: "🇬🇧", UY: "🇺🇾", EU: "🇪🇺" };
+const country = ds.source?.country ?? "";
+const flag = COUNTRY_FLAG[country] ?? "";
+
+function fmtBytes(b) {
+  if (!b) return "";
+  if (b < 1048576) return `${Math.round(b / 1024)} KB`;
+  return `${(b / 1048576).toFixed(1)} MB`;
+}
+---
+
+<Base title={ds.title} description={ds.description}>
+  <div class="ds-page">
+
+    <div class="ds-breadcrumb">
+      <a href={`${import.meta.env.BASE_URL}datasets/`}>Datasets</a>
+      <span>/</span>
+      <span>{ds.slug}</span>
+    </div>
+
+    <header class="ds-header">
+      <div class="ds-header__left">
+        <div class="ds-header__inst">{flag} {ds.source?.name ?? ds.source_id}</div>
+        <h1 class="ds-header__title">{ds.title}</h1>
+        <p class="ds-header__desc">{ds.description}</p>
+        <div class="ds-header__tags">
+          {(ds.tags ?? []).map((t) => <span class="tag">{t}</span>)}
+        </div>
+      </div>
+      <div class="ds-header__meta">
+        <div class="ds-meta-item">
+          <span class="ds-meta-label">Status</span>
+          <span class={`dcard__status dcard__status--${ds.status}`}>{ds.status}</span>
+        </div>
+        <div class="ds-meta-item">
+          <span class="ds-meta-label">Cobertura</span>
+          <span class="ds-meta-val">{ds.coverage}</span>
+        </div>
+        <div class="ds-meta-item">
+          <span class="ds-meta-label">Formato raw</span>
+          <span class="ds-meta-val">{ds.raw?.format?.toUpperCase()}</span>
+        </div>
+        <div class="ds-meta-item">
+          <span class="ds-meta-label">Tamanho</span>
+          <span class="ds-meta-val">{fmtBytes(ds.raw?.size_bytes)}</span>
+        </div>
+        {ds.raw?.files > 1 && (
+          <div class="ds-meta-item">
+            <span class="ds-meta-label">Arquivos</span>
+            <span class="ds-meta-val">{ds.raw.files} arquivos</span>
+          </div>
+        )}
+        {tables.length > 0 && (
+          <div class="ds-meta-item">
+            <span class="ds-meta-label">Tabelas Parquet</span>
+            <span class="ds-meta-val">{tables.join(", ")}</span>
+          </div>
+        )}
+      </div>
+    </header>
+
+    {tables.length > 0 && (
+      <section class="ds-section">
+        <h2 class="ds-section__title">// Dados Tratados (Parquet)</h2>
+        <p class="ds-section__desc">
+          Dados limpos, tipados e em UTF-8. Prontos para uso direto em Python, R ou DuckDB.
+        </p>
+        <div class="parquet-list">
+          {tables.map((table) => (
+            <div class="parquet-item">
+              <span class="parquet-name">{table}.parquet</span>
+              <a class="btn-sm" href={cleanedUrl(table)} target="_blank">Baixar</a>
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+
+    {primaryTable && (
+      <section class="ds-section">
+        <h2 class="ds-section__title">// Como Consultar</h2>
+        <div class="snippets-tabs" id="snippets-tabs">
+          <button class="stab stab--active" data-tab="duckdb">DuckDB</button>
+          <button class="stab" data-tab="pandas">Python pandas</button>
+          <button class="stab" data-tab="r">R</button>
+          <button class="stab" data-tab="cli">CLI</button>
+        </div>
+        <div id="tab-duckdb">
+          <CodeSnippet code={duckdbSnippet(primaryTable)} lang="python" />
+        </div>
+        <div id="tab-pandas" class="hidden">
+          <CodeSnippet code={pandasSnippet(primaryTable)} lang="python" />
+        </div>
+        <div id="tab-r" class="hidden">
+          <CodeSnippet code={rSnippet(primaryTable)} lang="r" />
+        </div>
+        <div id="tab-cli" class="hidden">
+          <CodeSnippet code={cliSnippet(ds.slug)} lang="bash" label="Baixar dados brutos via CLI" />
+        </div>
+      </section>
+    )}
+
+    <section class="ds-section">
+      <h2 class="ds-section__title">// Dados Brutos</h2>
+      <p class="ds-section__desc">
+        Arquivos originais, sem alteracao, exatamente como vieram da fonte oficial.
+        Hospedados no Hugging Face: <code>riabr-dados/riab</code>.
+      </p>
+      <div class="raw-info">
+        <div class="raw-info__item">
+          <span class="raw-info__label">Formato</span>
+          <span>{ds.raw?.format?.toUpperCase()}</span>
+        </div>
+        {ds.raw?.encoding && (
+          <div class="raw-info__item">
+            <span class="raw-info__label">Encoding</span>
+            <span>{ds.raw.encoding}</span>
+          </div>
+        )}
+        {ds.raw?.delimiter && (
+          <div class="raw-info__item">
+            <span class="raw-info__label">Delimitador</span>
+            <code>{ds.raw.delimiter}</code>
+          </div>
+        )}
+        <div class="raw-info__item">
+          <span class="raw-info__label">Pasta no HF</span>
+          <code>raw/{ds.slug}/</code>
+        </div>
+      </div>
+      {ds.source?.url && (
+        <a class="btn-outline btn-sm" href={ds.source?.data_portal ?? ds.source?.url} target="_blank" rel="noopener">
+          Acessar fonte oficial
+        </a>
+      )}
+    </section>
+
+    {related.length > 0 && (
+      <section class="ds-section">
+        <h2 class="ds-section__title">// Datasets Relacionados</h2>
+        <div class="related-list">
+          {related.map((r) => (
+            <a class="related-item" href={`${import.meta.env.BASE_URL}datasets/${r.slug}/`}>
+              <span class="related-item__title">{r.title}</span>
+              <span class="related-item__source">{r.source?.name?.split(" - ")[0] ?? r.source_id}</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+  </div>
+</Base>
+
+<script>
+  // Tabs dos snippets
+  const tabs = document.querySelectorAll(".stab");
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      tabs.forEach((t) => t.classList.remove("stab--active"));
+      tab.classList.add("stab--active");
+      const name = (tab as HTMLElement).dataset.tab;
+      document.querySelectorAll("[id^='tab-']").forEach((el) => {
+        (el as HTMLElement).classList.toggle("hidden", el.id !== `tab-${name}`);
+      });
+    });
+  });
+</script>

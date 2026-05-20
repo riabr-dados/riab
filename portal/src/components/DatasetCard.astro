@@ -1,0 +1,44 @@
+---
+const { ds } = Astro.props;
+const base = import.meta.env.BASE_URL;
+
+const COUNTRY_LABEL = {
+  BR: "Brasil",
+  FR: "França",
+  AR: "Argentina",
+  UK: "Reino Unido",
+  UY: "Uruguai",
+  EU: "Europa",
+};
+
+const country = ds.source?.country ?? "";
+const countryLabel = COUNTRY_LABEL[country] ?? country;
+
+function fmtBytes(b) {
+  if (!b) return "";
+  if (b < 1024) return `${b} B`;
+  if (b < 1048576) return `${Math.round(b / 1024)} KB`;
+  return `${(b / 1048576).toFixed(1)} MB`;
+}
+
+const totalBytes = ds.raw?.size_bytes ?? 0;
+const formats = [ds.raw?.format?.toUpperCase()].filter(Boolean).join(", ");
+const tables = ds.cleaned?.tables ?? [];
+---
+
+<a class={`dcard dcard--${country}`} href={`${base}datasets/${ds.slug}/`}>
+  <div class="dcard__top">
+    <span class="dcard__inst">{ds.source?.name?.split(" - ")[0] ?? ds.source_id}</span>
+    <span class={`dcard__status dcard__status--${ds.status}`}>{ds.status}</span>
+  </div>
+  <div class="dcard__title">{ds.title}</div>
+  <div class="dcard__desc">{ds.description}</div>
+  <div class="dcard__meta">
+    <span class="dcard__tag dcard__tag--country">{countryLabel}</span>
+    {formats && <span class="dcard__tag">{formats}</span>}
+    {totalBytes > 0 && <span class="dcard__tag">{fmtBytes(totalBytes)}</span>}
+    {ds.raw?.files > 1 && <span class="dcard__tag">{ds.raw.files} arquivos</span>}
+    {ds.coverage && <span class="dcard__tag">{ds.coverage}</span>}
+    {tables.length > 0 && <span class="dcard__tag dcard__tag--cleaned">Parquet disponivel</span>}
+  </div>
+</a>

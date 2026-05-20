@@ -1,117 +1,115 @@
-# dados-audiovisual-br
+# RIAB — Repositorio Independente do Audiovisual Brasileiro
 
-Hub independente de dados públicos do audiovisual brasileiro, com **snapshots datados** e proveniência rastreável.
+Hub de inteligencia de dados do audiovisual brasileiro e internacional.
+Dados brutos preservados. Dados tratados em Parquet, livres para consulta.
+Custo de hospedagem: zero.
 
-Este repositório não substitui as fontes oficiais — espelha, datada e auditavelmente, dados públicos já disponibilizados por órgãos como ANCINE, Observatório Europeu do Audiovisual, IBGE e outros. Existe como salvaguarda contra instabilidade institucional, mudanças silenciosas de metodologia e remoção de dados públicos.
+**Portal:** https://riabr-dados.github.io/riab
+**Dados (Hugging Face):** https://huggingface.co/datasets/riabr-dados/riab
+**Manifesto:** [MANIFESTO.md](MANIFESTO.md)
 
-Veja [MANIFESTO.md](MANIFESTO.md) para a motivação completa e [FONTES.md](FONTES.md) para o índice de saúde das fontes vivas.
+---
 
-## Modelo
+## O que esta aqui
 
-- **Snapshots datados**: cada dataset é coletado periodicamente e armazenado em pasta `snapshots/YYYY-MM-DD/`. Versões anteriores nunca são sobrescritas.
-- **Proveniência completa**: cada snapshot tem um `datapackage.json` (padrão [Frictionless Data](https://frictionlessdata.io)) com URL original, data da coleta, hash SHA256 e licença.
-- **Auditabilidade**: comparar dois snapshots do mesmo dataset mostra o que mudou — útil quando uma fonte altera metodologia sem aviso.
-- **Sinalização de status**: cada dataset declara se a fonte está ativa, offline, alterada ou descontinuada.
+| Camada | Onde | O que |
+|--------|------|-------|
+| **Raw** | `hf://riabr-dados/riab/raw/` | Dados brutos intocados das fontes oficiais |
+| **Cleaned** | `hf://riabr-dados/riab/cleaned/` | Dados tratados em Parquet, tipados, UTF-8 |
+| **Catalogo** | `catalog/` | YAML declarativo com 33 datasets |
+| **Pipelines** | `pipelines/` | Scripts de transformacao e upload |
+| **Portal** | `portal/` | Site Astro gerado automaticamente do catalogo |
 
-## Estrutura
+## Como usar os dados
 
-```
-dados-audiovisual-br/
-├── README.md
-├── MANIFESTO.md              # Motivação e princípios
-├── FONTES.md                 # Índice de saúde das fontes vivas
-├── LICENSE-data              # CC-BY-4.0 (dados derivados/curadoria)
-├── LICENSE-code              # MIT (scripts e schemas)
-│
-├── datasets/                 # Um diretório por dataset
-│   ├── ancine-fsa-projetos/
-│   │   ├── README.md
-│   │   ├── datapackage.json  # Versão "current" — aponta para snapshot mais recente
-│   │   └── snapshots/
-│   │       └── 2026-05-19/
-│   │           ├── projetos-fsa.csv
-│   │           ├── datapackage.json
-│   │           └── source.txt
-│   ├── ancine-renuncia-fiscal/
-│   ├── ancine-obras-nao-publicitarias/
-│   ├── ancine-bilheteria/
-│   ├── lumiere-cinemas-europa/
-│   ├── lumiere-vod-europa/
-│   └── ...
-│
-├── schemas/
-│   └── datapackage.template.json
-│
-├── scripts/                  # Futuros workflows de snapshot automatizado
-│
-└── docs/                     # Documentação adicional (vai pro GitHub Pages)
+### Python — DuckDB (sem baixar nada)
+
+```python
+import duckdb
+conn = duckdb.connect()
+conn.sql("INSTALL httpfs; LOAD httpfs;")
+conn.sql("""
+    SELECT titulo_original, ano_producao_inicial, tipo_obra
+    FROM 'hf://datasets/riabr-dados/riab/cleaned/obras.parquet'
+    WHERE tipo_obra = 'CINEMATOGRAFICA'
+    ORDER BY ano_producao_inicial DESC
+    LIMIT 20
+""").show()
 ```
 
-## Datasets disponíveis
+### Python — pandas
 
-33 datasets de 6 países, cobrindo Brasil, França, Reino Unido, Argentina, Uruguai e dados comparativos internacionais. Detalhes de cada fonte em [FONTES.md](FONTES.md).
+```python
+import pandas as pd
+df = pd.read_parquet("hf://datasets/riabr-dados/riab/cleaned/obras.parquet")
+print(df.head())
+```
 
-**Brasil — ANCINE, IBGE, Lumiere (13 datasets)**
+### R
 
-| Dataset | Fonte | Cobertura | Status |
-|---|---|---|---|
-| `ancine-fsa-projetos` | ANCINE / FSA | até 2026-05 | ativo |
-| `ancine-renuncia-fiscal` | ANCINE | até 2026-05 | ativo |
-| `ancine-obras-nao-publicitarias` | ANCINE / SAV | 2002–2026 (25 CSVs) | ativo |
-| `ancine-agentes-economicos` | ANCINE | até 2026-05 | ativo |
-| `ancine-diretores-obras` | ANCINE / SAV | até 2026-05 | ativo |
-| `ancine-produtores-obras` | ANCINE / SAV | até 2026-05 | ativo |
-| `ancine-bilheteria-consolidada` | ANCINE / SADIS | até 2026 | ativo |
-| `ancine-bilheteria-agregada-filme-ano` | ANCINE / OCA | até 2026 | intermitente |
-| `ancine-preco-medio-ingresso` | ANCINE / OCA | série histórica | intermitente |
-| `ancine-atas-fsa` | ANCINE / FSA (PDFs) | 2014–2024 | ativo |
-| `lumiere-cinemas-europa` | Observatório Europeu do Audiovisual | até 2026 | ativo |
-| `lumiere-vod-europa` | Observatório Europeu do Audiovisual | até 2026 | ativo |
-| `ibge-deflator-ipca` | IBGE | base 2024 | ativo |
+```r
+library(arrow)
+obras <- read_parquet("hf://datasets/riabr-dados/riab/cleaned/obras.parquet")
+head(obras)
+```
 
-**França — CNC (17 datasets, Licence Ouverte)**
+### CLI — baixar tudo
 
-| Dataset | Conteúdo |
-|---|---|
-| `cnc-visas-exploitation` | 95.000+ filmes autorizados 1945–2025 (CSV 12MB) |
-| `cnc-frequentation-salles` | Frequentação de salas (entradas, sessões, receita) |
-| `cnc-etablissements` | Cadastro de cinemas ativos |
-| `cnc-films-million-entrees` | Filmes com mais de 1M de espectadores |
-| `cnc-donnees-internationales` | Dados comparativos internacionais |
-| `cnc-films-agrees` | Filmes aprovados para apoio público |
-| `cnc-audience-television` | Audiência televisiva |
-| `cnc-films-television` | Filmes na TV francesa |
-| `cnc-exportacao-programas-audiovisuais` | Exportação de programas audiovisuais |
-| `cnc-geographie-cinema` | Equipamento e frequentação por região/dpto/commune (4 arquivos) |
-| `cnc-public-vod` | Público de VoD |
-| `cnc-referencias-ativas-vod` | Referências ativas em plataformas VoD |
-| `cnc-consumo-vod` | Consumo domiciliar de VoD |
-| `cnc-parc-cinematographique` | Parque cinematográfico geral |
-| `cnc-financement-television` | Financiamento da televisão |
-| `cnc-distribution-salles` | Distribuição de filmes em salas |
-| `cnc-public-films` | Perfil do público de filmes |
+```bash
+huggingface-cli download riabr-dados/riab \
+  --repo-type dataset \
+  --include "cleaned/*.parquet"
+```
 
-**Argentina, Reino Unido, Uruguai (3 datasets)**
+## Estrutura do repositorio
 
-| Dataset | Fonte | Cobertura | Status |
-|---|---|---|---|
-| `incaa-sector-audiovisual` | INCAA / Argentina (9 CSVs) | 2001–2023 | ativo |
-| `bfi-statistical-yearbook-2023` | BFI / Reino Unido (15 ODS) | 2023 | ativo |
-| `acau-uruguay-apoios-audiovisual` | ACAU / Uruguai | 2013–2024 | ativo |
+```
+riab/
+  catalog/
+    datasets.yaml      # Catalogo central (33 datasets)
+    sources.yaml       # Fontes oficiais (ANCINE, CNC, BFI, INCAA, ACAU, IBGE, Lumiere)
+    schemas/           # Schema de cada tabela Parquet (colunas, tipos, chaves)
+  pipelines/
+    transform/         # Limpeza e conversao para Parquet
+    extract/           # Coleta das fontes (em desenvolvimento)
+    consolidate/       # Joins entre tabelas
+    upload_hf.py       # Publica no Hugging Face
+    requirements.txt
+  portal/              # Site Astro (GitHub Pages)
+  .github/workflows/
+    deploy-portal.yml  # Build e deploy automatico
+    update-data.yml    # Coleta e transformacao semanal (cron)
+  datasets/            # Legado: snapshots brutos (migrando para HF)
+  MANIFESTO.md
+  LICENSE-code         # MIT
+  LICENSE-data         # CC-BY-4.0
+```
 
-## Licença
+## Datasets — 33 de 6 paises
 
-- **Dados**: [CC-BY-4.0](LICENSE-data). Atribuição obrigatória às fontes originais e a este repositório.
-- **Código (scripts, schemas)**: [MIT](LICENSE-code).
+Brasil (ANCINE, IBGE, Lumiere), Franca (CNC), Argentina (INCAA),
+Reino Unido (BFI), Uruguai (ACAU).
 
-Os dados brutos são públicos por força da Lei de Acesso à Informação (Lei 12.527/2011). Este repositório acrescenta organização, metadados, versionamento e proveniência — não altera o conteúdo das fontes.
+Ver catalogo completo com descricoes e schemas em: https://riabr-dados.github.io/riab/datasets/
 
-## Como contribuir
+## Licenca
 
-(Em construção.) O modelo previsto: cada nova fonte pública entra por PR seguindo o template em `schemas/datapackage.template.json`, com snapshot inicial datado e metadados completos.
+- **Dados:** [CC-BY-4.0](LICENSE-data) — use livremente, cite a fonte original
+- **Codigo:** [MIT](LICENSE-code)
+- **Fontes originais:** cada dataset tem sua propria licenca — ver `catalog/sources.yaml`
 
-## Citação
+Os dados brutos sao publicos por forca da Lei de Acesso a Informacao (Lei 12.527/2011)
+e legislacoes equivalentes nos demais paises. Este repositorio acrescenta organizacao,
+metadados, versionamento e acessibilidade — nao altera o conteudo das fontes.
 
-Se você usar estes dados em pesquisa ou jornalismo, cite a fonte original **e** este repositório, indicando a data do snapshot consultado. Exemplo:
+## Contribuindo
 
-> ANCINE. Projetos FSA. Snapshot de 2026-05-19, espelhado em dados-audiovisual-br. Disponível em: [URL].
+1. Abra uma [issue](https://github.com/riabr-dados/riab/issues/new/choose) sugerindo novo dataset
+2. Submeta um PR com pipeline de extracao ou transformacao
+3. Consulte `catalog/datasets.yaml` como referencia de formato
+
+## Citacao
+
+> RIAB — Repositorio Independente do Audiovisual Brasileiro.
+> Snapshot de [DATA]. Dados originais: [FONTE].
+> Disponivel em: https://huggingface.co/datasets/riabr-dados/riab

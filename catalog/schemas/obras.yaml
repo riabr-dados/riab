@@ -1,0 +1,153 @@
+table: obras
+description: >
+  Registro de obras audiovisuais brasileiras nao publicitarias.
+  Consolidado a partir dos arquivos anuais da ANCINE/SAV (2002-2026).
+  Chave primaria: cpb (Certificado de Produto Brasileiro).
+
+source_raw: ancine-obras-nao-publicitarias
+source_columns_original: >
+  TITULO_ORIGINAL, CPB, DATA_EMISSAO_CPB, SITUACAO_OBRA, TIPO_OBRA,
+  SUBTIPO_OBRA, CLASSIFICACAO_OBRA, ORGANIZACAO_TEMPORAL,
+  DURACAO_TOTAL_MINUTOS, QUANTIDADE_EPISODIOS, ANO_PRODUCAO_INICIAL,
+  ANO_PRODUCAO_FINAL, SEGMENTO_DESTINACAO_INICIAL, COPRODUCAO_INTERNACIONAL,
+  REQUERENTE, CNPJ_REQUERENTE, UF_REQUERENTE, MUNICIPIO_REQUERENTE
+
+columns:
+  - name: cpb
+    original: CPB
+    type: string
+    description: "Certificado de Produto Brasileiro — identificador unico da obra na ANCINE"
+    primary_key: true
+    example: "B2500233900000"
+    notes: "Prefixo B = brasileiro. Formato: B + ano (2 dig) + sequencial + 00000"
+
+  - name: titulo_original
+    original: TITULO_ORIGINAL
+    type: string
+    description: "Titulo original da obra"
+    example: "AINDA ESTOU AQUI"
+
+  - name: data_emissao_cpb
+    original: DATA_EMISSAO_CPB
+    type: date
+    format: "DD/MM/YYYY"
+    description: "Data de emissao do CPB (Certificado de Produto Brasileiro)"
+
+  - name: situacao_obra
+    original: SITUACAO_OBRA
+    type: string
+    description: "Situacao do registro da obra junto a ANCINE"
+    categories: ["DEFERIDO", "INDEFERIDO", "EM ANALISE", "CANCELADO"]
+
+  - name: tipo_obra
+    original: TIPO_OBRA
+    type: string
+    description: "Tipo principal da obra audiovisual"
+    categories:
+      - "CINEMATOGRAFICA"
+      - "VIDEOMUSICAIS"
+      - "ANIMACAO"
+      - "DOCUMENTARIO"
+      - "VIDEOARTE"
+      - "SERIE"
+      - "MINISSERIE"
+      - "TELEFILME"
+
+  - name: subtipo_obra
+    original: SUBTIPO_OBRA
+    type: string
+    description: "Subtipo da obra (complementa o tipo)"
+    nullable: true
+
+  - name: classificacao_obra
+    original: CLASSIFICACAO_OBRA
+    type: string
+    description: "Classificacao quanto a origem e qualificacao de espaco"
+    categories:
+      - "BRASILEIRA INDEPENDENTE CONSTITUINTE DE ESPACO QUALIFICADO"
+      - "BRASILEIRA CONSTITUINTE DE ESPACO QUALIFICADO"
+      - "BRASILEIRA INDEPENDENTE"
+      - "BRASILEIRA"
+
+  - name: organizacao_temporal
+    original: ORGANIZACAO_TEMPORAL
+    type: string
+    description: "Se a obra e seriada ou nao"
+    categories: ["NAO SERIADA", "SERIADA"]
+
+  - name: duracao_total_minutos
+    original: DURACAO_TOTAL_MINUTOS
+    type: float32
+    description: "Duracao total da obra em minutos"
+    nullable: true
+    notes: "Para obras seriadas, e a duracao total de todos os episodios"
+
+  - name: quantidade_episodios
+    original: QUANTIDADE_EPISODIOS
+    type: int32
+    description: "Numero de episodios (apenas para obras seriadas)"
+    nullable: true
+
+  - name: ano_producao_inicial
+    original: ANO_PRODUCAO_INICIAL
+    type: int32
+    description: "Ano de inicio da producao"
+    nullable: true
+
+  - name: ano_producao_final
+    original: ANO_PRODUCAO_FINAL
+    type: int32
+    description: "Ano de conclusao da producao"
+    nullable: true
+
+  - name: segmento_destinacao_inicial
+    original: SEGMENTO_DESTINACAO_INICIAL
+    type: string
+    description: "Mercado de destinacao inicial da obra (cinema, TV, VoD, etc.)"
+    nullable: true
+
+  - name: coproducao_internacional
+    original: COPRODUCAO_INTERNACIONAL
+    type: boolean
+    description: "Indica se a obra tem coproducao internacional"
+    notes: "Convertido de 'SIM'/'NAO' para boolean"
+
+  - name: requerente
+    original: REQUERENTE
+    type: string
+    description: "Nome do requerente (empresa ou pessoa fisica)"
+    nullable: true
+
+  - name: cnpj_requerente
+    original: CNPJ_REQUERENTE
+    type: string
+    description: "CNPJ do requerente (ou 'PESSOA FISICA')"
+    nullable: true
+
+  - name: uf_requerente
+    original: UF_REQUERENTE
+    type: string
+    description: "UF (estado) do requerente"
+    nullable: true
+
+  - name: municipio_requerente
+    original: MUNICIPIO_REQUERENTE
+    type: string
+    description: "Municipio do requerente"
+    nullable: true
+
+  - name: ano_arquivo
+    original: "(derivado)"
+    type: int32
+    description: "Ano do arquivo de origem (2002 a 2026) — adicionado no transform"
+
+foreign_keys:
+  - column: cpb
+    references: diretores.cpb
+    description: "Diretores desta obra"
+  - column: cpb
+    references: produtores.cpb
+    description: "Produtoras desta obra"
+  - column: cpb
+    references: bilheteria_domestica.cpb_roe
+    description: "Bilheteria domestica da obra"

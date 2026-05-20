@@ -1,0 +1,94 @@
+table: fomento_fsa
+description: >
+  Projetos de fomento apoiados pelo Fundo Setorial do Audiovisual (FSA)
+  entre 2008 e 2023. Cada linha e um contrato FSA com proponente,
+  produtora, programadora, chamada publica e valores contratados/liberados.
+
+source_raw: ancine-fsa-projetos
+source_columns_original: >
+  TITULO_PROJETO, CHAMADA_PUBLICA, ANO_EDITAL, CNPJ_PROPONENTE,
+  RAZAO_SOCIAL_PROPONENTE, CNPJ_PRODUTORA, RAZAO_SOCIAL_PRODUTORA,
+  CNPJ_PROGRAMADORA, RAZAO_SOCIAL_PROGRAMADORA, DATA_EXTRATO_CONTRATO_DOU,
+  VALOR_CONTRATO_DOU, DATA_PRIMEIRO_DESEMBOLSO, VALOR_TOTAL_LIBERADO
+
+columns:
+  - name: titulo_projeto
+    original: TITULO_PROJETO
+    type: string
+    description: "Titulo do projeto apoiado pelo FSA"
+
+  - name: chamada_publica
+    original: CHAMADA_PUBLICA
+    type: string
+    description: "Nome da chamada publica (edital) via a qual o projeto foi apoiado"
+    example: "PRODECINE 03"
+
+  - name: ano_edital
+    original: ANO_EDITAL
+    type: int32
+    description: "Ano do edital da chamada publica"
+
+  - name: cnpj_proponente
+    original: CNPJ_PROPONENTE
+    type: string
+    description: "CNPJ do proponente (empresa que submeteu o projeto)"
+
+  - name: razao_social_proponente
+    original: RAZAO_SOCIAL_PROPONENTE
+    type: string
+    description: "Razao social do proponente"
+
+  - name: cnpj_produtora
+    original: CNPJ_PRODUTORA
+    type: string
+    description: "CNPJ da produtora executora do projeto"
+    nullable: true
+
+  - name: razao_social_produtora
+    original: RAZAO_SOCIAL_PRODUTORA
+    type: string
+    description: "Razao social da produtora"
+    nullable: true
+
+  - name: cnpj_programadora
+    original: CNPJ_PROGRAMADORA
+    type: string
+    description: "CNPJ da programadora (canal de TV ou plataforma parceira)"
+    nullable: true
+
+  - name: razao_social_programadora
+    original: RAZAO_SOCIAL_PROGRAMADORA
+    type: string
+    description: "Razao social da programadora"
+    nullable: true
+
+  - name: data_extrato_contrato_dou
+    original: DATA_EXTRATO_CONTRATO_DOU
+    type: date
+    format: "DD/MM/YYYY"
+    description: "Data de publicacao do extrato de contrato no Diario Oficial da Uniao"
+    nullable: true
+
+  - name: valor_contrato_brl
+    original: VALOR_CONTRATO_DOU
+    type: float64
+    description: "Valor contratado em reais (BRL) — extraido da string 'R$ X,XX'"
+    notes: "Coluna original contem string com 'R$ '. Transform extrai valor numerico."
+
+  - name: data_primeiro_desembolso
+    original: DATA_PRIMEIRO_DESEMBOLSO
+    type: date
+    format: "DD/MM/YYYY"
+    description: "Data do primeiro desembolso do contrato"
+    nullable: true
+
+  - name: valor_total_liberado_brl
+    original: VALOR_TOTAL_LIBERADO
+    type: float64
+    description: "Valor total efetivamente liberado/desembolsado em reais (BRL)"
+    notes: "Coluna original contem string com 'R$ '. Transform extrai valor numerico."
+
+foreign_keys:
+  - column: cnpj_produtora
+    references: agentes_economicos.cnpj
+    description: "Produtora registrada na ANCINE"

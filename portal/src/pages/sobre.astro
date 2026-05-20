@@ -1,0 +1,127 @@
+---
+import Base from "../layouts/Base.astro";
+---
+
+<Base title="Sobre" description="Manifesto, metodologia e governanca do RIAB.">
+  <div class="page-inner page-inner--narrow">
+
+    <h1 class="page-title">Sobre o RIAB</h1>
+
+    <section class="doc-section">
+      <h2>O que e o RIAB</h2>
+      <p>
+        O <strong>Repositorio Independente do Audiovisual Brasileiro</strong> e um hub
+        de inteligencia de dados do setor audiovisual. Agrega dados publicos de fontes
+        oficiais brasileiras e internacionais, os preserva como snapshots auditaveis,
+        e os disponibiliza em formatos acessiveis para pesquisadores, jornalistas,
+        profissionais do setor e cidadaos.
+      </p>
+    </section>
+
+    <section class="doc-section">
+      <h2>Por que existe</h2>
+      <p>Dados publicos do audiovisual brasileiro sao frageis por tres razoes:</p>
+      <ol>
+        <li>
+          <strong>Instabilidade institucional</strong> — sistemas como o OCA (Observatorio
+          do Cinema e do Audiovisual) saem do ar; metodologias mudam entre gestoes
+          sem registro auditavel.
+        </li>
+        <li>
+          <strong>Ausencia de versionamento</strong> — quando uma planilha publica e
+          atualizada, a versao anterior some. Nao ha como saber o que mudou.
+        </li>
+        <li>
+          <strong>Dispersao</strong> — dados relevantes estao espalhados entre ANCINE,
+          IBGE, Observatorio Europeu, ministerios. Falta um ponto de consolidacao
+          independente.
+        </li>
+      </ol>
+      <p>
+        O incendio da Cinemateca Brasileira em 2021 e a remocao silenciosa de datasets
+        em diversas areas mostram que preservacao ativa e necessidade, nao paranoia.
+      </p>
+    </section>
+
+    <section class="doc-section">
+      <h2>Principios</h2>
+      <ul>
+        <li>
+          <strong>Espelhar, nao substituir.</strong> Fontes oficiais sao a referencia
+          primaria. O RIAB oferece redundancia e acessibilidade.
+        </li>
+        <li>
+          <strong>Duas camadas de dados.</strong> Raw: dado exatamente como veio da
+          fonte. Cleaned: dado tratado com scripts abertos e reproduziveis, documentado
+          e versionado.
+        </li>
+        <li>
+          <strong>Proveniencia rastreaval.</strong> Todo arquivo tem metadados explicitos:
+          URL de origem, data de coleta, licenca, dicionario de variaveis.
+        </li>
+        <li>
+          <strong>Auditabilidade por design.</strong> Mudancas nos dados sao visiveis
+          via historico de commits. Pipelines de transformacao sao publicos.
+        </li>
+        <li>
+          <strong>Redundancia em multiplas camadas.</strong> GitHub + Hugging Face +
+          Zenodo (DOI permanente via CERN).
+        </li>
+        <li>
+          <strong>Cobertura ampla.</strong> Brasil e o foco, mas dados internacionais
+          comparativos fazem parte do escopo desde o inicio.
+        </li>
+        <li>
+          <strong>Licenciamento permissivo.</strong> Dados em CC-BY-4.0. Codigo em MIT.
+        </li>
+      </ul>
+    </section>
+
+    <section class="doc-section">
+      <h2>Infraestrutura</h2>
+      <table class="doc-table">
+        <thead>
+          <tr>
+            <th>Componente</th>
+            <th>Tecnologia</th>
+            <th>Custo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Codigo e metadados</td><td>GitHub</td><td>Gratis</td></tr>
+          <tr><td>Storage de dados</td><td>Hugging Face Datasets</td><td>Gratis (ate 50 GB)</td></tr>
+          <tr><td>Portal web</td><td>GitHub Pages + Astro</td><td>Gratis</td></tr>
+          <tr><td>CI/CD</td><td>GitHub Actions</td><td>Gratis (2000 min/mes)</td></tr>
+          <tr><td>Arquivo permanente</td><td>Zenodo (CERN)</td><td>Gratis</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="doc-section">
+      <h2>Como contribuir</h2>
+      <p>
+        O projeto e aberto a contribuicoes. Voce pode:
+      </p>
+      <ul>
+        <li>Abrir uma issue sugerindo novo dataset ou fonte</li>
+        <li>Submeter um pull request com pipeline de extracao ou transformacao</li>
+        <li>Reportar dados desatualizados ou erros de transformacao</li>
+        <li>Fazer fork do repositorio para criar seu proprio hub tematico</li>
+      </ul>
+      <a class="btn-outline" href="https://github.com/riabr-dados/riab" target="_blank" rel="noopener">
+        Acessar no GitHub
+      </a>
+    </section>
+
+    <section class="doc-section">
+      <h2>Estabilidade de longo prazo</h2>
+      <p>
+        A meta e que o RIAB sobreviva a qualquer gestor, organizacao ou plataforma especifica.
+        Por isso: forks sao bem-vindos; releases periodicos serao arquivados no Zenodo
+        (DOI permanente, garantia de 20+ anos pelo CERN); espelhamento no Software Heritage
+        e Internet Archive.
+      </p>
+    </section>
+
+  </div>
+</Base>
