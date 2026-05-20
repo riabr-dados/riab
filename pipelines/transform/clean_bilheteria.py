@@ -1,0 +1,66 @@
+"""
+Transform: bilheteria domestica
+Fontes:
+  - ancine-bilheteria-consolidada  (Excel, histórico de obras BR)
+  - ancine-bilheteria-agregada-filme-ano (CSV, público por filme/ano, todos os países)
+Saída:
+  - bilheteria_consolidada_br.parquet  — top filmes brasileiros histórico
+  - bilheteria_por_filme_ano.parquet   — série temporal completa (todos os países)
+"""
+import pandas as pd
+from pathlib import Path
+
+RAW = Path("datasets")
+OUT = Path("pipelines/output/cleaned")
+OUT.mkdir(parents=True, exist_ok=True)
+
+SNAP = "snapshots/2026-05-19"
+
+# ── 1. Bilheteria consolidada BR (Excel) ─────────────────────────────────────
+print("Processando bilheteria_brasileira_consolidada.xlsx …")
+df_consol = pd.read_excel(
+    RAW / f"ancine-bilheteria-consolidada/{SNAP}/bilheteria_brasileira_consolidada.xlsx",
+    sheet_name="Bilheteria BR Completa",
+)
+df_consol.columns = ["rank", "titulo", "ano_lancamento", "publico_total", "fonte"]
+df_consol = df_consol.dropna(subset=["titulo"])
+df_consol["rank"] = pd.to_numeric(df_consol["rank"], errors="coerce").astype("Int64")
+df_consol["ano_lancamento"] = pd.to_numeric(df_consol["ano_lancamento"], errors="coerce").astype("Int64")
+df_consol["publico_total"] = pd.to_numeric(df_consol["publico_total"], errors="coerce").astype("Int64")
+df_consol["titulo"] = df_consol["titulo"].astype(str).str.strip()
+df_consol["fonte"] = df_consol["fonte"].astype(str).str.strip()
+
+out1 = OUT / "bilheteria_consolidada_br.parquet"
+df_consol.to_parquet(out1, index=False)
+print(f"  -> {out1} ({len(df_consol)} linhas)")
+
+# ── 2. Bilheteria por filme/ano (CSV) ────────────────────────────────────────
+print("Processando por_filme_ano.csv …")
+df_ano = pd.read_csv(
+    RAW / f"ancine-bilheteria-agregada-filme-ano/{SNAP}/por_filme_ano.csv",
+    encoding="utf-8-sig",
+    sep=None,
+    engine="python",
+)
+df_ano.columns = [c.lower() for c in df_ano.columns]
+# rename to snake_case
+rename = {
+    "cpb_roe": "cpb_roe",
+    "titulo_brasil": "titulo_brasil",
+    "titulo_original": "titulo_original",
+    "pais_obra": "pais_obra",
+    "ano": "ano",
+    "publico": "publico",
+}
+df_ano = df_ano.rename(columns=rename)
+df_ano["ano"] = pd.to_numeric(df_ano["ano"], errors="coerce").astype("Int64")
+df_ano["publico"] = pd.to_numeric(df_ano["publico"], errors="coerce").astype("Int64")
+df_ano["titulo_brasil"] = df_ano["titulo_brasil"].astype(str).str.strip()
+df_ano["titulo_original"] = df_ano["titulo_original"].astype(str).str.strip()
+df_ano["pais_obra"] = df_ano["pais_obra"].astype(str).str.strip()
+
+out2 = OUT / "bilheteria_por_filme_ano.parquet"
+df_ano.to_parquet(out2, index=False)
+print(f"  -> {out2} ({len(df_ano)} linhas)")
+
+print("Bilheteria OK.")

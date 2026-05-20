@@ -9,7 +9,13 @@ from pathlib import Path
 SCRIPTS = [
     "pipelines/transform/clean_obras.py",
     "pipelines/transform/clean_fsa.py",
-    # adicionar novos scripts aqui conforme forem criados
+    "pipelines/transform/clean_bilheteria.py",
+    "pipelines/transform/clean_agentes.py",
+    "pipelines/transform/clean_diretores.py",
+    "pipelines/transform/clean_produtores.py",
+    "pipelines/transform/clean_renuncia.py",
+    "pipelines/transform/clean_deflator.py",
+    "pipelines/transform/clean_lumiere.py",
 ]
 
 
