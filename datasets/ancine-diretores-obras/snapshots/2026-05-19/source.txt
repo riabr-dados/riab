@@ -1,0 +1,8 @@
+Dataset: ANCINE / SAV — Diretores de obras não publicitárias brasileiras
+Fonte oficial: ANCINE — Superintendência de Análise de Mercado
+URL: https://dados.gov.br/dataset?q=ancine+diretores
+Data do snapshot: 2026-05-19
+Status na data: ativo
+Coleta: manual, espelhamento do projeto fomento-audiovisual
+Arquivos:
+  - diretores-de-obras-nao-publicitarias-brasileiras (5055603 bytes, sha256:3095a0e821357a73498a37e49a26f2668387168a045227b4f66d7d5d8ca95726)

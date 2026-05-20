@@ -1,0 +1,13 @@
+Dataset: ANCINE / FSA — Atas oficiais de resultados (PDFs)
+Fonte oficial: ANCINE — FSA
+URL: https://fsa.ancine.gov.br/quem-somos/resultados
+Data do snapshot: 2026-05-19
+Status na data: ativo
+Coleta: manual, espelhamento do projeto fomento-audiovisual
+Arquivos:
+  - ata-habilit-final-desempenho-artistico-2024-2o-edicao-08.08.2025-publicacao (397971 bytes, sha256:33a8eee4742020e71a5fbf2967296edb6e7f3ab37be576034136492f72870714)
+  - ata-habilit-final-desempenho-artistico-2024-26.09.2024-publicacao (1242688 bytes, sha256:bf76f51c58b1dc9162c4ecd14a35aa99055163c0d8009bd54178dff9bb430965)
+  - ata-resultado-final-desempenhoartístico-2018 (776776 bytes, sha256:856b38ce75d56770f0f86947f0fbdcd7eda27a6b4a165e23937bf87ce3a3a1d0)
+  - prodav-072014-resultado-final (176163 bytes, sha256:a04eaeb4af930422f9403a0324a269a8872a583f710bae9160c15bd69d35ab22)
+  - prodav-072015-resultadofinal (266106 bytes, sha256:6557d46ffa1315c4d9c04a1542b32378af874f90f2797cffd7257268697eecb6)
+  - resultado-final-prodav-07-2017 (722254 bytes, sha256:3fb07c4f5664a42b699a1baed8caa6e85ec75e7c6131b8580b3278faa0c702f3)

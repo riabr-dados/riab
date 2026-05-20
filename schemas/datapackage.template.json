@@ -1,0 +1,72 @@
+{
+  "$schema": "https://specs.frictionlessdata.io/schemas/data-package.json",
+  "name": "exemplo-dataset-slug",
+  "title": "Título humano do dataset",
+  "description": "Descrição curta do conteúdo e da finalidade.",
+  "version": "YYYY.MM.DD",
+  "created": "YYYY-MM-DDThh:mm:ssZ",
+  "homepage": "https://github.com/SEU-USUARIO/dados-audiovisual-br/tree/main/datasets/exemplo-dataset-slug",
+  "licenses": [
+    {
+      "name": "CC-BY-4.0",
+      "title": "Creative Commons Attribution 4.0 International",
+      "path": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Nome oficial do órgão / produto",
+      "path": "https://url-oficial-da-fonte",
+      "email": null,
+      "version": null
+    }
+  ],
+  "contributors": [
+    {
+      "title": "dados-audiovisual-br",
+      "role": "publisher",
+      "path": "https://github.com/SEU-USUARIO/dados-audiovisual-br"
+    }
+  ],
+  "status": {
+    "value": "ativo",
+    "options": ["ativo", "intermitente", "alterado", "offline", "descontinuado"],
+    "last_checked": "YYYY-MM-DD",
+    "notes": "Observações livres sobre o estado da fonte."
+  },
+  "collection": {
+    "method": "manual",
+    "method_options": ["manual", "automated_actions", "api_pull", "web_scrape"],
+    "script": null,
+    "frequency": "ad-hoc",
+    "frequency_options": ["ad-hoc", "monthly", "quarterly", "annual"]
+  },
+  "resources": [
+    {
+      "name": "arquivo-principal",
+      "path": "snapshots/YYYY-MM-DD/arquivo.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 0,
+      "hash": "sha256:PREENCHER",
+      "schema": {
+        "fields": [
+          {
+            "name": "nome_da_coluna",
+            "type": "string",
+            "description": "Significado da coluna conforme fonte oficial."
+          }
+        ]
+      }
+    }
+  ],
+  "snapshots": [
+    {
+      "date": "YYYY-MM-DD",
+      "path": "snapshots/YYYY-MM-DD/",
+      "source_url": "https://url-de-onde-foi-baixado-naquela-data",
+      "notes": "Mudanças relevantes em relação ao snapshot anterior."
+    }
+  ]
+}

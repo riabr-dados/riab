@@ -1,0 +1,21 @@
+Attribution 4.0 International (CC BY 4.0)
+
+Os dados deste repositório que constituem curadoria, organização e metadados
+agregados são licenciados sob Creative Commons Attribution 4.0 International.
+
+Os dados brutos espelhados a partir de fontes públicas (ANCINE, IBGE,
+Observatório Europeu do Audiovisual e outros) permanecem sob suas licenças
+originais, em geral domínio público ou equivalente em razão da Lei de Acesso
+à Informação (Lei 12.527/2011) e legislações equivalentes nas jurisdições
+correspondentes.
+
+Ao usar dados deste repositório você deve:
+
+1. Citar a fonte original do dado (ANCINE, IBGE, Observatório Europeu,
+   conforme indicado no datapackage.json do dataset).
+2. Citar este repositório (dados-audiovisual-br) como camada de espelhamento
+   e indicar a data do snapshot consultado.
+3. Indicar se você fez modificações.
+
+Texto completo da licença CC BY 4.0:
+https://creativecommons.org/licenses/by/4.0/legalcode.pt

@@ -1,0 +1,8 @@
+Dataset: IBGE — Deflator IPCA (base 2024)
+Fonte oficial: IBGE — Sistema Nacional de Índices de Preços ao Consumidor
+URL: https://www.ibge.gov.br/estatisticas/economicas/precos-e-custos/9256-indice-nacional-de-precos-ao-consumidor-amplo.html
+Data do snapshot: 2026-05-19
+Status na data: ativo
+Coleta: manual, espelhamento do projeto fomento-audiovisual
+Arquivos:
+  - deflator-ipca-base2024 (471 bytes, sha256:36693f580acfcd08623fa2e30ab52911487f49315eab609def959bdb551ffb5f)

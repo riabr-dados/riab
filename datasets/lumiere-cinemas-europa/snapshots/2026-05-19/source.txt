@@ -1,0 +1,8 @@
+Dataset: Lumiere — Filmes brasileiros em salas de cinema na Europa
+Fonte oficial: European Audiovisual Observatory — Lumiere database
+URL: https://lumiere.obs.coe.int
+Data do snapshot: 2026-05-19
+Status na data: ativo
+Coleta: manual, espelhamento do projeto fomento-audiovisual
+Arquivos:
+  - lumiere-search (16135 bytes, sha256:78ef83d523e8ec41ec067e2329942cbda2c276d8b35a6d28e968e3a37bb6836e)

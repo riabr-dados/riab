@@ -1,0 +1,8 @@
+Dataset: ANCINE / SAV — Produtores de obras não publicitárias brasileiras
+Fonte oficial: ANCINE — Superintendência de Análise de Mercado
+URL: https://dados.gov.br/dataset?q=ancine+produtores
+Data do snapshot: 2026-05-19
+Status na data: ativo
+Coleta: manual, espelhamento do projeto fomento-audiovisual
+Arquivos:
+  - produtores-de-obras-nao-publicitarias-brasileiras (7043223 bytes, sha256:b30398dcb0d376adb86a917a2387276ecf3bfef4b65324b2eba9f232f0467fbc)

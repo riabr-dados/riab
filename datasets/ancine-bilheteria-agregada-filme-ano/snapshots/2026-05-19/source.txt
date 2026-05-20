@@ -1,0 +1,8 @@
+Dataset: ANCINE / OCA — Bilheteria agregada por filme e ano
+Fonte oficial: ANCINE — Observatório do Cinema e do Audiovisual
+URL: https://oca.ancine.gov.br
+Data do snapshot: 2026-05-19
+Status na data: intermitente
+Coleta: manual, espelhamento do projeto fomento-audiovisual
+Arquivos:
+  - por-filme-ano (558634 bytes, sha256:36cd26e056bf5a184883d5e9430995f39763a2775e560103b88cd59180cfba43)

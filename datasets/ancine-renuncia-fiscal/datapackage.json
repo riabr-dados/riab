@@ -1,0 +1,65 @@
+{
+  "$schema": "https://specs.frictionlessdata.io/schemas/data-package.json",
+  "name": "ancine-renuncia-fiscal",
+  "title": "ANCINE — Projetos com renúncia fiscal (Art. 1º, 1ºA, 3º, 3ºA)",
+  "description": "Projetos audiovisuais aprovados via mecanismos de renúncia fiscal federais (Lei do Audiovisual e Lei Rouanet audiovisual).",
+  "version": "2026.05.19",
+  "created": "2026-05-19T00:00:00Z",
+  "homepage": "https://github.com/SEU-USUARIO/dados-audiovisual-br/tree/main/datasets/ancine-renuncia-fiscal",
+  "licenses": [
+    {
+      "name": "CC-BY-4.0",
+      "title": "Creative Commons Attribution 4.0 International",
+      "path": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ],
+  "sources": [
+    {
+      "title": "ANCINE",
+      "path": "https://www.ancine.gov.br"
+    }
+  ],
+  "contributors": [
+    {
+      "title": "dados-audiovisual-br",
+      "role": "publisher",
+      "path": "https://github.com/SEU-USUARIO/dados-audiovisual-br"
+    }
+  ],
+  "status": {
+    "value": "ativo",
+    "options": [
+      "ativo",
+      "intermitente",
+      "alterado",
+      "offline",
+      "descontinuado"
+    ],
+    "last_checked": "2026-05-19",
+    "notes": "Cobre projetos Art. 1º, 1ºA, 3º e 3ºA."
+  },
+  "collection": {
+    "method": "manual",
+    "script": null,
+    "frequency": "ad-hoc"
+  },
+  "resources": [
+    {
+      "name": "projetos-com-renuncia-fiscal",
+      "path": "snapshots/2026-05-19/projetos-com-renuncia-fiscal.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1472298,
+      "hash": "sha256:c35abb446d19c1f6e96b17ecfc48d96ec20d55863e3bf2bef10ae8e7e6b3ecb8"
+    }
+  ],
+  "snapshots": [
+    {
+      "date": "2026-05-19",
+      "path": "snapshots/2026-05-19/",
+      "source_url": "https://www.ancine.gov.br",
+      "notes": "Snapshot inicial migrado do projeto fomento-audiovisual."
+    }
+  ]
+}

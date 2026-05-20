@@ -1,0 +1,8 @@
+Dataset: ANCINE / SADIS — Bilheteria brasileira consolidada
+Fonte oficial: ANCINE — SADIS
+URL: https://www.ancine.gov.br
+Data do snapshot: 2026-05-19
+Status na data: ativo
+Coleta: manual, espelhamento do projeto fomento-audiovisual
+Arquivos:
+  - bilheteria-brasileira-consolidada (92341 bytes, sha256:6de1eb6f659e05ae7e3fcffe1be693d11f8e012d0ede26c578118680f1d346be)

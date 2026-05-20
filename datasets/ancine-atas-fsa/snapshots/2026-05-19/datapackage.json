@@ -1,0 +1,110 @@
+{
+  "$schema": "https://specs.frictionlessdata.io/schemas/data-package.json",
+  "name": "ancine-atas-fsa",
+  "title": "ANCINE / FSA — Atas oficiais de resultados (PDFs)",
+  "description": "Atas oficiais de resultados de chamadas públicas do FSA, em PDF, incluindo PRODAV 07 (2014, 2015, 2017) e Desempenho Artístico (2018, 2024).",
+  "version": "2026.05.19",
+  "created": "2026-05-19T00:00:00Z",
+  "homepage": "https://github.com/SEU-USUARIO/dados-audiovisual-br/tree/main/datasets/ancine-atas-fsa",
+  "licenses": [
+    {
+      "name": "CC-BY-4.0",
+      "title": "Creative Commons Attribution 4.0 International",
+      "path": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ],
+  "sources": [
+    {
+      "title": "ANCINE — FSA",
+      "path": "https://fsa.ancine.gov.br/quem-somos/resultados"
+    }
+  ],
+  "contributors": [
+    {
+      "title": "dados-audiovisual-br",
+      "role": "publisher",
+      "path": "https://github.com/SEU-USUARIO/dados-audiovisual-br"
+    }
+  ],
+  "status": {
+    "value": "ativo",
+    "options": [
+      "ativo",
+      "intermitente",
+      "alterado",
+      "offline",
+      "descontinuado"
+    ],
+    "last_checked": "2026-05-19",
+    "notes": "Documentos oficiais em PDF. Fonte primária de seleção e investimento."
+  },
+  "collection": {
+    "method": "manual",
+    "script": null,
+    "frequency": "ad-hoc"
+  },
+  "resources": [
+    {
+      "name": "ata-habilit-final-desempenho-artistico-2024-2o-edicao-08.08.2025-publicacao",
+      "path": "snapshots/2026-05-19/Ata-Habilit-Final-Desempenho-Artistico-2024-2o-edicao_08.08.2025-publicacao.pdf",
+      "format": "pdf",
+      "mediatype": "application/pdf",
+      "encoding": "binary",
+      "bytes": 397971,
+      "hash": "sha256:33a8eee4742020e71a5fbf2967296edb6e7f3ab37be576034136492f72870714"
+    },
+    {
+      "name": "ata-habilit-final-desempenho-artistico-2024-26.09.2024-publicacao",
+      "path": "snapshots/2026-05-19/Ata-Habilit-Final-Desempenho-Artistico-2024_26.09.2024-publicacao.pdf",
+      "format": "pdf",
+      "mediatype": "application/pdf",
+      "encoding": "binary",
+      "bytes": 1242688,
+      "hash": "sha256:bf76f51c58b1dc9162c4ecd14a35aa99055163c0d8009bd54178dff9bb430965"
+    },
+    {
+      "name": "ata-resultado-final-desempenhoartístico-2018",
+      "path": "snapshots/2026-05-19/Ata-Resultado-Final_DesempenhoArtístico_2018.pdf",
+      "format": "pdf",
+      "mediatype": "application/pdf",
+      "encoding": "binary",
+      "bytes": 776776,
+      "hash": "sha256:856b38ce75d56770f0f86947f0fbdcd7eda27a6b4a165e23937bf87ce3a3a1d0"
+    },
+    {
+      "name": "prodav-072014-resultado-final",
+      "path": "snapshots/2026-05-19/PRODAV-072014_resultado-final.pdf",
+      "format": "pdf",
+      "mediatype": "application/pdf",
+      "encoding": "binary",
+      "bytes": 176163,
+      "hash": "sha256:a04eaeb4af930422f9403a0324a269a8872a583f710bae9160c15bd69d35ab22"
+    },
+    {
+      "name": "prodav-072015-resultadofinal",
+      "path": "snapshots/2026-05-19/PRODAV-072015_resultadofinal.pdf",
+      "format": "pdf",
+      "mediatype": "application/pdf",
+      "encoding": "binary",
+      "bytes": 266106,
+      "hash": "sha256:6557d46ffa1315c4d9c04a1542b32378af874f90f2797cffd7257268697eecb6"
+    },
+    {
+      "name": "resultado-final-prodav-07-2017",
+      "path": "snapshots/2026-05-19/Resultado-Final-PRODAV-07-2017.pdf",
+      "format": "pdf",
+      "mediatype": "application/pdf",
+      "encoding": "binary",
+      "bytes": 722254,
+      "hash": "sha256:3fb07c4f5664a42b699a1baed8caa6e85ec75e7c6131b8580b3278faa0c702f3"
+    }
+  ],
+  "snapshots": [
+    {
+      "date": "2026-05-19",
+      "path": "snapshots/2026-05-19/",
+      "source_url": "https://fsa.ancine.gov.br/quem-somos/resultados",
+      "notes": "Snapshot inicial migrado do projeto fomento-audiovisual."
+    }
+  ]
+}

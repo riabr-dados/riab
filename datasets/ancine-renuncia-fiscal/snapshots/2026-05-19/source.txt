@@ -1,0 +1,8 @@
+Dataset: ANCINE — Projetos com renúncia fiscal (Art. 1º, 1ºA, 3º, 3ºA)
+Fonte oficial: ANCINE
+URL: https://www.ancine.gov.br
+Data do snapshot: 2026-05-19
+Status na data: ativo
+Coleta: manual, espelhamento do projeto fomento-audiovisual
+Arquivos:
+  - projetos-com-renuncia-fiscal (1472298 bytes, sha256:c35abb446d19c1f6e96b17ecfc48d96ec20d55863e3bf2bef10ae8e7e6b3ecb8)

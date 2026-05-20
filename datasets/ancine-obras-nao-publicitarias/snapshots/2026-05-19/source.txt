@@ -1,0 +1,32 @@
+Dataset: ANCINE / SAV — Obras audiovisuais não publicitárias brasileiras (2002–2026)
+Fonte oficial: ANCINE — Superintendência de Análise de Mercado
+URL: https://dados.gov.br/dataset?q=ancine+obras
+Data do snapshot: 2026-05-19
+Status na data: ativo
+Coleta: manual, espelhamento do projeto fomento-audiovisual
+Arquivos:
+  - obras-nao-pub-brasileiras-2002 (794 bytes, sha256:a6edd1968f74748d65229742e8b5c37f88bd10d3e634edc1327f0c51e358d4d3)
+  - obras-nao-pub-brasileiras-2003 (47708 bytes, sha256:4edd74a5106dc1224fd8e66906673cc3695e192b01e807a65dfe236b2579227f)
+  - obras-nao-pub-brasileiras-2004 (171900 bytes, sha256:386d9c7ed657aa519e13b5304898849f414455570e730a98e1b83d5176970b9d)
+  - obras-nao-pub-brasileiras-2005 (656725 bytes, sha256:c36bf4dbe28e05e23fd56b6b66a65f39722c4a2600498304e2a7930d84deac5b)
+  - obras-nao-pub-brasileiras-2006 (390429 bytes, sha256:65117cb291ad37a99e3b23236a0f99f725378ca0731c2c053282fd85e1028b79)
+  - obras-nao-pub-brasileiras-2007 (398595 bytes, sha256:712cc2499cb7779444196cb259743f872165fb6ce2ca323f677048e0ad1e1782)
+  - obras-nao-pub-brasileiras-2008 (344046 bytes, sha256:5ee27fa8c84fb1c182d9db2f4b360d33eec200143a65e94b8b8f9df28a143fd9)
+  - obras-nao-pub-brasileiras-2009 (358907 bytes, sha256:a064718033513e148091d96aff1f914946b79b2745fae72a7de8d0f6e0c3341a)
+  - obras-nao-pub-brasileiras-2010 (499076 bytes, sha256:b9ba979a9e32ade66ef70b3158e93a7239d61dfdd6ae44660561afe19cab61ff)
+  - obras-nao-pub-brasileiras-2011 (442269 bytes, sha256:9bce1c7e0dacacef6095513ee8135bbc9d930f2f437ba5730d0ef0bb2c11bb1c)
+  - obras-nao-pub-brasileiras-2012 (405061 bytes, sha256:6889a31d7043146117f2c6cdd2c6f63be2b03b1be09947b9aaf44b2f5703027c)
+  - obras-nao-pub-brasileiras-2013 (812830 bytes, sha256:3e2b15a8dd4a0acda21f14aec363783587567f7cc402aea00ecbedb4cc6dc330)
+  - obras-nao-pub-brasileiras-2014 (818510 bytes, sha256:d3929b9412733f5d6017f112876506ed9be909cc07c1cc6a873c5e3902c8fdbe)
+  - obras-nao-pub-brasileiras-2015 (964879 bytes, sha256:293d4e193f44941fe02cefc7df229536c88d777f27c1cd15cec5e3b322b55921)
+  - obras-nao-pub-brasileiras-2016 (913775 bytes, sha256:f4f9b8c0157145c70502cc30b800ca09ed20c06770a4150f60f9356f0cff1d4a)
+  - obras-nao-pub-brasileiras-2017 (939545 bytes, sha256:472068d11e5da7d3afc4c2c6d84b33af0516b56eb411de6feab191cc1fc0570d)
+  - obras-nao-pub-brasileiras-2018 (886720 bytes, sha256:bbdbf01b83964c91173792dce95d9cf55028a59cbd932bcc7a8f13943ffba70a)
+  - obras-nao-pub-brasileiras-2019 (974849 bytes, sha256:4a3103ce359b3c2c1d16d9f00e0f9933f58956dc5f7e3aa043e362c5e5111c9e)
+  - obras-nao-pub-brasileiras-2020 (809070 bytes, sha256:83a8c43d210930b1dd10010b1277071957b7f4595b920ace2106d9d420b75c57)
+  - obras-nao-pub-brasileiras-2021 (922934 bytes, sha256:d8dc66a841e9832d75515eb08ef949199c6346fd2d2ddabfb34279dc21515cc2)
+  - obras-nao-pub-brasileiras-2022 (879841 bytes, sha256:3ed31558e2bd96be684528c47d649730ea66d151d09122f6761d9c2aa09c4f9a)
+  - obras-nao-pub-brasileiras-2023 (1037164 bytes, sha256:65a726c79d82d2204d3c697fbab399b57c0dbc0c3f08c0ba153a5b770338dd57)
+  - obras-nao-pub-brasileiras-2024 (1041771 bytes, sha256:04aceeec176a5b5b47f2fa4f8805ab3f3ea5a9e9f4b0c8fca9a7ab3485b28d5b)
+  - obras-nao-pub-brasileiras-2025 (1070117 bytes, sha256:a80ed673baee36134933d841bc5147023f5092a286cbad922759794db8202616)
+  - obras-nao-pub-brasileiras-2026 (123725 bytes, sha256:21e47e3ae5fbd4e5bb2c93e60ffee2d2ade0f7f0f66515d2e134315812bee670)

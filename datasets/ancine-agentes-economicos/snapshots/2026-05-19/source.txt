@@ -1,0 +1,8 @@
+Dataset: ANCINE — Agentes econômicos regulares
+Fonte oficial: ANCINE
+URL: https://dados.gov.br/dataset?q=ancine+agentes
+Data do snapshot: 2026-05-19
+Status na data: ativo
+Coleta: manual, espelhamento do projeto fomento-audiovisual
+Arquivos:
+  - agentes-economicos-regulares (3154164 bytes, sha256:5afcee56159e1a4b74834f89677fcd9504f9c44dd64e9c6dfeeab2013b861399)

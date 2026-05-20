@@ -1,0 +1,8 @@
+Dataset: ANCINE — Preço médio do ingresso (série histórica)
+Fonte oficial: ANCINE — OCA
+URL: https://oca.ancine.gov.br
+Data do snapshot: 2026-05-19
+Status na data: intermitente
+Coleta: manual, espelhamento do projeto fomento-audiovisual
+Arquivos:
+  - preco-medio-ingresso-ancine (925 bytes, sha256:2fb6e2537b8712ceebc7b92dc8c85f11be8f6b5791edce9003f8209aa3cd1293)

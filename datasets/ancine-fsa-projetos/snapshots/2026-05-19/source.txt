@@ -1,0 +1,8 @@
+Dataset: ANCINE / FSA — Projetos do Fundo Setorial do Audiovisual
+Fonte oficial: ANCINE — Fundo Setorial do Audiovisual
+URL: https://fsa.ancine.gov.br
+Data do snapshot: 2026-05-19
+Status na data: ativo
+Coleta: manual, espelhamento do projeto fomento-audiovisual
+Arquivos:
+  - projetos-fsa (1128551 bytes, sha256:e0f7c0100e78405c695ee69937d73db306f83ba83653b6edc9e98be3f9fd7337)
