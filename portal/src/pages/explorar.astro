@@ -1,0 +1,836 @@
+---
+import Base from "../layouts/Base.astro";
+import { getDatasets, buildSchemaContext } from "../lib/catalog.js";
+
+const HF_BASE = "https://huggingface.co/datasets/riabr-dados/riab/resolve/main/cleaned";
+
+const datasets = getDatasets();
+
+// Grupos temáticos para a sidebar
+const GRUPOS = [
+  {
+    label: "Brasil — Registro de Obras",
+    color: "br",
+    tables: ["obras", "diretores", "produtores"],
+    desc: { obras: "61 mil obras audiovisuais brasileiras (ANCINE)", diretores: "Diretores por CPB", produtores: "Produtoras por CPB" },
+  },
+  {
+    label: "Brasil — Fomento Público",
+    color: "br",
+    tables: ["fomento_fsa", "renuncia_fiscal"],
+    desc: { fomento_fsa: "4.5 mil contratos FSA (2008–2023)", renuncia_fiscal: "Projetos de renúncia fiscal" },
+  },
+  {
+    label: "Brasil — Mercado",
+    color: "br",
+    tables: ["bilheteria_domestica", "preco_ingresso", "agentes_economicos"],
+    desc: { bilheteria_domestica: "Bilheteria doméstica por filme/ano", preco_ingresso: "Preço médio do ingresso", agentes_economicos: "Empresas registradas na ANCINE" },
+  },
+  {
+    label: "Europa — Lumiere",
+    color: "eu",
+    tables: ["bilheteria_europa", "vod_europa"],
+    desc: { bilheteria_europa: "Admissões de filmes em 37 países", vod_europa: "Catálogo de filmes em VOD" },
+  },
+  {
+    label: "França — CNC",
+    color: "fr",
+    tables: ["cnc_visas", "cnc_frequentacao", "cnc_filmes_milhao", "cnc_distribuicao", "cnc_parque", "cnc_audiencia_tv", "cnc_filmes_tv", "cnc_exportacao", "cnc_geografia", "cnc_vod_publico", "cnc_vod_consumo"],
+    desc: { cnc_visas: "Visas de exploração de filmes", cnc_frequentacao: "Frequentação nas salas", cnc_filmes_milhao: "Filmes acima de 1 milhão de entradas", cnc_distribuicao: "Distribuidores e salas", cnc_parque: "Parque cinematográfico francês", cnc_audiencia_tv: "Audiência televisiva", cnc_filmes_tv: "Filmes na TV" },
+  },
+  {
+    label: "Argentina — INCAA",
+    color: "ar",
+    tables: ["incaa_setor"],
+    desc: { incaa_setor: "Setor audiovisual argentino (INCAA)" },
+  },
+  {
+    label: "Reino Unido — BFI",
+    color: "uk",
+    tables: ["bfi_anuario"],
+    desc: { bfi_anuario: "Anuário estatístico do BFI 2023" },
+  },
+  {
+    label: "Uruguai — ACAU",
+    color: "uy",
+    tables: ["acau_apoios"],
+    desc: { acau_apoios: "Apoios audiovisuais do ACAU" },
+  },
+  {
+    label: "Referência",
+    color: "muted",
+    tables: ["deflator_ipca"],
+    desc: { deflator_ipca: "Deflator IPCA para atualização de valores (IBGE)" },
+  },
+];
+
+// Mapa completo nome → URL
+const parquetMap: Record<string, string> = {};
+const seen = new Set<string>();
+for (const ds of datasets) {
+  for (const t of ds.cleaned?.tables ?? []) {
+    if (!seen.has(t)) {
+      seen.add(t);
+      parquetMap[t] = `${HF_BASE}/${t}.parquet`;
+    }
+  }
+}
+
+// Contexto de schema para IA (apenas tabelas com schema documentado)
+const schemaContext = Object.keys(parquetMap)
+  .map(t => buildSchemaContext(t))
+  .filter(Boolean)
+  .join("\n\n---\n\n");
+
+// Queries preset de cruzamento
+const PRESETS = [
+  {
+    label: "Obras por tipo",
+    sql: `SELECT tipo_obra, COUNT(*) AS total,
+  ROUND(AVG(duracao_total_minutos)) AS duracao_media_min
+FROM obras
+GROUP BY tipo_obra
+ORDER BY total DESC`,
+  },
+  {
+    label: "FSA por ano",
+    sql: `SELECT ano_edital,
+  COUNT(*) AS projetos,
+  ROUND(SUM(valor_total_liberado_brl)/1e6, 2) AS liberado_mi_brl
+FROM fomento_fsa
+GROUP BY ano_edital
+ORDER BY ano_edital`,
+  },
+  {
+    label: "Top bilheteria BR",
+    sql: `SELECT titulo_brasil, pais_obra,
+  SUM(publico) AS publico_total
+FROM bilheteria_domestica
+GROUP BY titulo_brasil, pais_obra
+ORDER BY publico_total DESC
+LIMIT 30`,
+  },
+  {
+    label: "Obras + FSA cruzado",
+    sql: `SELECT o.tipo_obra,
+  COUNT(DISTINCT o.cpb) AS total_obras,
+  COUNT(DISTINCT f.titulo_projeto) AS com_fsa,
+  ROUND(SUM(f.valor_total_liberado_brl)/1e6, 2) AS fsa_mi_brl
+FROM obras o
+LEFT JOIN fomento_fsa f
+  ON LOWER(o.titulo_original) = LOWER(f.titulo_projeto)
+GROUP BY o.tipo_obra
+ORDER BY total_obras DESC`,
+  },
+  {
+    label: "UF mais produtoras",
+    sql: `SELECT uf_requerente AS uf,
+  COUNT(*) AS obras,
+  COUNT(DISTINCT requerente) AS produtoras
+FROM obras
+WHERE uf_requerente IS NOT NULL
+GROUP BY uf
+ORDER BY obras DESC
+LIMIT 20`,
+  },
+];
+
+const parquetMapJson = JSON.stringify(parquetMap);
+const presetsJson = JSON.stringify(PRESETS);
+---
+
+<Base title="Explorador Unificado" description="Consulte e cruze todos os datasets do RIAB com SQL direto no navegador.">
+  <div class="exp-page">
+
+    <!-- Cabeçalho da página -->
+    <div class="exp-topbar">
+      <div class="exp-topbar__left">
+        <h1 class="exp-title">Explorador de Dados</h1>
+        <p class="exp-subtitle">Todas as tabelas disponíveis. Escreva SQL ou pergunte em português.</p>
+      </div>
+      <div class="exp-topbar__right">
+        <div class="exp-status-wrap">
+          <span class="ex-dot ex-dot--loading" id="ex-dot"></span>
+          <span class="exp-status-text" id="ex-status-text">Carregando DuckDB…</span>
+        </div>
+        <button class="ex-btn" id="btn-run" disabled>▶ Executar</button>
+        <button class="ex-btn ex-btn--outline" id="btn-export" disabled>↓ CSV</button>
+      </div>
+    </div>
+
+    <!-- Barra de linguagem natural -->
+    <div class="exp-nl-bar">
+      <div class="exp-nl-inner">
+        <span class="exp-nl-label">✦ Pergunte em português</span>
+        <textarea
+          id="nl-input"
+          class="exp-nl-input"
+          placeholder="Ex: Quais estados brasileiros produziram mais filmes nos últimos 5 anos? Cruze com o fomento do FSA."
+          rows="2"
+          spellcheck="true"
+        ></textarea>
+        <div class="exp-nl-actions">
+          <span id="nl-hint" class="exp-nl-hint"></span>
+          <button class="ex-btn exp-nl-btn" id="btn-gen">✦ Gerar SQL</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Layout principal: sidebar + editor -->
+    <div class="exp-body">
+
+      <!-- Sidebar de tabelas -->
+      <aside class="exp-sidebar" id="exp-sidebar">
+        <div class="exp-sidebar__header">
+          <span>Tabelas</span>
+          <button class="sidebar-toggle" id="sidebar-toggle" title="Recolher">«</button>
+        </div>
+        {GRUPOS.map(g => (
+          <div class={`exp-group exp-group--${g.color}`}>
+            <div class="exp-group__label">{g.label}</div>
+            {g.tables.map(t => (
+              <button
+                class="exp-table-btn"
+                data-table={t}
+                title={g.desc[t] ?? t}
+              >
+                <span class="etb-name">{t}</span>
+                <span class="etb-desc">{g.desc[t] ?? ""}</span>
+              </button>
+            ))}
+          </div>
+        ))}
+      </aside>
+
+      <!-- Área principal -->
+      <div class="exp-main" id="exp-main">
+
+        <!-- Queries preset -->
+        <div class="exp-presets">
+          <span class="exp-presets-label">Cruzamentos prontos:</span>
+          <div class="exp-presets-chips" id="presets-chips">
+            {PRESETS.map((p, i) => (
+              <button class="preset-chip" data-idx={i}>{p.label}</button>
+            ))}
+          </div>
+        </div>
+
+        <!-- Editor SQL -->
+        <div class="exp-editor-wrap">
+          <textarea
+            class="exp-editor"
+            id="ex-editor"
+            spellcheck="false"
+            rows="8"
+          >SELECT tipo_obra, COUNT(*) AS total
+FROM obras
+GROUP BY tipo_obra
+ORDER BY total DESC</textarea>
+        </div>
+
+        <!-- Resultado -->
+        <div class="exp-result" id="ex-result">
+          <div class="ex-placeholder">Execute uma query para ver os resultados.</div>
+        </div>
+
+        <!-- Rodapé -->
+        <div class="exp-foot" id="ex-foot" style="display:none">
+          <span id="ex-rowcount"></span>
+          <span id="ex-time"></span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</Base>
+
+<!-- Injeta dados de build no escopo global -->
+<script define:vars={{ parquetMapJson, presetsJson, schemaContext }}>
+  window.__RIAB__ = {
+    parquetMap: JSON.parse(parquetMapJson),
+    presets: JSON.parse(presetsJson),
+    schemaContext,
+  };
+</script>
+
+<!-- DuckDB WASM -->
+<script type="module">
+import * as duckdb from "https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.29.0/+esm";
+
+const { parquetMap, presets, schemaContext } = window.__RIAB__;
+
+const dot        = document.getElementById("ex-dot");
+const statusText = document.getElementById("ex-status-text");
+const btnRun     = document.getElementById("btn-run");
+const btnExport  = document.getElementById("btn-export");
+const editor     = document.getElementById("ex-editor");
+const result     = document.getElementById("ex-result");
+const foot       = document.getElementById("ex-foot");
+const rowcount   = document.getElementById("ex-rowcount");
+const timeEl     = document.getElementById("ex-time");
+
+let db, conn, lastRows = [], lastCols = [];
+
+// ── INIT DUCKDB ───────────────────────────────────────────────
+async function initDuckDB() {
+  try {
+    const bundles = duckdb.getJsDelivrBundles();
+    const bundle  = await duckdb.selectBundle(bundles);
+    const workerUrl = URL.createObjectURL(
+      new Blob([`importScripts("${bundle.mainWorker}");`], { type: "text/javascript" })
+    );
+    const worker = new Worker(workerUrl);
+    const logger = new duckdb.ConsoleLogger();
+    db = new duckdb.AsyncDuckDB(logger, worker);
+    await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
+    conn = await db.connect();
+
+    await conn.query("INSTALL httpfs; LOAD httpfs;");
+    await conn.query("SET s3_region='us-east-1';");
+
+    // Registra todas as tabelas como views
+    const tableNames = Object.keys(parquetMap);
+    statusText.textContent = `Registrando ${tableNames.length} tabelas…`;
+    for (const [name, url] of Object.entries(parquetMap)) {
+      await conn.query(`CREATE OR REPLACE VIEW ${name} AS SELECT * FROM '${url}'`);
+    }
+
+    dot.className  = "ex-dot ex-dot--ok";
+    statusText.textContent = `${tableNames.length} tabelas disponíveis — dados carregados do Hugging Face`;
+    btnRun.disabled    = false;
+    btnExport.disabled = false;
+
+    // Marca tabelas como ready na sidebar
+    document.querySelectorAll(".exp-table-btn").forEach(btn => {
+      btn.classList.add("etb--ready");
+    });
+  } catch (e) {
+    dot.className  = "ex-dot ex-dot--err";
+    statusText.textContent = "Erro ao carregar DuckDB: " + e.message;
+  }
+}
+
+// ── EXECUTAR QUERY ────────────────────────────────────────────
+async function runQuery(sql) {
+  result.innerHTML = `<div class="ex-placeholder ex-loading">Executando…</div>`;
+  foot.style.display = "none";
+  btnRun.disabled = true;
+  const t0 = performance.now();
+  try {
+    const res = await conn.query(sql);
+    const elapsed = ((performance.now() - t0) / 1000).toFixed(2);
+    lastCols = res.schema.fields.map(f => f.name);
+    lastRows = res.toArray().map(r => lastCols.map(c => r[c]));
+    renderTable(lastCols, lastRows, elapsed);
+  } catch (e) {
+    result.innerHTML = `<div class="ex-error">${e.message}</div>`;
+  } finally {
+    btnRun.disabled = false;
+  }
+}
+
+// ── RENDERIZAR TABELA ─────────────────────────────────────────
+function renderTable(cols, rows, elapsed) {
+  if (!rows.length) {
+    result.innerHTML = `<div class="ex-placeholder">Nenhum resultado.</div>`;
+    return;
+  }
+  const MAX = 500;
+  const display = rows.slice(0, MAX);
+  const thead = `<thead><tr>${cols.map(c => `<th>${c}</th>`).join("")}</tr></thead>`;
+  const tbody = `<tbody>${display.map(row =>
+    `<tr>${row.map(v => {
+      const s = v == null ? "" : String(v);
+      return `<td title="${s.replace(/"/g, "&quot;")}">${s.length > 60 ? s.slice(0,60)+"…" : s}</td>`;
+    }).join("")}</tr>`
+  ).join("")}</tbody>`;
+  result.innerHTML = `<div class="ex-table-wrap"><table class="ex-table">${thead}${tbody}</table></div>`;
+  rowcount.textContent = `${rows.length.toLocaleString("pt-BR")} linhas${rows.length > MAX ? ` (exibindo ${MAX})` : ""}`;
+  timeEl.textContent = `${elapsed}s`;
+  foot.style.display = "flex";
+}
+
+// ── EXPORT CSV ────────────────────────────────────────────────
+function exportCSV() {
+  if (!lastRows.length) return;
+  const esc = v => {
+    const s = v == null ? "" : String(v);
+    return s.includes(",") || s.includes('"') || s.includes("\n")
+      ? `"${s.replace(/"/g, '""')}"` : s;
+  };
+  const lines = [lastCols.map(esc).join(","), ...lastRows.map(r => r.map(esc).join(","))];
+  const blob = new Blob(["\uFEFF" + lines.join("\n")], { type: "text/csv;charset=utf-8;" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "riab-export.csv";
+  a.click();
+}
+
+// ── LINGUAGEM NATURAL → SQL ───────────────────────────────────
+const LS_KEY = "riab_anthropic_key";
+const nlInput = document.getElementById("nl-input");
+const btnGen  = document.getElementById("btn-gen");
+const nlHint  = document.getElementById("nl-hint");
+
+function getApiKey() {
+  let key = localStorage.getItem(LS_KEY);
+  if (!key) {
+    key = prompt(
+      "Para gerar SQL com IA, informe sua chave da API Anthropic (anthropic.com).\n" +
+      "Fica salva só no seu navegador — nunca enviada para nossos servidores.",
+      ""
+    );
+    if (key) localStorage.setItem(LS_KEY, key.trim());
+  }
+  return key ? key.trim() : null;
+}
+
+async function generateSQL() {
+  const question = nlInput?.value?.trim();
+  if (!question || !conn) return;
+  const apiKey = getApiKey();
+  if (!apiKey) return;
+
+  btnGen.disabled = true;
+  nlHint.textContent = "Gerando…";
+
+  const tablesAvailable = Object.keys(parquetMap).join(", ");
+  const systemPrompt = `Voce e um assistente especializado em gerar queries SQL para DuckDB.
+O usuario esta explorando dados audiovisuais de multiplos paises.
+
+Tabelas disponíveis: ${tablesAvailable}
+
+${schemaContext || "Use os nomes de tabela exatos listados acima."}
+
+REGRAS OBRIGATORIAS:
+1. Responda APENAS com o SQL — sem explicacoes, sem markdown, sem backticks
+2. Use os nomes de tabela e coluna exatos (snake_case)
+3. Inclua LIMIT 200 quando nao for agregacao
+4. Para filtros de texto use ILIKE
+5. Apenas funcoes nativas do DuckDB`;
+
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
+        "anthropic-dangerous-direct-browser-access": "true",
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "claude-haiku-4-5-20251001",
+        max_tokens: 600,
+        system: systemPrompt,
+        messages: [{ role: "user", content: question }],
+      }),
+    });
+    if (res.status === 401) {
+      localStorage.removeItem(LS_KEY);
+      nlHint.textContent = "Chave inválida. Tente novamente.";
+      return;
+    }
+    if (!res.ok) { nlHint.textContent = `Erro ${res.status}.`; return; }
+    const data = await res.json();
+    const sql = data.content?.[0]?.text?.trim() ?? "";
+    if (sql) {
+      editor.value = sql;
+      document.getElementById("btn-run")?.click();
+      nlHint.textContent = "SQL gerado ✓";
+    } else {
+      nlHint.textContent = "Não foi possível gerar SQL. Reformule.";
+    }
+  } catch (e) {
+    nlHint.textContent = "Erro: " + e.message;
+  } finally {
+    btnGen.disabled = false;
+  }
+}
+
+// ── EVENTOS ───────────────────────────────────────────────────
+btnRun.addEventListener("click", () => runQuery(editor.value));
+btnExport.addEventListener("click", exportCSV);
+
+editor.addEventListener("keydown", e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === "Enter") { e.preventDefault(); runQuery(editor.value); }
+  if (e.key === "Tab") {
+    e.preventDefault();
+    const s = editor.selectionStart, end = editor.selectionEnd;
+    editor.value = editor.value.substring(0, s) + "  " + editor.value.substring(end);
+    editor.selectionStart = editor.selectionEnd = s + 2;
+  }
+});
+
+if (btnGen) btnGen.addEventListener("click", generateSQL);
+if (nlInput) nlInput.addEventListener("keydown", e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === "Enter") { e.preventDefault(); generateSQL(); }
+});
+
+// Clicks nas tabelas da sidebar
+document.querySelectorAll(".exp-table-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const t = btn.dataset.table;
+    const cursor = editor.selectionStart;
+    const val = editor.value;
+    editor.value = val.substring(0, cursor) + t + val.substring(cursor);
+    editor.focus();
+  });
+});
+
+// Presets
+document.querySelectorAll(".preset-chip").forEach(chip => {
+  chip.addEventListener("click", () => {
+    document.querySelectorAll(".preset-chip").forEach(c => c.classList.remove("preset-chip--active"));
+    chip.classList.add("preset-chip--active");
+    const idx = parseInt(chip.dataset.idx);
+    editor.value = presets[idx].sql;
+    runQuery(editor.value);
+  });
+});
+
+// Sidebar toggle
+document.getElementById("sidebar-toggle")?.addEventListener("click", () => {
+  const sidebar = document.getElementById("exp-sidebar");
+  const main    = document.getElementById("exp-main");
+  const btn     = document.getElementById("sidebar-toggle");
+  const collapsed = sidebar.classList.toggle("exp-sidebar--collapsed");
+  btn.textContent = collapsed ? "»" : "«";
+});
+
+initDuckDB();
+</script>
+
+<style>
+/* Layout da página */
+.exp-page {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 53px); /* minus nav */
+  overflow: hidden;
+}
+
+/* Topbar */
+.exp-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  flex-shrink: 0;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.exp-title {
+  font-family: var(--font-d);
+  font-size: 20px;
+  letter-spacing: 1px;
+  line-height: 1;
+}
+.exp-subtitle {
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.exp-topbar__right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.exp-status-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  color: var(--muted);
+}
+.exp-status-text { font-family: var(--font-m); }
+
+/* NL bar */
+.exp-nl-bar {
+  padding: 10px 20px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.exp-nl-inner { display: flex; flex-direction: column; gap: 6px; }
+.exp-nl-label {
+  font-size: 9px;
+  color: var(--br);
+  font-family: var(--font-m);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.exp-nl-input {
+  width: 100%;
+  font-family: var(--font-s, system-ui, sans-serif);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  outline: none;
+  resize: none;
+}
+.exp-nl-input:focus { border-color: var(--br); }
+.exp-nl-actions { display: flex; justify-content: space-between; align-items: center; }
+.exp-nl-hint { font-size: 9px; color: var(--dim); font-family: var(--font-m); }
+.exp-nl-btn {
+  background: transparent;
+  color: var(--br);
+  border-color: var(--br);
+  font-size: 10px;
+}
+.exp-nl-btn:not(:disabled):hover { background: rgba(0,196,122,.1); }
+
+/* Corpo: sidebar + main */
+.exp-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* Sidebar */
+.exp-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  background: var(--surface);
+  transition: width .2s;
+}
+.exp-sidebar--collapsed { width: 32px; overflow: hidden; }
+.exp-sidebar--collapsed .exp-group,
+.exp-sidebar--collapsed .exp-sidebar__header span { display: none; }
+.exp-sidebar::-webkit-scrollbar { width: 3px; }
+.exp-sidebar::-webkit-scrollbar-thumb { background: var(--border2); }
+
+.exp-sidebar__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px 6px;
+  font-size: 9px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--dim);
+  position: sticky;
+  top: 0;
+  background: var(--surface);
+  z-index: 1;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar-toggle {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 11px;
+  padding: 0;
+  line-height: 1;
+}
+.sidebar-toggle:hover { color: var(--text); }
+
+.exp-group { padding: 8px 0 4px; border-bottom: 1px solid var(--border); }
+.exp-group__label {
+  padding: 0 12px 4px;
+  font-size: 8px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.exp-group--br .exp-group__label { color: var(--br); }
+.exp-group--fr .exp-group__label { color: var(--fr); }
+.exp-group--eu .exp-group__label { color: var(--eu); }
+.exp-group--ar .exp-group__label { color: var(--ar); }
+.exp-group--uk .exp-group__label { color: var(--uk); }
+.exp-group--uy .exp-group__label { color: var(--uy); }
+
+.exp-table-btn {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  text-align: left;
+  padding: 4px 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background .1s;
+  gap: 1px;
+}
+.exp-table-btn:hover { background: var(--surface2); }
+.etb-name {
+  font-family: var(--font-m);
+  font-size: 10px;
+  color: var(--text);
+}
+.etb-desc {
+  font-size: 8px;
+  color: var(--dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.etb--ready .etb-name::after {
+  content: " ●";
+  color: var(--status-ativo);
+  font-size: 6px;
+  vertical-align: middle;
+}
+
+/* Área principal */
+.exp-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* Presets */
+.exp-presets {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 8px 16px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.exp-presets-label {
+  font-size: 9px;
+  color: var(--dim);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.exp-presets-chips { display: flex; gap: 4px; flex-wrap: wrap; }
+.preset-chip {
+  font-family: var(--font-m);
+  font-size: 9px;
+  padding: 3px 10px;
+  border-radius: 2px;
+  border: 1px solid var(--border2);
+  background: var(--surface);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all .15s;
+}
+.preset-chip:hover { color: var(--text); border-color: var(--br); }
+.preset-chip--active { color: var(--br); border-color: var(--br); background: rgba(0,196,122,.07); }
+
+/* Editor */
+.exp-editor-wrap {
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  background: var(--surface2);
+}
+.exp-editor {
+  width: 100%;
+  font-family: var(--font-m);
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text);
+  background: transparent;
+  border: none;
+  outline: none;
+  resize: vertical;
+  padding: 14px 16px;
+  min-height: 140px;
+}
+
+/* Resultado */
+.exp-result {
+  flex: 1;
+  overflow: auto;
+  background: var(--bg);
+  min-height: 0;
+}
+.exp-result::-webkit-scrollbar { width: 4px; height: 4px; }
+.exp-result::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+/* Rodapé */
+.exp-foot {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 14px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  font-size: 9px;
+  color: var(--dim);
+  flex-shrink: 0;
+}
+
+/* Reutiliza estilos do DataExplorer */
+.ex-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.ex-dot--loading { background: var(--muted); animation: pulse 1s infinite; }
+.ex-dot--ok { background: var(--status-ativo); }
+.ex-dot--err { background: var(--uk); }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+.ex-btn {
+  font-family: var(--font-m);
+  font-size: 10px;
+  padding: 5px 14px;
+  border-radius: var(--radius);
+  border: 1px solid var(--br);
+  background: var(--br);
+  color: #000;
+  cursor: pointer;
+  transition: all .15s;
+  letter-spacing: .03em;
+}
+.ex-btn:disabled { opacity: .35; cursor: not-allowed; }
+.ex-btn:not(:disabled):hover { background: #00e589; }
+.ex-btn--outline {
+  background: transparent;
+  color: var(--muted);
+  border-color: var(--border2);
+}
+.ex-btn--outline:not(:disabled):hover { color: var(--text); border-color: var(--br); background: transparent; }
+
+.ex-placeholder {
+  padding: 40px 20px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--dim);
+}
+.ex-loading { color: var(--muted); }
+.ex-error {
+  padding: 16px 20px;
+  font-size: 11px;
+  color: #f87171;
+  white-space: pre-wrap;
+  font-family: var(--font-m);
+}
+.ex-table-wrap { overflow-x: auto; }
+.ex-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+.ex-table th {
+  position: sticky; top: 0;
+  background: var(--surface);
+  padding: 7px 12px;
+  text-align: left;
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border2);
+  white-space: nowrap;
+}
+.ex-table td {
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  max-width: 260px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ex-table tr:hover td { background: var(--surface); }
+</style>

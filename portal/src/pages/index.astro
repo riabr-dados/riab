@@ -1,7 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
 import DatasetCard from "../components/DatasetCard.astro";
-import StatsBar from "../components/StatsBar.astro";
 import { getDatasets, getCatalogStats } from "../lib/catalog.js";
 
 const datasets = getDatasets();
@@ -9,118 +8,218 @@ const stats = getCatalogStats(datasets);
 
 const COUNTRIES = [
   { code: "", label: `Todos (${datasets.length})` },
-  { code: "BR", label: `Brasil` },
-  { code: "FR", label: `Franca` },
-  { code: "AR", label: `Argentina` },
-  { code: "UK", label: `Reino Unido` },
-  { code: "UY", label: `Uruguai` },
-  { code: "EU", label: `Europa` },
+  { code: "BR", label: "Brasil" },
+  { code: "FR", label: "França" },
+  { code: "AR", label: "Argentina" },
+  { code: "UK", label: "Reino Unido" },
+  { code: "UY", label: "Uruguai" },
+  { code: "EU", label: "Europa" },
 ];
+
+const DISCOVERIES = [
+  {
+    question: "Qual estado brasileiro produz mais filmes?",
+    detail: "61 mil obras cadastradas na ANCINE — 2002 a 2026",
+    color: "br",
+  },
+  {
+    question: "Quanto o FSA investiu por tipo de projeto?",
+    detail: "4.5 mil contratos do Fundo Setorial do Audiovisual",
+    color: "br",
+  },
+  {
+    question: "Quais filmes brasileiros chegaram à Europa?",
+    detail: "Dados Lumiere — admissões em 37 países europeus",
+    color: "eu",
+  },
+  {
+    question: "Como o mercado francês evoluiu nos últimos 10 anos?",
+    detail: "CNC — frequentação anual e dados de distribuição",
+    color: "fr",
+  },
+];
+
+const base = import.meta.env.BASE_URL;
 ---
 
 <Base>
-  <section class="home-hero">
-    <div class="hero__text">
+
+  <!-- ── HERO ──────────────────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="hero__left">
+      <div class="hero__badge">Hub de dados abertos · Audiovisual</div>
       <h1 class="hero__title">
-        Repositorio<br />
-        Independente do<br />
-        Audiovisual<br />
-        <em>Brasileiro</em>
+        Dados do<br/>audiovisual<br/><em>em aberto.</em>
       </h1>
-      <p class="hero__sub">
-        Hub de inteligencia de dados do audiovisual brasileiro e internacional.
-        Dados brutos preservados. Dados tratados em Parquet, livres para consulta.
-        Custo zero. Infraestrutura redundante.
+      <p class="hero__desc">
+        {stats.total_datasets} datasets de {stats.total_paises} países.
+        Consulte, cruze e exporte direto do navegador — sem instalar nada,
+        sem cadastro, sem custo.
       </p>
+      <div class="hero__ctas">
+        <a class="btn-primary" href={`${base}explorar/`}>Explorar dados →</a>
+        <a class="btn-ghost" href={`${base}datasets/`}>Ver catálogo</a>
+      </div>
     </div>
-    <StatsBar stats={stats} />
+    <div class="hero__stats">
+      <div class="hero-stat">
+        <span class="hero-stat__n">{stats.total_datasets}</span>
+        <span class="hero-stat__l">datasets</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat__n">{stats.total_paises}</span>
+        <span class="hero-stat__l">países</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat__n">+60 mil</span>
+        <span class="hero-stat__l">obras cadastradas</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat__n hero-stat__n--accent">R$ 0</span>
+        <span class="hero-stat__l">custo de acesso</span>
+      </div>
+    </div>
   </section>
 
-  <section class="home-catalog">
+  <!-- ── O QUE VOCÊ PODE DESCOBRIR ─────────────────────────────────── -->
+  <section class="home-section discoveries">
+    <div class="sec-head">
+      <h2 class="sec-title">O que você pode descobrir</h2>
+      <p class="sec-sub">Perguntas reais que os dados respondem. Clique para explorar.</p>
+    </div>
+    <div class="disc-grid">
+      {DISCOVERIES.map((d) => (
+        <a class={`disc-card disc-card--${d.color}`} href={`${base}explorar/`}>
+          <div class="disc-card__q">{d.question}</div>
+          <div class="disc-card__detail">{d.detail}</div>
+          <span class="disc-card__cta">Explorar →</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- ── COMO FUNCIONA ──────────────────────────────────────────────── -->
+  <section class="home-section how">
+    <div class="sec-head">
+      <h2 class="sec-title">Como funciona</h2>
+      <p class="sec-sub">Três passos. Sem cadastro. Sem download obrigatório.</p>
+    </div>
+    <div class="how-steps">
+      <div class="how-step">
+        <div class="how-step__num">01</div>
+        <div class="how-step__body">
+          <h3 class="how-step__title">Escolha um dataset</h3>
+          <p class="how-step__desc">
+            {stats.total_datasets} datasets de fontes oficiais (ANCINE, CNC, BFI, INCAA, ACAU, Lumiere, IBGE),
+            organizados e documentados com schema completo de colunas.
+          </p>
+        </div>
+      </div>
+      <div class="how-step">
+        <div class="how-step__num">02</div>
+        <div class="how-step__body">
+          <h3 class="how-step__title">Escreva SQL ou pergunte em português</h3>
+          <p class="how-step__desc">
+            O explorador roda no seu navegador via DuckDB. Os dados chegam diretamente
+            do Hugging Face. Sem servidor, sem espera — e você pode cruzar tabelas de países diferentes.
+          </p>
+        </div>
+      </div>
+      <div class="how-step">
+        <div class="how-step__num">03</div>
+        <div class="how-step__body">
+          <h3 class="how-step__title">Exporte e use onde quiser</h3>
+          <p class="how-step__desc">
+            Baixe CSV com um clique, ou acesse os dados diretamente do Python, R
+            ou DuckDB com uma linha de código — via Hugging Face.
+          </p>
+        </div>
+      </div>
+    </div>
+    <a class="btn-primary" href={`${base}explorar/`}>Começar agora →</a>
+  </section>
+
+  <!-- ── CATÁLOGO ───────────────────────────────────────────────────── -->
+  <section class="home-section catalog-section">
+    <div class="sec-head">
+      <h2 class="sec-title">Catálogo completo</h2>
+      <p class="sec-sub">Filtre por país ou busque pelo nome.</p>
+    </div>
     <div class="catalog__filters" id="filters">
       {COUNTRIES.map((c) => (
-        <button
-          class={`chip${c.code === "" ? " chip--active" : ""}`}
-          data-country={c.code}
-        >
+        <button class={`chip${c.code === "" ? " chip--active" : ""}`} data-country={c.code}>
           {c.label}
         </button>
       ))}
       <input
-        class="catalog__search"
-        id="search"
-        type="search"
-        placeholder="Buscar dataset..."
-        autocomplete="off"
+        class="catalog__search" id="search"
+        type="search" placeholder="Buscar dataset..." autocomplete="off"
       />
     </div>
-
     <div class="catalog__grid" id="catalog-grid">
       {datasets.map((ds) => (
-        <div data-country={ds.source?.country ?? ""} data-tags={(ds.tags ?? []).join(" ")} data-title={ds.title.toLowerCase()}>
+        <div
+          data-country={ds.source?.country ?? ""}
+          data-tags={(ds.tags ?? []).join(" ")}
+          data-title={ds.title.toLowerCase()}
+        >
           <DatasetCard ds={ds} />
         </div>
       ))}
     </div>
   </section>
 
-  <section class="home-quickstart">
-    <h2 class="section-title">Como usar</h2>
-    <p class="section-sub">
-      Todos os dados tratados estao disponiveis como Parquet no Hugging Face.
-      Nenhuma instalacao especial necessaria — apenas Python ou R.
-    </p>
-    <div class="quickstart-grid">
-      <div class="qs-card">
-        <div class="qs-card__lang">Python · DuckDB</div>
-        <pre class="qs-card__code">import duckdb
+  <!-- ── CÓDIGO ─────────────────────────────────────────────────────── -->
+  <section class="home-section quickcode">
+    <div class="sec-head">
+      <h2 class="sec-title">Use no seu código</h2>
+      <p class="sec-sub">Acesse os Parquets direto do Hugging Face — sem baixar nada.</p>
+    </div>
+    <div class="qc-grid">
+      <div class="qc-card">
+        <div class="qc-lang">Python · DuckDB</div>
+        <pre class="qc-code">import duckdb
 duckdb.sql("""
-  SELECT titulo_original, ano_producao_inicial, tipo_obra
+  SELECT tipo_obra, COUNT(*) as total
   FROM 'hf://datasets/riabr-dados/riab/cleaned/obras.parquet'
-  WHERE tipo_obra = 'CINEMATOGRAFICA'
-  ORDER BY ano_producao_inicial DESC
-  LIMIT 20
+  GROUP BY tipo_obra ORDER BY total DESC
 """).show()</pre>
       </div>
-      <div class="qs-card">
-        <div class="qs-card__lang">Python · pandas</div>
-        <pre class="qs-card__code">import pandas as pd
+      <div class="qc-card">
+        <div class="qc-lang">Python · pandas</div>
+        <pre class="qc-code">import pandas as pd
 df = pd.read_parquet(
   "hf://datasets/riabr-dados/riab/cleaned/obras.parquet"
 )
-print(df.shape)
-print(df.head())</pre>
+print(df.shape, df.head())</pre>
       </div>
-      <div class="qs-card">
-        <div class="qs-card__lang">R · arrow</div>
-        <pre class="qs-card__code">library(arrow)
+      <div class="qc-card">
+        <div class="qc-lang">R · arrow</div>
+        <pre class="qc-code">library(arrow)
 obras <- read_parquet(
   "hf://datasets/riabr-dados/riab/cleaned/obras.parquet"
 )
 head(obras)</pre>
       </div>
     </div>
-    <a class="btn-outline" href="/riab/consulta/">Ver guia completo de consulta</a>
+    <a class="btn-ghost" href={`${base}consulta/`}>Ver guia completo de consulta</a>
   </section>
+
 </Base>
 
 <script>
-  // Filtro por pais
   const chips = document.querySelectorAll(".chip[data-country]");
   const cards = document.querySelectorAll("#catalog-grid > div");
-  const search = document.getElementById("search");
-
+  const search = document.getElementById("search") as HTMLInputElement | null;
   let activeCountry = "";
 
   function applyFilters() {
-    const q = (search?.value ?? "").trim().toLowerCase();
+    const q = search?.value.trim().toLowerCase() ?? "";
     cards.forEach((card) => {
-      const country = card.dataset.country ?? "";
-      const title = card.dataset.title ?? "";
-      const tags = card.dataset.tags ?? "";
-      const matchCountry = activeCountry === "" || country === activeCountry;
-      const matchSearch = q === "" || title.includes(q) || tags.includes(q);
-      (card as HTMLElement).style.display = matchCountry && matchSearch ? "" : "none";
+      const el = card as HTMLElement;
+      const matchC = activeCountry === "" || el.dataset.country === activeCountry;
+      const matchS = q === "" || (el.dataset.title ?? "").includes(q) || (el.dataset.tags ?? "").includes(q);
+      el.style.display = matchC && matchS ? "" : "none";
     });
   }
 
@@ -132,6 +231,254 @@ head(obras)</pre>
       applyFilters();
     });
   });
-
   search?.addEventListener("input", applyFilters);
 </script>
+
+<style>
+/* HERO */
+.hero {
+  padding: 64px 0 52px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 48px;
+  flex-wrap: wrap;
+}
+.hero__badge {
+  display: inline-block;
+  font-family: var(--font-m);
+  font-size: 9px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--br);
+  border: 1px solid var(--br);
+  padding: 3px 10px;
+  border-radius: 2px;
+  margin-bottom: 20px;
+}
+.hero__title {
+  font-family: var(--font-d);
+  font-size: clamp(52px, 7vw, 96px);
+  letter-spacing: 2px;
+  line-height: .92;
+  color: var(--text);
+  margin-bottom: 20px;
+}
+.hero__title em { color: var(--br); font-style: normal; }
+.hero__desc {
+  font-size: 13px;
+  color: var(--muted);
+  max-width: 520px;
+  line-height: 1.75;
+  margin-bottom: 28px;
+}
+.hero__ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+.hero__stats {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+.hero-stat { text-align: right; }
+.hero-stat__n {
+  display: block;
+  font-family: var(--font-d);
+  font-size: 52px;
+  line-height: 1;
+  color: var(--text);
+}
+.hero-stat__n--accent { color: var(--br); }
+.hero-stat__l {
+  display: block;
+  font-family: var(--font-m);
+  font-size: 9px;
+  color: var(--muted);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+/* BOTÕES */
+.btn-primary {
+  display: inline-block;
+  background: var(--br);
+  color: #000 !important;
+  font-family: var(--font-m);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .05em;
+  padding: 10px 24px;
+  border-radius: var(--radius);
+  text-decoration: none !important;
+  transition: background .15s;
+}
+.btn-primary:hover { background: #00e589; }
+.btn-ghost {
+  display: inline-block;
+  background: transparent;
+  color: var(--muted) !important;
+  font-family: var(--font-m);
+  font-size: 11px;
+  letter-spacing: .05em;
+  padding: 10px 24px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border2);
+  text-decoration: none !important;
+  transition: all .15s;
+}
+.btn-ghost:hover { color: var(--text) !important; border-color: var(--br); }
+
+/* SEÇÕES */
+.home-section {
+  padding: 56px 0;
+  border-bottom: 1px solid var(--border);
+}
+.home-section:last-child { border-bottom: none; }
+.sec-head { margin-bottom: 32px; }
+.sec-title {
+  font-family: var(--font-d);
+  font-size: 30px;
+  letter-spacing: 1px;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.sec-sub { font-size: 12px; color: var(--muted); }
+
+/* DISCOVERIES */
+.disc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+}
+.disc-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  background: var(--surface);
+  text-decoration: none !important;
+  transition: all .15s;
+}
+.disc-card:hover { border-color: var(--br); background: var(--surface2); }
+.disc-card--br { border-left: 3px solid var(--br); }
+.disc-card--eu { border-left: 3px solid var(--eu); }
+.disc-card--fr { border-left: 3px solid var(--fr); }
+.disc-card--ar { border-left: 3px solid var(--ar); }
+.disc-card__q { font-size: 13px; color: var(--text); line-height: 1.5; }
+.disc-card__detail { font-size: 10px; color: var(--muted); }
+.disc-card__cta {
+  font-size: 10px;
+  color: var(--br);
+  font-family: var(--font-m);
+  margin-top: auto;
+}
+
+/* HOW */
+.how-steps {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 32px;
+}
+.how-step {
+  display: flex;
+  gap: 28px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--border);
+  align-items: flex-start;
+}
+.how-step:last-child { border-bottom: none; padding-bottom: 0; }
+.how-step__num {
+  font-family: var(--font-d);
+  font-size: 40px;
+  color: var(--dim);
+  line-height: 1;
+  flex-shrink: 0;
+  width: 52px;
+}
+.how-step__title {
+  font-family: var(--font-m);
+  font-size: 13px;
+  color: var(--text);
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+.how-step__desc { font-size: 11px; color: var(--muted); line-height: 1.75; }
+
+/* CATÁLOGO */
+.catalog__filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.chip {
+  font-family: var(--font-m);
+  font-size: 10px;
+  padding: 5px 14px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border2);
+  background: var(--surface);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all .15s;
+}
+.chip:hover { color: var(--text); border-color: var(--br); }
+.chip--active { color: var(--br); border-color: var(--br); background: rgba(0,196,122,.07); }
+.catalog__search {
+  margin-left: auto;
+  font-family: var(--font-m);
+  font-size: 10px;
+  padding: 5px 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border2);
+  background: var(--surface);
+  color: var(--text);
+  outline: none;
+  width: 180px;
+}
+.catalog__search:focus { border-color: var(--br); }
+.catalog__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 10px;
+}
+
+/* QUICK CODE */
+.qc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.qc-card {
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--surface);
+}
+.qc-lang {
+  padding: 8px 14px;
+  font-family: var(--font-m);
+  font-size: 9px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface2);
+}
+.qc-code {
+  padding: 14px;
+  font-family: var(--font-m);
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--text);
+  white-space: pre;
+  overflow-x: auto;
+  margin: 0;
+}
+</style>

@@ -24,6 +24,7 @@
 
   --font-d: 'Bebas Neue', sans-serif;
   --font-m: 'IBM Plex Mono', monospace;
+  --font-s: 'Inter', system-ui, sans-serif;
 
   --radius: 3px;
   --max-w: 1440px;
@@ -82,6 +83,14 @@ a:hover { text-decoration: underline; }
   border-radius: var(--radius);
 }
 .nav-gh:hover { border-color: var(--br) !important; color: var(--br) !important; }
+.nav-explorar {
+  color: var(--br) !important;
+  border: 1px solid rgba(0,196,122,.3);
+  padding: 4px 12px;
+  border-radius: var(--radius);
+  font-weight: 500;
+}
+.nav-explorar:hover { background: rgba(0,196,122,.1); text-decoration: none; border-color: var(--br); }
 
 /* ── FOOTER ──────────────────────────────────────────────────── */
 .sitefooter {
@@ -99,6 +108,8 @@ a:hover { text-decoration: underline; }
 
 /* ── MAIN WRAPPER ────────────────────────────────────────────── */
 main { max-width: var(--max-w); margin: 0 auto; padding: 0 var(--pad); }
+/* Explorador usa full-width sem padding */
+main:has(.exp-page) { max-width: 100%; padding: 0; }
 
 /* ── HOME HERO ───────────────────────────────────────────────── */
 .home-hero {
