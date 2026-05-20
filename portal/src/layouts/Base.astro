@@ -18,7 +18,7 @@ const base = import.meta.env.BASE_URL;
   <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@300;400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href={`${base}_assets/global.css`} />
 </head>
 <body>
@@ -29,7 +29,7 @@ const base = import.meta.env.BASE_URL;
       <a href={`${base}datasets/`}>Datasets</a>
       <a href={`${base}consulta/`}>Docs</a>
       <a href={`${base}sobre/`}>Sobre</a>
-      <a href="https://github.com/riabr-dados/riab" target="_blank" rel="noopener" class="nav-gh">GitHub</a>
+      <a href="https://github.com/riabr-dados/riab" target="_blank" rel="noopener" class="nav-gh">GitHub ↗</a>
     </div>
   </nav>
 
@@ -38,12 +38,13 @@ const base = import.meta.env.BASE_URL;
   </main>
 
   <footer class="sitefooter">
-    <span>RIAB — Repositorio Independente do Audiovisual Brasileiro</span>
-    <span>
-      <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">Dados: CC-BY-4.0</a>
-      &nbsp;·&nbsp;
-      <a href="https://github.com/riabr-dados/riab/blob/main/LICENSE-code" target="_blank">Codigo: MIT</a>
-    </span>
+    <span class="sitefooter-logo">RIAB</span>
+    <div class="sitefooter-links">
+      <a href="https://huggingface.co/datasets/riabr-dados/riab" target="_blank">Hugging Face</a>
+      <a href="https://github.com/riabr-dados/riab" target="_blank">GitHub</a>
+      <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC-BY-4.0</a>
+    </div>
+    <span class="sitefooter-right">Dados: CC-BY-4.0 · Código: MIT</span>
   </footer>
 </body>
 </html>

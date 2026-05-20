@@ -16,198 +16,239 @@ const COUNTRIES = [
   { code: "EU", label: "Europa" },
 ];
 
-const DISCOVERIES = [
-  {
-    question: "Qual estado brasileiro produz mais filmes?",
-    detail: "61 mil obras cadastradas na ANCINE — 2002 a 2026",
-    color: "br",
-  },
-  {
-    question: "Quanto o FSA investiu por tipo de projeto?",
-    detail: "4.5 mil contratos do Fundo Setorial do Audiovisual",
-    color: "br",
-  },
-  {
-    question: "Quais filmes brasileiros chegaram à Europa?",
-    detail: "Dados Lumiere — admissões em 37 países europeus",
-    color: "eu",
-  },
-  {
-    question: "Como o mercado francês evoluiu nos últimos 10 anos?",
-    detail: "CNC — frequentação anual e dados de distribuição",
-    color: "fr",
-  },
-];
-
 const base = import.meta.env.BASE_URL;
 ---
 
 <Base>
 
-  <!-- ── HERO ──────────────────────────────────────────────────────── -->
-  <section class="hero">
-    <div class="hero__left">
-      <div class="hero__badge">Hub de dados abertos · Audiovisual</div>
-      <h1 class="hero__title">
-        Dados do<br/>audiovisual<br/><em>em aberto.</em>
-      </h1>
-      <p class="hero__desc">
-        {stats.total_datasets} datasets de {stats.total_paises} países.
-        Consulte, cruze e exporte direto do navegador — sem instalar nada,
-        sem cadastro, sem custo.
+<!-- ── HERO ──────────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero__left">
+    <div class="hero__badge">
+      <span class="hero__badge-dot"></span>
+      Hub de dados abertos · Audiovisual
+    </div>
+    <h1 class="hero__title">
+      Dados do<br/>audiovisual<br/><em>em aberto.</em>
+    </h1>
+    <p class="hero__desc">
+      {stats.total_datasets} datasets de {stats.total_paises} países, {stats.total_fontes} fontes oficiais.
+      Consulte, cruze e exporte direto do navegador — sem instalar nada, sem cadastro, sem custo.
+    </p>
+    <div class="hero__ctas">
+      <a class="btn-primary" href={`${base}explorar/`}>Explorar dados →</a>
+      <a class="btn-ghost" href={`${base}datasets/`}>Ver catálogo</a>
+    </div>
+  </div>
+
+  <div class="hero__stats">
+    <div class="stat-card">
+      <span class="stat-card__n">{stats.total_datasets}</span>
+      <span class="stat-card__l">datasets</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card__n">{stats.total_paises}</span>
+      <span class="stat-card__l">países</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card__n">+60k</span>
+      <span class="stat-card__l">obras cadastradas</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card__n stat-card__n--accent">R$&thinsp;0</span>
+      <span class="stat-card__l">custo de acesso</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── DISCOVER ───────────────────────────────────────────────────── -->
+<section class="home-section">
+  <div class="sec-label">O que você pode descobrir</div>
+  <h2 class="sec-title">Perguntas reais.<br/>Dados reais.</h2>
+  <p class="sec-sub">Clique para explorar qualquer pergunta no explorador.</p>
+
+  <div class="disc-grid">
+    <a href={`${base}explorar/`} class="disc-card disc-card--br">
+      <div class="disc-card__glow"></div>
+      <div class="disc-card__tag">Brasil · ANCINE</div>
+      <div class="disc-card__q">Qual estado brasileiro produz mais filmes — e como isso mudou nos últimos 20 anos?</div>
+      <div class="disc-card__detail">61.335 obras cadastradas · 2002–2026</div>
+      <span class="disc-card__arrow">→</span>
+    </a>
+    <a href={`${base}explorar/`} class="disc-card disc-card--br">
+      <div class="disc-card__glow"></div>
+      <div class="disc-card__tag">Brasil · FSA</div>
+      <div class="disc-card__q">Quanto o Fundo Setorial do Audiovisual investiu por tipo de projeto e produtora?</div>
+      <div class="disc-card__detail">4.588 contratos FSA · 2008–2023</div>
+      <span class="disc-card__arrow">→</span>
+    </a>
+    <a href={`${base}explorar/`} class="disc-card disc-card--eu">
+      <div class="disc-card__glow"></div>
+      <div class="disc-card__tag">Europa · Lumiere</div>
+      <div class="disc-card__q">Quais filmes brasileiros chegaram à Europa — e em quais países tiveram mais público?</div>
+      <div class="disc-card__detail">Dados Lumiere · 37 países europeus</div>
+      <span class="disc-card__arrow">→</span>
+    </a>
+    <a href={`${base}explorar/`} class="disc-card disc-card--fr">
+      <div class="disc-card__glow"></div>
+      <div class="disc-card__tag">França · CNC</div>
+      <div class="disc-card__q">Como o mercado de cinema francês evoluiu nos últimos 10 anos em salas e VOD?</div>
+      <div class="disc-card__detail">Dados CNC · frequentação + distribuição</div>
+      <span class="disc-card__arrow">→</span>
+    </a>
+  </div>
+</section>
+
+<!-- ── HOW ────────────────────────────────────────────────────────── -->
+<section class="home-section home-section--alt">
+  <div class="sec-label">Como funciona</div>
+  <h2 class="sec-title">Três passos.</h2>
+  <p class="sec-sub">Sem cadastro. Sem download obrigatório. Sem servidor.</p>
+
+  <div class="how-grid">
+    <div class="how-step">
+      <div class="how-step__num">01</div>
+      <div class="how-step__title">Escolha um dataset</div>
+      <p class="how-step__desc">
+        {stats.total_datasets} datasets de fontes oficiais — ANCINE, CNC, BFI, INCAA, ACAU, Lumiere, IBGE —
+        organizados e documentados com schema completo de colunas e tipos.
       </p>
-      <div class="hero__ctas">
-        <a class="btn-primary" href={`${base}explorar/`}>Explorar dados →</a>
-        <a class="btn-ghost" href={`${base}datasets/`}>Ver catálogo</a>
-      </div>
+      <span class="how-step__tag">{stats.total_datasets} datasets · {stats.total_paises} países</span>
     </div>
-    <div class="hero__stats">
-      <div class="hero-stat">
-        <span class="hero-stat__n">{stats.total_datasets}</span>
-        <span class="hero-stat__l">datasets</span>
-      </div>
-      <div class="hero-stat">
-        <span class="hero-stat__n">{stats.total_paises}</span>
-        <span class="hero-stat__l">países</span>
-      </div>
-      <div class="hero-stat">
-        <span class="hero-stat__n">+60 mil</span>
-        <span class="hero-stat__l">obras cadastradas</span>
-      </div>
-      <div class="hero-stat">
-        <span class="hero-stat__n hero-stat__n--accent">R$ 0</span>
-        <span class="hero-stat__l">custo de acesso</span>
-      </div>
+    <div class="how-step">
+      <div class="how-step__num">02</div>
+      <div class="how-step__title">Escreva SQL ou pergunte em português</div>
+      <p class="how-step__desc">
+        O explorador roda no seu navegador via DuckDB-WASM. Os dados chegam diretamente
+        do Hugging Face. Sem servidor, sem espera — e você pode cruzar tabelas de países diferentes.
+      </p>
+      <span class="how-step__tag">DuckDB · IA em português</span>
     </div>
-  </section>
+    <div class="how-step">
+      <div class="how-step__num">03</div>
+      <div class="how-step__title">Exporte e use onde quiser</div>
+      <p class="how-step__desc">
+        Baixe CSV com um clique, ou acesse os dados diretamente do Python, R ou DuckDB
+        com uma linha de código — via Hugging Face.
+      </p>
+      <span class="how-step__tag">CSV · Python · R · DuckDB</span>
+    </div>
+  </div>
 
-  <!-- ── O QUE VOCÊ PODE DESCOBRIR ─────────────────────────────────── -->
-  <section class="home-section discoveries">
-    <div class="sec-head">
-      <h2 class="sec-title">O que você pode descobrir</h2>
-      <p class="sec-sub">Perguntas reais que os dados respondem. Clique para explorar.</p>
-    </div>
-    <div class="disc-grid">
-      {DISCOVERIES.map((d) => (
-        <a class={`disc-card disc-card--${d.color}`} href={`${base}explorar/`}>
-          <div class="disc-card__q">{d.question}</div>
-          <div class="disc-card__detail">{d.detail}</div>
-          <span class="disc-card__cta">Explorar →</span>
-        </a>
-      ))}
-    </div>
-  </section>
-
-  <!-- ── COMO FUNCIONA ──────────────────────────────────────────────── -->
-  <section class="home-section how">
-    <div class="sec-head">
-      <h2 class="sec-title">Como funciona</h2>
-      <p class="sec-sub">Três passos. Sem cadastro. Sem download obrigatório.</p>
-    </div>
-    <div class="how-steps">
-      <div class="how-step">
-        <div class="how-step__num">01</div>
-        <div class="how-step__body">
-          <h3 class="how-step__title">Escolha um dataset</h3>
-          <p class="how-step__desc">
-            {stats.total_datasets} datasets de fontes oficiais (ANCINE, CNC, BFI, INCAA, ACAU, Lumiere, IBGE),
-            organizados e documentados com schema completo de colunas.
-          </p>
-        </div>
-      </div>
-      <div class="how-step">
-        <div class="how-step__num">02</div>
-        <div class="how-step__body">
-          <h3 class="how-step__title">Escreva SQL ou pergunte em português</h3>
-          <p class="how-step__desc">
-            O explorador roda no seu navegador via DuckDB. Os dados chegam diretamente
-            do Hugging Face. Sem servidor, sem espera — e você pode cruzar tabelas de países diferentes.
-          </p>
-        </div>
-      </div>
-      <div class="how-step">
-        <div class="how-step__num">03</div>
-        <div class="how-step__body">
-          <h3 class="how-step__title">Exporte e use onde quiser</h3>
-          <p class="how-step__desc">
-            Baixe CSV com um clique, ou acesse os dados diretamente do Python, R
-            ou DuckDB com uma linha de código — via Hugging Face.
-          </p>
-        </div>
-      </div>
-    </div>
+  <div style="margin-top: 32px">
     <a class="btn-primary" href={`${base}explorar/`}>Começar agora →</a>
-  </section>
+  </div>
+</section>
 
-  <!-- ── CATÁLOGO ───────────────────────────────────────────────────── -->
-  <section class="home-section catalog-section">
-    <div class="sec-head">
-      <h2 class="sec-title">Catálogo completo</h2>
-      <p class="sec-sub">Filtre por país ou busque pelo nome.</p>
+<!-- ── CATALOG ────────────────────────────────────────────────────── -->
+<section class="home-section">
+  <div class="sec-label">Catálogo completo</div>
+  <h2 class="sec-title">{stats.total_datasets} datasets.</h2>
+  <p class="sec-sub">Filtre por país ou busque pelo nome.</p>
+
+  <div class="catalog__filters" id="filters" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:24px;">
+    {COUNTRIES.map((c) => (
+      <button class={`chip${c.code === "" ? " chip--active" : ""}`} data-country={c.code}>
+        {c.label}
+      </button>
+    ))}
+    <input class="catalog__search" id="search" type="search" placeholder="Buscar dataset..." autocomplete="off" />
+  </div>
+
+  <div class="catalog__grid" id="catalog-grid">
+    {datasets.map((ds) => (
+      <div data-country={ds.source?.country ?? ""} data-tags={(ds.tags ?? []).join(" ")} data-title={ds.title.toLowerCase()}>
+        <DatasetCard ds={ds} />
+      </div>
+    ))}
+  </div>
+</section>
+
+<!-- ── CODE ──────────────────────────────────────────────────────── -->
+<section class="home-section home-section--alt">
+  <div class="sec-label">Use no seu código</div>
+  <h2 class="sec-title">Uma linha. Dados diretos.</h2>
+  <p class="sec-sub">Acesse os Parquets direto do Hugging Face — sem baixar nada.</p>
+
+  <div class="code-tabs-wrap">
+    <div class="code-tabs">
+      <button class="ctab ctab--active" data-tab="duckdb">DuckDB</button>
+      <button class="ctab" data-tab="pandas">pandas</button>
+      <button class="ctab" data-tab="r">R</button>
+      <button class="ctab" data-tab="cli">CLI</button>
     </div>
-    <div class="catalog__filters" id="filters">
-      {COUNTRIES.map((c) => (
-        <button class={`chip${c.code === "" ? " chip--active" : ""}`} data-country={c.code}>
-          {c.label}
-        </button>
-      ))}
-      <input
-        class="catalog__search" id="search"
-        type="search" placeholder="Buscar dataset..." autocomplete="off"
-      />
-    </div>
-    <div class="catalog__grid" id="catalog-grid">
-      {datasets.map((ds) => (
-        <div
-          data-country={ds.source?.country ?? ""}
-          data-tags={(ds.tags ?? []).join(" ")}
-          data-title={ds.title.toLowerCase()}
-        >
-          <DatasetCard ds={ds} />
+
+    <div class="code-panels">
+      <div class="code-panel code-panel--active" id="ctab-duckdb">
+        <div class="code-header">
+          <span class="code-filename">query.py</span>
         </div>
-      ))}
-    </div>
-  </section>
+        <pre class="code-block"><span class="ck">import</span> duckdb
 
-  <!-- ── CÓDIGO ─────────────────────────────────────────────────────── -->
-  <section class="home-section quickcode">
-    <div class="sec-head">
-      <h2 class="sec-title">Use no seu código</h2>
-      <p class="sec-sub">Acesse os Parquets direto do Hugging Face — sem baixar nada.</p>
-    </div>
-    <div class="qc-grid">
-      <div class="qc-card">
-        <div class="qc-lang">Python · DuckDB</div>
-        <pre class="qc-code">import duckdb
-duckdb.sql("""
-  SELECT tipo_obra, COUNT(*) as total
+conn <span class="co">=</span> duckdb.<span class="cf">connect</span>()
+conn.<span class="cf">sql</span>(<span class="cs">"INSTALL httpfs; LOAD httpfs;"</span>)
+
+conn.<span class="cf">sql</span>(<span class="cs">"""
+  SELECT tipo_obra, COUNT(*) AS total
   FROM 'hf://datasets/riabr-dados/riab/cleaned/obras.parquet'
-  GROUP BY tipo_obra ORDER BY total DESC
-""").show()</pre>
+  GROUP BY tipo_obra
+  ORDER BY total DESC
+"""</span>).<span class="cf">show</span>()</pre>
       </div>
-      <div class="qc-card">
-        <div class="qc-lang">Python · pandas</div>
-        <pre class="qc-code">import pandas as pd
-df = pd.read_parquet(
-  "hf://datasets/riabr-dados/riab/cleaned/obras.parquet"
+      <div class="code-panel" id="ctab-pandas">
+        <div class="code-header">
+          <span class="code-filename">analise.py</span>
+        </div>
+        <pre class="code-block"><span class="ck">import</span> pandas <span class="ck">as</span> pd
+
+df <span class="co">=</span> pd.<span class="cf">read_parquet</span>(
+    <span class="cs">"hf://datasets/riabr-dados/riab/cleaned/obras.parquet"</span>
 )
-print(df.shape, df.head())</pre>
+
+top_ufs <span class="co">=</span> (
+    df.<span class="cf">groupby</span>(<span class="cs">"uf_requerente"</span>)
+      .<span class="cf">size</span>()
+      .<span class="cf">sort_values</span>(ascending<span class="co">=</span><span class="ck">False</span>)
+      .<span class="cf">head</span>(<span class="cn">10</span>)
+)
+<span class="cf">print</span>(top_ufs)</pre>
       </div>
-      <div class="qc-card">
-        <div class="qc-lang">R · arrow</div>
-        <pre class="qc-code">library(arrow)
-obras <- read_parquet(
-  "hf://datasets/riabr-dados/riab/cleaned/obras.parquet"
+      <div class="code-panel" id="ctab-r">
+        <div class="code-header">
+          <span class="code-filename">analise.R</span>
+        </div>
+        <pre class="code-block"><span class="cf">library</span>(arrow)
+<span class="cf">library</span>(dplyr)
+
+obras <span class="co">&lt;-</span> <span class="cf">read_parquet</span>(
+    <span class="cs">"hf://datasets/riabr-dados/riab/cleaned/obras.parquet"</span>
 )
-head(obras)</pre>
+
+obras <span class="co">|&gt;</span>
+    <span class="cf">count</span>(tipo_obra, sort <span class="co">=</span> <span class="ck">TRUE</span>) <span class="co">|&gt;</span>
+    <span class="cf">head</span>(<span class="cn">10</span>)</pre>
+      </div>
+      <div class="code-panel" id="ctab-cli">
+        <div class="code-header">
+          <span class="code-filename">terminal</span>
+        </div>
+        <pre class="code-block">huggingface-cli download riabr-dados/riab \
+    --repo-type dataset \
+    --include <span class="cs">"cleaned/*.parquet"</span> \
+    --local-dir ./dados</pre>
       </div>
     </div>
-    <a class="btn-ghost" href={`${base}consulta/`}>Ver guia completo de consulta</a>
-  </section>
+  </div>
+
+  <div style="margin-top: 24px">
+    <a class="btn-ghost" href={`${base}consulta/`}>Ver guia completo →</a>
+  </div>
+</section>
 
 </Base>
 
 <script>
+  // Catalog filter
   const chips = document.querySelectorAll(".chip[data-country]");
   const cards = document.querySelectorAll("#catalog-grid > div");
   const search = document.getElementById("search") as HTMLInputElement | null;
@@ -222,7 +263,6 @@ head(obras)</pre>
       el.style.display = matchC && matchS ? "" : "none";
     });
   }
-
   chips.forEach((chip) => {
     chip.addEventListener("click", () => {
       chips.forEach((c) => c.classList.remove("chip--active"));
@@ -232,253 +272,255 @@ head(obras)</pre>
     });
   });
   search?.addEventListener("input", applyFilters);
+
+  // Code tabs
+  document.querySelectorAll(".ctab").forEach(tab => {
+    tab.addEventListener("click", () => {
+      document.querySelectorAll(".ctab").forEach(t => t.classList.remove("ctab--active"));
+      document.querySelectorAll(".code-panel").forEach(p => p.classList.remove("code-panel--active"));
+      tab.classList.add("ctab--active");
+      const name = (tab as HTMLElement).dataset.tab;
+      document.getElementById(`ctab-${name}`)?.classList.add("code-panel--active");
+    });
+  });
 </script>
 
 <style>
 /* HERO */
 .hero {
-  padding: 64px 0 52px;
+  position: relative;
+  padding: 80px 0 72px;
   border-bottom: 1px solid var(--border);
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 48px;
-  flex-wrap: wrap;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 60px;
+  align-items: center;
 }
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: linear-gradient(to bottom, transparent 0%, black 30%, black 70%, transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -80px; left: -40px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(0,196,122,.07) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+.hero__left { position: relative; z-index: 1; }
+.hero__stats { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 2px; flex-shrink: 0; animation: fadeIn .8s .4s ease both; }
+
 .hero__badge {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   font-family: var(--font-m);
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: .12em;
   text-transform: uppercase;
   color: var(--br);
-  border: 1px solid var(--br);
-  padding: 3px 10px;
-  border-radius: 2px;
-  margin-bottom: 20px;
+  border: 1px solid rgba(0,196,122,.25);
+  background: var(--green-d);
+  padding: 5px 12px;
+  border-radius: 100px;
+  margin-bottom: 28px;
+  animation: fadeUp .6s ease both;
+}
+.hero__badge-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--br);
+  animation: blink 2s infinite;
 }
 .hero__title {
   font-family: var(--font-d);
-  font-size: clamp(52px, 7vw, 96px);
-  letter-spacing: 2px;
-  line-height: .92;
+  font-size: clamp(64px, 9vw, 108px);
+  letter-spacing: 1px;
+  line-height: .88;
   color: var(--text);
-  margin-bottom: 20px;
+  margin-bottom: 28px;
+  animation: fadeUp .6s .1s ease both;
 }
-.hero__title em { color: var(--br); font-style: normal; }
+.hero__title em { font-style: normal; color: var(--br); display: block; }
 .hero__desc {
-  font-size: 13px;
+  font-size: 15px;
   color: var(--muted);
   max-width: 520px;
   line-height: 1.75;
-  margin-bottom: 28px;
+  margin-bottom: 36px;
+  font-weight: 300;
+  animation: fadeUp .6s .2s ease both;
 }
-.hero__ctas { display: flex; gap: 12px; flex-wrap: wrap; }
-.hero__stats {
+.hero__ctas { display: flex; gap: 12px; flex-wrap: wrap; animation: fadeUp .6s .3s ease both; }
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 20px 28px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  align-items: flex-end;
-  flex-shrink: 0;
+  gap: 4px;
+  min-width: 200px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color .2s;
 }
-.hero-stat { text-align: right; }
-.hero-stat__n {
-  display: block;
-  font-family: var(--font-d);
-  font-size: 52px;
-  line-height: 1;
-  color: var(--text);
-}
-.hero-stat__n--accent { color: var(--br); }
-.hero-stat__l {
-  display: block;
-  font-family: var(--font-m);
-  font-size: 9px;
-  color: var(--muted);
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  margin-top: 2px;
-}
-
-/* BOTÕES */
-.btn-primary {
-  display: inline-block;
+.stat-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
   background: var(--br);
-  color: #000 !important;
-  font-family: var(--font-m);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: .05em;
-  padding: 10px 24px;
-  border-radius: var(--radius);
-  text-decoration: none !important;
-  transition: background .15s;
+  opacity: 0;
+  transition: opacity .2s;
 }
-.btn-primary:hover { background: #00e589; }
-.btn-ghost {
-  display: inline-block;
-  background: transparent;
-  color: var(--muted) !important;
-  font-family: var(--font-m);
-  font-size: 11px;
-  letter-spacing: .05em;
-  padding: 10px 24px;
-  border-radius: var(--radius);
-  border: 1px solid var(--border2);
-  text-decoration: none !important;
-  transition: all .15s;
-}
-.btn-ghost:hover { color: var(--text) !important; border-color: var(--br); }
+.stat-card:hover { border-color: var(--border2); }
+.stat-card:hover::before { opacity: 1; }
+.stat-card__n { font-family: var(--font-d); font-size: 44px; line-height: 1; color: var(--text); letter-spacing: 1px; }
+.stat-card__n--accent { color: var(--br); }
+.stat-card__l { font-family: var(--font-m); font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
 
-/* SEÇÕES */
-.home-section {
-  padding: 56px 0;
-  border-bottom: 1px solid var(--border);
-}
+/* SECTIONS */
+.home-section { padding: 80px 0; border-bottom: 1px solid var(--border); }
 .home-section:last-child { border-bottom: none; }
-.sec-head { margin-bottom: 32px; }
-.sec-title {
-  font-family: var(--font-d);
-  font-size: 30px;
-  letter-spacing: 1px;
-  color: var(--text);
-  margin-bottom: 6px;
-}
-.sec-sub { font-size: 12px; color: var(--muted); }
+.home-section--alt { background: var(--bg2); }
 
-/* DISCOVERIES */
+/* DISCOVER */
 .disc-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: var(--border2);
+  border: 1px solid var(--border2);
+  border-radius: var(--r);
+  overflow: hidden;
 }
 .disc-card {
+  background: var(--bg);
+  padding: 32px 28px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 20px;
-  border: 1px solid var(--border2);
-  border-radius: var(--radius);
-  background: var(--surface);
+  gap: 14px;
+  position: relative;
+  transition: background .2s;
+  overflow: hidden;
   text-decoration: none !important;
-  transition: all .15s;
 }
-.disc-card:hover { border-color: var(--br); background: var(--surface2); }
-.disc-card--br { border-left: 3px solid var(--br); }
-.disc-card--eu { border-left: 3px solid var(--eu); }
-.disc-card--fr { border-left: 3px solid var(--fr); }
-.disc-card--ar { border-left: 3px solid var(--ar); }
-.disc-card__q { font-size: 13px; color: var(--text); line-height: 1.5; }
-.disc-card__detail { font-size: 10px; color: var(--muted); }
-.disc-card__cta {
-  font-size: 10px;
-  color: var(--br);
-  font-family: var(--font-m);
-  margin-top: auto;
+.disc-card:hover { background: var(--surface); }
+.disc-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
 }
+.disc-card--br::before { background: var(--br); }
+.disc-card--eu::before { background: var(--eu); }
+.disc-card--fr::before { background: var(--fr); }
+.disc-card--ar::before { background: var(--ar); }
+.disc-card__glow {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity .3s;
+  pointer-events: none;
+}
+.disc-card--br .disc-card__glow { background: radial-gradient(circle at 0% 50%, rgba(0,196,122,.06), transparent 70%); }
+.disc-card--eu .disc-card__glow { background: radial-gradient(circle at 0% 50%, rgba(168,85,247,.06), transparent 70%); }
+.disc-card--fr .disc-card__glow { background: radial-gradient(circle at 0% 50%, rgba(72,120,232,.06), transparent 70%); }
+.disc-card:hover .disc-card__glow { opacity: 1; }
+.disc-card__tag { font-family: var(--font-m); font-size: 8px; letter-spacing: .14em; text-transform: uppercase; }
+.disc-card--br .disc-card__tag { color: var(--br); }
+.disc-card--eu .disc-card__tag { color: var(--eu); }
+.disc-card--fr .disc-card__tag { color: var(--fr); }
+.disc-card--ar .disc-card__tag { color: var(--ar); }
+.disc-card__q { font-size: 16px; font-weight: 500; color: var(--text); line-height: 1.4; }
+.disc-card__detail { font-family: var(--font-m); font-size: 10px; color: var(--muted); margin-top: auto; }
+.disc-card__arrow { font-size: 12px; color: var(--muted); transition: transform .2s, color .2s; align-self: flex-end; }
+.disc-card:hover .disc-card__arrow { transform: translateX(4px); color: var(--text); }
 
 /* HOW */
-.how-steps {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 32px;
+.how-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border2);
+  border: 1px solid var(--border2);
+  border-radius: var(--r);
+  overflow: hidden;
 }
 .how-step {
+  background: var(--bg2);
+  padding: 40px 32px;
   display: flex;
-  gap: 28px;
-  padding: 24px 0;
-  border-bottom: 1px solid var(--border);
-  align-items: flex-start;
+  flex-direction: column;
+  gap: 16px;
+  transition: background .2s;
 }
-.how-step:last-child { border-bottom: none; padding-bottom: 0; }
-.how-step__num {
-  font-family: var(--font-d);
-  font-size: 40px;
-  color: var(--dim);
-  line-height: 1;
-  flex-shrink: 0;
-  width: 52px;
-}
-.how-step__title {
-  font-family: var(--font-m);
-  font-size: 13px;
-  color: var(--text);
-  margin-bottom: 6px;
-  font-weight: 500;
-}
-.how-step__desc { font-size: 11px; color: var(--muted); line-height: 1.75; }
+.how-step:hover { background: var(--surface); }
+.how-step__num { font-family: var(--font-d); font-size: 72px; line-height: 1; color: var(--dim); letter-spacing: 1px; }
+.how-step__title { font-weight: 600; font-size: 15px; color: var(--text); line-height: 1.3; }
+.how-step__desc { font-size: 13px; color: var(--muted); line-height: 1.7; font-weight: 300; }
+.how-step__tag { font-family: var(--font-m); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--br); margin-top: auto; }
 
-/* CATÁLOGO */
-.catalog__filters {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  align-items: center;
-  margin-bottom: 20px;
-}
-.chip {
-  font-family: var(--font-m);
-  font-size: 10px;
-  padding: 5px 14px;
-  border-radius: var(--radius);
-  border: 1px solid var(--border2);
-  background: var(--surface);
-  color: var(--muted);
-  cursor: pointer;
-  transition: all .15s;
-}
-.chip:hover { color: var(--text); border-color: var(--br); }
-.chip--active { color: var(--br); border-color: var(--br); background: rgba(0,196,122,.07); }
-.catalog__search {
-  margin-left: auto;
-  font-family: var(--font-m);
-  font-size: 10px;
-  padding: 5px 12px;
-  border-radius: var(--radius);
-  border: 1px solid var(--border2);
-  background: var(--surface);
-  color: var(--text);
-  outline: none;
-  width: 180px;
-}
-.catalog__search:focus { border-color: var(--br); }
-.catalog__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 10px;
-}
-
-/* QUICK CODE */
-.qc-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 12px;
-  margin-bottom: 24px;
-}
-.qc-card {
-  border: 1px solid var(--border2);
-  border-radius: var(--radius);
-  overflow: hidden;
-  background: var(--surface);
-}
-.qc-lang {
-  padding: 8px 14px;
-  font-family: var(--font-m);
-  font-size: 9px;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  color: var(--muted);
-  border-bottom: 1px solid var(--border);
-  background: var(--surface2);
-}
-.qc-code {
-  padding: 14px;
+/* CODE TABS */
+.code-tabs-wrap { border: 1px solid var(--border2); border-radius: var(--r); overflow: hidden; }
+.code-tabs { display: flex; border-bottom: 1px solid var(--border2); background: var(--surface); }
+.ctab {
   font-family: var(--font-m);
   font-size: 11px;
-  line-height: 1.6;
-  color: var(--text);
-  white-space: pre;
+  letter-spacing: .04em;
+  padding: 12px 20px;
+  color: var(--muted);
+  cursor: pointer;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  background: none;
+  transition: all .15s;
+}
+.ctab:hover { color: var(--text); }
+.ctab--active { color: var(--br); border-bottom-color: var(--br); }
+.code-panels { background: var(--bg); }
+.code-panel { display: none; }
+.code-panel--active { display: block; }
+.code-header {
+  background: var(--surface);
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border2);
+}
+.code-filename { font-family: var(--font-m); font-size: 10px; color: var(--muted); }
+pre.code-block {
+  padding: 24px;
+  font-family: var(--font-m);
+  font-size: 12px;
+  line-height: 1.8;
+  color: #8888cc;
   overflow-x: auto;
   margin: 0;
+}
+.ck { color: #c792ea; }
+.cf { color: #82aaff; }
+.cs { color: #c3e88d; }
+.co { color: var(--br); }
+.cn { color: #f78c6c; }
+
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; }
+  .hero__stats { flex-direction: row; flex-wrap: wrap; }
+  .stat-card { flex: 1; min-width: 140px; }
+  .disc-grid { grid-template-columns: 1fr; }
+  .how-grid { grid-template-columns: 1fr; }
 }
 </style>
