@@ -8,3 +8,10 @@ Thumbs.db
 .idea/
 .vscode/
 *.tmp
+
+# Astro
+portal/node_modules/
+portal/dist/
+
+# Pipelines output (local apenas — vai pro HF, nao pro Git)
+pipelines/output/
