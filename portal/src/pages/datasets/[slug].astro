@@ -1,8 +1,9 @@
 ---
 import Base from "../../layouts/Base.astro";
 import CodeSnippet from "../../components/CodeSnippet.astro";
+import DataExplorer from "../../components/DataExplorer.astro";
 import { getDatasets, getDataset } from "../../lib/catalog.js";
-import { duckdbSnippet, pandasSnippet, rSnippet, cliSnippet, rawUrl, cleanedUrl } from "../../lib/hf.js";
+import { duckdbSnippet, pandasSnippet, rSnippet, cliSnippet, cleanedUrl } from "../../lib/hf.js";
 
 export async function getStaticPaths() {
   const datasets = getDatasets();
@@ -30,6 +31,126 @@ function fmtBytes(b) {
   if (b < 1048576) return `${Math.round(b / 1024)} KB`;
   return `${(b / 1048576).toFixed(1)} MB`;
 }
+
+// Queries padrão por tabela
+const DEFAULT_QUERIES = {
+  obras: `SELECT
+  tipo_obra,
+  COUNT(*) AS total,
+  COUNT(*) FILTER (WHERE coproducao_internacional = true) AS coproducoes
+FROM obras
+GROUP BY tipo_obra
+ORDER BY total DESC`,
+
+  fomento_fsa: `SELECT
+  chamada_publica,
+  COUNT(*) AS projetos,
+  ROUND(SUM(valor_total_liberado_brl) / 1e6, 2) AS total_liberado_mi_brl
+FROM fomento_fsa
+WHERE valor_total_liberado_brl > 0
+GROUP BY chamada_publica
+ORDER BY total_liberado_mi_brl DESC`,
+
+  bilheteria_domestica: `SELECT
+  titulo_brasil,
+  pais_obra,
+  SUM(publico) AS publico_total
+FROM bilheteria_domestica
+GROUP BY titulo_brasil, pais_obra
+ORDER BY publico_total DESC
+LIMIT 30`,
+
+  bilheteria_europa: `SELECT
+  titulo_original,
+  SUM(admissoes) AS admissoes_totais,
+  COUNT(DISTINCT pais) AS paises
+FROM bilheteria_europa
+GROUP BY titulo_original
+ORDER BY admissoes_totais DESC
+LIMIT 30`,
+};
+
+// Cruzamentos prontos por tabela
+const CROSS_QUERIES = {
+  obras: [
+    {
+      label: "Por UF do requerente",
+      sql: `SELECT uf_requerente, COUNT(*) AS obras
+FROM obras
+WHERE uf_requerente IS NOT NULL
+GROUP BY uf_requerente
+ORDER BY obras DESC`,
+    },
+    {
+      label: "Por tipo e ano",
+      sql: `SELECT ano_arquivo AS ano, tipo_obra, COUNT(*) AS obras
+FROM obras
+WHERE ano_arquivo >= 2010
+GROUP BY ano, tipo_obra
+ORDER BY ano DESC, obras DESC`,
+    },
+    {
+      label: "Coproduções internacionais",
+      sql: `SELECT ano_arquivo AS ano, COUNT(*) AS total,
+  COUNT(*) FILTER (WHERE coproducao_internacional = true) AS coproducoes,
+  ROUND(100.0 * COUNT(*) FILTER (WHERE coproducao_internacional = true) / COUNT(*), 1) AS pct_coproducao
+FROM obras
+WHERE ano_arquivo >= 2010
+GROUP BY ano ORDER BY ano DESC`,
+    },
+    {
+      label: "Top produtoras (FSA)",
+      sql: `SELECT f.razao_social_produtora AS produtora,
+  COUNT(*) AS projetos,
+  ROUND(SUM(f.valor_total_liberado_brl)/1e6, 2) AS total_mi_brl
+FROM fomento_fsa f
+WHERE f.razao_social_produtora IS NOT NULL
+  AND f.valor_total_liberado_brl > 0
+GROUP BY produtora
+ORDER BY total_mi_brl DESC
+LIMIT 20`,
+    },
+  ],
+  fomento_fsa: [
+    {
+      label: "Por ano do edital",
+      sql: `SELECT ano_edital,
+  COUNT(*) AS projetos,
+  ROUND(SUM(valor_total_liberado_brl)/1e6, 2) AS liberado_mi_brl
+FROM fomento_fsa
+GROUP BY ano_edital
+ORDER BY ano_edital`,
+    },
+    {
+      label: "Execucao por chamada",
+      sql: `SELECT chamada_publica,
+  COUNT(*) AS projetos,
+  ROUND(SUM(valor_contrato_brl)/1e6, 2) AS contratado_mi,
+  ROUND(SUM(valor_total_liberado_brl)/1e6, 2) AS liberado_mi,
+  ROUND(100.0 * SUM(valor_total_liberado_brl) / NULLIF(SUM(valor_contrato_brl),0), 1) AS pct_execucao
+FROM fomento_fsa
+GROUP BY chamada_publica
+ORDER BY liberado_mi DESC`,
+    },
+    {
+      label: "Top produtoras",
+      sql: `SELECT razao_social_produtora AS produtora,
+  COUNT(*) AS projetos,
+  ROUND(SUM(valor_total_liberado_brl)/1e6, 2) AS total_mi_brl
+FROM fomento_fsa
+WHERE razao_social_produtora IS NOT NULL AND valor_total_liberado_brl > 0
+GROUP BY produtora
+ORDER BY total_mi_brl DESC
+LIMIT 20`,
+    },
+  ],
+};
+
+const defaultQuery = primaryTable
+  ? (DEFAULT_QUERIES[primaryTable] ?? `SELECT * FROM ${primaryTable} LIMIT 100`)
+  : null;
+
+const crossQueries = primaryTable ? (CROSS_QUERIES[primaryTable] ?? []) : [];
 ---
 
 <Base title={ds.title} description={ds.description}>
@@ -75,59 +196,73 @@ function fmtBytes(b) {
         )}
         {tables.length > 0 && (
           <div class="ds-meta-item">
-            <span class="ds-meta-label">Tabelas Parquet</span>
-            <span class="ds-meta-val">{tables.join(", ")}</span>
+            <span class="ds-meta-label">Tabela Parquet</span>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:2px">
+              {tables.map((t) => (
+                <a class="tag dcard__tag--cleaned" href={cleanedUrl(t)} target="_blank"
+                   title={`Baixar ${t}.parquet`}>{t} ↓</a>
+              ))}
+            </div>
           </div>
         )}
       </div>
     </header>
 
-    {tables.length > 0 && (
+    {/* EXPLORADOR SQL */}
+    {primaryTable && (
       <section class="ds-section">
-        <h2 class="ds-section__title">// Dados Tratados (Parquet)</h2>
+        <h2 class="ds-section__title">// Explorar e Exportar</h2>
         <p class="ds-section__desc">
-          Dados limpos, tipados e em UTF-8. Prontos para uso direto em Python, R ou DuckDB.
+          Escreva SQL direto no browser. Os dados vem do Hugging Face em tempo real.
+          <kbd>Ctrl+Enter</kbd> para executar.
         </p>
-        <div class="parquet-list">
-          {tables.map((table) => (
-            <div class="parquet-item">
-              <span class="parquet-name">{table}.parquet</span>
-              <a class="btn-sm" href={cleanedUrl(table)} target="_blank">Baixar</a>
-            </div>
-          ))}
+        <DataExplorer
+          table={primaryTable}
+          defaultQuery={defaultQuery}
+          crossQueries={crossQueries}
+        />
+      </section>
+    )}
+
+    {/* SEM PARQUET */}
+    {!primaryTable && (
+      <section class="ds-section">
+        <div class="no-explorer">
+          <div style="font-size:28px;opacity:.3;margin-bottom:8px">⬜</div>
+          <p>Este dataset ainda nao tem tabela Parquet tratada.</p>
+          <p style="margin-top:4px">
+            Baixe os arquivos brutos abaixo ou
+            <a href="https://github.com/riabr-dados/riab/issues/new" target="_blank">
+              abra uma issue
+            </a>
+            para solicitar a transformacao.
+          </p>
         </div>
       </section>
     )}
 
+    {/* COMO USAR NO CODIGO */}
     {primaryTable && (
       <section class="ds-section">
-        <h2 class="ds-section__title">// Como Consultar</h2>
+        <h2 class="ds-section__title">// Usar no seu codigo</h2>
         <div class="snippets-tabs" id="snippets-tabs">
           <button class="stab stab--active" data-tab="duckdb">DuckDB</button>
-          <button class="stab" data-tab="pandas">Python pandas</button>
+          <button class="stab" data-tab="pandas">pandas</button>
           <button class="stab" data-tab="r">R</button>
           <button class="stab" data-tab="cli">CLI</button>
         </div>
-        <div id="tab-duckdb">
-          <CodeSnippet code={duckdbSnippet(primaryTable)} lang="python" />
-        </div>
-        <div id="tab-pandas" class="hidden">
-          <CodeSnippet code={pandasSnippet(primaryTable)} lang="python" />
-        </div>
-        <div id="tab-r" class="hidden">
-          <CodeSnippet code={rSnippet(primaryTable)} lang="r" />
-        </div>
-        <div id="tab-cli" class="hidden">
-          <CodeSnippet code={cliSnippet(ds.slug)} lang="bash" label="Baixar dados brutos via CLI" />
-        </div>
+        <div id="tab-duckdb"><CodeSnippet code={duckdbSnippet(primaryTable)} lang="python" /></div>
+        <div id="tab-pandas" class="hidden"><CodeSnippet code={pandasSnippet(primaryTable)} lang="python" /></div>
+        <div id="tab-r" class="hidden"><CodeSnippet code={rSnippet(primaryTable)} lang="r" /></div>
+        <div id="tab-cli" class="hidden"><CodeSnippet code={cliSnippet(ds.slug)} lang="bash" /></div>
       </section>
     )}
 
+    {/* DADOS BRUTOS */}
     <section class="ds-section">
       <h2 class="ds-section__title">// Dados Brutos</h2>
       <p class="ds-section__desc">
-        Arquivos originais, sem alteracao, exatamente como vieram da fonte oficial.
-        Hospedados no Hugging Face: <code>riabr-dados/riab</code>.
+        Arquivos originais intocados, hospedados no Hugging Face.
       </p>
       <div class="raw-info">
         <div class="raw-info__item">
@@ -151,13 +286,23 @@ function fmtBytes(b) {
           <code>raw/{ds.slug}/</code>
         </div>
       </div>
-      {ds.source?.url && (
-        <a class="btn-outline btn-sm" href={ds.source?.data_portal ?? ds.source?.url} target="_blank" rel="noopener">
-          Acessar fonte oficial
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+        <a class="btn-outline btn-sm"
+           href={`https://huggingface.co/datasets/riabr-dados/riab/tree/main/raw/${ds.slug}`}
+           target="_blank" rel="noopener">
+          Ver arquivos no HF
         </a>
-      )}
+        {ds.source?.url && (
+          <a class="btn-outline btn-sm"
+             href={ds.source?.data_portal ?? ds.source?.url}
+             target="_blank" rel="noopener">
+            Fonte oficial
+          </a>
+        )}
+      </div>
     </section>
 
+    {/* RELACIONADOS */}
     {related.length > 0 && (
       <section class="ds-section">
         <h2 class="ds-section__title">// Datasets Relacionados</h2>
@@ -175,8 +320,28 @@ function fmtBytes(b) {
   </div>
 </Base>
 
+<style>
+.no-explorer {
+  padding: 32px 20px;
+  text-align: center;
+  border: 1px dashed var(--border2);
+  border-radius: var(--radius);
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+kbd {
+  font-family: var(--font-m);
+  font-size: 9px;
+  padding: 1px 5px;
+  border: 1px solid var(--border2);
+  border-radius: 2px;
+  background: var(--surface2);
+  color: var(--muted);
+}
+</style>
+
 <script>
-  // Tabs dos snippets
   const tabs = document.querySelectorAll(".stab");
   tabs.forEach((tab) => {
     tab.addEventListener("click", () => {

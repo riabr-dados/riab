@@ -1,0 +1,386 @@
+---
+// DataExplorer: editor SQL com DuckDB-WASM, roda no browser
+// Lê Parquets direto do Hugging Face, exporta CSV
+const { table, defaultQuery, crossQueries = [] } = Astro.props;
+
+const HF_BASE = "https://huggingface.co/datasets/riabr-dados/riab/resolve/main/cleaned";
+const parquetUrl = `${HF_BASE}/${table}.parquet`;
+---
+
+<div class="explorer" id="explorer">
+
+  <!-- TOOLBAR -->
+  <div class="explorer__toolbar">
+    <div class="explorer__status" id="ex-status">
+      <span class="ex-dot ex-dot--loading" id="ex-dot"></span>
+      <span id="ex-status-text">Carregando DuckDB...</span>
+    </div>
+    <div class="explorer__actions">
+      <button class="ex-btn" id="btn-run" disabled>▶ Executar</button>
+      <button class="ex-btn ex-btn--outline" id="btn-export" disabled>↓ Exportar CSV</button>
+    </div>
+  </div>
+
+  <!-- CROSS QUERIES -->
+  {crossQueries.length > 0 && (
+    <div class="explorer__crosses">
+      <span class="ex-crosses-label">Cruzamentos prontos:</span>
+      {crossQueries.map((q, i) => (
+        <button class="cross-chip" data-query={q.sql} data-idx={i}>{q.label}</button>
+      ))}
+    </div>
+  )}
+
+  <!-- EDITOR -->
+  <div class="explorer__editor-wrap">
+    <textarea
+      class="explorer__editor"
+      id="ex-editor"
+      spellcheck="false"
+      rows="6"
+    >{defaultQuery}</textarea>
+  </div>
+
+  <!-- RESULTADO -->
+  <div class="explorer__result" id="ex-result">
+    <div class="ex-placeholder">Execute uma query para ver os resultados.</div>
+  </div>
+
+  <!-- INFO RODAPÉ -->
+  <div class="explorer__foot" id="ex-foot" style="display:none">
+    <span id="ex-rowcount"></span>
+    <span id="ex-time"></span>
+  </div>
+
+</div>
+
+<!-- DuckDB WASM -->
+<script type="module">
+import * as duckdb from "https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.29.0/+esm";
+
+const PARQUET_URL = "PARQUET_URL_PLACEHOLDER";
+const statusDot  = document.getElementById("ex-dot");
+const statusText = document.getElementById("ex-status-text");
+const btnRun     = document.getElementById("btn-run");
+const btnExport  = document.getElementById("btn-export");
+const editor     = document.getElementById("ex-editor");
+const result     = document.getElementById("ex-result");
+const foot       = document.getElementById("ex-foot");
+const rowcount   = document.getElementById("ex-rowcount");
+const timeEl     = document.getElementById("ex-time");
+
+let db, conn, lastRows = [], lastCols = [];
+
+// ── INICIALIZAR DUCKDB ──────────────────────────────────────
+async function initDuckDB() {
+  try {
+    const JSDELIVR_BUNDLES = duckdb.getJsDelivrBundles();
+    const bundle = await duckdb.selectBundle(JSDELIVR_BUNDLES);
+    const worker_url = URL.createObjectURL(
+      new Blob([`importScripts("${bundle.mainWorker}");`], { type: "text/javascript" })
+    );
+    const worker = new Worker(worker_url);
+    const logger = new duckdb.ConsoleLogger();
+    db = new duckdb.AsyncDuckDB(logger, worker);
+    await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
+    conn = await db.connect();
+
+    await conn.query("INSTALL httpfs; LOAD httpfs;");
+    await conn.query(`SET s3_region='us-east-1';`);
+
+    statusDot.className  = "ex-dot ex-dot--ok";
+    statusText.textContent = "Pronto — dados carregados do Hugging Face";
+    btnRun.disabled    = false;
+    btnExport.disabled = false;
+  } catch (e) {
+    statusDot.className  = "ex-dot ex-dot--err";
+    statusText.textContent = "Erro ao carregar DuckDB: " + e.message;
+  }
+}
+
+// ── EXECUTAR QUERY ──────────────────────────────────────────
+async function runQuery(sql) {
+  result.innerHTML = `<div class="ex-placeholder ex-loading">Executando...</div>`;
+  foot.style.display = "none";
+  btnRun.disabled = true;
+
+  const t0 = performance.now();
+  try {
+    // Substitui referências curtas pela URL completa
+    const finalSql = sql
+      .replace(/FROM\s+obras\b/gi,          `FROM '${PARQUET_URL.replace(/[^/]+\.parquet$/, "obras.parquet")}'`)
+      .replace(/FROM\s+fomento_fsa\b/gi,    `FROM '${PARQUET_URL.replace(/[^/]+\.parquet$/, "fomento_fsa.parquet")}'`)
+      .replace(/FROM\s+bilheteria_domestica\b/gi, `FROM '${PARQUET_URL.replace(/[^/]+\.parquet$/, "bilheteria_domestica.parquet")}'`)
+      .replace(/FROM\s+bilheteria_europa\b/gi, `FROM '${PARQUET_URL.replace(/[^/]+\.parquet$/, "bilheteria_europa.parquet")}'`)
+      .replace(/FROM\s+'([a-z_]+\.parquet)'/gi, (_, f) => `FROM '${PARQUET_URL.replace(/[^/]+\.parquet$/, f)}'`);
+
+    const res = await conn.query(finalSql);
+    const elapsed = ((performance.now() - t0) / 1000).toFixed(2);
+
+    lastCols = res.schema.fields.map(f => f.name);
+    lastRows = res.toArray().map(r => lastCols.map(c => r[c]));
+
+    renderTable(lastCols, lastRows, elapsed);
+  } catch (e) {
+    result.innerHTML = `<div class="ex-error">${e.message}</div>`;
+  } finally {
+    btnRun.disabled = false;
+  }
+}
+
+// ── RENDERIZAR TABELA ───────────────────────────────────────
+function renderTable(cols, rows, elapsed) {
+  if (!rows.length) {
+    result.innerHTML = `<div class="ex-placeholder">Nenhum resultado.</div>`;
+    return;
+  }
+
+  const MAX_DISPLAY = 500;
+  const display = rows.slice(0, MAX_DISPLAY);
+
+  const thead = `<thead><tr>${cols.map(c => `<th>${c}</th>`).join("")}</tr></thead>`;
+  const tbody = `<tbody>${display.map(row =>
+    `<tr>${row.map(v => {
+      const s = v == null ? "" : String(v);
+      return `<td title="${s.replace(/"/g, "&quot;")}">${s.length > 60 ? s.slice(0,60)+"…" : s}</td>`;
+    }).join("")}</tr>`
+  ).join("")}</tbody>`;
+
+  result.innerHTML = `<div class="ex-table-wrap"><table class="ex-table">${thead}${tbody}</table></div>`;
+
+  rowcount.textContent = `${rows.length.toLocaleString("pt-BR")} linhas${rows.length > MAX_DISPLAY ? ` (exibindo ${MAX_DISPLAY})` : ""}`;
+  timeEl.textContent = `${elapsed}s`;
+  foot.style.display = "flex";
+}
+
+// ── EXPORT CSV ──────────────────────────────────────────────
+function exportCSV() {
+  if (!lastRows.length) return;
+  const esc = v => {
+    const s = v == null ? "" : String(v);
+    return s.includes(",") || s.includes('"') || s.includes("\n")
+      ? `"${s.replace(/"/g, '""')}"` : s;
+  };
+  const lines = [lastCols.map(esc).join(","), ...lastRows.map(r => r.map(esc).join(","))];
+  const blob = new Blob(["\uFEFF" + lines.join("\n")], { type: "text/csv;charset=utf-8;" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "riab-export.csv";
+  a.click();
+}
+
+// ── EVENTOS ─────────────────────────────────────────────────
+btnRun.addEventListener("click", () => runQuery(editor.value));
+btnExport.addEventListener("click", exportCSV);
+
+editor.addEventListener("keydown", e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+    e.preventDefault();
+    runQuery(editor.value);
+  }
+});
+
+// Cruzamentos prontos
+document.querySelectorAll(".cross-chip").forEach(chip => {
+  chip.addEventListener("click", () => {
+    document.querySelectorAll(".cross-chip").forEach(c => c.classList.remove("cross-chip--active"));
+    chip.classList.add("cross-chip--active");
+    editor.value = chip.dataset.query;
+    runQuery(editor.value);
+  });
+});
+
+// Tab no editor
+editor.addEventListener("keydown", e => {
+  if (e.key === "Tab") {
+    e.preventDefault();
+    const s = editor.selectionStart, end = editor.selectionEnd;
+    editor.value = editor.value.substring(0, s) + "  " + editor.value.substring(end);
+    editor.selectionStart = editor.selectionEnd = s + 2;
+  }
+});
+
+initDuckDB();
+</script>
+
+<script define:vars={{ parquetUrl }}>
+// Injeta a URL do Parquet no script acima
+document.querySelector('script[type="module"]').textContent =
+  document.querySelector('script[type="module"]').textContent
+    .replace("PARQUET_URL_PLACEHOLDER", parquetUrl);
+</script>
+
+<style>
+.explorer {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+/* toolbar */
+.explorer__toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.explorer__status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  color: var(--muted);
+}
+.ex-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.ex-dot--loading { background: var(--muted); animation: pulse 1s infinite; }
+.ex-dot--ok      { background: var(--status-ativo); }
+.ex-dot--err     { background: var(--uk); }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+.explorer__actions { display: flex; gap: 6px; }
+.ex-btn {
+  font-family: var(--font-m);
+  font-size: 10px;
+  padding: 5px 14px;
+  border-radius: var(--radius);
+  border: 1px solid var(--br);
+  background: var(--br);
+  color: #000;
+  cursor: pointer;
+  transition: all .15s;
+  letter-spacing: .03em;
+}
+.ex-btn:disabled { opacity: .35; cursor: not-allowed; }
+.ex-btn:not(:disabled):hover { background: #00e589; }
+.ex-btn--outline {
+  background: transparent;
+  color: var(--muted);
+  border-color: var(--border2);
+}
+.ex-btn--outline:not(:disabled):hover { color: var(--text); border-color: var(--br); background: transparent; }
+
+/* cruzamentos */
+.explorer__crosses {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 8px 14px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+.ex-crosses-label {
+  font-size: 9px;
+  color: var(--dim);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.cross-chip {
+  font-family: var(--font-m);
+  font-size: 9px;
+  padding: 3px 10px;
+  border-radius: 2px;
+  border: 1px solid var(--border2);
+  background: var(--surface);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all .15s;
+}
+.cross-chip:hover { color: var(--text); border-color: var(--fr); }
+.cross-chip--active { color: var(--fr); border-color: var(--fr); background: rgba(72,120,232,.08); }
+
+/* editor */
+.explorer__editor-wrap {
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+}
+.explorer__editor {
+  width: 100%;
+  font-family: var(--font-m);
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text);
+  background: transparent;
+  border: none;
+  outline: none;
+  resize: vertical;
+  padding: 14px 16px;
+  min-height: 110px;
+}
+
+/* resultado */
+.explorer__result {
+  min-height: 120px;
+  max-height: 440px;
+  overflow: auto;
+  background: var(--bg);
+}
+.explorer__result::-webkit-scrollbar { width: 4px; height: 4px; }
+.explorer__result::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+.ex-placeholder {
+  padding: 40px 20px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--dim);
+}
+.ex-loading { color: var(--muted); }
+.ex-error {
+  padding: 16px 20px;
+  font-size: 11px;
+  color: #f87171;
+  white-space: pre-wrap;
+  font-family: var(--font-m);
+}
+.ex-table-wrap { overflow-x: auto; }
+.ex-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+.ex-table th {
+  position: sticky;
+  top: 0;
+  background: var(--surface);
+  padding: 7px 12px;
+  text-align: left;
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border2);
+  white-space: nowrap;
+  cursor: default;
+}
+.ex-table td {
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  max-width: 260px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ex-table tr:hover td { background: var(--surface); }
+
+/* rodapé */
+.explorer__foot {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 14px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  font-size: 9px;
+  color: var(--dim);
+}
+</style>
