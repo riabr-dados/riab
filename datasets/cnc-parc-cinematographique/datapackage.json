@@ -1,0 +1,65 @@
+{
+  "$schema": "https://specs.frictionlessdata.io/schemas/data-package.json",
+  "name": "cnc-parc-cinematographique",
+  "title": "CNC — Parc cinématographique: données générales",
+  "description": "Dados gerais sobre o parque cinematográfico francês: telas, complexos, salas.",
+  "version": "2026.05.19",
+  "created": "2026-05-19T00:00:00Z",
+  "homepage": "https://github.com/SEU-USUARIO/dados-audiovisual-br/tree/main/datasets/cnc-parc-cinematographique",
+  "licenses": [
+    {
+      "name": "CC-BY-4.0",
+      "title": "Creative Commons Attribution 4.0 International",
+      "path": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Centre national du cinéma et de l'image animée (CNC)",
+      "path": "https://www.data.gouv.fr/datasets/parc-cinematographique-donnees-generales"
+    }
+  ],
+  "contributors": [
+    {
+      "title": "dados-audiovisual-br",
+      "role": "publisher",
+      "path": "https://github.com/SEU-USUARIO/dados-audiovisual-br"
+    }
+  ],
+  "status": {
+    "value": "ativo",
+    "options": [
+      "ativo",
+      "intermitente",
+      "alterado",
+      "offline",
+      "descontinuado"
+    ],
+    "last_checked": "2026-05-19",
+    "notes": "Licence Ouverte."
+  },
+  "collection": {
+    "method": "manual",
+    "script": null,
+    "frequency": "ad-hoc"
+  },
+  "resources": [
+    {
+      "name": "parc-cinematographique",
+      "path": "snapshots/2026-05-19/parc-cinematographique.xlsx",
+      "format": "xlsx",
+      "mediatype": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "encoding": "binary",
+      "bytes": 420992,
+      "hash": "sha256:a680191a89795465c34d61ecbccaa2a5299657616ee58fe80a13ff8e056729f3"
+    }
+  ],
+  "snapshots": [
+    {
+      "date": "2026-05-19",
+      "path": "snapshots/2026-05-19/",
+      "source_url": "https://www.data.gouv.fr/datasets/parc-cinematographique-donnees-generales",
+      "notes": "Snapshot inicial migrado do projeto fomento-audiovisual."
+    }
+  ]
+}

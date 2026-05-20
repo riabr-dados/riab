@@ -1,0 +1,92 @@
+{
+  "$schema": "https://specs.frictionlessdata.io/schemas/data-package.json",
+  "name": "cnc-geographie-cinema",
+  "title": "CNC — Géographie du cinéma: équipement et fréquentation",
+  "description": "Equipamento e frequentação cinematográfica na França por região, departamento, commune e unité urbaine (4 arquivos de granularidade territorial diferente).",
+  "version": "2026.05.19",
+  "created": "2026-05-19T00:00:00Z",
+  "homepage": "https://github.com/SEU-USUARIO/dados-audiovisual-br/tree/main/datasets/cnc-geographie-cinema",
+  "licenses": [
+    {
+      "name": "CC-BY-4.0",
+      "title": "Creative Commons Attribution 4.0 International",
+      "path": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Centre national du cinéma et de l'image animée (CNC)",
+      "path": "https://www.data.gouv.fr/datasets/geographie-du-cinema-equipement-et-frequentation"
+    }
+  ],
+  "contributors": [
+    {
+      "title": "dados-audiovisual-br",
+      "role": "publisher",
+      "path": "https://github.com/SEU-USUARIO/dados-audiovisual-br"
+    }
+  ],
+  "status": {
+    "value": "ativo",
+    "options": [
+      "ativo",
+      "intermitente",
+      "alterado",
+      "offline",
+      "descontinuado"
+    ],
+    "last_checked": "2026-05-19",
+    "notes": "Licence Ouverte. 4 arquivos: région, département, commune, unité urbaine."
+  },
+  "collection": {
+    "method": "manual",
+    "script": null,
+    "frequency": "ad-hoc"
+  },
+  "resources": [
+    {
+      "name": "geographie-par-commune",
+      "path": "snapshots/2026-05-19/geographie-par-commune.xlsx",
+      "format": "xlsx",
+      "mediatype": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "encoding": "binary",
+      "bytes": 789883,
+      "hash": "sha256:e712f6ed08a80ecc1aa9425f28b9dd1c8d819e36f5f9490290cab04923e64114"
+    },
+    {
+      "name": "geographie-par-departement",
+      "path": "snapshots/2026-05-19/geographie-par-departement.xlsx",
+      "format": "xlsx",
+      "mediatype": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "encoding": "binary",
+      "bytes": 1244790,
+      "hash": "sha256:8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5"
+    },
+    {
+      "name": "geographie-par-region",
+      "path": "snapshots/2026-05-19/geographie-par-region.xlsx",
+      "format": "xlsx",
+      "mediatype": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "encoding": "binary",
+      "bytes": 315994,
+      "hash": "sha256:fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3"
+    },
+    {
+      "name": "geographie-par-unite-urbaine",
+      "path": "snapshots/2026-05-19/geographie-par-unite-urbaine.xlsx",
+      "format": "xlsx",
+      "mediatype": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "encoding": "binary",
+      "bytes": 472408,
+      "hash": "sha256:eac82ab973c04cddda7cdab41083fd17e349f57201894b8f72bda523090f58c8"
+    }
+  ],
+  "snapshots": [
+    {
+      "date": "2026-05-19",
+      "path": "snapshots/2026-05-19/",
+      "source_url": "https://www.data.gouv.fr/datasets/geographie-du-cinema-equipement-et-frequentation",
+      "notes": "Snapshot inicial migrado do projeto fomento-audiovisual."
+    }
+  ]
+}

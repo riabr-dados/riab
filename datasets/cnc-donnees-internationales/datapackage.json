@@ -1,0 +1,65 @@
+{
+  "$schema": "https://specs.frictionlessdata.io/schemas/data-package.json",
+  "name": "cnc-donnees-internationales",
+  "title": "CNC — Données internationales sur le cinéma",
+  "description": "Dados comparativos internacionais sobre o mercado cinematográfico: bilheteria, produção, frequentação e investimento em diversos países.",
+  "version": "2026.05.19",
+  "created": "2026-05-19T00:00:00Z",
+  "homepage": "https://github.com/SEU-USUARIO/dados-audiovisual-br/tree/main/datasets/cnc-donnees-internationales",
+  "licenses": [
+    {
+      "name": "CC-BY-4.0",
+      "title": "Creative Commons Attribution 4.0 International",
+      "path": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Centre national du cinéma et de l'image animée (CNC)",
+      "path": "https://www.data.gouv.fr/datasets/donnees-internationales-sur-le-cinema"
+    }
+  ],
+  "contributors": [
+    {
+      "title": "dados-audiovisual-br",
+      "role": "publisher",
+      "path": "https://github.com/SEU-USUARIO/dados-audiovisual-br"
+    }
+  ],
+  "status": {
+    "value": "ativo",
+    "options": [
+      "ativo",
+      "intermitente",
+      "alterado",
+      "offline",
+      "descontinuado"
+    ],
+    "last_checked": "2026-05-19",
+    "notes": "Licence Ouverte. Útil para comparação com dados brasileiros."
+  },
+  "collection": {
+    "method": "manual",
+    "script": null,
+    "frequency": "ad-hoc"
+  },
+  "resources": [
+    {
+      "name": "donnees-internationales-cinema",
+      "path": "snapshots/2026-05-19/donnees-internationales-cinema.xlsx",
+      "format": "xlsx",
+      "mediatype": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "encoding": "binary",
+      "bytes": 87814,
+      "hash": "sha256:5475a59fded1e3dae812c6fb516c43135d184abca8e8decd1bcd9248eeb48f4b"
+    }
+  ],
+  "snapshots": [
+    {
+      "date": "2026-05-19",
+      "path": "snapshots/2026-05-19/",
+      "source_url": "https://www.data.gouv.fr/datasets/donnees-internationales-sur-le-cinema",
+      "notes": "Snapshot inicial migrado do projeto fomento-audiovisual."
+    }
+  ]
+}

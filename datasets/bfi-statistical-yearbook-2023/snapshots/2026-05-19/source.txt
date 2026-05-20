@@ -1,0 +1,22 @@
+Dataset: BFI — Statistical Yearbook 2023 (Reino Unido)
+Fonte oficial: British Film Institute (BFI)
+URL: https://www.bfi.org.uk/industry-data-insights/statistical-yearbook
+Data do snapshot: 2026-05-19
+Status na data: ativo
+Coleta: manual, espelhamento do projeto fomento-audiovisual
+Arquivos:
+  - audiences (60049 bytes, sha256:63634cc3296f13e87b50c55d46cc749712803c0d3fe7b5d4cfbc6096eae5828c)
+  - box-office-2023 (67643 bytes, sha256:8233d05fa3c373f998e382375026f71e0aa100c17700b6ef87b45599c85de316)
+  - exhibition (49245 bytes, sha256:60d312d1af09e2b08fc0d70c707e02bec21b84680bff66e315aef2202cd8e37e)
+  - film-education (51031 bytes, sha256:c627e7f95ad5a2818f9af6aa6b65d308bdc43f1cec6a240f1ea4fd0b7dafb606)
+  - film-industry-companies (39042 bytes, sha256:8a155253064943c0e397b10028647f139688e9cb81a199ae4d51c0cab8fb61f3)
+  - film-industry-employment (43435 bytes, sha256:cc9fff1a602a28f92146b078cc49a46a0463514aed115ff9dcef1529482d29b8)
+  - film-on-digital-video (44128 bytes, sha256:830c369593a67fdc8b09cf543d3937ef4cd6f26e5d05c00bc3e33fa94b49e3b7)
+  - film-on-physical-video (41904 bytes, sha256:afd757ba6a43bdbe6cab3c84077fcc2747accc2f6bd854d1d09f3842ba7d2ba4)
+  - film-on-television (66401 bytes, sha256:9311e99b4320d4d6439134c9def20a3c83916c8e851a405927f09dd17834a1cb)
+  - public-investment-in-film (32975 bytes, sha256:a45ce357c18f860f3cfefe384702b9da1c2db6423d2a82469a15b23df533c5a5)
+  - screen-sector-certification (30592 bytes, sha256:56aa51bdc9073f05557ef1767bd212e51e85e91b393e5cef11be0e4bc41cadf1)
+  - top-films-2023 (50762 bytes, sha256:a4a0b272f8668e9ecaf7da38f0421cd439d12383fa500890f1302092b98d2fc2)
+  - uk-film-economy (23110 bytes, sha256:1e85545644c74345cb185bcbb6fe890220e51e1fe2b6a3b6483b825fdd445b22)
+  - uk-film-market (35964 bytes, sha256:e118687aeeba5a167454c2509b6e4c656776a47e6493d043a844897b81482ea3)
+  - uk-films-talent-worldwide (52629 bytes, sha256:2da66bcea4ae397cb79d7891fe4f95483bcf1a62f9dfa255d69531d34cde4385)

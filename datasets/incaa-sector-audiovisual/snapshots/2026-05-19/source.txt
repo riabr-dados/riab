@@ -1,0 +1,16 @@
+Dataset: INCAA / Argentina — Sector Audiovisual (2001–2023)
+Fonte oficial: Ministerio de Cultura de Argentina — Datos Abiertos de Cultura
+URL: https://datos.gob.ar/dataset/cultura-sector-audiovisual
+Data do snapshot: 2026-05-19
+Status na data: ativo
+Coleta: manual, espelhamento do projeto fomento-audiovisual
+Arquivos:
+  - a01-espectadores-cine-origen-film (922 bytes, sha256:7894daf03361f8c70a330769e8c9a1fd03d558ea2d202542b47b0059f0795fe0)
+  - a02-recaudacion-cine-nacional-origen-film (1044 bytes, sha256:21e7541896c5926f09864e49d7b7c9863239d10c2dc1896ad2908ee38bc3339a)
+  - a03-estrenos-cine-origen-film (511 bytes, sha256:ede18f729a3048ddacab6fd991544df054fce47231cb546277a2fec30252915a)
+  - a04-espectadores-cine-nivel-provincial (4545 bytes, sha256:b533615821280009bd217387ef70f3716da77667b0ac4670fc465bb91aaa6d36)
+  - a05-recaudacion-cine-nivel-provincial (5473 bytes, sha256:16173b6a5c83a15ada23da5205b9743ed0b4f7d2714a62080a9a4baebb54e38c)
+  - a06-participacion-espectadores-distribuidora (600 bytes, sha256:8bd4efdb91aec83f15d7a995ee29d7893f48853e1bfa8aa68e0e7595823fe777)
+  - a07-puestos-trabajo-largometrajes-nacional (511 bytes, sha256:d8065fa2b518de88d0d693f2b95ab4b0ba064de3d7e9101dbffd0280648767af)
+  - a09-accesos-servicios-tv-suscripcion (271 bytes, sha256:6ee08653d00c566aa2be0fd7f951b647d9ff61029dd7eba98df79eb9995919f6)
+  - a10-ingresos-servicios-tv-suscripcion (298 bytes, sha256:05c29a89137fb94d3d3d7a61dbb9f7ea996ac0958fe34ae55bace9662608096d)

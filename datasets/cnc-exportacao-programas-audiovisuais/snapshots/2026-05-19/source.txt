@@ -1,0 +1,8 @@
+Dataset: CNC — Exportation de programmes audiovisuels
+Fonte oficial: Centre national du cinéma et de l'image animée (CNC)
+URL: https://www.data.gouv.fr/datasets/exportation-de-programmes-audiovisuels
+Data do snapshot: 2026-05-19
+Status na data: ativo
+Coleta: manual, espelhamento do projeto fomento-audiovisual
+Arquivos:
+  - exportacao-programas-audiovisuais (77796 bytes, sha256:ddfe852e09952249d4f798a210bc253cf86202bce6034bbd9b76d2629b0f5172)

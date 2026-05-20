@@ -1,0 +1,8 @@
+Dataset: CNC — Films ayant réalisé plus d'un million d'entrées
+Fonte oficial: Centre national du cinéma et de l'image animée (CNC)
+URL: https://www.data.gouv.fr/datasets/films-ayant-realise-plus-dun-million-dentrees
+Data do snapshot: 2026-05-19
+Status na data: ativo
+Coleta: manual, espelhamento do projeto fomento-audiovisual
+Arquivos:
+  - films-plus-million-entrees (109816 bytes, sha256:cbc2ecf23d684c89a8c678c908b390c5de7de1799b1802ab7c55deb53c470cd5)

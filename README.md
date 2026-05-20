@@ -47,25 +47,57 @@ dados-audiovisual-br/
 └── docs/                     # Documentação adicional (vai pro GitHub Pages)
 ```
 
-## Datasets disponíveis (primeira contribuição)
+## Datasets disponíveis
 
-A primeira contribuição traz dados que já estavam coletados no projeto de análise [fomento-audiovisual](https://github.com/cainanbaladez-bot/fomento-audiovisual). Detalhes em [FONTES.md](FONTES.md).
+33 datasets de 6 países, cobrindo Brasil, França, Reino Unido, Argentina, Uruguai e dados comparativos internacionais. Detalhes de cada fonte em [FONTES.md](FONTES.md).
 
-| Dataset | Fonte | Período coberto | Status |
+**Brasil — ANCINE, IBGE, Lumiere (13 datasets)**
+
+| Dataset | Fonte | Cobertura | Status |
 |---|---|---|---|
 | `ancine-fsa-projetos` | ANCINE / FSA | até 2026-05 | ativo |
 | `ancine-renuncia-fiscal` | ANCINE | até 2026-05 | ativo |
-| `ancine-obras-nao-publicitarias` | ANCINE / SAV | 2002–2026 | ativo |
+| `ancine-obras-nao-publicitarias` | ANCINE / SAV | 2002–2026 (25 CSVs) | ativo |
 | `ancine-agentes-economicos` | ANCINE | até 2026-05 | ativo |
 | `ancine-diretores-obras` | ANCINE / SAV | até 2026-05 | ativo |
 | `ancine-produtores-obras` | ANCINE / SAV | até 2026-05 | ativo |
 | `ancine-bilheteria-consolidada` | ANCINE / SADIS | até 2026 | ativo |
-| `ancine-bilheteria-agregada-filme-ano` | ANCINE / SADIS | até 2026 | ativo |
-| `ancine-preco-medio-ingresso` | ANCINE | série histórica | ativo |
-| `ancine-atas-fsa` | ANCINE / FSA (PDFs oficiais) | 2014, 2015, 2017, 2018, 2024 | ativo |
+| `ancine-bilheteria-agregada-filme-ano` | ANCINE / OCA | até 2026 | intermitente |
+| `ancine-preco-medio-ingresso` | ANCINE / OCA | série histórica | intermitente |
+| `ancine-atas-fsa` | ANCINE / FSA (PDFs) | 2014–2024 | ativo |
 | `lumiere-cinemas-europa` | Observatório Europeu do Audiovisual | até 2026 | ativo |
 | `lumiere-vod-europa` | Observatório Europeu do Audiovisual | até 2026 | ativo |
 | `ibge-deflator-ipca` | IBGE | base 2024 | ativo |
+
+**França — CNC (17 datasets, Licence Ouverte)**
+
+| Dataset | Conteúdo |
+|---|---|
+| `cnc-visas-exploitation` | 95.000+ filmes autorizados 1945–2025 (CSV 12MB) |
+| `cnc-frequentation-salles` | Frequentação de salas (entradas, sessões, receita) |
+| `cnc-etablissements` | Cadastro de cinemas ativos |
+| `cnc-films-million-entrees` | Filmes com mais de 1M de espectadores |
+| `cnc-donnees-internationales` | Dados comparativos internacionais |
+| `cnc-films-agrees` | Filmes aprovados para apoio público |
+| `cnc-audience-television` | Audiência televisiva |
+| `cnc-films-television` | Filmes na TV francesa |
+| `cnc-exportacao-programas-audiovisuais` | Exportação de programas audiovisuais |
+| `cnc-geographie-cinema` | Equipamento e frequentação por região/dpto/commune (4 arquivos) |
+| `cnc-public-vod` | Público de VoD |
+| `cnc-referencias-ativas-vod` | Referências ativas em plataformas VoD |
+| `cnc-consumo-vod` | Consumo domiciliar de VoD |
+| `cnc-parc-cinematographique` | Parque cinematográfico geral |
+| `cnc-financement-television` | Financiamento da televisão |
+| `cnc-distribution-salles` | Distribuição de filmes em salas |
+| `cnc-public-films` | Perfil do público de filmes |
+
+**Argentina, Reino Unido, Uruguai (3 datasets)**
+
+| Dataset | Fonte | Cobertura | Status |
+|---|---|---|---|
+| `incaa-sector-audiovisual` | INCAA / Argentina (9 CSVs) | 2001–2023 | ativo |
+| `bfi-statistical-yearbook-2023` | BFI / Reino Unido (15 ODS) | 2023 | ativo |
+| `acau-uruguay-apoios-audiovisual` | ACAU / Uruguai | 2013–2024 | ativo |
 
 ## Licença
 

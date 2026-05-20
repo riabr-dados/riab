@@ -1,0 +1,65 @@
+{
+  "$schema": "https://specs.frictionlessdata.io/schemas/data-package.json",
+  "name": "cnc-etablissements",
+  "title": "CNC — Liste des établissements cinématographiques actifs",
+  "description": "Cadastro dos estabelecimentos cinematográficos ativos na França: cinemas, salas, localização, capacidade.",
+  "version": "2026.05.19",
+  "created": "2026-05-19T00:00:00Z",
+  "homepage": "https://github.com/SEU-USUARIO/dados-audiovisual-br/tree/main/datasets/cnc-etablissements",
+  "licenses": [
+    {
+      "name": "CC-BY-4.0",
+      "title": "Creative Commons Attribution 4.0 International",
+      "path": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Centre national du cinéma et de l'image animée (CNC)",
+      "path": "https://www.data.gouv.fr/datasets/liste-des-etablissements-cinematographiques-actifs-1"
+    }
+  ],
+  "contributors": [
+    {
+      "title": "dados-audiovisual-br",
+      "role": "publisher",
+      "path": "https://github.com/SEU-USUARIO/dados-audiovisual-br"
+    }
+  ],
+  "status": {
+    "value": "ativo",
+    "options": [
+      "ativo",
+      "intermitente",
+      "alterado",
+      "offline",
+      "descontinuado"
+    ],
+    "last_checked": "2026-05-19",
+    "notes": "Licence Ouverte. Atualizado em mai/2026."
+  },
+  "collection": {
+    "method": "manual",
+    "script": null,
+    "frequency": "ad-hoc"
+  },
+  "resources": [
+    {
+      "name": "etablissements-cinematographiques",
+      "path": "snapshots/2026-05-19/etablissements-cinematographiques.xlsx",
+      "format": "xlsx",
+      "mediatype": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "encoding": "binary",
+      "bytes": 2640686,
+      "hash": "sha256:513a71e15ef574293fdc2178ebee7140aadcb11ecd20e0c7cd8bb8f231298383"
+    }
+  ],
+  "snapshots": [
+    {
+      "date": "2026-05-19",
+      "path": "snapshots/2026-05-19/",
+      "source_url": "https://www.data.gouv.fr/datasets/liste-des-etablissements-cinematographiques-actifs-1",
+      "notes": "Snapshot inicial migrado do projeto fomento-audiovisual."
+    }
+  ]
+}

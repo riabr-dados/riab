@@ -1,0 +1,11 @@
+Dataset: CNC — Géographie du cinéma: équipement et fréquentation
+Fonte oficial: Centre national du cinéma et de l'image animée (CNC)
+URL: https://www.data.gouv.fr/datasets/geographie-du-cinema-equipement-et-frequentation
+Data do snapshot: 2026-05-19
+Status na data: ativo
+Coleta: manual, espelhamento do projeto fomento-audiovisual
+Arquivos:
+  - geographie-par-commune (789883 bytes, sha256:e712f6ed08a80ecc1aa9425f28b9dd1c8d819e36f5f9490290cab04923e64114)
+  - geographie-par-departement (1244790 bytes, sha256:8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5)
+  - geographie-par-region (315994 bytes, sha256:fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3)
+  - geographie-par-unite-urbaine (472408 bytes, sha256:eac82ab973c04cddda7cdab41083fd17e349f57201894b8f72bda523090f58c8)

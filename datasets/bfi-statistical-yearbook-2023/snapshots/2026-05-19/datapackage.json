@@ -1,0 +1,191 @@
+{
+  "$schema": "https://specs.frictionlessdata.io/schemas/data-package.json",
+  "name": "bfi-statistical-yearbook-2023",
+  "title": "BFI — Statistical Yearbook 2023 (Reino Unido)",
+  "description": "Anuário estatístico do British Film Institute (BFI) para o mercado cinematográfico do Reino Unido: bilheteria, top filmes, UK no mundo, exibição, vídeo físico/digital, TV, mercado total, audiências, emprego, empresas, economia do setor. 15 arquivos ODS.",
+  "version": "2026.05.19",
+  "created": "2026-05-19T00:00:00Z",
+  "homepage": "https://github.com/SEU-USUARIO/dados-audiovisual-br/tree/main/datasets/bfi-statistical-yearbook-2023",
+  "licenses": [
+    {
+      "name": "CC-BY-4.0",
+      "title": "Creative Commons Attribution 4.0 International",
+      "path": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ],
+  "sources": [
+    {
+      "title": "British Film Institute (BFI)",
+      "path": "https://www.bfi.org.uk/industry-data-insights/statistical-yearbook"
+    }
+  ],
+  "contributors": [
+    {
+      "title": "dados-audiovisual-br",
+      "role": "publisher",
+      "path": "https://github.com/SEU-USUARIO/dados-audiovisual-br"
+    }
+  ],
+  "status": {
+    "value": "ativo",
+    "options": [
+      "ativo",
+      "intermitente",
+      "alterado",
+      "offline",
+      "descontinuado"
+    ],
+    "last_checked": "2026-05-19",
+    "notes": "Open Government Licence v3.0. Dados de 2023 (publicados 2024)."
+  },
+  "collection": {
+    "method": "manual",
+    "script": null,
+    "frequency": "ad-hoc"
+  },
+  "resources": [
+    {
+      "name": "audiences",
+      "path": "snapshots/2026-05-19/audiences.ods",
+      "format": "ods",
+      "mediatype": "application/octet-stream",
+      "encoding": "binary",
+      "bytes": 60049,
+      "hash": "sha256:63634cc3296f13e87b50c55d46cc749712803c0d3fe7b5d4cfbc6096eae5828c"
+    },
+    {
+      "name": "box-office-2023",
+      "path": "snapshots/2026-05-19/box-office-2023.ods",
+      "format": "ods",
+      "mediatype": "application/octet-stream",
+      "encoding": "binary",
+      "bytes": 67643,
+      "hash": "sha256:8233d05fa3c373f998e382375026f71e0aa100c17700b6ef87b45599c85de316"
+    },
+    {
+      "name": "exhibition",
+      "path": "snapshots/2026-05-19/exhibition.ods",
+      "format": "ods",
+      "mediatype": "application/octet-stream",
+      "encoding": "binary",
+      "bytes": 49245,
+      "hash": "sha256:60d312d1af09e2b08fc0d70c707e02bec21b84680bff66e315aef2202cd8e37e"
+    },
+    {
+      "name": "film-education",
+      "path": "snapshots/2026-05-19/film-education.ods",
+      "format": "ods",
+      "mediatype": "application/octet-stream",
+      "encoding": "binary",
+      "bytes": 51031,
+      "hash": "sha256:c627e7f95ad5a2818f9af6aa6b65d308bdc43f1cec6a240f1ea4fd0b7dafb606"
+    },
+    {
+      "name": "film-industry-companies",
+      "path": "snapshots/2026-05-19/film-industry-companies.ods",
+      "format": "ods",
+      "mediatype": "application/octet-stream",
+      "encoding": "binary",
+      "bytes": 39042,
+      "hash": "sha256:8a155253064943c0e397b10028647f139688e9cb81a199ae4d51c0cab8fb61f3"
+    },
+    {
+      "name": "film-industry-employment",
+      "path": "snapshots/2026-05-19/film-industry-employment.ods",
+      "format": "ods",
+      "mediatype": "application/octet-stream",
+      "encoding": "binary",
+      "bytes": 43435,
+      "hash": "sha256:cc9fff1a602a28f92146b078cc49a46a0463514aed115ff9dcef1529482d29b8"
+    },
+    {
+      "name": "film-on-digital-video",
+      "path": "snapshots/2026-05-19/film-on-digital-video.ods",
+      "format": "ods",
+      "mediatype": "application/octet-stream",
+      "encoding": "binary",
+      "bytes": 44128,
+      "hash": "sha256:830c369593a67fdc8b09cf543d3937ef4cd6f26e5d05c00bc3e33fa94b49e3b7"
+    },
+    {
+      "name": "film-on-physical-video",
+      "path": "snapshots/2026-05-19/film-on-physical-video.ods",
+      "format": "ods",
+      "mediatype": "application/octet-stream",
+      "encoding": "binary",
+      "bytes": 41904,
+      "hash": "sha256:afd757ba6a43bdbe6cab3c84077fcc2747accc2f6bd854d1d09f3842ba7d2ba4"
+    },
+    {
+      "name": "film-on-television",
+      "path": "snapshots/2026-05-19/film-on-television.ods",
+      "format": "ods",
+      "mediatype": "application/octet-stream",
+      "encoding": "binary",
+      "bytes": 66401,
+      "hash": "sha256:9311e99b4320d4d6439134c9def20a3c83916c8e851a405927f09dd17834a1cb"
+    },
+    {
+      "name": "public-investment-in-film",
+      "path": "snapshots/2026-05-19/public-investment-in-film.ods",
+      "format": "ods",
+      "mediatype": "application/octet-stream",
+      "encoding": "binary",
+      "bytes": 32975,
+      "hash": "sha256:a45ce357c18f860f3cfefe384702b9da1c2db6423d2a82469a15b23df533c5a5"
+    },
+    {
+      "name": "screen-sector-certification",
+      "path": "snapshots/2026-05-19/screen-sector-certification.ods",
+      "format": "ods",
+      "mediatype": "application/octet-stream",
+      "encoding": "binary",
+      "bytes": 30592,
+      "hash": "sha256:56aa51bdc9073f05557ef1767bd212e51e85e91b393e5cef11be0e4bc41cadf1"
+    },
+    {
+      "name": "top-films-2023",
+      "path": "snapshots/2026-05-19/top-films-2023.ods",
+      "format": "ods",
+      "mediatype": "application/octet-stream",
+      "encoding": "binary",
+      "bytes": 50762,
+      "hash": "sha256:a4a0b272f8668e9ecaf7da38f0421cd439d12383fa500890f1302092b98d2fc2"
+    },
+    {
+      "name": "uk-film-economy",
+      "path": "snapshots/2026-05-19/uk-film-economy.ods",
+      "format": "ods",
+      "mediatype": "application/octet-stream",
+      "encoding": "binary",
+      "bytes": 23110,
+      "hash": "sha256:1e85545644c74345cb185bcbb6fe890220e51e1fe2b6a3b6483b825fdd445b22"
+    },
+    {
+      "name": "uk-film-market",
+      "path": "snapshots/2026-05-19/uk-film-market.ods",
+      "format": "ods",
+      "mediatype": "application/octet-stream",
+      "encoding": "binary",
+      "bytes": 35964,
+      "hash": "sha256:e118687aeeba5a167454c2509b6e4c656776a47e6493d043a844897b81482ea3"
+    },
+    {
+      "name": "uk-films-talent-worldwide",
+      "path": "snapshots/2026-05-19/uk-films-talent-worldwide.ods",
+      "format": "ods",
+      "mediatype": "application/octet-stream",
+      "encoding": "binary",
+      "bytes": 52629,
+      "hash": "sha256:2da66bcea4ae397cb79d7891fe4f95483bcf1a62f9dfa255d69531d34cde4385"
+    }
+  ],
+  "snapshots": [
+    {
+      "date": "2026-05-19",
+      "path": "snapshots/2026-05-19/",
+      "source_url": "https://www.bfi.org.uk/industry-data-insights/statistical-yearbook",
+      "notes": "Snapshot inicial migrado do projeto fomento-audiovisual."
+    }
+  ]
+}

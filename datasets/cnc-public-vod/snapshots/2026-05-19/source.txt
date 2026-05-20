@@ -1,0 +1,8 @@
+Dataset: CNC — Public de la vidéo à la demande
+Fonte oficial: Centre national du cinéma et de l'image animée (CNC)
+URL: https://www.data.gouv.fr/datasets/public-de-la-video-a-la-demande
+Data do snapshot: 2026-05-19
+Status na data: ativo
+Coleta: manual, espelhamento do projeto fomento-audiovisual
+Arquivos:
+  - public-vod (65787 bytes, sha256:b238cc02e8fa17c811e3916e94b010535f9b19ead4bffb7ad45d436142c74887)

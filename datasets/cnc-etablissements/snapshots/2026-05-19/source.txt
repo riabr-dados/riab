@@ -1,0 +1,8 @@
+Dataset: CNC — Liste des établissements cinématographiques actifs
+Fonte oficial: Centre national du cinéma et de l'image animée (CNC)
+URL: https://www.data.gouv.fr/datasets/liste-des-etablissements-cinematographiques-actifs-1
+Data do snapshot: 2026-05-19
+Status na data: ativo
+Coleta: manual, espelhamento do projeto fomento-audiovisual
+Arquivos:
+  - etablissements-cinematographiques (2640686 bytes, sha256:513a71e15ef574293fdc2178ebee7140aadcb11ecd20e0c7cd8bb8f231298383)

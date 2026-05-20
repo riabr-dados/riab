@@ -1,0 +1,8 @@
+Dataset: CNC — Distribution des films dans les salles de cinéma
+Fonte oficial: Centre national du cinéma et de l'image animée (CNC)
+URL: https://www.data.gouv.fr/datasets/distribution-des-films-dans-les-salles-de-cinema
+Data do snapshot: 2026-05-19
+Status na data: ativo
+Coleta: manual, espelhamento do projeto fomento-audiovisual
+Arquivos:
+  - distribution-films-salles (185531 bytes, sha256:1f9cf64248c28b754dbf4a6de927699948c50ec3ae40122f04e0a89ad2a7c4d5)

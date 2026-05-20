@@ -37,6 +37,68 @@ Tabela de saúde das fontes públicas espelhadas neste repositório. Atualizada 
 |---|---|---|---|---|---|
 | Deflator IPCA (base 2024) | https://www.ibge.gov.br/estatisticas/economicas/precos-e-custos/9256-indice-nacional-de-precos-ao-consumidor-amplo.html | IBGE | 2026-05-19 | ativo | Série mensal |
 
+## CNC — Centre national du cinéma et de l'image animée (França)
+
+| Dataset | URL viva | Última verificação | Status |
+|---|---|---|---|
+| Visas d'exploitation 1945–2025 | https://www.data.gouv.fr/datasets/liste-des-visas-dexploitations-cinematographiques-delivres-de-1945-a-2025 | 2026-05-19 | ativo |
+| Fréquentation des salles | https://www.data.gouv.fr/datasets/frequentation-des-salles-de-cinema | 2026-05-19 | ativo |
+| Établissements cinématographiques actifs | https://www.data.gouv.fr/datasets/liste-des-etablissements-cinematographiques-actifs-1 | 2026-05-19 | ativo |
+| Films >1M d'entrées | https://www.data.gouv.fr/datasets/films-ayant-realise-plus-dun-million-dentrees | 2026-05-19 | ativo |
+| Données internationales | https://www.data.gouv.fr/datasets/donnees-internationales-sur-le-cinema | 2026-05-19 | ativo |
+| Films agréés (produção) | https://www.data.gouv.fr/datasets/liste-des-films-cinematographiques-agrees | 2026-05-19 | ativo |
+| Audience de la télévision | https://www.data.gouv.fr/datasets/audience-de-la-television | 2026-05-19 | ativo |
+| Films à la télévision | https://www.data.gouv.fr/datasets/films-a-la-television | 2026-05-19 | ativo |
+| Exportation programmes audiovisuels | https://www.data.gouv.fr/datasets/exportation-de-programmes-audiovisuels | 2026-05-19 | ativo |
+| Géographie du cinéma (4 níveis territoriais) | https://www.data.gouv.fr/datasets/geographie-du-cinema-equipement-et-frequentation | 2026-05-19 | ativo |
+| Public de la VoD | https://www.data.gouv.fr/datasets/public-de-la-video-a-la-demande | 2026-05-19 | ativo |
+| Références actives VoD | https://www.data.gouv.fr/datasets/references-actives-en-video-a-la-demande | 2026-05-19 | ativo |
+| Consommation ménages VoD | https://www.data.gouv.fr/datasets/consommation-des-menages-en-video-a-la-demande | 2026-05-19 | ativo |
+| Parc cinématographique | https://www.data.gouv.fr/datasets/parc-cinematographique-donnees-generales | 2026-05-19 | ativo |
+| Financement de la télévision | https://www.data.gouv.fr/datasets/financement-de-la-television | 2026-05-19 | ativo |
+| Distribution des films en salles | https://www.data.gouv.fr/datasets/distribution-des-films-dans-les-salles-de-cinema | 2026-05-19 | ativo |
+| Public des films | https://www.data.gouv.fr/datasets/public-des-films | 2026-05-19 | ativo |
+
+Todos sob **Licence Ouverte / Open Licence 2.0**. Fonte: data.gouv.fr.
+
+## INCAA — Argentina
+
+| Dataset | URL viva | Última verificação | Status |
+|---|---|---|---|
+| Setor audiovisual (espectadores, receita, estrenos, emprego, TV) 2001–2023 | https://datos.gob.ar/dataset/cultura-sector-audiovisual | 2026-05-19 | ativo |
+| Produtoras e distribuidoras audiovisuais | https://datos.cultura.gob.ar/dataset/0560ef96-55ca-4026-b70a-d638e1541c05 | 2026-05-19 | ativo |
+
+CC-BY 4.0. Fontes: INCAA, SICA, ENACOM.
+
+## BFI — British Film Institute (Reino Unido)
+
+| Dataset | URL viva | Última verificação | Status |
+|---|---|---|---|
+| Statistical Yearbook 2023 (15 arquivos ODS) | https://www.bfi.org.uk/industry-data-insights/statistical-yearbook | 2026-05-19 | ativo |
+
+Open Government Licence v3.0. Cobre bilheteria, exibição, vídeo, TV, emprego, economia.
+
+## ACAU — Agência de Cinema e Audiovisual (Uruguai)
+
+| Dataset | URL viva | Última verificação | Status |
+|---|---|---|---|
+| Apoios e reembolsos a projetos audiovisuais 2013–2024 | https://catalogodatos.gub.uy/dataset/acau-fondos-de-acau | 2026-05-19 | ativo |
+
+Catálogo de Datos Abiertos do Uruguai.
+
+## Fontes identificadas mas não coletáveis automaticamente
+
+| Instituição | País | Razão | URL |
+|---|---|---|---|
+| FFA Filmförderungsanstalt | Alemanha | Dados apenas em PDF (sem CSV/XLSX estruturado) | https://www.ffa.de/marktdaten.html |
+| KOFIC / KOBIS | Coreia do Sul | API REST disponível mas requer cadastro para chave | https://www.kobis.or.kr/kobisopenapi |
+| IMCINE | México | Portal dados.gob.mx retornando 403; datasets individuais com URLs instáveis | https://datos.gob.mx/busca/organization/imcine |
+| ICAA | Espanha | Estatísticas disponíveis mas acesso direto via HTTPS com certificado inválido | https://www.cultura.gob.es/cultura/areas/cine/datos.html |
+| ICA | Portugal | Anuários estatísticos em PDF apenas (sem dados estruturados) | https://www.ica-ip.pt/pt/downloads/publicacoes/ |
+| Screen Australia | Austrália | Dados em painel interativo (Fact Finders) sem download direto em CSV | https://www.screenaustralia.gov.au/fact-finders |
+| Telefilm Canada | Canadá | Relatórios anuais em PDF; open.canada.ca com cobertura limitada | https://telefilm.ca/en |
+| Proimágenes Colombia | Colômbia | Dados interativos (Cine en Cifras), sem download em CSV | https://www.proimagenescolombia.com/visualizaciondatos.php |
+
 ## Lacunas conhecidas (a cobrir em contribuições futuras)
 
 - **SICA (Sistema ANCINE de Informações)** — dados de salas, exibidores, distribuidoras

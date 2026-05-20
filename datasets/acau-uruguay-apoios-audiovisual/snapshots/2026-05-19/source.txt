@@ -1,0 +1,8 @@
+Dataset: ACAU / Uruguay — Apoios e reembolsos a projetos audiovisuais (2013–2024)
+Fonte oficial: Agencia del Cine y el Audiovisual del Uruguay (ACAU)
+URL: https://catalogodatos.gub.uy/dataset/acau-fondos-de-acau
+Data do snapshot: 2026-05-19
+Status na data: ativo
+Coleta: manual, espelhamento do projeto fomento-audiovisual
+Arquivos:
+  - acau-apoios-reembolsos-projetos-audiovisuais-2013-2024 (515065 bytes, sha256:6b1bcc471aa89682887e7e3f00535f1be0fb52c11ec231448ffbd12c3ef2d08b)

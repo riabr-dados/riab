@@ -1,0 +1,137 @@
+{
+  "$schema": "https://specs.frictionlessdata.io/schemas/data-package.json",
+  "name": "incaa-sector-audiovisual",
+  "title": "INCAA / Argentina — Sector Audiovisual (2001–2023)",
+  "description": "Dados do setor audiovisual argentino: espectadores e receita por origem do filme, estrenos por origem, dados por provincia, participação de distribuidoras, postos de trabalho em longas-metragens e dados de TV por assinatura. Fontes: INCAA, SICA, ENACOM.",
+  "version": "2026.05.19",
+  "created": "2026-05-19T00:00:00Z",
+  "homepage": "https://github.com/SEU-USUARIO/dados-audiovisual-br/tree/main/datasets/incaa-sector-audiovisual",
+  "licenses": [
+    {
+      "name": "CC-BY-4.0",
+      "title": "Creative Commons Attribution 4.0 International",
+      "path": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Ministerio de Cultura de Argentina — Datos Abiertos de Cultura",
+      "path": "https://datos.gob.ar/dataset/cultura-sector-audiovisual"
+    }
+  ],
+  "contributors": [
+    {
+      "title": "dados-audiovisual-br",
+      "role": "publisher",
+      "path": "https://github.com/SEU-USUARIO/dados-audiovisual-br"
+    }
+  ],
+  "status": {
+    "value": "ativo",
+    "options": [
+      "ativo",
+      "intermitente",
+      "alterado",
+      "offline",
+      "descontinuado"
+    ],
+    "last_checked": "2026-05-19",
+    "notes": "CC-BY 4.0. Série 2001-2023. 9 arquivos CSV temáticos."
+  },
+  "collection": {
+    "method": "manual",
+    "script": null,
+    "frequency": "ad-hoc"
+  },
+  "resources": [
+    {
+      "name": "a01-espectadores-cine-origen-film",
+      "path": "snapshots/2026-05-19/a01-espectadores-cine-origen-film.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 922,
+      "hash": "sha256:7894daf03361f8c70a330769e8c9a1fd03d558ea2d202542b47b0059f0795fe0"
+    },
+    {
+      "name": "a02-recaudacion-cine-nacional-origen-film",
+      "path": "snapshots/2026-05-19/a02-recaudacion-cine-nacional-origen-film.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1044,
+      "hash": "sha256:21e7541896c5926f09864e49d7b7c9863239d10c2dc1896ad2908ee38bc3339a"
+    },
+    {
+      "name": "a03-estrenos-cine-origen-film",
+      "path": "snapshots/2026-05-19/a03-estrenos-cine-origen-film.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 511,
+      "hash": "sha256:ede18f729a3048ddacab6fd991544df054fce47231cb546277a2fec30252915a"
+    },
+    {
+      "name": "a04-espectadores-cine-nivel-provincial",
+      "path": "snapshots/2026-05-19/a04-espectadores-cine-nivel-provincial.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 4545,
+      "hash": "sha256:b533615821280009bd217387ef70f3716da77667b0ac4670fc465bb91aaa6d36"
+    },
+    {
+      "name": "a05-recaudacion-cine-nivel-provincial",
+      "path": "snapshots/2026-05-19/a05-recaudacion-cine-nivel-provincial.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 5473,
+      "hash": "sha256:16173b6a5c83a15ada23da5205b9743ed0b4f7d2714a62080a9a4baebb54e38c"
+    },
+    {
+      "name": "a06-participacion-espectadores-distribuidora",
+      "path": "snapshots/2026-05-19/a06-participacion-espectadores-distribuidora.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 600,
+      "hash": "sha256:8bd4efdb91aec83f15d7a995ee29d7893f48853e1bfa8aa68e0e7595823fe777"
+    },
+    {
+      "name": "a07-puestos-trabajo-largometrajes-nacional",
+      "path": "snapshots/2026-05-19/a07-puestos-trabajo-largometrajes-nacional.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 511,
+      "hash": "sha256:d8065fa2b518de88d0d693f2b95ab4b0ba064de3d7e9101dbffd0280648767af"
+    },
+    {
+      "name": "a09-accesos-servicios-tv-suscripcion",
+      "path": "snapshots/2026-05-19/a09-accesos-servicios-tv-suscripcion.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 271,
+      "hash": "sha256:6ee08653d00c566aa2be0fd7f951b647d9ff61029dd7eba98df79eb9995919f6"
+    },
+    {
+      "name": "a10-ingresos-servicios-tv-suscripcion",
+      "path": "snapshots/2026-05-19/a10-ingresos-servicios-tv-suscripcion.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 298,
+      "hash": "sha256:05c29a89137fb94d3d3d7a61dbb9f7ea996ac0958fe34ae55bace9662608096d"
+    }
+  ],
+  "snapshots": [
+    {
+      "date": "2026-05-19",
+      "path": "snapshots/2026-05-19/",
+      "source_url": "https://datos.gob.ar/dataset/cultura-sector-audiovisual",
+      "notes": "Snapshot inicial migrado do projeto fomento-audiovisual."
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+Dataset: CNC — Liste des films cinématographiques agréés
+Fonte oficial: Centre national du cinéma et de l'image animée (CNC)
+URL: https://www.data.gouv.fr/datasets/liste-des-films-cinematographiques-agrees
+Data do snapshot: 2026-05-19
+Status na data: ativo
+Coleta: manual, espelhamento do projeto fomento-audiovisual
+Arquivos:
+  - films-agrees-production (843119 bytes, sha256:c192b4528ddfdc984b1a489cfcffc0059f5a709a7df0a3de25d5b95cf18b77a0)

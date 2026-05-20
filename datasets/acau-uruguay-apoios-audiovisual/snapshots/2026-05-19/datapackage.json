@@ -1,0 +1,65 @@
+{
+  "$schema": "https://specs.frictionlessdata.io/schemas/data-package.json",
+  "name": "acau-uruguay-apoios-audiovisual",
+  "title": "ACAU / Uruguay — Apoios e reembolsos a projetos audiovisuais (2013–2024)",
+  "description": "Fundos atribuídos pela Agência de Cinema e Audiovisual do Uruguai (ACAU) e suas antecessoras (ICAU, INCAU) a projetos audiovisuais uruguaios, incluindo valor adjudicado, executado, instrumento, fundo, formato, gênero, destino e situação do projeto.",
+  "version": "2026.05.19",
+  "created": "2026-05-19T00:00:00Z",
+  "homepage": "https://github.com/SEU-USUARIO/dados-audiovisual-br/tree/main/datasets/acau-uruguay-apoios-audiovisual",
+  "licenses": [
+    {
+      "name": "CC-BY-4.0",
+      "title": "Creative Commons Attribution 4.0 International",
+      "path": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Agencia del Cine y el Audiovisual del Uruguay (ACAU)",
+      "path": "https://catalogodatos.gub.uy/dataset/acau-fondos-de-acau"
+    }
+  ],
+  "contributors": [
+    {
+      "title": "dados-audiovisual-br",
+      "role": "publisher",
+      "path": "https://github.com/SEU-USUARIO/dados-audiovisual-br"
+    }
+  ],
+  "status": {
+    "value": "ativo",
+    "options": [
+      "ativo",
+      "intermitente",
+      "alterado",
+      "offline",
+      "descontinuado"
+    ],
+    "last_checked": "2026-05-19",
+    "notes": "Catálogo de Datos Abiertos do Uruguay. Dados 2013-2024. ~500KB."
+  },
+  "collection": {
+    "method": "manual",
+    "script": null,
+    "frequency": "ad-hoc"
+  },
+  "resources": [
+    {
+      "name": "acau-apoios-reembolsos-projetos-audiovisuais-2013-2024",
+      "path": "snapshots/2026-05-19/acau-apoios-reembolsos-projetos-audiovisuais-2013-2024.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 515065,
+      "hash": "sha256:6b1bcc471aa89682887e7e3f00535f1be0fb52c11ec231448ffbd12c3ef2d08b"
+    }
+  ],
+  "snapshots": [
+    {
+      "date": "2026-05-19",
+      "path": "snapshots/2026-05-19/",
+      "source_url": "https://catalogodatos.gub.uy/dataset/acau-fondos-de-acau",
+      "notes": "Snapshot inicial migrado do projeto fomento-audiovisual."
+    }
+  ]
+}

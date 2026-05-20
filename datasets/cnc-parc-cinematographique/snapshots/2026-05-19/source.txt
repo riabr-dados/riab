@@ -1,0 +1,8 @@
+Dataset: CNC — Parc cinématographique: données générales
+Fonte oficial: Centre national du cinéma et de l'image animée (CNC)
+URL: https://www.data.gouv.fr/datasets/parc-cinematographique-donnees-generales
+Data do snapshot: 2026-05-19
+Status na data: ativo
+Coleta: manual, espelhamento do projeto fomento-audiovisual
+Arquivos:
+  - parc-cinematographique (420992 bytes, sha256:a680191a89795465c34d61ecbccaa2a5299657616ee58fe80a13ff8e056729f3)

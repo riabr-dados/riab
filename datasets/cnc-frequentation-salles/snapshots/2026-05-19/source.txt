@@ -1,0 +1,8 @@
+Dataset: CNC — Fréquentation des salles de cinéma
+Fonte oficial: Centre national du cinéma et de l'image animée (CNC)
+URL: https://www.data.gouv.fr/datasets/frequentation-des-salles-de-cinema
+Data do snapshot: 2026-05-19
+Status na data: ativo
+Coleta: manual, espelhamento do projeto fomento-audiovisual
+Arquivos:
+  - frequentation-salles (436623 bytes, sha256:495eee2e1392ea2e956ff6db398de6fc912050dd8d634b29d029dfa8855dab5d)

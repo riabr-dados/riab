@@ -1,0 +1,8 @@
+Dataset: CNC — Financement de la télévision
+Fonte oficial: Centre national du cinéma et de l'image animée (CNC)
+URL: https://www.data.gouv.fr/datasets/financement-de-la-television
+Data do snapshot: 2026-05-19
+Status na data: ativo
+Coleta: manual, espelhamento do projeto fomento-audiovisual
+Arquivos:
+  - financement-television (78336 bytes, sha256:e6e46c2e7eabd58291aac437f58c875cc0b590dd90fb0c4e697544b1032af731)

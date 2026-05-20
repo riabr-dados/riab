@@ -1,0 +1,8 @@
+Dataset: CNC — Données internationales sur le cinéma
+Fonte oficial: Centre national du cinéma et de l'image animée (CNC)
+URL: https://www.data.gouv.fr/datasets/donnees-internationales-sur-le-cinema
+Data do snapshot: 2026-05-19
+Status na data: ativo
+Coleta: manual, espelhamento do projeto fomento-audiovisual
+Arquivos:
+  - donnees-internationales-cinema (87814 bytes, sha256:5475a59fded1e3dae812c6fb516c43135d184abca8e8decd1bcd9248eeb48f4b)

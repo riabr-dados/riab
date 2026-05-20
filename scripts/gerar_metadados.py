@@ -182,6 +182,249 @@ CATALOG = [
         "notes": "Série mensal, base 2024.",
         "files": ["deflator_ipca_base2024.csv"],
     },
+    # ── CNC France ──────────────────────────────────────────────────────────
+    {
+        "slug": "cnc-visas-exploitation",
+        "title": "CNC — Visas d'exploitation cinématographique (1945–2025)",
+        "description": (
+            "Lista completa dos visas d'exploitation cinématographique emitidos pelo CNC "
+            "desde 1945, cobrindo todos os filmes autorizados para distribuição em salas "
+            "na França. Mais de 95.000 registros."
+        ),
+        "source_title": "Centre national du cinéma et de l'image animée (CNC)",
+        "source_url": "https://www.data.gouv.fr/datasets/liste-des-visas-dexploitations-cinematographiques-delivres-de-1945-a-2025",
+        "status": "ativo",
+        "notes": "Licence Ouverte / Open Licence 2.0. Atualizado em nov/2025. CSV ~12MB.",
+        "files": None,
+    },
+    {
+        "slug": "cnc-frequentation-salles",
+        "title": "CNC — Fréquentation des salles de cinéma",
+        "description": (
+            "Frequentação das salas de cinema na França: entradas por ano, mês, semana e dia, "
+            "sessões e receitas."
+        ),
+        "source_title": "Centre national du cinéma et de l'image animée (CNC)",
+        "source_url": "https://www.data.gouv.fr/datasets/frequentation-des-salles-de-cinema",
+        "status": "ativo",
+        "notes": "Licence Ouverte. Dataset mais baixado do CNC (34K downloads).",
+        "files": None,
+    },
+    {
+        "slug": "cnc-etablissements",
+        "title": "CNC — Liste des établissements cinématographiques actifs",
+        "description": (
+            "Cadastro dos estabelecimentos cinematográficos ativos na França: cinemas, "
+            "salas, localização, capacidade."
+        ),
+        "source_title": "Centre national du cinéma et de l'image animée (CNC)",
+        "source_url": "https://www.data.gouv.fr/datasets/liste-des-etablissements-cinematographiques-actifs-1",
+        "status": "ativo",
+        "notes": "Licence Ouverte. Atualizado em mai/2026.",
+        "files": None,
+    },
+    {
+        "slug": "cnc-films-million-entrees",
+        "title": "CNC — Films ayant réalisé plus d'un million d'entrées",
+        "description": (
+            "Lista de todos os filmes que ultrapassaram 1 milhão de espectadores nas "
+            "salas francesas, com bilheteria e detalhes."
+        ),
+        "source_title": "Centre national du cinéma et de l'image animée (CNC)",
+        "source_url": "https://www.data.gouv.fr/datasets/films-ayant-realise-plus-dun-million-dentrees",
+        "status": "ativo",
+        "notes": "Licence Ouverte. 185K downloads — um dos mais populares do CNC.",
+        "files": None,
+    },
+    {
+        "slug": "cnc-donnees-internationales",
+        "title": "CNC — Données internationales sur le cinéma",
+        "description": (
+            "Dados comparativos internacionais sobre o mercado cinematográfico: "
+            "bilheteria, produção, frequentação e investimento em diversos países."
+        ),
+        "source_title": "Centre national du cinéma et de l'image animée (CNC)",
+        "source_url": "https://www.data.gouv.fr/datasets/donnees-internationales-sur-le-cinema",
+        "status": "ativo",
+        "notes": "Licence Ouverte. Útil para comparação com dados brasileiros.",
+        "files": None,
+    },
+    {
+        "slug": "cnc-films-agrees",
+        "title": "CNC — Liste des films cinématographiques agréés",
+        "description": (
+            "Lista dos filmes cinématográficos aprovados (agréés) pelo CNC para fins "
+            "de apoio e qualificação. Inclui primeiros filmes de iniciativa francesa."
+        ),
+        "source_title": "Centre national du cinéma et de l'image animée (CNC)",
+        "source_url": "https://www.data.gouv.fr/datasets/liste-des-films-cinematographiques-agrees",
+        "status": "ativo",
+        "notes": "Licence Ouverte. Atualizado em mar/2026.",
+        "files": None,
+    },
+    {
+        "slug": "cnc-audience-television",
+        "title": "CNC — Audience de la télévision",
+        "description": (
+            "Duração de escuta da televisão e audiência das cadeias televisivas na França."
+        ),
+        "source_title": "Centre national du cinéma et de l'image animée (CNC)",
+        "source_url": "https://www.data.gouv.fr/datasets/audience-de-la-television",
+        "status": "ativo",
+        "notes": "Licence Ouverte.",
+        "files": None,
+    },
+    {
+        "slug": "cnc-films-television",
+        "title": "CNC — Films à la télévision",
+        "description": "Dados sobre a difusão de filmes na televisão francesa.",
+        "source_title": "Centre national du cinéma et de l'image animée (CNC)",
+        "source_url": "https://www.data.gouv.fr/datasets/films-a-la-television",
+        "status": "ativo",
+        "notes": "Licence Ouverte.",
+        "files": None,
+    },
+    {
+        "slug": "cnc-exportacao-programas-audiovisuais",
+        "title": "CNC — Exportation de programmes audiovisuels",
+        "description": "Vendas de programas audiovisuais franceses ao exterior (exportação).",
+        "source_title": "Centre national du cinéma et de l'image animée (CNC)",
+        "source_url": "https://www.data.gouv.fr/datasets/exportation-de-programmes-audiovisuels",
+        "status": "ativo",
+        "notes": "Licence Ouverte.",
+        "files": None,
+    },
+    {
+        "slug": "cnc-geographie-cinema",
+        "title": "CNC — Géographie du cinéma: équipement et fréquentation",
+        "description": (
+            "Equipamento e frequentação cinematográfica na França por região, departamento, "
+            "commune e unité urbaine (4 arquivos de granularidade territorial diferente)."
+        ),
+        "source_title": "Centre national du cinéma et de l'image animée (CNC)",
+        "source_url": "https://www.data.gouv.fr/datasets/geographie-du-cinema-equipement-et-frequentation",
+        "status": "ativo",
+        "notes": "Licence Ouverte. 4 arquivos: région, département, commune, unité urbaine.",
+        "files": None,
+    },
+    {
+        "slug": "cnc-public-vod",
+        "title": "CNC — Public de la vidéo à la demande",
+        "description": "Público consumidor de VoD na França: perfil, hábitos, plataformas.",
+        "source_title": "Centre national du cinéma et de l'image animée (CNC)",
+        "source_url": "https://www.data.gouv.fr/datasets/public-de-la-video-a-la-demande",
+        "status": "ativo",
+        "notes": "Licence Ouverte.",
+        "files": None,
+    },
+    {
+        "slug": "cnc-referencias-ativas-vod",
+        "title": "CNC — Références actives en vidéo à la demande",
+        "description": "Programas e referências ativos em plataformas de VoD na França.",
+        "source_title": "Centre national du cinéma et de l'image animée (CNC)",
+        "source_url": "https://www.data.gouv.fr/datasets/references-actives-en-video-a-la-demande",
+        "status": "ativo",
+        "notes": "Licence Ouverte.",
+        "files": None,
+    },
+    {
+        "slug": "cnc-consumo-vod",
+        "title": "CNC — Consommation des ménages en vidéo à la demande",
+        "description": "Consumo domiciliar de VoD na França: volume, receita e tendências.",
+        "source_title": "Centre national du cinéma et de l'image animée (CNC)",
+        "source_url": "https://www.data.gouv.fr/datasets/consommation-des-menages-en-video-a-la-demande",
+        "status": "ativo",
+        "notes": "Licence Ouverte. Atualizado em mai/2026.",
+        "files": None,
+    },
+    {
+        "slug": "cnc-parc-cinematographique",
+        "title": "CNC — Parc cinématographique: données générales",
+        "description": "Dados gerais sobre o parque cinematográfico francês: telas, complexos, salas.",
+        "source_title": "Centre national du cinéma et de l'image animée (CNC)",
+        "source_url": "https://www.data.gouv.fr/datasets/parc-cinematographique-donnees-generales",
+        "status": "ativo",
+        "notes": "Licence Ouverte.",
+        "files": None,
+    },
+    {
+        "slug": "cnc-financement-television",
+        "title": "CNC — Financement de la télévision",
+        "description": "Financiamento da televisão francesa: fontes, volumes, canais.",
+        "source_title": "Centre national du cinéma et de l'image animée (CNC)",
+        "source_url": "https://www.data.gouv.fr/datasets/financement-de-la-television",
+        "status": "ativo",
+        "notes": "Licence Ouverte.",
+        "files": None,
+    },
+    {
+        "slug": "cnc-distribution-salles",
+        "title": "CNC — Distribution des films dans les salles de cinéma",
+        "description": "Distribuição de filmes nas salas de cinema na França: títulos, distribuidoras, semanas.",
+        "source_title": "Centre national du cinéma et de l'image animée (CNC)",
+        "source_url": "https://www.data.gouv.fr/datasets/distribution-des-films-dans-les-salles-de-cinema",
+        "status": "ativo",
+        "notes": "Licence Ouverte.",
+        "files": None,
+    },
+    {
+        "slug": "cnc-public-films",
+        "title": "CNC — Public des films",
+        "description": "Perfil do público de filmes nas salas de cinema francesas: sexo, idade, frequência.",
+        "source_title": "Centre national du cinéma et de l'image animée (CNC)",
+        "source_url": "https://www.data.gouv.fr/datasets/public-des-films",
+        "status": "ativo",
+        "notes": "Licence Ouverte.",
+        "files": None,
+    },
+    # ── INCAA Argentina ─────────────────────────────────────────────────────
+    {
+        "slug": "incaa-sector-audiovisual",
+        "title": "INCAA / Argentina — Sector Audiovisual (2001–2023)",
+        "description": (
+            "Dados do setor audiovisual argentino: espectadores e receita por origem do filme, "
+            "estrenos por origem, dados por provincia, participação de distribuidoras, "
+            "postos de trabalho em longas-metragens e dados de TV por assinatura. "
+            "Fontes: INCAA, SICA, ENACOM."
+        ),
+        "source_title": "Ministerio de Cultura de Argentina — Datos Abiertos de Cultura",
+        "source_url": "https://datos.gob.ar/dataset/cultura-sector-audiovisual",
+        "status": "ativo",
+        "notes": "CC-BY 4.0. Série 2001-2023. 9 arquivos CSV temáticos.",
+        "files": None,
+    },
+    # ── BFI UK ──────────────────────────────────────────────────────────────
+    {
+        "slug": "bfi-statistical-yearbook-2023",
+        "title": "BFI — Statistical Yearbook 2023 (Reino Unido)",
+        "description": (
+            "Anuário estatístico do British Film Institute (BFI) para o mercado "
+            "cinematográfico do Reino Unido: bilheteria, top filmes, UK no mundo, "
+            "exibição, vídeo físico/digital, TV, mercado total, audiências, emprego, "
+            "empresas, economia do setor. 15 arquivos ODS."
+        ),
+        "source_title": "British Film Institute (BFI)",
+        "source_url": "https://www.bfi.org.uk/industry-data-insights/statistical-yearbook",
+        "status": "ativo",
+        "notes": "Open Government Licence v3.0. Dados de 2023 (publicados 2024).",
+        "files": None,
+    },
+    # ── ACAU Uruguay ────────────────────────────────────────────────────────
+    {
+        "slug": "acau-uruguay-apoios-audiovisual",
+        "title": "ACAU / Uruguay — Apoios e reembolsos a projetos audiovisuais (2013–2024)",
+        "description": (
+            "Fundos atribuídos pela Agência de Cinema e Audiovisual do Uruguai (ACAU) "
+            "e suas antecessoras (ICAU, INCAU) a projetos audiovisuais uruguaios, "
+            "incluindo valor adjudicado, executado, instrumento, fundo, formato, "
+            "gênero, destino e situação do projeto."
+        ),
+        "source_title": "Agencia del Cine y el Audiovisual del Uruguay (ACAU)",
+        "source_url": "https://catalogodatos.gub.uy/dataset/acau-fondos-de-acau",
+        "status": "ativo",
+        "notes": "Catálogo de Datos Abiertos do Uruguay. Dados 2013-2024. ~500KB.",
+        "files": None,
+    },
 ]
 
 

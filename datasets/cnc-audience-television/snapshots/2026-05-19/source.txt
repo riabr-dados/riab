@@ -1,0 +1,8 @@
+Dataset: CNC — Audience de la télévision
+Fonte oficial: Centre national du cinéma et de l'image animée (CNC)
+URL: https://www.data.gouv.fr/datasets/audience-de-la-television
+Data do snapshot: 2026-05-19
+Status na data: ativo
+Coleta: manual, espelhamento do projeto fomento-audiovisual
+Arquivos:
+  - audience-television (77505 bytes, sha256:82842541ec6c80adae8dfd3e4b55c685cb6907870261b35b19934fdfbdeecd98)

@@ -1,0 +1,8 @@
+Dataset: CNC — Références actives en vidéo à la demande
+Fonte oficial: Centre national du cinéma et de l'image animée (CNC)
+URL: https://www.data.gouv.fr/datasets/references-actives-en-video-a-la-demande
+Data do snapshot: 2026-05-19
+Status na data: ativo
+Coleta: manual, espelhamento do projeto fomento-audiovisual
+Arquivos:
+  - referencias-ativas-vod (77553 bytes, sha256:6b1466fae58bd5b284304ec34586a3a780ebb783e0b3391a4d83bf0d4a740b97)

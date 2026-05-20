@@ -1,0 +1,8 @@
+Dataset: CNC — Consommation des ménages en vidéo à la demande
+Fonte oficial: Centre national du cinéma et de l'image animée (CNC)
+URL: https://www.data.gouv.fr/datasets/consommation-des-menages-en-video-a-la-demande
+Data do snapshot: 2026-05-19
+Status na data: ativo
+Coleta: manual, espelhamento do projeto fomento-audiovisual
+Arquivos:
+  - consumo-menages-vod (71895 bytes, sha256:b6baa5ba99958b71ac033e429cabc9de1f281117e4f4a58a6c759f4c2660d217)
