@@ -107,72 +107,64 @@ const featuredJson   = JSON.stringify(FEATURED);
         <button class="sql-run-btn" id="btn-run-sql">&#9654; Executar SQL</button>
       </div>
 
-      <!-- Visual steps -->
-      <div class="builder-steps" id="builder-steps">
+      <!-- ░░ FIELD PANEL ░░ -->
+      <div class="fp" id="field-panel">
 
-        <!-- Step 01: Columns -->
-        <div class="step" id="step-cols">
-          <div class="step-head">
-            <div class="step-num">01</div>
-            <div class="step-info">
-              <div class="step-label">Selecione as colunas</div>
-              <div class="step-hint" id="cols-hint">todas selecionadas</div>
-            </div>
-            <div class="step-actions">
-              <button class="step-act-btn" id="btn-all-cols">Todas</button>
-              <button class="step-act-btn" id="btn-no-cols">Nenhuma</button>
-              <input type="text" class="cols-search" id="cols-search" placeholder="buscar coluna…" />
-            </div>
+        <!-- source: campos disponíveis (draggáveis) -->
+        <div class="fp-source">
+          <div class="fp-source__bar">
+            <span class="fp-source__count" id="fp-count">0 campos</span>
+            <input class="fp-search" id="fp-search" placeholder="buscar campo…" />
           </div>
-          <div class="cols-pills" id="cols-pills"></div>
+          <div class="fp-list" id="fp-list"></div>
         </div>
 
-        <!-- Step 02: Filters -->
-        <div class="step" id="step-filters">
-          <div class="step-head">
-            <div class="step-num">02</div>
-            <div class="step-info">
-              <div class="step-label">Filtre os dados</div>
-              <div class="step-hint" id="filters-hint">sem filtros ativos</div>
-            </div>
-            <button class="add-filter-btn" id="btn-add-filter">+ Adicionar filtro</button>
-          </div>
-          <div class="filters-list" id="filters-list">
-            <div class="filters-empty">Nenhum filtro — todos os dados serão retornados.</div>
-          </div>
-        </div>
+        <!-- zonas de drop -->
+        <div class="fp-zones">
 
-        <!-- Step 03: Sort & Limit -->
-        <div class="step step--last" id="step-sort">
-          <div class="step-head">
-            <div class="step-num">03</div>
-            <div class="step-info">
-              <div class="step-label">Ordene e limite</div>
-              <div class="step-hint">configure exibição</div>
+          <div class="fp-zone" id="zone-cols" data-zone="cols">
+            <div class="fp-zone__head">
+              <span class="fp-zone__label">Colunas</span>
+              <button class="fp-zone__btn" id="btn-cols-all">Todas</button>
+            </div>
+            <div class="fp-zone__body" id="zone-cols-body">
+              <span class="fp-zone__empty">arraste campos ou clique em Todas</span>
             </div>
           </div>
-          <div class="sort-controls">
-            <div class="sort-col-wrap">
-              <label class="sort-label">Ordenar por</label>
-              <select class="sort-select" id="sel-sort">
-                <option value="">— padrão —</option>
-              </select>
+
+          <div class="fp-zone" id="zone-filters" data-zone="filters">
+            <div class="fp-zone__head">
+              <span class="fp-zone__label">Filtros</span>
+              <button class="fp-zone__btn fp-zone__btn--add" id="btn-add-filter">+ filtro</button>
+            </div>
+            <div class="fp-zone__body" id="zone-filters-body">
+              <span class="fp-zone__empty">arraste um campo para filtrar</span>
+            </div>
+          </div>
+
+          <div class="fp-zone" id="zone-sort" data-zone="sort">
+            <div class="fp-zone__head">
+              <span class="fp-zone__label">Ordenar por</span>
               <button class="dir-btn" id="btn-dir">&#8593; ASC</button>
             </div>
-            <div class="limit-wrap">
-              <label class="sort-label">Linhas</label>
-              <div class="limit-chips">
-                <button class="lchip" data-val="50">50</button>
-                <button class="lchip lchip--on" data-val="100">100</button>
-                <button class="lchip" data-val="500">500</button>
-                <button class="lchip" data-val="1000">1.000</button>
-                <button class="lchip" data-val="0">Todas</button>
-              </div>
+            <div class="fp-zone__body" id="zone-sort-body">
+              <span class="fp-zone__empty">arraste um campo para ordenar</span>
             </div>
           </div>
-        </div>
 
-      </div><!-- /builder-steps -->
+          <div class="fp-limit">
+            <span class="fp-zone__label">Linhas</span>
+            <div class="limit-chips">
+              <button class="lchip" data-val="50">50</button>
+              <button class="lchip lchip--on" data-val="100">100</button>
+              <button class="lchip" data-val="500">500</button>
+              <button class="lchip" data-val="1000">1 k</button>
+              <button class="lchip" data-val="0">Todas</button>
+            </div>
+          </div>
+
+        </div><!-- /fp-zones -->
+      </div><!-- /field-panel -->
 
       <!-- CTA -->
       <div class="builder-cta">
@@ -237,41 +229,44 @@ import * as duckdb from "https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.29.0
 const { parquetMap, tables, featured } = window.__RIAB__;
 
 // ── DOM ────────────────────────────────────────────────────────
-const dot         = document.getElementById("ex-dot");
-const statusEl    = document.getElementById("ex-status");
-const btnRun      = document.getElementById("btn-run");
-const btnExport   = document.getElementById("btn-export");
-const resultArea  = document.getElementById("ex-result");
-const foot        = document.getElementById("ex-foot");
-const rowcountEl  = document.getElementById("ex-rowcount");
-const timeEl      = document.getElementById("ex-time");
-const colsPills   = document.getElementById("cols-pills");
-const filtersList = document.getElementById("filters-list");
-const colsHint    = document.getElementById("cols-hint");
-const filtersHint = document.getElementById("filters-hint");
-const colsSearch  = document.getElementById("cols-search");
-const selSort     = document.getElementById("sel-sort");
-const btnDir      = document.getElementById("btn-dir");
-const editor      = document.getElementById("ex-editor");
-const bhTableId   = document.getElementById("bh-table-id");
-const bhTableDesc = document.getElementById("bh-table-desc");
-const nlInput     = document.getElementById("nl-input");
-const btnGen      = document.getElementById("btn-gen");
-const nlHint      = document.getElementById("nl-hint");
+const dot             = document.getElementById("ex-dot");
+const statusEl        = document.getElementById("ex-status");
+const btnRun          = document.getElementById("btn-run");
+const btnExport       = document.getElementById("btn-export");
+const resultArea      = document.getElementById("ex-result");
+const foot            = document.getElementById("ex-foot");
+const rowcountEl      = document.getElementById("ex-rowcount");
+const timeEl          = document.getElementById("ex-time");
+const fpList          = document.getElementById("fp-list");
+const fpSearch        = document.getElementById("fp-search");
+const fpCount         = document.getElementById("fp-count");
+const zoneColsBody    = document.getElementById("zone-cols-body");
+const zoneFiltersBody = document.getElementById("zone-filters-body");
+const zoneSortBody    = document.getElementById("zone-sort-body");
+const btnColsAll      = document.getElementById("btn-cols-all");
+const btnDir          = document.getElementById("btn-dir");
+const editor          = document.getElementById("ex-editor");
+const bhTableId       = document.getElementById("bh-table-id");
+const bhTableDesc     = document.getElementById("bh-table-desc");
+const nlInput         = document.getElementById("nl-input");
+const btnGen          = document.getElementById("btn-gen");
+const nlHint          = document.getElementById("nl-hint");
 
 // ── State ──────────────────────────────────────────────────────
 let db, conn;
-let ready    = false;
-let sqlMode  = false;
+let ready        = false;
+let sqlMode      = false;
 let currentTable = null;
-let columns  = [];
+let columns      = [];
 let selectedCols = new Set();
-let filters  = [];
-let sortDir  = "ASC";
-let limitVal = 100;
+let colsAll      = true;
+let filters      = [];
+let sortDir      = "ASC";
+let sortField    = "";
+let limitVal     = 100;
 let lastRows = [], lastCols = [];
 let autoRunTimer = null;
-let filterId = 0;
+let filterId     = 0;
 
 // ── INIT DUCKDB ────────────────────────────────────────────────
 async function initDuckDB() {
@@ -327,8 +322,10 @@ async function initDuckDB() {
 async function loadTable(name) {
   if (!ready) return;
   currentTable = name;
-  filters = [];
+  filters      = [];
   selectedCols = new Set();
+  colsAll      = true;
+  sortField    = "";
 
   document.querySelectorAll(".stable").forEach(b =>
     b.classList.toggle("stable--active", b.dataset.table === name)
@@ -347,11 +344,10 @@ async function loadTable(name) {
   try {
     const res = await conn.query(`DESCRIBE ${name}`);
     columns = res.toArray().map(r => ({ name: r.column_name, type: r.column_type }));
-    columns.forEach(c => selectedCols.add(c.name));
-    renderPills();
-    renderFiltersEmpty();
-    rebuildSortSelect();
-    updateHints();
+    renderFields();
+    renderColsZone();
+    renderSortZone();
+    zoneFiltersBody.innerHTML = `<span class="fp-zone__empty">arraste um campo para filtrar</span>`;
     statusEl.textContent = `${columns.length} colunas`;
     btnRun.disabled = false;
     triggerAutoRun();
@@ -360,59 +356,143 @@ async function loadTable(name) {
   }
 }
 
-// ── RENDER PILLS ───────────────────────────────────────────────
-function renderPills() {
-  const q = (colsSearch.value ?? "").toLowerCase();
-  colsPills.innerHTML = "";
+// ── FIELD LIST ─────────────────────────────────────────────────
+function renderFields(query) {
+  const q = (query !== undefined ? query : fpSearch.value ?? "").toLowerCase();
+  fpList.innerHTML = "";
+  fpCount.textContent = `${columns.length} campo${columns.length !== 1 ? "s" : ""}`;
   columns
     .filter(c => !q || c.name.toLowerCase().includes(q))
     .forEach(col => {
-      const on  = selectedCols.has(col.name);
-      const btn = document.createElement("button");
-      btn.className = "cpill" + (on ? " cpill--on" : "");
-      btn.dataset.col = col.name;
-      // Normalize type label
-      const t = col.type.toUpperCase().replace("VARCHAR", "TEXT").replace("INTEGER","INT").replace("BIGINT","INT").replace("DOUBLE","NUM").replace("FLOAT","NUM").split("(")[0].trim();
-      btn.innerHTML = `<span class="cpill__name">${col.name}</span><span class="cpill__type">${t}</span>`;
-      btn.addEventListener("click", () => {
-        if (selectedCols.has(col.name)) selectedCols.delete(col.name);
-        else selectedCols.add(col.name);
-        btn.classList.toggle("cpill--on", selectedCols.has(col.name));
-        updateHints();
+      const t = col.type.toUpperCase()
+        .replace("VARCHAR","TEXT").replace("INTEGER","INT").replace("BIGINT","INT")
+        .replace("DOUBLE","NUM").replace("FLOAT","NUM").split("(")[0].trim();
+      const el = document.createElement("div");
+      el.className = "fp-item";
+      el.draggable = true;
+      el.dataset.col = col.name;
+      el.innerHTML = `<span class="fp-item__name">${col.name}</span><span class="fp-item__type">${t}</span>`;
+
+      el.addEventListener("dragstart", e => {
+        e.dataTransfer.setData("text/plain", col.name);
+        e.dataTransfer.effectAllowed = "copy";
+        el.classList.add("fp-item--dragging");
+      });
+      el.addEventListener("dragend", () => el.classList.remove("fp-item--dragging"));
+
+      el.addEventListener("click", () => {
+        colsAll = false;
+        selectedCols.add(col.name);
+        renderColsZone();
         syncAndRun();
       });
-      colsPills.appendChild(btn);
+
+      fpList.appendChild(el);
     });
 }
 
-function rebuildSortSelect() {
-  selSort.innerHTML = `<option value="">— padrão —</option>` +
-    columns.map(c => `<option value="${c.name}">${c.name}</option>`).join("");
+// ── DROP ZONES ─────────────────────────────────────────────────
+function initDropZones() {
+  function setupZone(zoneEl, onDrop) {
+    zoneEl.addEventListener("dragover", e => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = "copy";
+      zoneEl.classList.add("fp-zone--over");
+    });
+    zoneEl.addEventListener("dragleave", e => {
+      if (!zoneEl.contains(e.relatedTarget)) zoneEl.classList.remove("fp-zone--over");
+    });
+    zoneEl.addEventListener("drop", e => {
+      e.preventDefault();
+      zoneEl.classList.remove("fp-zone--over");
+      const colName = e.dataTransfer.getData("text/plain");
+      if (colName) onDrop(colName);
+    });
+  }
+
+  setupZone(document.getElementById("zone-cols"), colName => {
+    colsAll = false;
+    selectedCols.add(colName);
+    renderColsZone();
+    syncAndRun();
+  });
+
+  setupZone(document.getElementById("zone-filters"), colName => {
+    addFilterForCol(colName);
+  });
+
+  setupZone(document.getElementById("zone-sort"), colName => {
+    sortField = colName;
+    renderSortZone();
+    syncAndRun();
+  });
 }
 
-function updateHints() {
-  const on = selectedCols.size;
-  colsHint.textContent = on === columns.length ? "todas selecionadas" :
-    on === 0 ? "nenhuma selecionada" : `${on} de ${columns.length} selecionadas`;
-  filtersHint.textContent = filters.length === 0 ? "sem filtros ativos" :
-    filters.length === 1 ? "1 filtro ativo" : `${filters.length} filtros ativos`;
+// ── RENDER ZONES ───────────────────────────────────────────────
+function renderColsZone() {
+  if (colsAll) {
+    zoneColsBody.innerHTML = "";
+    const chip = document.createElement("div");
+    chip.className = "fchip fchip--all";
+    chip.innerHTML = `<span>Todas (${columns.length})</span><button class="fchip__x" title="Selecionar manualmente">&times;</button>`;
+    chip.querySelector(".fchip__x").addEventListener("click", () => {
+      colsAll = false;
+      selectedCols = new Set(columns.map(c => c.name));
+      renderColsZone();
+      syncAndRun();
+    });
+    zoneColsBody.appendChild(chip);
+  } else if (selectedCols.size === 0) {
+    zoneColsBody.innerHTML = `<span class="fp-zone__empty">arraste campos ou clique em Todas</span>`;
+  } else {
+    zoneColsBody.innerHTML = "";
+    [...selectedCols].forEach(colName => {
+      const chip = document.createElement("div");
+      chip.className = "fchip";
+      chip.innerHTML = `<span>${colName}</span><button class="fchip__x" title="Remover">&times;</button>`;
+      chip.querySelector(".fchip__x").addEventListener("click", () => {
+        selectedCols.delete(colName);
+        if (selectedCols.size === 0) colsAll = true;
+        renderColsZone();
+        syncAndRun();
+      });
+      zoneColsBody.appendChild(chip);
+    });
+  }
+}
+
+function renderSortZone() {
+  if (!sortField) {
+    zoneSortBody.innerHTML = `<span class="fp-zone__empty">arraste um campo para ordenar</span>`;
+  } else {
+    zoneSortBody.innerHTML = "";
+    const chip = document.createElement("div");
+    chip.className = "fchip";
+    chip.innerHTML = `<span>${sortField}</span><button class="fchip__x" title="Remover">&times;</button>`;
+    chip.querySelector(".fchip__x").addEventListener("click", () => {
+      sortField = "";
+      renderSortZone();
+      syncAndRun();
+    });
+    zoneSortBody.appendChild(chip);
+  }
 }
 
 // ── FILTERS ────────────────────────────────────────────────────
-function renderFiltersEmpty() {
-  filtersList.innerHTML = `<div class="filters-empty">Nenhum filtro — todos os dados serão retornados.</div>`;
-}
-
-function addFilter() {
+function addFilterForCol(colName) {
   if (!columns.length) return;
   const id = ++filterId;
-  filters.push({ id, col: columns[0].name, op: "contains", val: "" });
+  filters.push({ id, col: colName || columns[0].name, op: "contains", val: "" });
   renderFilters();
+  syncAndRun();
 }
 
 function renderFilters() {
-  if (!filters.length) { renderFiltersEmpty(); updateHints(); return; }
-  filtersList.innerHTML = "";
+  if (!filters.length) {
+    zoneFiltersBody.innerHTML = `<span class="fp-zone__empty">arraste um campo para filtrar</span>`;
+    return;
+  }
+  zoneFiltersBody.innerHTML = "";
   filters.forEach((f, idx) => {
     const row = document.createElement("div");
     row.className = "filter-row";
@@ -458,16 +538,14 @@ function renderFilters() {
       filters = filters.filter(x=>x.id!==f.id);
       renderFilters(); syncAndRun();
     });
-    filtersList.appendChild(row);
+    zoneFiltersBody.appendChild(row);
   });
-  updateHints();
 }
 
 // ── BUILD SQL ──────────────────────────────────────────────────
 function buildSQL() {
   if (!currentTable) return "";
-  const cols = selectedCols.size > 0 && selectedCols.size < columns.length
-    ? [...selectedCols].join(", ") : "*";
+  const cols = colsAll || selectedCols.size === 0 ? "*" : [...selectedCols].join(", ");
   let sql = `SELECT ${cols}\nFROM ${currentTable}`;
 
   const vf = filters.filter(f => f.col && (["null","notnull"].includes(f.op) || f.val !== ""));
@@ -490,8 +568,7 @@ function buildSQL() {
     }).filter(Boolean);
     if (conds.length) sql += `\nWHERE ${conds.join("\n  AND ")}`;
   }
-  const s = selSort.value;
-  if (s) sql += `\nORDER BY ${s} ${sortDir}`;
+  if (sortField) sql += `\nORDER BY ${sortField} ${sortDir}`;
   if (limitVal > 0) sql += `\nLIMIT ${limitVal}`;
   return sql;
 }
@@ -635,9 +712,9 @@ Pergunta: ${q}`;
 // ── SQL MODE TOGGLE ────────────────────────────────────────────
 function setSQLMode(on) {
   sqlMode = on;
-  document.getElementById("builder-sql").style.display   = on ? "flex" : "none";
-  document.getElementById("builder-steps").style.display = on ? "none" : "flex";
-  document.getElementById("builder-cta").style.display   = on ? "none" : "block";
+  document.getElementById("builder-sql").style.display  = on ? "flex" : "none";
+  document.getElementById("field-panel").style.display  = on ? "none" : "flex";
+  document.getElementById("builder-cta").style.display  = on ? "none" : "block";
   document.getElementById("btn-sql-toggle").classList.toggle("bh-sql-toggle--active", on);
   if (on) { editor.value = buildSQL(); }
 }
@@ -647,18 +724,16 @@ btnRun.addEventListener("click", () => runQuery(buildSQL()));
 btnExport.addEventListener("click", exportCSV);
 btnGen.addEventListener("click", generateSQL);
 
-document.getElementById("btn-add-filter").addEventListener("click", addFilter);
-document.getElementById("btn-all-cols").addEventListener("click", () => {
-  columns.forEach(c => selectedCols.add(c.name));
-  renderPills(); updateHints(); syncAndRun();
-});
-document.getElementById("btn-no-cols").addEventListener("click", () => {
+document.getElementById("btn-add-filter").addEventListener("click", () => addFilterForCol(""));
+btnColsAll.addEventListener("click", () => {
+  colsAll = true;
   selectedCols.clear();
-  renderPills(); updateHints(); syncAndRun();
+  renderColsZone();
+  syncAndRun();
 });
-colsSearch.addEventListener("input", renderPills);
 
-selSort.addEventListener("change", syncAndRun);
+fpSearch.addEventListener("input", e => renderFields(e.target.value));
+
 btnDir.addEventListener("click", () => {
   sortDir = sortDir==="ASC"?"DESC":"ASC";
   btnDir.innerHTML = sortDir==="ASC"?"&#8593; ASC":"&#8595; DESC";
@@ -687,7 +762,6 @@ editor.addEventListener("keydown", e => {
 nlInput.addEventListener("keydown", e => {
   if ((e.ctrlKey||e.metaKey)&&e.key==="Enter"){ e.preventDefault(); generateSQL(); }
 });
-// Auto-grow NL textarea
 nlInput.addEventListener("input", () => {
   nlInput.style.height = "auto";
   nlInput.style.height = Math.min(nlInput.scrollHeight, 80) + "px";
@@ -704,6 +778,7 @@ document.getElementById("sidebar-toggle").addEventListener("click", () => {
   btn.innerHTML = c ? "&#8250;" : "&#8249;";
 });
 
+initDropZones();
 initDuckDB();
 </script>
 
@@ -712,6 +787,7 @@ initDuckDB();
 .exp {
   display: grid;
   grid-template-columns: 220px 360px 1fr;
+  grid-template-rows: 1fr;
   height: calc(100vh - 53px);
   overflow: hidden;
   position: relative;
@@ -1033,63 +1109,123 @@ initDuckDB();
 }
 .sql-run-btn:hover { background: #005c2e; }
 
-/* Steps */
-.builder-steps {
+/* ─── Field Panel ──────────────────────────────────────────── */
+.fp {
   flex: 1;
-  overflow-y: auto;
-  flex-direction: column;
-  padding-bottom: 8px;
-}
-.builder-steps::-webkit-scrollbar { width: 3px; }
-.builder-steps::-webkit-scrollbar-thumb { background: var(--border); }
-
-.step {
-  padding: 20px 20px 16px;
-  border-bottom: 1px solid var(--border);
-  position: relative;
-}
-.step--last { border-bottom: none; }
-
-.step-head {
   display: flex;
-  align-items: flex-start;
-  gap: 14px;
-  margin-bottom: 14px;
+  flex-direction: column;
+  overflow: hidden;
 }
-.step-num {
-  font-family: var(--font-d);
-  font-size: 42px;
-  line-height: 1;
-  color: rgba(0,122,60,.15);
-  letter-spacing: 1px;
+
+.fp-source {
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  max-height: 200px;
   flex-shrink: 0;
-  margin-top: -4px;
 }
-.step-info { flex: 1; min-width: 0; }
-.step-label {
-  font-family: var(--font-d);
-  font-size: 16px;
-  letter-spacing: 1.5px;
-  color: var(--text);
-  text-transform: uppercase;
-  line-height: 1.1;
-}
-.step-hint {
-  font-family: var(--font-m);
-  font-size: 9px;
-  color: var(--br);
-  margin-top: 3px;
-  letter-spacing: .06em;
-}
-.step-actions {
+.fp-source__bar {
   display: flex;
   align-items: center;
-  gap: 5px;
+  justify-content: space-between;
+  padding: 10px 16px 6px;
+  gap: 8px;
   flex-shrink: 0;
-  flex-wrap: wrap;
-  justify-content: flex-end;
 }
-.step-act-btn {
+.fp-source__count {
+  font-family: var(--font-m);
+  font-size: 9px;
+  letter-spacing: .1em;
+  color: var(--dim);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.fp-search {
+  font-family: var(--font-m);
+  font-size: 10px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 3px;
+  padding: 4px 10px;
+  outline: none;
+  flex: 1;
+  max-width: 160px;
+}
+.fp-search:focus { border-color: var(--br); }
+
+.fp-list {
+  overflow-y: auto;
+  padding: 4px 10px 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-content: flex-start;
+}
+.fp-list::-webkit-scrollbar { width: 3px; }
+.fp-list::-webkit-scrollbar-thumb { background: var(--border); }
+
+.fp-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  cursor: grab;
+  user-select: none;
+  font-family: var(--font-m);
+  font-size: 10px;
+  transition: all .15s;
+}
+.fp-item:hover {
+  border-color: rgba(0,122,60,.4);
+  color: var(--text);
+  background: rgba(0,122,60,.04);
+}
+.fp-item--dragging { opacity: .4; cursor: grabbing; }
+.fp-item__name { font-size: 10px; }
+.fp-item__type {
+  font-size: 7.5px;
+  letter-spacing: .05em;
+  color: var(--dim);
+  background: var(--bg2);
+  border-radius: 2px;
+  padding: 1px 4px;
+}
+
+.fp-zones {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+.fp-zones::-webkit-scrollbar { width: 3px; }
+.fp-zones::-webkit-scrollbar-thumb { background: var(--border); }
+
+.fp-zone {
+  border-bottom: 1px solid var(--border);
+  transition: background .15s;
+  flex-shrink: 0;
+}
+.fp-zone--over { background: rgba(0,122,60,.04); }
+
+.fp-zone__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px 6px;
+}
+.fp-zone__label {
+  font-family: var(--font-m);
+  font-size: 9px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.fp-zone__btn {
   font-family: var(--font-m);
   font-size: 9px;
   padding: 3px 8px;
@@ -1100,103 +1236,74 @@ initDuckDB();
   cursor: pointer;
   transition: all .12s;
 }
-.step-act-btn:hover { color: var(--text); border-color: var(--border2); }
-.cols-search {
-  font-family: var(--font-m);
-  font-size: 9px;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  color: var(--text);
-  border-radius: 3px;
-  padding: 3px 8px;
-  width: 88px;
-  outline: none;
+.fp-zone__btn:hover { color: var(--text); border-color: var(--border2); }
+.fp-zone__btn--add {
+  color: var(--br);
+  border-color: rgba(0,122,60,.3);
+  background: rgba(0,122,60,.06);
 }
-.cols-search:focus { border-color: var(--br); }
+.fp-zone__btn--add:hover { background: rgba(0,122,60,.12); }
 
-/* Column pills */
-.cols-pills {
+.fp-zone__body {
+  padding: 4px 16px 12px;
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
+  min-height: 36px;
+  align-content: flex-start;
 }
-.cpill {
+.fp-zone__empty {
+  font-family: var(--font-m);
+  font-size: 10px;
+  color: var(--dim);
+  font-style: italic;
+  opacity: .7;
+  align-self: center;
+}
+
+.fchip {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 4px 10px 4px 9px;
+  padding: 4px 8px 4px 10px;
   border-radius: 20px;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--dim);
-  cursor: pointer;
-  transition: all .15s;
-  font-family: var(--font-m);
-  font-size: 10px;
-}
-.cpill:hover { border-color: rgba(0,122,60,.4); color: var(--text); }
-.cpill--on {
-  background: rgba(0,122,60,.12);
-  border-color: rgba(0,122,60,.5);
-  color: var(--br);
-}
-.cpill__name { font-size: 10px; }
-.cpill__type {
-  font-size: 7.5px;
-  letter-spacing: .06em;
-  color: var(--dim);
-  background: var(--bg2);
-  border-radius: 2px;
-  padding: 1px 4px;
-}
-.cpill--on .cpill__type {
-  background: rgba(0,122,60,.12);
-  color: var(--br);
-}
-
-/* Filters */
-.add-filter-btn {
-  font-family: var(--font-m);
-  font-size: 10px;
-  padding: 5px 14px;
-  background: rgba(0,122,60,.08);
+  background: rgba(0,122,60,.1);
   border: 1px solid rgba(0,122,60,.3);
   color: var(--br);
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all .15s;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-.add-filter-btn:hover { background: rgba(0,122,60,.15); }
-
-.filters-list { display: flex; flex-direction: column; gap: 6px; }
-.filters-empty {
-  font-size: 10px;
-  color: var(--dim);
   font-family: var(--font-m);
-  padding: 4px 0;
+  font-size: 10px;
+  animation: chipIn .15s ease;
 }
+@keyframes chipIn { from{opacity:0;transform:scale(.9)} to{opacity:1;transform:none} }
+.fchip--all { background: rgba(0,122,60,.07); font-style: italic; }
+.fchip__x {
+  background: none; border: none;
+  color: rgba(0,122,60,.5); cursor: pointer;
+  font-size: 14px; line-height: 1;
+  padding: 0; margin-left: 2px;
+  transition: color .12s;
+}
+.fchip__x:hover { color: #e8341a; }
 
 .filter-row {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   background: var(--surface2);
   border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 7px 10px;
+  border-radius: 5px;
+  padding: 6px 10px;
+  width: 100%;
   animation: filterIn .2s ease;
 }
 @keyframes filterIn { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:none} }
-
 .filter-row__num {
   font-family: var(--font-d);
-  font-size: 18px;
+  font-size: 16px;
   color: rgba(0,122,60,.2);
   letter-spacing: 1px;
   flex-shrink: 0;
-  width: 22px;
+  width: 18px;
   line-height: 1;
 }
 .fsel {
@@ -1233,43 +1340,13 @@ initDuckDB();
 }
 .frm:hover { color: #e8341a; }
 
-/* Sort & Limit */
-.sort-controls { display: flex; flex-direction: column; gap: 12px; }
-.sort-col-wrap { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.sort-label {
-  font-family: var(--font-m);
-  font-size: 9px;
-  color: var(--dim);
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  white-space: nowrap;
+.fp-limit {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  flex-shrink: 0;
 }
-.sort-select {
-  font-family: var(--font-m);
-  font-size: 10px;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  color: var(--text);
-  border-radius: 4px;
-  padding: 4px 8px;
-  cursor: pointer;
-  flex: 1;
-  max-width: 160px;
-}
-.dir-btn {
-  font-family: var(--font-m);
-  font-size: 9px;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  color: var(--muted);
-  border-radius: 4px;
-  padding: 4px 10px;
-  cursor: pointer;
-  transition: all .15s;
-}
-.dir-btn:hover { border-color: var(--br); color: var(--br); }
-
-.limit-wrap { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .limit-chips { display: flex; gap: 5px; flex-wrap: wrap; }
 .lchip {
   font-family: var(--font-m);
@@ -1288,6 +1365,19 @@ initDuckDB();
   border-color: rgba(0,122,60,.4);
   color: var(--br);
 }
+
+.dir-btn {
+  font-family: var(--font-m);
+  font-size: 9px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 4px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: all .15s;
+}
+.dir-btn:hover { border-color: var(--br); color: var(--br); }
 
 /* CTA */
 .builder-cta {
