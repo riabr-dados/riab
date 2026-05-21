@@ -629,45 +629,409 @@ datasets:
 
   # ── ARGENTINA / INCAA ──────────────────────────────────────────────────────
 
-  - slug: incaa-sector-audiovisual
-    title: "Setor Audiovisual Argentino"
+  - slug: incaa-espectadores-origem
+    title: "Espectadores de Cinema por Origem do Filme"
     description: >
-      Conjunto de 9 arquivos CSV sobre o setor audiovisual argentino:
-      espectadores, receita, estreias, emprego, TV por assinatura e mais.
-      Fonte: INCAA em parceria com SICA e ENACOM.
+      Serie historica de espectadores do cinema argentino desagregada por
+      origem do filme (nacional, co-producao, estrangeiro) entre 2001 e 2023.
     source_id: incaa
     status: ativo
     coverage: "2001-2023"
-    tags: [cinema, televisao, emprego, argentina, incaa]
+    tags: [cinema, bilheteria, espectadores, argentina, incaa]
     raw:
       path: incaa-sector-audiovisual/
+      file: a01-espectadores-cine-origen-film.csv
       format: csv
       encoding: utf-8
       delimiter: ","
-      files: 9
-      size_bytes: 14175
-    cleaned:
-      tables: [incaa_setor]
+      files: 1
+      size_bytes: 922
+
+  - slug: incaa-receita-origem
+    title: "Receita Cinematografica por Origem do Filme"
+    description: >
+      Receita bruta do cinema nacional argentino por origem de producao
+      (nacional, co-producao, estrangeiro), 2001-2023.
+    source_id: incaa
+    status: ativo
+    coverage: "2001-2023"
+    tags: [cinema, receita, bilheteria, argentina, incaa]
+    raw:
+      path: incaa-sector-audiovisual/
+      file: a02-recaudacion-cine-nacional-origen-film.csv
+      format: csv
+      encoding: utf-8
+      delimiter: ","
+      files: 1
+      size_bytes: 1044
+
+  - slug: incaa-estreias-origem
+    title: "Estreias Cinematograficas por Origem do Filme"
+    description: >
+      Numero de filmes estreados no mercado argentino por origem
+      (nacional, estrangeiro), serie historica 2001-2023.
+    source_id: incaa
+    status: ativo
+    coverage: "2001-2023"
+    tags: [cinema, estreias, argentina, incaa]
+    raw:
+      path: incaa-sector-audiovisual/
+      file: a03-estrenos-cine-origen-film.csv
+      format: csv
+      encoding: utf-8
+      delimiter: ","
+      files: 1
+      size_bytes: 511
+
+  - slug: incaa-espectadores-provincias
+    title: "Espectadores de Cinema por Provincias Argentinas"
+    description: >
+      Distribuicao geografica de espectadores do cinema argentino por
+      provincia, com abertura por origem do filme, 2001-2023.
+    source_id: incaa
+    status: ativo
+    coverage: "2001-2023"
+    tags: [cinema, espectadores, geografia, provincias, argentina, incaa]
+    raw:
+      path: incaa-sector-audiovisual/
+      file: a04-espectadores-cine-nivel-provincial.csv
+      format: csv
+      encoding: utf-8
+      delimiter: ","
+      files: 1
+      size_bytes: 4545
+
+  - slug: incaa-receita-provincias
+    title: "Receita de Cinema por Provincias Argentinas"
+    description: >
+      Receita bruta do cinema por provincia argentina, com abertura por
+      origem do filme, serie historica 2001-2023.
+    source_id: incaa
+    status: ativo
+    coverage: "2001-2023"
+    tags: [cinema, receita, geografia, provincias, argentina, incaa]
+    raw:
+      path: incaa-sector-audiovisual/
+      file: a05-recaudacion-cine-nivel-provincial.csv
+      format: csv
+      encoding: utf-8
+      delimiter: ","
+      files: 1
+      size_bytes: 5473
+
+  - slug: incaa-participacao-distribuidoras
+    title: "Participacao das Distribuidoras no Mercado Argentino"
+    description: >
+      Quota de espectadores de cada distribuidora no mercado cinematografico
+      argentino, por ano e por origem do filme, 2001-2023.
+    source_id: incaa
+    status: ativo
+    coverage: "2001-2023"
+    tags: [cinema, distribuicao, mercado, argentina, incaa]
+    raw:
+      path: incaa-sector-audiovisual/
+      file: a06-participacion-espectadores-distribuidora.csv
+      format: csv
+      encoding: utf-8
+      delimiter: ","
+      files: 1
+      size_bytes: 600
+
+  - slug: incaa-empregos-longa-metragem
+    title: "Empregos em Longa-Metragem Nacional Argentina"
+    description: >
+      Postos de trabalho gerados pela producao de longa-metragem nacional
+      argentina, por categoria profissional, 2001-2023.
+    source_id: incaa
+    status: ativo
+    coverage: "2001-2023"
+    tags: [cinema, emprego, producao, argentina, incaa]
+    raw:
+      path: incaa-sector-audiovisual/
+      file: a07-puestos-trabajo-largometrajes-nacional.csv
+      format: csv
+      encoding: utf-8
+      delimiter: ","
+      files: 1
+      size_bytes: 511
+
+  - slug: incaa-acessos-tv-assinatura
+    title: "Acessos a Servicos de TV por Assinatura na Argentina"
+    description: >
+      Total de acessos a servicos de televisao por assinatura na Argentina
+      (cabo e satelite), serie historica com dados do ENACOM, 2001-2023.
+    source_id: incaa
+    status: ativo
+    coverage: "2001-2023"
+    tags: [televisao, tv-assinatura, acesso, argentina, incaa, enacom]
+    raw:
+      path: incaa-sector-audiovisual/
+      file: a09-accesos-servicios-tv-suscripcion.csv
+      format: csv
+      encoding: utf-8
+      delimiter: ","
+      files: 1
+      size_bytes: 271
+
+  - slug: incaa-receitas-tv-assinatura
+    title: "Receitas de Servicos de TV por Assinatura na Argentina"
+    description: >
+      Receitas dos servicos de televisao por assinatura na Argentina
+      (cabo e satelite), serie historica com dados do ENACOM, 2001-2023.
+    source_id: incaa
+    status: ativo
+    coverage: "2001-2023"
+    tags: [televisao, tv-assinatura, receita, argentina, incaa, enacom]
+    raw:
+      path: incaa-sector-audiovisual/
+      file: a10-ingresos-servicios-tv-suscripcion.csv
+      format: csv
+      encoding: utf-8
+      delimiter: ","
+      files: 1
+      size_bytes: 298
 
   # ── REINO UNIDO / BFI ──────────────────────────────────────────────────────
 
-  - slug: bfi-statistical-yearbook-2023
-    title: "BFI Statistical Yearbook 2023"
+  - slug: bfi-publicos-cinema
+    title: "Publicos do Cinema Britanico"
     description: >
-      Anuario estatistico do cinema britanico com 15 arquivos ODS cobrindo:
-      bilheteria, exibicao, video fisico e digital, televisao, emprego,
-      investimento publico e mercado global de filmes.
+      Audiencias cinematograficas no Reino Unido desagregadas por tipo de
+      filme, origem e canal de distribuicao. BFI Statistical Yearbook 2023.
     source_id: bfi
     status: ativo
     coverage: "2023"
-    tags: [cinema, televisao, emprego, anuario, reino-unido, bfi]
+    tags: [cinema, audiencia, publico, reino-unido, bfi]
     raw:
       path: bfi-statistical-yearbook-2023/
+      file: audiences.ods
       format: ods
-      files: 15
-      size_bytes: 691861
-    cleaned:
-      tables: [bfi_anuario]
+      files: 1
+      size_bytes: 60049
+
+  - slug: bfi-bilheteria-2023
+    title: "Bilheteria do Reino Unido 2023"
+    description: >
+      Resultados de bilheteria do mercado cinematografico britanico em 2023:
+      admissoes, receita e top filmes por origem. BFI Statistical Yearbook 2023.
+    source_id: bfi
+    status: ativo
+    coverage: "2023"
+    tags: [cinema, bilheteria, box-office, reino-unido, bfi]
+    raw:
+      path: bfi-statistical-yearbook-2023/
+      file: box-office-2023.ods
+      format: ods
+      files: 1
+      size_bytes: 67643
+
+  - slug: bfi-exibicao-cinematografica
+    title: "Exibicao Cinematografica no Reino Unido"
+    description: >
+      Dados sobre salas de cinema, sessoes e admissoes no mercado britanico
+      de exibicao, incluindo multiplex e circuito independente.
+    source_id: bfi
+    status: ativo
+    coverage: "2023"
+    tags: [cinema, exibicao, salas, reino-unido, bfi]
+    raw:
+      path: bfi-statistical-yearbook-2023/
+      file: exhibition.ods
+      format: ods
+      files: 1
+      size_bytes: 49245
+
+  - slug: bfi-educacao-cinematografica
+    title: "Educacao Cinematografica no Reino Unido"
+    description: >
+      Dados sobre iniciativas, programas e alcance da educacao
+      cinematografica no Reino Unido. BFI Statistical Yearbook 2023.
+    source_id: bfi
+    status: ativo
+    coverage: "2023"
+    tags: [cinema, educacao, reino-unido, bfi]
+    raw:
+      path: bfi-statistical-yearbook-2023/
+      file: film-education.ods
+      format: ods
+      files: 1
+      size_bytes: 51031
+
+  - slug: bfi-empresas-industria
+    title: "Empresas da Industria Cinematografica Britanica"
+    description: >
+      Cadastro e perfil das empresas do setor cinematografico britanico:
+      producao, distribuicao, exibicao e servicos. BFI Yearbook 2023.
+    source_id: bfi
+    status: ativo
+    coverage: "2023"
+    tags: [cinema, empresas, industria, reino-unido, bfi]
+    raw:
+      path: bfi-statistical-yearbook-2023/
+      file: film-industry-companies.ods
+      format: ods
+      files: 1
+      size_bytes: 39042
+
+  - slug: bfi-emprego-industria
+    title: "Emprego na Industria Cinematografica Britanica"
+    description: >
+      Postos de trabalho e perfil de emprego na industria cinematografica
+      do Reino Unido, por funcao e segmento. BFI Yearbook 2023.
+    source_id: bfi
+    status: ativo
+    coverage: "2023"
+    tags: [cinema, emprego, industria, reino-unido, bfi]
+    raw:
+      path: bfi-statistical-yearbook-2023/
+      file: film-industry-employment.ods
+      format: ods
+      files: 1
+      size_bytes: 43435
+
+  - slug: bfi-video-digital
+    title: "Filmes em Video Digital no Reino Unido"
+    description: >
+      Mercado britanico de video digital (VoD, streaming, download):
+      receita, titulos disponíveis e habitos de consumo. BFI Yearbook 2023.
+    source_id: bfi
+    status: ativo
+    coverage: "2023"
+    tags: [cinema, vod, streaming, video-digital, reino-unido, bfi]
+    raw:
+      path: bfi-statistical-yearbook-2023/
+      file: film-on-digital-video.ods
+      format: ods
+      files: 1
+      size_bytes: 44128
+
+  - slug: bfi-video-fisico
+    title: "Filmes em Video Fisico no Reino Unido"
+    description: >
+      Mercado britanico de DVD e Blu-ray: vendas, alugueis e receita
+      por tipo de suporte e origem do filme. BFI Yearbook 2023.
+    source_id: bfi
+    status: ativo
+    coverage: "2023"
+    tags: [cinema, dvd, blu-ray, video-fisico, reino-unido, bfi]
+    raw:
+      path: bfi-statistical-yearbook-2023/
+      file: film-on-physical-video.ods
+      format: ods
+      files: 1
+      size_bytes: 41904
+
+  - slug: bfi-filmes-televisao
+    title: "Filmes na Televisao Britanica"
+    description: >
+      Exibicao de filmes em canais de televisao britanicos: numero de
+      transmissoes, audiencia e origem dos filmes. BFI Yearbook 2023.
+    source_id: bfi
+    status: ativo
+    coverage: "2023"
+    tags: [cinema, televisao, exibicao, reino-unido, bfi]
+    raw:
+      path: bfi-statistical-yearbook-2023/
+      file: film-on-television.ods
+      format: ods
+      files: 1
+      size_bytes: 66401
+
+  - slug: bfi-investimento-publico
+    title: "Investimento Publico no Cinema Britanico"
+    description: >
+      Recursos publicos destinados ao cinema britanico por BFI, Screen
+      Scotland, Creative Wales e parceiros. BFI Statistical Yearbook 2023.
+    source_id: bfi
+    status: ativo
+    coverage: "2023"
+    tags: [cinema, fomento, investimento-publico, reino-unido, bfi]
+    raw:
+      path: bfi-statistical-yearbook-2023/
+      file: public-investment-in-film.ods
+      format: ods
+      files: 1
+      size_bytes: 32975
+
+  - slug: bfi-certificacao-obras
+    title: "Certificacao de Obras Britanicas (Screen Sector)"
+    description: >
+      Filmes e obras certificadas como britanicos pelo BFI, habilitando
+      acesso a incentivos fiscais e cotas de conteudo. Yearbook 2023.
+    source_id: bfi
+    status: ativo
+    coverage: "2023"
+    tags: [cinema, certificacao, incentivo-fiscal, reino-unido, bfi]
+    raw:
+      path: bfi-statistical-yearbook-2023/
+      file: screen-sector-certification.ods
+      format: ods
+      files: 1
+      size_bytes: 30592
+
+  - slug: bfi-top-filmes-2023
+    title: "Top Filmes no Reino Unido 2023"
+    description: >
+      Ranking dos filmes com maior bilheteria no mercado britanico em 2023,
+      com admissoes, receita e origem de producao. BFI Yearbook 2023.
+    source_id: bfi
+    status: ativo
+    coverage: "2023"
+    tags: [cinema, ranking, bilheteria, top-filmes, reino-unido, bfi]
+    raw:
+      path: bfi-statistical-yearbook-2023/
+      file: top-films-2023.ods
+      format: ods
+      files: 1
+      size_bytes: 50762
+
+  - slug: bfi-economia-do-cinema
+    title: "Economia do Cinema Britanico"
+    description: >
+      Indicadores macroeconomicos do setor cinematografico britanico:
+      PIB setorial, emprego agregado e contribuicao ao audiovisual.
+    source_id: bfi
+    status: ativo
+    coverage: "2023"
+    tags: [cinema, economia, pib, reino-unido, bfi]
+    raw:
+      path: bfi-statistical-yearbook-2023/
+      file: uk-film-economy.ods
+      format: ods
+      files: 1
+      size_bytes: 23110
+
+  - slug: bfi-mercado-cinematografico
+    title: "Mercado Cinematografico do Reino Unido"
+    description: >
+      Visao geral do mercado cinematografico britanico: participacao por
+      origem, tendencias e comparacoes internacionais. BFI Yearbook 2023.
+    source_id: bfi
+    status: ativo
+    coverage: "2023"
+    tags: [cinema, mercado, bilheteria, reino-unido, bfi]
+    raw:
+      path: bfi-statistical-yearbook-2023/
+      file: uk-film-market.ods
+      format: ods
+      files: 1
+      size_bytes: 35964
+
+  - slug: bfi-talentos-britanicos-mundo
+    title: "Filmes Britanicos e Talentos no Mundo"
+    description: >
+      Desempenho internacional de filmes britanicos e presenca de talentos
+      do Reino Unido em producoes internacionais. BFI Yearbook 2023.
+    source_id: bfi
+    status: ativo
+    coverage: "2023"
+    tags: [cinema, internacional, talentos, exportacao, reino-unido, bfi]
+    raw:
+      path: bfi-statistical-yearbook-2023/
+      file: uk-films-talent-worldwide.ods
+      format: ods
+      files: 1
+      size_bytes: 52629
 
   # ── URUGUAI / ACAU ─────────────────────────────────────────────────────────
 
