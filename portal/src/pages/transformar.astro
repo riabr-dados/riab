@@ -25,22 +25,77 @@ const HF = "https://huggingface.co/datasets/riabr-dados/riab/resolve/main/cleane
     <span class="tf-doclink-arr">Ler documentação →</span>
   </a>
 
-  <!-- CRUZAMENTO CARDS -->
-  <div class="cr-section">
-    <div class="cr-intro">
-      <h2 class="cr-h">Escolha uma conexão para explorar</h2>
-      <p class="cr-sub">Cada card liga duas ou mais bases. Clique para ver os dados imediatamente.</p>
-    </div>
-    <div class="cr-grid" id="cr-grid">
-      <!-- rendered by JS -->
+  <!-- MODE TABS -->
+  <div class="mode-tabs">
+    <button class="mtab mtab--active" id="mtab-conexoes">⊞ Conexões</button>
+    <button class="mtab" id="mtab-campos">⊕ Campos livres</button>
+  </div>
+
+  <!-- ── PANEL: CONEXÕES ─────────────────────────────────────── -->
+  <div id="panel-conexoes">
+    <div class="cr-section">
+      <div class="cr-intro">
+        <h2 class="cr-h">Escolha uma conexão para explorar</h2>
+        <p class="cr-sub">Cada card liga duas ou mais bases. Clique para ver os dados imediatamente.</p>
+      </div>
+      <div class="cr-grid" id="cr-grid"></div>
     </div>
   </div>
 
-  <!-- RESULT AREA (hidden until a cruzamento is selected) -->
+  <!-- ── PANEL: CAMPOS LIVRES ───────────────────────────────── -->
+  <div id="panel-campos" style="display:none">
+    <div class="fl-wrap">
+
+      <!-- Table selector -->
+      <div class="fl-section">
+        <div class="fl-section-label">Tabelas <span class="fl-hint">selecione uma ou mais</span></div>
+        <div class="fl-table-pills" id="fl-table-pills"></div>
+      </div>
+
+      <!-- Available + chosen columns -->
+      <div class="fl-cols-area" id="fl-cols-area" style="display:none">
+        <div class="fl-available">
+          <div class="fl-section-label">Colunas disponíveis <span class="fl-hint">clique para adicionar</span></div>
+          <div class="fl-col-list" id="fl-col-list"></div>
+        </div>
+        <div class="fl-chosen-area">
+          <div class="fl-section-label">Selecionadas</div>
+          <div class="fl-chosen" id="fl-chosen"></div>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="fl-filters-area" id="fl-filters-area" style="display:none">
+        <div class="fl-section-label">
+          Filtros
+          <button class="fl-add-filter" id="fl-add-filter">+ adicionar</button>
+        </div>
+        <div id="fl-filter-rows"></div>
+      </div>
+
+      <!-- Limit + Run -->
+      <div class="fl-controls" id="fl-controls" style="display:none">
+        <div class="fl-limit-group">
+          <span class="fl-section-label">Limite</span>
+          <div class="fl-limit-chips" id="fl-limit-chips">
+            <button class="lchip" data-n="25">25</button>
+            <button class="lchip lchip--active" data-n="50">50</button>
+            <button class="lchip" data-n="100">100</button>
+            <button class="lchip" data-n="250">250</button>
+            <button class="lchip" data-n="500">500</button>
+          </div>
+        </div>
+        <button class="fl-run-btn" id="fl-run">▶ Executar</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── SHARED RESULT AREA ─────────────────────────────────── -->
   <div class="res-area" id="res-area" style="display:none">
 
-    <!-- REFINEMENT BAR -->
-    <div class="ref-bar">
+    <!-- Refinement bar (conexoes mode only) -->
+    <div class="ref-bar" id="ref-bar">
       <div class="ref-group">
         <label class="ref-label" for="ref-dim">Agrupar por</label>
         <select class="ref-select" id="ref-dim"></select>
@@ -56,7 +111,7 @@ const HF = "https://huggingface.co/datasets/riabr-dados/riab/resolve/main/cleane
       <button class="ref-run-btn" id="btn-rerun">↻ Atualizar</button>
     </div>
 
-    <!-- RESULT TOOLBAR -->
+    <!-- Result toolbar -->
     <div class="res-toolbar">
       <span class="res-info" id="res-info"></span>
       <div class="res-btns">
@@ -67,7 +122,7 @@ const HF = "https://huggingface.co/datasets/riabr-dados/riab/resolve/main/cleane
       </div>
     </div>
 
-    <!-- SQL PANEL -->
+    <!-- SQL panel -->
     <div class="sql-panel" id="sql-panel" style="display:none">
       <div class="sql-head">
         <span class="sql-label">SQL · DuckDB</span>
@@ -77,22 +132,28 @@ const HF = "https://huggingface.co/datasets/riabr-dados/riab/resolve/main/cleane
       <pre class="sql-pre" id="sql-pre"></pre>
     </div>
 
-    <!-- CHART VIEW -->
+    <!-- Chart type sub-bar -->
+    <div class="chart-type-bar" id="chart-type-bar" style="display:none">
+      <button class="ct-btn ct-btn--active" data-type="bh">≡ Barras H</button>
+      <button class="ct-btn" data-type="bv">∥ Barras V</button>
+      <button class="ct-btn" data-type="ln">↗ Linha</button>
+    </div>
+
+    <!-- Chart view -->
     <div id="view-chart" class="chart-view"></div>
 
-    <!-- TABLE VIEW -->
+    <!-- Table view -->
     <div id="view-table" class="table-view" style="display:none"></div>
 
   </div><!-- /res-area -->
 
-  <!-- LOADING OVERLAY -->
+  <!-- Loading overlay -->
   <div class="res-loading" id="res-loading" style="display:none">
     <div class="spinner"></div>
     <span id="loading-msg">Carregando…</span>
   </div>
 
 </div><!-- /tf -->
-
 </Base>
 
 <script define:vars={{ HF }}>
@@ -104,34 +165,45 @@ import * as duckdb from "https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.29.0
 
 const HF = window.__RIDAB_HF__;
 
-// ── CRUZAMENTOS ────────────────────────────────────────────────────────────
+// ── TABLE META (for campos livres) ─────────────────────────────
+const TABLE_META = [
+  { id: 'obras',                    alias: 'o', label: 'Obras ANCINE',      color: '#007a3c' },
+  { id: 'bilheteria_por_filme_ano', alias: 'b', label: 'Bilheteria BR',     color: '#007a3c' },
+  { id: 'diretores_obras',          alias: 'd', label: 'Diretores',         color: '#007a3c' },
+  { id: 'produtores_obras',         alias: 'p', label: 'Produtores',        color: '#007a3c' },
+  { id: 'fomento_fsa',              alias: 'f', label: 'Fomento FSA',       color: '#c8920a' },
+  { id: 'renuncia_fiscal',          alias: 'r', label: 'Renúncia Fiscal',   color: '#1f3bb8' },
+  { id: 'bilheteria_europa',        alias: 'l', label: 'Bilheteria Europa', color: '#1f3bb8' },
+];
+
+// ── CRUZAMENTOS ────────────────────────────────────────────────
 const CRZ = [
   {
     id: 'obras-ano',
     label: 'Produção por ano',
     desc: 'Como evoluiu o número de obras registradas na ANCINE desde 2000',
     tables: [{ name: 'obras-nao-pub', color: '#007a3c' }],
-    join: null,
-    icon: '📅',
+    join: null, icon: '📅',
     dims: [
-      { label: 'Ano de produção',  col: 'ANO_PRODUCAO_INICIAL' },
-      { label: 'Tipo de obra',     col: 'TIPO_OBRA' },
-      { label: 'Estado (UF)',      col: 'UF_REQUERENTE' },
-      { label: 'Janela de destino',col: 'SEGMENTO_DESTINACAO_INICIAL' },
+      { label: 'Ano de produção',   col: 'ano_producao_inicial' },
+      { label: 'Tipo de obra',      col: 'tipo_obra' },
+      { label: 'Estado (UF)',       col: 'uf_requerente' },
+      { label: 'Janela de destino', col: 'segmento_destinacao_inicial' },
     ],
     metrics: [
       { label: 'Nº de obras', expr: 'COUNT(*)', alias: 'obras' },
     ],
     buildSQL: (dim, metric, search) => {
+      const isYear = dim.col === 'ano_producao_inicial';
       const where = buildWhere([
         `${dim.col} IS NOT NULL`,
-        dim.col === 'ANO_PRODUCAO_INICIAL' ? `${dim.col} >= 2000` : null,
+        isYear ? `${dim.col} >= 2000` : null,
         search ? `CAST(${dim.col} AS VARCHAR) ILIKE '%${esc(search)}%'` : null,
       ]);
       return `SELECT ${dim.col} AS dim, ${metric.expr} AS valor
 FROM obras
 ${where}
-GROUP BY 1 ORDER BY 1 ${dim.col === 'ANO_PRODUCAO_INICIAL' ? 'ASC' : ''}
+GROUP BY 1 ORDER BY 1 ${isYear ? 'ASC' : 'DESC'}
 LIMIT 60`;
     },
   },
@@ -143,18 +215,16 @@ LIMIT 60`;
       { name: 'obras-nao-pub',       color: '#007a3c' },
       { name: 'bilheteria-agregada', color: '#007a3c' },
     ],
-    join: { type: 'exact', label: 'CPB exato' },
-    icon: '🎟',
+    join: { type: 'exact', label: 'CPB exato' }, icon: '🎟',
     dims: [
-      { label: 'Obra (título)',   col: 'o.TITULO_ORIGINAL' },
-      { label: 'Tipo de obra',   col: 'o.TIPO_OBRA' },
-      { label: 'Estado (UF)',    col: 'o.UF_REQUERENTE' },
-      { label: 'Ano de exibição',col: 'b.ANO' },
+      { label: 'Obra (título)',    col: 'o.titulo_original' },
+      { label: 'Tipo de obra',    col: 'o.tipo_obra' },
+      { label: 'Estado (UF)',     col: 'o.uf_requerente' },
+      { label: 'Ano de exibição', col: 'b.ano' },
     ],
     metrics: [
-      { label: 'Espectadores',  expr: 'SUM(b.PUBLICO)',         alias: 'espectadores' },
-      { label: 'Renda (R$)',    expr: 'SUM(b.RENDA)',           alias: 'renda_reais' },
-      { label: 'Nº de obras',   expr: 'COUNT(DISTINCT o.CPB)',  alias: 'obras' },
+      { label: 'Espectadores', expr: 'SUM(b.publico)',         alias: 'espectadores' },
+      { label: 'Nº de obras',  expr: 'COUNT(DISTINCT o.cpb)', alias: 'obras' },
     ],
     buildSQL: (dim, metric, search) => {
       const where = buildWhere([
@@ -164,7 +234,7 @@ LIMIT 60`;
       return `SELECT ${dim.col} AS dim, ${metric.expr} AS valor
 FROM obras o
 INNER JOIN bilheteria_por_filme_ano b
-  ON b.CPB_ROE = o.CPB AND b.CPB_ROE LIKE 'B%'
+  ON b.cpb_roe = o.cpb AND b.cpb_roe LIKE 'B%'
 ${where}
 GROUP BY 1 ORDER BY 2 DESC LIMIT 40`;
     },
@@ -174,20 +244,19 @@ GROUP BY 1 ORDER BY 2 DESC LIMIT 40`;
     label: 'Ficha técnica',
     desc: 'Obras com diretor(es) e produtora(s) — tudo via CPB exato',
     tables: [
-      { name: 'obras-nao-pub',      color: '#007a3c' },
-      { name: 'diretores-obras',    color: '#007a3c' },
-      { name: 'produtores-obras',   color: '#007a3c' },
+      { name: 'obras-nao-pub',    color: '#007a3c' },
+      { name: 'diretores-obras',  color: '#007a3c' },
+      { name: 'produtores-obras', color: '#007a3c' },
     ],
-    join: { type: 'exact', label: 'CPB exato' },
-    icon: '🎬',
+    join: { type: 'exact', label: 'CPB exato' }, icon: '🎬',
     dims: [
-      { label: 'Diretor',          col: 'd.DIRETOR' },
-      { label: 'Produtora',        col: 'p.PRODUTOR' },
-      { label: 'Estado (UF)',      col: 'o.UF_REQUERENTE' },
-      { label: 'Tipo de obra',     col: 'o.TIPO_OBRA' },
+      { label: 'Diretor',      col: 'd.diretor' },
+      { label: 'Produtora',    col: 'p.produtor' },
+      { label: 'Estado (UF)', col: 'o.uf_requerente' },
+      { label: 'Tipo de obra', col: 'o.tipo_obra' },
     ],
     metrics: [
-      { label: 'Nº de obras', expr: 'COUNT(DISTINCT o.CPB)', alias: 'obras' },
+      { label: 'Nº de obras', expr: 'COUNT(DISTINCT o.cpb)', alias: 'obras' },
     ],
     buildSQL: (dim, metric, search) => {
       const where = buildWhere([
@@ -196,8 +265,8 @@ GROUP BY 1 ORDER BY 2 DESC LIMIT 40`;
       ]);
       return `SELECT ${dim.col} AS dim, ${metric.expr} AS valor
 FROM obras o
-LEFT JOIN diretores_obras d ON d.CPB = o.CPB
-LEFT JOIN produtores_obras p ON p.CPB = o.CPB
+LEFT JOIN diretores_obras d ON d.cpb = o.cpb
+LEFT JOIN produtores_obras p ON p.cpb = o.cpb
 ${where}
 GROUP BY 1 ORDER BY 2 DESC LIMIT 40`;
     },
@@ -210,17 +279,16 @@ GROUP BY 1 ORDER BY 2 DESC LIMIT 40`;
       { name: 'obras-nao-pub', color: '#007a3c' },
       { name: 'fsa-projetos',  color: '#c8920a' },
     ],
-    join: { type: 'proxy', label: 'proxy título' },
-    icon: '💰',
+    join: { type: 'proxy', label: 'proxy título' }, icon: '💰',
     dims: [
-      { label: 'Chamada FSA',      col: 'f.CHAMADA_PUBLICA' },
-      { label: 'Tipo de obra',     col: 'o.TIPO_OBRA' },
-      { label: 'Produtora (FSA)',  col: 'f.RAZAO_SOCIAL_PRODUTORA' },
-      { label: 'Estado (UF)',      col: 'o.UF_REQUERENTE' },
+      { label: 'Chamada FSA',     col: 'f.chamada_publica' },
+      { label: 'Tipo de obra',    col: 'o.tipo_obra' },
+      { label: 'Produtora (FSA)', col: 'f.razao_social_produtora' },
+      { label: 'Estado (UF)',     col: 'o.uf_requerente' },
     ],
     metrics: [
-      { label: 'Total investido (R$)', expr: 'SUM(f.VALOR_CONTRATO_DOU)', alias: 'total_reais' },
-      { label: 'Nº de projetos',       expr: 'COUNT(*)',                   alias: 'projetos' },
+      { label: 'Total investido (R$)', expr: 'SUM(f.valor_contrato_brl)', alias: 'total_reais' },
+      { label: 'Nº de projetos',       expr: 'COUNT(*)',                  alias: 'projetos' },
     ],
     buildSQL: (dim, metric, search) => {
       const where = buildWhere([
@@ -228,11 +296,11 @@ GROUP BY 1 ORDER BY 2 DESC LIMIT 40`;
         search ? `CAST(${dim.col} AS VARCHAR) ILIKE '%${esc(search)}%'` : null,
       ]);
       return `WITH o_n AS (
-  SELECT *, lower(regexp_replace(TITULO_ORIGINAL,'[^a-zA-Z0-9 ]','','g')) AS _tn
+  SELECT *, lower(regexp_replace(titulo_original,'[^a-zA-Z0-9 ]','','g')) AS _tn
   FROM obras
 ),
 f_n AS (
-  SELECT *, lower(regexp_replace(TITULO_PROJETO,'[^a-zA-Z0-9 ]','','g')) AS _tn
+  SELECT *, lower(regexp_replace(titulo_projeto,'[^a-zA-Z0-9 ]','','g')) AS _tn
   FROM fomento_fsa
 )
 SELECT ${dim.col} AS dim, ${metric.expr} AS valor
@@ -250,15 +318,14 @@ GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 40`;
       { name: 'obras-nao-pub',   color: '#007a3c' },
       { name: 'renuncia-fiscal', color: '#1f3bb8' },
     ],
-    join: { type: 'proxy', label: 'proxy título' },
-    icon: '📋',
+    join: { type: 'proxy', label: 'proxy título' }, icon: '📋',
     dims: [
-      { label: 'Obra (título)',    col: 'o.TITULO_ORIGINAL' },
-      { label: 'Tipo de obra',    col: 'o.TIPO_OBRA' },
-      { label: 'Estado (UF)',     col: 'o.UF_REQUERENTE' },
+      { label: 'Obra (título)', col: 'o.titulo_original' },
+      { label: 'Tipo de obra',  col: 'o.tipo_obra' },
+      { label: 'Estado (UF)',   col: 'o.uf_requerente' },
     ],
     metrics: [
-      { label: 'Total captado (R$)', expr: 'SUM(r.TOTAL_CAPTADO)', alias: 'total_captado' },
+      { label: 'Total captado (R$)', expr: 'SUM(r.total_captado)', alias: 'total_captado' },
       { label: 'Nº de projetos',     expr: 'COUNT(*)',              alias: 'projetos' },
     ],
     buildSQL: (dim, metric, search) => {
@@ -267,11 +334,11 @@ GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 40`;
         search ? `CAST(${dim.col} AS VARCHAR) ILIKE '%${esc(search)}%'` : null,
       ]);
       return `WITH o_n AS (
-  SELECT *, lower(regexp_replace(TITULO_ORIGINAL,'[^a-zA-Z0-9 ]','','g')) AS _tn
+  SELECT *, lower(regexp_replace(titulo_original,'[^a-zA-Z0-9 ]','','g')) AS _tn
   FROM obras
 ),
 r_n AS (
-  SELECT *, lower(regexp_replace(TITULO_PROJETO,'[^a-zA-Z0-9 ]','','g')) AS _tn
+  SELECT *, lower(regexp_replace(titulo_projeto,'[^a-zA-Z0-9 ]','','g')) AS _tn
   FROM renuncia_fiscal
 )
 SELECT ${dim.col} AS dim, ${metric.expr} AS valor
@@ -286,82 +353,101 @@ GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 40`;
     label: 'Brasil ↔ Europa',
     desc: 'Filmes brasileiros com mais espectadores em salas europeias (Lumière)',
     tables: [
-      { name: 'bilheteria-agregada',    color: '#007a3c' },
       { name: 'lumiere-cinemas-europa', color: '#1f3bb8' },
     ],
-    join: { type: 'proxy', label: 'proxy título' },
-    icon: '🌍',
+    join: null, icon: '🌍',
     dims: [
-      { label: 'Filme (título)',   col: 'l."Original title"' },
+      { label: 'Filme (título)',     col: 'titulo_original' },
+      { label: 'País(es) produção',  col: 'paises_producao' },
+      { label: 'Ano de produção',    col: 'ano_producao' },
     ],
     metrics: [
-      { label: 'Admissões (Europa)', expr: 'SUM(l."Admissions")', alias: 'admissoes_europa' },
+      { label: 'Admissões (Europa)', expr: 'SUM(admissoes_1996_2026)', alias: 'admissoes_europa' },
+      { label: 'Nº de filmes',       expr: 'COUNT(*)',                  alias: 'filmes' },
     ],
     buildSQL: (dim, metric, search) => {
       const where = buildWhere([
-        `l."Original title" IS NOT NULL`,
-        search ? `l."Original title" ILIKE '%${esc(search)}%'` : null,
+        `${dim.col} IS NOT NULL`,
+        `tem_brasil = TRUE`,
+        search ? `CAST(${dim.col} AS VARCHAR) ILIKE '%${esc(search)}%'` : null,
       ]);
-      return `SELECT l."Original title" AS dim, ${metric.expr} AS valor
-FROM bilheteria_europa l
+      return `SELECT ${dim.col} AS dim, ${metric.expr} AS valor
+FROM bilheteria_europa
 ${where}
 GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 40`;
     },
   },
 ];
 
-// ── HELPERS ────────────────────────────────────────────────────────────────
+// ── HELPERS ────────────────────────────────────────────────────
 function buildWhere(clauses) {
   const valid = clauses.filter(Boolean);
   return valid.length ? `WHERE ${valid.join('\n  AND ')}` : '';
 }
-function esc(s) { return String(s).replace(/'/g, "''"); }
+function esc(s) { return String(s ?? '').replace(/'/g, "''"); }
+function fmtNum(n) {
+  if (!Number.isFinite(n)) return '—';
+  return Number.isInteger(n)
+    ? n.toLocaleString('pt-BR')
+    : n.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
 
 const JOIN_COLOR = { exact: '#007a3c', proxy: '#c8920a' };
 
-// ── STATE ──────────────────────────────────────────────────────────────────
+// ── STATE ──────────────────────────────────────────────────────
 let db, conn, ready = false;
+let appMode = 'conexoes'; // 'conexoes' | 'campos'
 let activeCrz = null;
 let lastSQL = '', lastRows = [], lastCols = [];
-let viewMode = 'chart'; // 'chart' | 'table'
+let viewMode = 'chart';   // 'chart' | 'table'
+let chartType = 'bh';     // 'bh' | 'bv' | 'ln'
+let sortCol = null, sortAsc = true;
 
-// ── DOM ────────────────────────────────────────────────────────────────────
-const dot      = document.getElementById('tf-dot');
-const statusEl = document.getElementById('tf-status');
-const crGrid   = document.getElementById('cr-grid');
-const resArea  = document.getElementById('res-area');
+// Campos livres state
+let flTables = new Set();
+let flTableCols = {};     // { tableId: [{name,type}] }
+let flChosen = [];        // [{tableId, alias, col}]
+let flFilters = [];       // [{col, op, val}]
+let flLimit = 50;
+
+// ── DOM ────────────────────────────────────────────────────────
+const dot        = document.getElementById('tf-dot');
+const statusEl   = document.getElementById('tf-status');
+const crGrid     = document.getElementById('cr-grid');
+const resArea    = document.getElementById('res-area');
 const resLoading = document.getElementById('res-loading');
 const loadingMsg = document.getElementById('loading-msg');
-const refDim   = document.getElementById('ref-dim');
-const refMetric= document.getElementById('ref-metric');
+const refBar     = document.getElementById('ref-bar');
+const refDim     = document.getElementById('ref-dim');
+const refMetric  = document.getElementById('ref-metric');
 const refMetricGroup = document.getElementById('ref-metric-group');
-const refSearch= document.getElementById('ref-search');
-const btnRerun = document.getElementById('btn-rerun');
-const resInfo  = document.getElementById('res-info');
-const btnChart = document.getElementById('btn-chart');
-const btnTable = document.getElementById('btn-table');
-const btnSql   = document.getElementById('btn-sql');
-const btnCsv   = document.getElementById('btn-csv');
-const sqlPanel = document.getElementById('sql-panel');
-const sqlPre   = document.getElementById('sql-pre');
+const refSearch  = document.getElementById('ref-search');
+const btnRerun   = document.getElementById('btn-rerun');
+const resInfo    = document.getElementById('res-info');
+const btnChart   = document.getElementById('btn-chart');
+const btnTable   = document.getElementById('btn-table');
+const btnSql     = document.getElementById('btn-sql');
+const btnCsv     = document.getElementById('btn-csv');
+const sqlPanel   = document.getElementById('sql-panel');
+const sqlPre     = document.getElementById('sql-pre');
 const btnCopySql = document.getElementById('btn-copy-sql');
-const viewChart= document.getElementById('view-chart');
-const viewTable= document.getElementById('view-table');
+const ctBar      = document.getElementById('chart-type-bar');
+const viewChart  = document.getElementById('view-chart');
+const viewTable  = document.getElementById('view-table');
 
-// ── INIT ───────────────────────────────────────────────────────────────────
+// ── INIT ───────────────────────────────────────────────────────
 (async () => {
   try {
     const bundles = duckdb.getJsDelivrBundles();
     const bundle  = await duckdb.selectBundle(bundles);
     const wUrl = URL.createObjectURL(
-      new Blob([`importScripts("${bundle.mainWorker}");`], {type:'text/javascript'})
+      new Blob([`importScripts("${bundle.mainWorker}");`], { type: 'text/javascript' })
     );
     db = new duckdb.AsyncDuckDB(new duckdb.ConsoleLogger(), new Worker(wUrl));
     await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
     conn = await db.connect();
     await conn.query("INSTALL httpfs; LOAD httpfs; SET s3_region='us-east-1';");
 
-    // Register views
     const views = {
       obras:                    `${HF}/obras.parquet`,
       diretores_obras:          `${HF}/diretores_obras.parquet`,
@@ -379,82 +465,93 @@ const viewTable= document.getElementById('view-table');
     statusEl.textContent = `${Object.keys(views).length} tabelas prontas`;
     ready = true;
     renderCards();
-  } catch(e) {
+    renderFlTablePills();
+  } catch (e) {
     dot.className = 'tdot tdot--err';
     statusEl.textContent = 'Erro ao iniciar: ' + e.message;
   }
 })();
 
-// ── RENDER CARDS ───────────────────────────────────────────────────────────
+// ── MODE TABS ──────────────────────────────────────────────────
+document.getElementById('mtab-conexoes').addEventListener('click', () => switchMode('conexoes'));
+document.getElementById('mtab-campos').addEventListener('click',   () => switchMode('campos'));
+
+function switchMode(mode) {
+  appMode = mode;
+  document.getElementById('mtab-conexoes').classList.toggle('mtab--active', mode === 'conexoes');
+  document.getElementById('mtab-campos').classList.toggle('mtab--active', mode === 'campos');
+  document.getElementById('panel-conexoes').style.display = mode === 'conexoes' ? 'block' : 'none';
+  document.getElementById('panel-campos').style.display   = mode === 'campos'   ? 'block' : 'none';
+  refBar.style.display = mode === 'conexoes' ? 'flex' : 'none';
+  resArea.style.display = 'none';
+  sqlPanel.style.display = 'none';
+  btnSql.classList.remove('res-btn--active');
+}
+
+// ── RENDER CARDS ───────────────────────────────────────────────
 function renderCards() {
   crGrid.innerHTML = CRZ.map(c => {
     const tablePills = c.tables.map(t =>
       `<span class="cr-tbl-pill" style="border-color:${t.color};color:${t.color}">${t.name}</span>`
     ).join('<span class="cr-plus">+</span>');
-
     const joinBadge = c.join
       ? `<span class="cr-join-badge" style="color:${JOIN_COLOR[c.join.type]};border-color:${JOIN_COLOR[c.join.type]}20;background:${JOIN_COLOR[c.join.type]}10">${c.join.label}</span>`
       : '';
-
     return `<button class="cr-card" data-id="${c.id}" ${!ready ? 'disabled' : ''}>
-      <div class="cr-card-top">
-        <div class="cr-tables">${tablePills}</div>
-        ${joinBadge}
-      </div>
+      <div class="cr-card-top"><div class="cr-tables">${tablePills}</div>${joinBadge}</div>
       <div class="cr-card-icon">${c.icon}</div>
       <div class="cr-card-label">${c.label}</div>
       <div class="cr-card-desc">${c.desc}</div>
       <div class="cr-card-cta">Explorar →</div>
     </button>`;
   }).join('');
-
   crGrid.querySelectorAll('.cr-card').forEach(btn => {
     btn.addEventListener('click', () => selectCrz(btn.dataset.id));
   });
 }
 
-// ── SELECT CRUZAMENTO ──────────────────────────────────────────────────────
+// ── SELECT CRUZAMENTO ──────────────────────────────────────────
 function selectCrz(id) {
   activeCrz = CRZ.find(c => c.id === id);
   if (!activeCrz) return;
-
-  // Mark active card
-  crGrid.querySelectorAll('.cr-card').forEach(b => {
-    b.classList.toggle('cr-card--active', b.dataset.id === id);
-  });
-
-  // Populate dropdowns
+  crGrid.querySelectorAll('.cr-card').forEach(b =>
+    b.classList.toggle('cr-card--active', b.dataset.id === id)
+  );
   refDim.innerHTML = activeCrz.dims.map((d, i) =>
     `<option value="${i}">${d.label}</option>`).join('');
-
   refMetric.innerHTML = activeCrz.metrics.map((m, i) =>
     `<option value="${i}">${m.label}</option>`).join('');
-
   refMetricGroup.style.display = activeCrz.metrics.length > 1 ? 'flex' : 'none';
-
   refSearch.value = '';
-
+  refBar.style.display = 'flex';
   resArea.style.display = 'block';
   sqlPanel.style.display = 'none';
   btnSql.classList.remove('res-btn--active');
-
   runQuery();
 }
 
-// ── RUN QUERY ──────────────────────────────────────────────────────────────
+// ── RUN QUERY ──────────────────────────────────────────────────
 async function runQuery() {
-  if (!ready || !activeCrz) return;
+  if (!ready) return;
 
-  const dim    = activeCrz.dims[+refDim.value];
-  const metric = activeCrz.metrics[+refMetric.value];
-  const search = refSearch.value.trim();
-  const sql    = activeCrz.buildSQL(dim, metric, search);
+  let sql;
+  if (appMode === 'conexoes') {
+    if (!activeCrz) return;
+    const dim    = activeCrz.dims[+refDim.value];
+    const metric = activeCrz.metrics[+refMetric.value];
+    const search = refSearch.value.trim();
+    sql = activeCrz.buildSQL(dim, metric, search);
+  } else {
+    sql = buildCamposSQL();
+    if (!sql) return;
+  }
 
   lastSQL = sql;
   sqlPre.textContent = sql;
+  sortCol = null; sortAsc = true;
 
   resLoading.style.display = 'flex';
-  loadingMsg.textContent   = `Consultando ${activeCrz.label}…`;
+  loadingMsg.textContent   = 'Consultando…';
   viewChart.innerHTML = '';
   viewTable.innerHTML = '';
 
@@ -465,10 +562,12 @@ async function runQuery() {
     lastRows  = res.toArray();
     lastCols  = res.schema.fields.map(f => f.name);
 
+    resArea.style.display = 'block';
     resInfo.textContent = `${lastRows.length} linhas · ${ms}ms`;
-    statusEl.textContent = `${activeCrz.label} · ${lastRows.length} linhas · ${ms}ms`;
+    statusEl.textContent = `${lastRows.length} linhas · ${ms}ms`;
     renderView();
-  } catch(e) {
+  } catch (e) {
+    resArea.style.display = 'block';
     statusEl.textContent = 'Erro: ' + e.message;
     viewChart.innerHTML = `<div class="qerr">${e.message}</div>`;
     viewTable.innerHTML = '';
@@ -482,68 +581,161 @@ refDim.addEventListener('change', runQuery);
 refMetric.addEventListener('change', runQuery);
 refSearch.addEventListener('keydown', e => { if (e.key === 'Enter') runQuery(); });
 
-// ── RENDER VIEW ────────────────────────────────────────────────────────────
+// ── RENDER VIEW ────────────────────────────────────────────────
 function renderView() {
-  if (viewMode === 'chart') { renderChart(); viewChart.style.display='block'; viewTable.style.display='none'; }
-  else                      { renderTable(); viewChart.style.display='none';  viewTable.style.display='block'; }
+  if (viewMode === 'chart') {
+    viewChart.style.display = 'block';
+    viewTable.style.display = 'none';
+    ctBar.style.display     = 'flex';
+    renderChart();
+  } else {
+    viewChart.style.display = 'none';
+    viewTable.style.display = 'block';
+    ctBar.style.display     = 'none';
+    renderTable();
+  }
+}
+
+// ── CHART TYPES ────────────────────────────────────────────────
+ctBar.querySelectorAll('.ct-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    chartType = btn.dataset.type;
+    ctBar.querySelectorAll('.ct-btn').forEach(b => b.classList.remove('ct-btn--active'));
+    btn.classList.add('ct-btn--active');
+    renderChart();
+  });
+});
+
+function getChartData() {
+  const dimCol = lastCols[0];
+  const valCol = lastCols[lastCols.length - 1];
+  const rows   = lastRows.slice(0, 40);
+  const vals   = rows.map(r => Number(r[valCol]) || 0);
+  const maxVal = Math.max(...vals, 1);
+  return { dimCol, valCol, rows, vals, maxVal };
 }
 
 function renderChart() {
-  if (!lastRows.length) { viewChart.innerHTML = '<div class="qerr">Nenhum resultado.</div>'; return; }
-  const dimCol = 'dim', valCol = 'valor';
-  const top    = lastRows.slice(0, 40);
-  const vals   = top.map(r => Number(r[valCol]) || 0);
-  const maxVal = Math.max(...vals, 1);
-  const metric = activeCrz?.metrics[+refMetric.value];
-  const dim    = activeCrz?.dims[+refDim.value];
+  if (!lastRows.length) {
+    viewChart.innerHTML = '<div class="qerr">Nenhum resultado.</div>';
+    return;
+  }
+  const { dimCol, valCol, rows, vals, maxVal } = getChartData();
+  const dimLabel = appMode === 'conexoes' ? (activeCrz?.dims[+refDim.value]?.label ?? dimCol) : dimCol;
+  const valLabel = appMode === 'conexoes' ? (activeCrz?.metrics[+refMetric.value]?.label ?? valCol) : valCol;
 
-  const bars = top.map(r => {
-    const v   = Number(r[valCol]) || 0;
-    const lbl = String(r[dimCol] ?? '—');
-    const pct = (v / maxVal) * 100;
-    const fmt = fmtNum(v);
-    return `<div class="cbar">
-      <div class="cbar-lbl" title="${lbl}">${lbl}</div>
-      <div class="cbar-track"><div class="cbar-fill" style="width:${pct.toFixed(1)}%"></div></div>
-      <div class="cbar-val">${fmt}</div>
+  const legend = `<div class="chart-legend">
+    <span class="chart-x">${dimLabel}</span>
+    <span class="chart-m">${valLabel}</span>
+  </div>`;
+
+  if (chartType === 'bh') {
+    const bars = rows.map(r => {
+      const v   = Number(r[valCol]) || 0;
+      const lbl = String(r[dimCol] ?? '—');
+      const pct = (v / maxVal) * 100;
+      return `<div class="cbar">
+        <div class="cbar-lbl" title="${lbl}">${lbl}</div>
+        <div class="cbar-track"><div class="cbar-fill" style="width:${pct.toFixed(1)}%"></div></div>
+        <div class="cbar-val">${fmtNum(v)}</div>
+      </div>`;
+    }).join('');
+    viewChart.innerHTML = `${legend}<div class="chart-bars">${bars}</div>`;
+
+  } else if (chartType === 'bv') {
+    const bars = rows.map(r => {
+      const v   = Number(r[valCol]) || 0;
+      const lbl = String(r[dimCol] ?? '—');
+      const pct = (v / maxVal) * 100;
+      return `<div class="cbv-col">
+        <div class="cbv-val">${fmtNum(v)}</div>
+        <div class="cbv-track"><div class="cbv-fill" style="height:${pct.toFixed(1)}%"></div></div>
+        <div class="cbv-lbl" title="${lbl}">${lbl}</div>
+      </div>`;
+    }).join('');
+    viewChart.innerHTML = `${legend}<div class="chart-bars-v">${bars}</div>`;
+
+  } else { // ln
+    const W = 800, H = 180, PAD = 10, BOTTOM = 60;
+    const n   = rows.length;
+    const xStep = n > 1 ? (W - PAD * 2) / (n - 1) : 0;
+    const points = rows.map((r, i) => {
+      const v = Number(r[valCol]) || 0;
+      const x = PAD + i * xStep;
+      const y = H - PAD - ((v / maxVal) * (H - PAD * 2 - BOTTOM));
+      return { x, y, v, lbl: String(r[dimCol] ?? '—') };
+    });
+    const polyline = points.map(p => `${p.x},${p.y}`).join(' ');
+    const dots = points.map(p =>
+      `<circle cx="${p.x}" cy="${p.y}" r="3.5" fill="var(--br)">
+        <title>${p.lbl}: ${fmtNum(p.v)}</title>
+      </circle>`
+    ).join('');
+    // X-axis labels: show max 10 evenly
+    const step = Math.max(1, Math.ceil(n / 10));
+    const labels = points.filter((_, i) => i % step === 0 || i === n - 1).map(p =>
+      `<text x="${p.x}" y="${H + 14}" text-anchor="middle" font-size="9" fill="var(--muted)"
+        transform="rotate(-35,${p.x},${H + 14})">${p.lbl.slice(0, 20)}</text>`
+    ).join('');
+    const area = points.map((p, i) => (i === 0 ? `M${p.x},${H - PAD - BOTTOM + BOTTOM}` : ``) + '').join('');
+    viewChart.innerHTML = `${legend}<div class="chart-svg-wrap">
+      <svg viewBox="0 0 ${W} ${H + BOTTOM}" preserveAspectRatio="xMidYMid meet" class="chart-svg">
+        <polyline points="${polyline}" fill="none" stroke="var(--br)" stroke-width="2" stroke-linejoin="round"/>
+        ${dots}
+        ${labels}
+      </svg>
     </div>`;
-  }).join('');
+  }
+}
 
-  viewChart.innerHTML = `
-    <div class="chart-legend">
-      <span class="chart-x">${dim?.label ?? 'Dimensão'}</span>
-      <span class="chart-m">${metric?.label ?? 'Valor'}</span>
-    </div>
-    <div class="chart-bars">${bars}</div>`;
+// ── SORTABLE TABLE ─────────────────────────────────────────────
+function sortedRows() {
+  if (!sortCol) return lastRows;
+  return [...lastRows].sort((a, b) => {
+    const av = a[sortCol], bv = b[sortCol];
+    const an = Number(av), bn = Number(bv);
+    const cmp = Number.isFinite(an) && Number.isFinite(bn)
+      ? an - bn
+      : String(av ?? '').localeCompare(String(bv ?? ''), 'pt-BR');
+    return sortAsc ? cmp : -cmp;
+  });
 }
 
 function renderTable() {
   if (!lastRows.length) { viewTable.innerHTML = '<div class="qerr">Nenhum resultado.</div>'; return; }
+
+  const rows    = sortedRows();
   const metricCol = lastCols[lastCols.length - 1];
-  const vals      = lastRows.map(r => Number(r[metricCol]) || 0);
-  const maxVal    = Math.max(...vals, 1);
+  const metricVals = rows.map(r => Number(r[metricCol]) || 0);
+  const maxVal  = Math.max(...metricVals, 1);
+
+  const friendlyHdr = (c, i) => {
+    if (appMode === 'conexoes') {
+      if (c === 'dim')   return activeCrz?.dims[+refDim.value]?.label    ?? c;
+      if (c === 'valor') return activeCrz?.metrics[+refMetric.value]?.label ?? c;
+    }
+    return c;
+  };
 
   let h = `<table class="dtbl"><thead><tr>`;
-  // friendly headers
-  const friendlyHeaders = lastCols.map((c, i) => {
-    if (c === 'dim')   return activeCrz?.dims[+refDim.value]?.label    ?? c;
-    if (c === 'valor') return activeCrz?.metrics[+refMetric.value]?.label ?? c;
-    return c;
+  lastCols.forEach((c, i) => {
+    const dir  = sortCol === c ? (sortAsc ? ' ↑' : ' ↓') : '';
+    const cls  = `th-sort${sortCol === c ? ' th-sort--active' : ''}`;
+    h += `<th class="${cls}" data-col="${c}">${friendlyHdr(c, i)}${dir}</th>`;
   });
-  friendlyHeaders.forEach(c => { h += `<th>${c}</th>`; });
   h += `</tr></thead><tbody>`;
-  lastRows.forEach(row => {
+
+  rows.forEach(row => {
     h += `<tr>`;
     lastCols.forEach((col, i) => {
-      const v = row[col];
+      const v    = row[col];
       const disp = v == null ? '—' : String(v);
-      if (i === lastCols.length - 1 && maxVal > 0) {
+      if (i === lastCols.length - 1 && maxVal > 0 && Number.isFinite(Number(v))) {
         const pct = Math.round((Number(v) / maxVal) * 100);
-        h += `<td class="td-metric">
-          <div class="td-bar-wrap">
-            <div class="td-bar" style="width:${pct}%"></div>
-            <span>${fmtNum(Number(v))}</span>
-          </div></td>`;
+        h += `<td class="td-metric"><div class="td-bar-wrap">
+          <div class="td-bar" style="width:${pct}%"></div>
+          <span>${fmtNum(Number(v))}</span>
+        </div></td>`;
       } else {
         h += `<td title="${disp}">${disp}</td>`;
       }
@@ -552,16 +744,18 @@ function renderTable() {
   });
   h += `</tbody></table>`;
   viewTable.innerHTML = h;
+
+  viewTable.querySelectorAll('.th-sort').forEach(th => {
+    th.addEventListener('click', () => {
+      const col = th.dataset.col;
+      if (sortCol === col) sortAsc = !sortAsc;
+      else { sortCol = col; sortAsc = true; }
+      renderTable();
+    });
+  });
 }
 
-function fmtNum(n) {
-  if (!Number.isFinite(n)) return '—';
-  return Number.isInteger(n)
-    ? n.toLocaleString('pt-BR')
-    : n.toLocaleString('pt-BR', {minimumFractionDigits:2,maximumFractionDigits:2});
-}
-
-// ── TOOLBAR ────────────────────────────────────────────────────────────────
+// ── TOOLBAR BUTTONS ────────────────────────────────────────────
 btnChart.addEventListener('click', () => {
   viewMode = 'chart';
   btnChart.classList.add('res-btn--active');
@@ -588,18 +782,249 @@ btnCsv.addEventListener('click', () => {
   if (!lastRows.length) return;
   const sep = ';';
   const header = lastCols.join(sep);
-  const rows = lastRows.map(r =>
+  const body   = lastRows.map(r =>
     lastCols.map(c => {
       const v = r[c]; if (v == null) return '';
       const s = String(v);
-      return (s.includes(sep)||s.includes('"')||s.includes('\n')) ? `"${s.replace(/"/g,'""')}"` : s;
+      return (s.includes(sep) || s.includes('"') || s.includes('\n'))
+        ? `"${s.replace(/"/g, '""')}"` : s;
     }).join(sep)
   ).join('\n');
-  const blob = new Blob(['﻿'+header+'\n'+rows], {type:'text/csv;charset=utf-8;'});
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-  a.download = `ridab_${activeCrz?.id ?? 'export'}_${new Date().toISOString().slice(0,10)}.csv`;
+  const blob = new Blob(['﻿' + header + '\n' + body], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `ridab_${activeCrz?.id ?? 'export'}_${new Date().toISOString().slice(0, 10)}.csv`;
   a.click();
 });
+
+// ── CAMPOS LIVRES ──────────────────────────────────────────────
+function renderFlTablePills() {
+  const container = document.getElementById('fl-table-pills');
+  container.innerHTML = TABLE_META.map(m =>
+    `<button class="fl-tbl-pill" data-id="${m.id}" style="border-color:${m.color};color:${m.color}">${m.label}</button>`
+  ).join('');
+  container.querySelectorAll('.fl-tbl-pill').forEach(btn => {
+    btn.addEventListener('click', () => flToggleTable(btn.dataset.id));
+  });
+}
+
+async function flToggleTable(tableId) {
+  if (flTables.has(tableId)) {
+    flTables.delete(tableId);
+    flChosen = flChosen.filter(c => c.tableId !== tableId);
+  } else {
+    flTables.add(tableId);
+    if (!flTableCols[tableId] && ready) {
+      try {
+        const res = await conn.query(`DESCRIBE SELECT * FROM ${tableId}`);
+        flTableCols[tableId] = res.toArray().map(r => ({
+          name: String(r.column_name),
+          type: String(r.column_type),
+        }));
+      } catch (e) {
+        console.warn('DESCRIBE failed for', tableId, e);
+        flTableCols[tableId] = [];
+      }
+    }
+  }
+  renderFlPanel();
+}
+
+function renderFlPanel() {
+  // Toggle pill active state
+  document.querySelectorAll('.fl-tbl-pill').forEach(p => {
+    p.classList.toggle('fl-tbl-pill--active', flTables.has(p.dataset.id));
+  });
+
+  const hasTables  = flTables.size > 0;
+  const hasChosen  = flChosen.length > 0;
+  document.getElementById('fl-cols-area').style.display    = hasTables ? 'grid' : 'none';
+  document.getElementById('fl-filters-area').style.display = hasChosen ? 'block' : 'none';
+  document.getElementById('fl-controls').style.display     = hasChosen ? 'flex'  : 'none';
+
+  if (!hasTables) return;
+
+  // Available columns
+  const colList = document.getElementById('fl-col-list');
+  colList.innerHTML = '';
+  for (const tid of flTables) {
+    const meta = TABLE_META.find(m => m.id === tid);
+    const cols = flTableCols[tid] || [];
+    cols.forEach(c => {
+      const active = flChosen.some(x => x.tableId === tid && x.col === c.name);
+      const btn = document.createElement('button');
+      btn.className = 'fl-col-chip' + (active ? ' fl-col-chip--active' : '');
+      btn.title = `${c.name} · ${c.type}`;
+      btn.innerHTML = `<span class="fl-col-alias" style="color:${meta.color}">${meta.alias}.</span>${c.name}`;
+      btn.addEventListener('click', () => {
+        if (active) {
+          flChosen = flChosen.filter(x => !(x.tableId === tid && x.col === c.name));
+        } else {
+          flChosen.push({ tableId: tid, alias: meta.alias, col: c.name });
+        }
+        renderFlPanel();
+      });
+      colList.appendChild(btn);
+    });
+  }
+
+  // Chosen columns
+  const chosenEl = document.getElementById('fl-chosen');
+  if (flChosen.length) {
+    chosenEl.innerHTML = flChosen.map((c, i) =>
+      `<div class="fl-sel-chip">
+        <span class="fl-col-alias">${c.alias}.</span>${c.col}
+        <button class="fl-sel-rm" data-i="${i}">×</button>
+      </div>`
+    ).join('');
+    chosenEl.querySelectorAll('.fl-sel-rm').forEach(btn => {
+      btn.addEventListener('click', () => {
+        flChosen.splice(+btn.dataset.i, 1);
+        renderFlPanel();
+      });
+    });
+  } else {
+    chosenEl.innerHTML = '<span class="fl-empty">Nenhuma coluna adicionada</span>';
+  }
+
+  renderFlFilters();
+}
+
+function allFlColKeys() {
+  const keys = [];
+  for (const tid of flTables) {
+    const meta = TABLE_META.find(m => m.id === tid);
+    (flTableCols[tid] || []).forEach(c => keys.push(`${meta.alias}.${c.name}`));
+  }
+  return keys;
+}
+
+function renderFlFilters() {
+  const area = document.getElementById('fl-filter-rows');
+  if (!area) return;
+  const cols = allFlColKeys();
+  area.innerHTML = flFilters.map((f, i) => {
+    const colOpts = cols.map(c =>
+      `<option value="${c}"${f.col === c ? ' selected' : ''}>${c}</option>`
+    ).join('');
+    const needsVal = f.op !== 'IS NOT NULL' && f.op !== 'IS NULL';
+    return `<div class="fl-filter-row">
+      <select class="fl-f-col" data-i="${i}">${colOpts}</select>
+      <select class="fl-f-op" data-i="${i}">
+        <option value="="${f.op==='='?' selected':''}>= igual</option>
+        <option value="!="${f.op==='!='?' selected':''}>≠ diferente</option>
+        <option value="ILIKE"${f.op==='ILIKE'?' selected':''}>contém</option>
+        <option value=">"${f.op==='>'?' selected':''}>&gt; maior</option>
+        <option value="<"${f.op==='<'?' selected':''}>&lt; menor</option>
+        <option value="IS NOT NULL"${f.op==='IS NOT NULL'?' selected':''}>não nulo</option>
+      </select>
+      ${needsVal ? `<input class="fl-f-val" data-i="${i}" value="${esc(f.val ?? '')}" placeholder="valor">` : ''}
+      <button class="fl-f-rm" data-i="${i}">×</button>
+    </div>`;
+  }).join('');
+
+  area.querySelectorAll('.fl-f-col').forEach(el => el.addEventListener('change', () => {
+    flFilters[+el.dataset.i].col = el.value; renderFlFilters();
+  }));
+  area.querySelectorAll('.fl-f-op').forEach(el => el.addEventListener('change', () => {
+    flFilters[+el.dataset.i].op = el.value; renderFlFilters();
+  }));
+  area.querySelectorAll('.fl-f-val').forEach(el => el.addEventListener('input', () => {
+    flFilters[+el.dataset.i].val = el.value;
+  }));
+  area.querySelectorAll('.fl-f-rm').forEach(btn => btn.addEventListener('click', () => {
+    flFilters.splice(+btn.dataset.i, 1); renderFlFilters();
+  }));
+}
+
+document.getElementById('fl-add-filter').addEventListener('click', () => {
+  const cols = allFlColKeys();
+  flFilters.push({ col: cols[0] ?? '', op: 'IS NOT NULL', val: '' });
+  renderFlFilters();
+});
+
+// Limit chips
+document.getElementById('fl-limit-chips').addEventListener('click', e => {
+  const btn = e.target.closest('.lchip');
+  if (!btn) return;
+  flLimit = +btn.dataset.n;
+  document.querySelectorAll('.lchip').forEach(b => b.classList.remove('lchip--active'));
+  btn.classList.add('lchip--active');
+});
+
+document.getElementById('fl-run').addEventListener('click', () => {
+  if (!ready) return;
+  refBar.style.display = 'none';
+  resArea.style.display = 'block';
+  runQuery();
+});
+
+// ── BUILD CAMPOS SQL ───────────────────────────────────────────
+function buildCamposSQL() {
+  if (!flChosen.length) return null;
+  const tables = [...flTables];
+
+  const selectCols = flChosen.map(c => `${c.alias}.${c.col}`).join(',\n  ');
+  const { from, ctes } = buildFromClause(tables);
+
+  const filterClauses = flFilters.map(f => {
+    if (!f.col) return null;
+    if (f.op === 'IS NOT NULL') return `${f.col} IS NOT NULL`;
+    if (f.op === 'IS NULL')     return `${f.col} IS NULL`;
+    const isNum = !isNaN(f.val) && f.val !== '';
+    const valExpr = isNum ? f.val : `'${esc(f.val)}'`;
+    if (f.op === 'ILIKE') return `${f.col} ILIKE '%${esc(f.val)}%'`;
+    return `${f.col} ${f.op} ${valExpr}`;
+  }).filter(Boolean);
+
+  const whereClause = filterClauses.length ? `WHERE ${filterClauses.join('\n  AND ')}` : '';
+  const ctePrefix   = ctes ? `${ctes}\n` : '';
+
+  return `${ctePrefix}SELECT\n  ${selectCols}\n${from}\n${whereClause}\nLIMIT ${flLimit}`;
+}
+
+function buildFromClause(tables) {
+  if (tables.length === 0) return { from: '', ctes: null };
+
+  if (tables.length === 1) {
+    const meta = TABLE_META.find(m => m.id === tables[0]);
+    return { from: `FROM ${tables[0]} ${meta.alias}`, ctes: null };
+  }
+
+  const hasObras     = tables.includes('obras');
+  const hasBilh      = tables.includes('bilheteria_por_filme_ano');
+  const hasDir       = tables.includes('diretores_obras');
+  const hasProd      = tables.includes('produtores_obras');
+  const hasFSA       = tables.includes('fomento_fsa');
+  const hasRen       = tables.includes('renuncia_fiscal');
+
+  const joins = [];
+  let ctes    = null;
+  let from    = 'FROM obras o';
+
+  // Direct CPB joins
+  if (hasBilh)  joins.push(`INNER JOIN bilheteria_por_filme_ano b ON b.cpb_roe = o.cpb AND b.cpb_roe LIKE 'B%'`);
+  if (hasDir)   joins.push(`LEFT JOIN diretores_obras d ON d.cpb = o.cpb`);
+  if (hasProd)  joins.push(`LEFT JOIN produtores_obras p ON p.cpb = o.cpb`);
+
+  // Proxy title joins
+  if (hasFSA || hasRen) {
+    let cteStr = `WITH o_n AS (\n  SELECT *, lower(regexp_replace(titulo_original,'[^a-zA-Z0-9 ]','','g')) AS _tn\n  FROM obras\n)`;
+    if (hasFSA) {
+      cteStr += `,\nf_n AS (\n  SELECT *, lower(regexp_replace(titulo_projeto,'[^a-zA-Z0-9 ]','','g')) AS _tn\n  FROM fomento_fsa\n)`;
+      joins.push(`INNER JOIN f_n f ON f._tn = o._tn`);
+    }
+    if (hasRen) {
+      cteStr += `,\nr_n AS (\n  SELECT *, lower(regexp_replace(titulo_projeto,'[^a-zA-Z0-9 ]','','g')) AS _tn\n  FROM renuncia_fiscal\n)`;
+      joins.push(`INNER JOIN r_n r ON r._tn = o._tn`);
+    }
+    ctes = cteStr;
+    from = `FROM o_n o`;
+  }
+
+  if (joins.length) from += '\n' + joins.join('\n');
+  return { from, ctes };
+}
 </script>
 
 <style is:global>
@@ -612,20 +1037,15 @@ btnCsv.addEventListener('click', () => {
 
 /* ── Status bar ──────────────────────────────────────────────── */
 .tf-bar {
-  display: flex;
-  align-items: center;
-  gap: 16px;
+  display: flex; align-items: center; gap: 16px;
   padding: 14px 0;
   border-bottom: 1px solid var(--border);
   margin-bottom: 48px;
 }
 .tf-ey {
-  font-family: var(--font-m);
-  font-size: 10px;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: var(--muted);
-  flex-shrink: 0;
+  font-family: var(--font-m); font-size: 10px;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--muted); flex-shrink: 0;
 }
 .tf-status-row {
   display: flex; align-items: center; gap: 7px;
@@ -641,19 +1061,12 @@ btnCsv.addEventListener('click', () => {
 /* ── Docs link ───────────────────────────────────────────────── */
 .tf-doclink {
   display: flex; align-items: center; justify-content: space-between; gap: 16px;
-  margin-bottom: 40px;
-  padding: 12px 18px;
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--br);
-  border-radius: var(--r);
-  text-decoration: none;
-  transition: border-color .14s, background .14s;
+  margin-bottom: 32px; padding: 12px 18px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-left: 3px solid var(--br); border-radius: var(--r);
+  text-decoration: none; transition: border-color .14s, background .14s;
 }
-.tf-doclink:hover {
-  background: var(--surface);
-  border-color: var(--br);
-}
+.tf-doclink:hover { background: var(--surface); border-color: var(--br); }
 .tf-doclink-text {
   font-family: var(--font-m); font-size: 12px; color: var(--muted); line-height: 1.5;
 }
@@ -662,38 +1075,46 @@ btnCsv.addEventListener('click', () => {
   color: var(--br); white-space: nowrap; flex-shrink: 0;
 }
 
-/* ── Cruzamento section ──────────────────────────────────────── */
+/* ── Mode tabs ───────────────────────────────────────────────── */
+.mode-tabs {
+  display: flex; gap: 0; margin-bottom: 32px;
+  border-bottom: 1px solid var(--border);
+}
+.mtab {
+  font-family: var(--font-m); font-size: 12px; font-weight: 600;
+  color: var(--dim); background: transparent; border: none;
+  padding: 10px 20px; cursor: pointer; position: relative;
+  transition: color .13s;
+}
+.mtab::after {
+  content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 2px;
+  background: transparent; transition: background .13s;
+}
+.mtab:hover { color: var(--text); }
+.mtab--active { color: var(--text); }
+.mtab--active::after { background: var(--br); }
+
+/* ── Cruzamento grid ─────────────────────────────────────────── */
 .cr-section { margin-bottom: 48px; }
 .cr-intro { margin-bottom: 28px; }
 .cr-h {
   font-family: var(--font-d);
   font-variation-settings: 'opsz' 14,'wdth' 90,'wght' 650;
-  font-size: 24px; letter-spacing: -.025em;
-  color: var(--text); margin-bottom: 6px;
+  font-size: 24px; letter-spacing: -.025em; color: var(--text); margin-bottom: 6px;
 }
 .cr-sub { font-size: 13.5px; color: var(--muted); }
-
 .cr-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-  gap: 1px;
-  background: var(--border);
-  border: 1px solid var(--border);
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 1px; background: var(--border); border: 1px solid var(--border);
 }
-
 .cr-card {
-  background: var(--bg);
-  padding: 24px 22px 20px;
-  text-align: left;
-  cursor: pointer;
-  border: none;
+  background: var(--bg); padding: 24px 22px 20px;
+  text-align: left; cursor: pointer; border: none;
   display: flex; flex-direction: column; gap: 10px;
-  transition: background .14s;
-  position: relative;
+  transition: background .14s; position: relative;
 }
 .cr-card::before {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
   background: transparent; transition: background .15s;
 }
 .cr-card:hover { background: var(--surface); }
@@ -701,17 +1122,12 @@ btnCsv.addEventListener('click', () => {
 .cr-card--active { background: var(--surface); }
 .cr-card--active::before { background: var(--br); }
 .cr-card:disabled { opacity: .5; cursor: default; }
-
-.cr-card-top {
-  display: flex; align-items: center;
-  gap: 8px; flex-wrap: wrap;
-}
+.cr-card-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .cr-tables { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
 .cr-tbl-pill {
   font-family: var(--font-m); font-size: 9px;
   letter-spacing: .06em; text-transform: uppercase;
-  padding: 3px 7px; border: 1px solid;
-  border-radius: 2px;
+  padding: 3px 7px; border: 1px solid; border-radius: 2px;
 }
 .cr-plus { font-size: 12px; color: var(--dim); }
 .cr-join-badge {
@@ -728,25 +1144,122 @@ btnCsv.addEventListener('click', () => {
 }
 .cr-card-desc { font-size: 12.5px; color: var(--muted); line-height: 1.5; }
 .cr-card-cta {
-  font-family: var(--font-m); font-size: 10.5px;
-  color: var(--dim); margin-top: 4px;
-  transition: color .13s;
+  font-family: var(--font-m); font-size: 10.5px; color: var(--dim);
+  margin-top: 4px; transition: color .13s;
 }
 .cr-card:hover .cr-card-cta,
 .cr-card--active .cr-card-cta { color: var(--br); }
 
-/* ── Result area ─────────────────────────────────────────────── */
-.res-area {
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  overflow: hidden;
+/* ── Campos livres ───────────────────────────────────────────── */
+.fl-wrap {
+  display: flex; flex-direction: column; gap: 24px;
+  margin-bottom: 32px;
 }
+.fl-section { display: flex; flex-direction: column; gap: 10px; }
+.fl-section-label {
+  font-family: var(--font-m); font-size: 9.5px;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--dim);
+  display: flex; align-items: center; gap: 8px;
+}
+.fl-hint { font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--muted); }
+.fl-table-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.fl-tbl-pill {
+  font-family: var(--font-m); font-size: 11px; font-weight: 600;
+  padding: 6px 14px; border: 1px solid; border-radius: 4px;
+  background: transparent; cursor: pointer;
+  transition: background .13s, opacity .13s;
+  opacity: .65;
+}
+.fl-tbl-pill--active { opacity: 1; background: color-mix(in srgb, currentColor 8%, transparent); }
+.fl-tbl-pill:hover   { opacity: 1; }
 
-/* Refinement bar */
+.fl-cols-area {
+  display: grid; grid-template-columns: 1fr 240px; gap: 16px;
+  padding: 16px; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r);
+}
+.fl-available { display: flex; flex-direction: column; gap: 10px; }
+.fl-col-list { display: flex; flex-wrap: wrap; gap: 5px; }
+.fl-col-chip {
+  font-family: var(--font-m); font-size: 11px;
+  padding: 4px 9px; border: 1px solid var(--border);
+  border-radius: 3px; background: var(--surface);
+  color: var(--text); cursor: pointer; transition: all .12s;
+}
+.fl-col-chip:hover { border-color: var(--br); }
+.fl-col-chip--active { background: var(--br); color: #fff; border-color: var(--br); }
+.fl-col-alias { font-size: 9px; opacity: .7; margin-right: 1px; }
+.fl-chosen-area { display: flex; flex-direction: column; gap: 10px; }
+.fl-chosen { display: flex; flex-direction: column; gap: 5px; min-height: 40px; }
+.fl-sel-chip {
+  display: flex; align-items: center; gap: 6px;
+  font-family: var(--font-m); font-size: 11px;
+  padding: 5px 8px; background: var(--surface);
+  border: 1px solid var(--border); border-radius: 3px;
+}
+.fl-sel-rm {
+  background: transparent; border: none; color: var(--dim);
+  cursor: pointer; font-size: 14px; line-height: 1; padding: 0 2px;
+  margin-left: auto;
+}
+.fl-sel-rm:hover { color: #e8341a; }
+.fl-empty { font-size: 11px; color: var(--dim); font-style: italic; }
+
+.fl-filters-area { display: flex; flex-direction: column; gap: 10px; }
+.fl-add-filter {
+  font-family: var(--font-m); font-size: 10px; color: var(--br);
+  background: transparent; border: none; cursor: pointer; padding: 0;
+  font-weight: 600; letter-spacing: .03em;
+}
+.fl-filter-row {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+.fl-f-col, .fl-f-op {
+  font-family: var(--font-m); font-size: 11.5px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 4px; color: var(--text);
+  padding: 6px 8px; cursor: pointer;
+}
+.fl-f-val {
+  font-family: var(--font-m); font-size: 11.5px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 4px; color: var(--text);
+  padding: 6px 10px; width: 140px;
+}
+.fl-f-rm {
+  background: transparent; border: none; color: var(--dim);
+  cursor: pointer; font-size: 16px; padding: 0 4px;
+}
+.fl-f-rm:hover { color: #e8341a; }
+
+.fl-controls {
+  display: flex; align-items: flex-end; gap: 20px;
+  padding-top: 4px;
+}
+.fl-limit-group { display: flex; flex-direction: column; gap: 8px; }
+.fl-limit-chips { display: flex; gap: 4px; }
+.lchip {
+  font-family: var(--font-m); font-size: 11px; font-weight: 600;
+  padding: 5px 10px; border: 1px solid var(--border);
+  border-radius: 4px; background: transparent; color: var(--dim);
+  cursor: pointer; transition: all .12s;
+}
+.lchip:hover { border-color: var(--br); color: var(--br); }
+.lchip--active { background: var(--br); color: #fff; border-color: var(--br); }
+.fl-run-btn {
+  background: var(--br); color: #fff; border: none;
+  border-radius: 4px; font-family: var(--font-s);
+  font-size: 12px; font-weight: 700;
+  padding: 9px 22px; cursor: pointer;
+  transition: opacity .14s; letter-spacing: .04em;
+}
+.fl-run-btn:hover { opacity: .88; }
+
+/* ── Result area ─────────────────────────────────────────────── */
+.res-area { border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; }
+
 .ref-bar {
   display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap;
-  padding: 16px 20px;
-  background: var(--bg2);
+  padding: 16px 20px; background: var(--bg2);
   border-bottom: 1px solid var(--border);
 }
 .ref-group { display: flex; flex-direction: column; gap: 5px; }
@@ -759,8 +1272,7 @@ btnCsv.addEventListener('click', () => {
   background: var(--surface); border: 1px solid var(--border);
   border-radius: 4px; color: var(--text);
   padding: 7px 10px; font-size: 12.5px; font-family: var(--font-m);
-  cursor: pointer; min-width: 160px;
-  transition: border-color .14s;
+  cursor: pointer; min-width: 160px; transition: border-color .14s;
 }
 .ref-select:hover { border-color: var(--br); }
 .ref-input {
@@ -771,20 +1283,17 @@ btnCsv.addEventListener('click', () => {
 }
 .ref-input:focus { outline: none; border-color: var(--br); }
 .ref-run-btn {
-  background: var(--br); color: #fff;
-  border: none; border-radius: 4px;
+  background: var(--br); color: #fff; border: none; border-radius: 4px;
   font-size: 12px; font-weight: 600; font-family: var(--font-s);
   padding: 7px 16px; cursor: pointer; white-space: nowrap;
-  transition: opacity .14s;
-  align-self: flex-end;
+  transition: opacity .14s; align-self: flex-end;
 }
 .ref-run-btn:hover { opacity: .88; }
 
 /* Toolbar */
 .res-toolbar {
   display: flex; align-items: center; gap: 12px;
-  padding: 10px 20px;
-  border-bottom: 1px solid var(--border);
+  padding: 10px 20px; border-bottom: 1px solid var(--border);
   background: var(--surface);
 }
 .res-info { font-family: var(--font-m); font-size: 11px; color: var(--dim); flex: 1; }
@@ -793,23 +1302,17 @@ btnCsv.addEventListener('click', () => {
   font-family: var(--font-m); font-size: 11px;
   color: var(--muted); background: transparent;
   border: 1px solid var(--border); border-radius: 4px;
-  padding: 5px 11px; cursor: pointer;
-  transition: all .12s;
+  padding: 5px 11px; cursor: pointer; transition: all .12s;
 }
 .res-btn:hover { border-color: var(--text); color: var(--text); }
 .res-btn--active { background: var(--text); color: var(--bg); border-color: var(--text); }
 
 /* SQL panel */
-.sql-panel {
-  background: #0d0b08;
-  border-bottom: 1px solid var(--border);
-}
+.sql-panel { background: #0d0b08; border-bottom: 1px solid var(--border); }
 .sql-head {
   display: flex; align-items: center; gap: 10px;
-  padding: 8px 16px;
-  border-bottom: 1px solid #1e1c19;
-  font-family: var(--font-m); font-size: 10px;
-  color: rgba(250,248,239,.35);
+  padding: 8px 16px; border-bottom: 1px solid #1e1c19;
+  font-family: var(--font-m); font-size: 10px; color: rgba(250,248,239,.35);
 }
 .sql-label { color: rgba(250,248,239,.55); }
 .sql-note { flex: 1; }
@@ -817,42 +1320,80 @@ btnCsv.addEventListener('click', () => {
   background: transparent; border: 1px solid rgba(250,248,239,.2);
   border-radius: 3px; color: rgba(250,248,239,.5);
   font-size: 10px; font-family: var(--font-m);
-  padding: 2px 8px; cursor: pointer;
-  transition: background .13s;
+  padding: 2px 8px; cursor: pointer; transition: background .13s;
 }
 .sql-copy:hover { background: rgba(250,248,239,.08); }
 .sql-pre {
   font-family: var(--font-m); font-size: 11.5px;
   line-height: 1.75; color: rgba(250,248,239,.78);
-  padding: 14px 16px; margin: 0; overflow-x: auto;
-  max-height: 220px;
+  padding: 14px 16px; margin: 0; overflow-x: auto; max-height: 220px;
 }
 
-/* Chart view */
+/* Chart type sub-bar */
+.chart-type-bar {
+  display: flex; gap: 4px;
+  padding: 8px 16px; background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+}
+.ct-btn {
+  font-family: var(--font-m); font-size: 10.5px; font-weight: 600;
+  color: var(--dim); background: transparent;
+  border: 1px solid var(--border); border-radius: 3px;
+  padding: 4px 11px; cursor: pointer; transition: all .12s;
+}
+.ct-btn:hover { color: var(--text); border-color: var(--text); }
+.ct-btn--active { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+/* Chart: horizontal bars */
 .chart-view { padding: 20px 24px 24px; background: var(--surface); }
 .chart-legend {
   display: flex; justify-content: space-between;
-  font-family: var(--font-m); font-size: 10px;
-  color: var(--dim); margin-bottom: 16px;
-  letter-spacing: .06em; text-transform: uppercase;
+  font-family: var(--font-m); font-size: 10px; color: var(--dim);
+  margin-bottom: 16px; letter-spacing: .06em; text-transform: uppercase;
 }
 .chart-bars { display: flex; flex-direction: column; gap: 6px; }
 .cbar { display: grid; grid-template-columns: 200px 1fr 100px; align-items: center; gap: 12px; }
 .cbar-lbl {
   font-family: var(--font-m); font-size: 11.5px; color: var(--text);
-  text-align: right; white-space: nowrap;
-  overflow: hidden; text-overflow: ellipsis;
+  text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-.cbar-track {
-  background: var(--border); border-radius: 2px; height: 8px; overflow: hidden;
-}
-.cbar-fill {
-  height: 100%; background: var(--br);
-  border-radius: 2px; transition: width .35s ease;
-}
-.cbar-val { font-family: var(--font-m); font-size: 11.5px; color: var(--muted); }
+.cbar-track { background: var(--border); border-radius: 2px; height: 8px; overflow: hidden; }
+.cbar-fill  { height: 100%; background: var(--br); border-radius: 2px; transition: width .35s ease; }
+.cbar-val   { font-family: var(--font-m); font-size: 11.5px; color: var(--muted); }
 
-/* Table view */
+/* Chart: vertical bars */
+.chart-bars-v {
+  display: flex; align-items: flex-end; gap: 6px;
+  overflow-x: auto; padding-bottom: 8px; min-height: 180px;
+}
+.cbv-col {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  flex: 1; min-width: 28px; max-width: 64px;
+}
+.cbv-val {
+  font-family: var(--font-m); font-size: 9px; color: var(--muted);
+  writing-mode: horizontal-tb; white-space: nowrap;
+}
+.cbv-track {
+  width: 100%; flex: 1; display: flex; align-items: flex-end;
+  background: var(--border); border-radius: 2px 2px 0 0; min-height: 120px;
+}
+.cbv-fill {
+  width: 100%; background: var(--br); border-radius: 2px 2px 0 0;
+  transition: height .35s ease; min-height: 2px;
+}
+.cbv-lbl {
+  font-family: var(--font-m); font-size: 9px; color: var(--muted);
+  writing-mode: vertical-rl; text-orientation: mixed;
+  transform: rotate(180deg); white-space: nowrap;
+  max-height: 80px; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* Chart: line (SVG) */
+.chart-svg-wrap { width: 100%; overflow-x: auto; }
+.chart-svg { width: 100%; min-width: 400px; display: block; }
+
+/* Sortable table */
 .table-view { overflow-x: auto; background: var(--surface); }
 .dtbl { width: 100%; border-collapse: collapse; font-size: 12px; }
 .dtbl th {
@@ -862,6 +1403,9 @@ btnCsv.addEventListener('click', () => {
   border-bottom: 1px solid var(--border);
   white-space: nowrap; position: sticky; top: 0;
 }
+.th-sort { cursor: pointer; user-select: none; transition: color .12s; }
+.th-sort:hover { color: var(--text); }
+.th-sort--active { color: var(--br); }
 .dtbl td {
   padding: 7px 12px; border-bottom: 1px solid var(--border);
   font-family: var(--font-m); font-size: 11px;
@@ -884,17 +1428,14 @@ btnCsv.addEventListener('click', () => {
 }
 .spinner {
   width: 20px; height: 20px; border-radius: 50%;
-  border: 2px solid var(--border);
-  border-top-color: var(--br);
+  border: 2px solid var(--border); border-top-color: var(--br);
   animation: spin .7s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
-
 .qerr {
   padding: 20px; color: #b5250e;
   font-family: var(--font-m); font-size: 12px;
-  background: rgba(232,52,26,.06);
-  border-top: 1px solid rgba(232,52,26,.15);
+  background: rgba(232,52,26,.06); border-top: 1px solid rgba(232,52,26,.15);
 }
 
 /* ── Mobile ──────────────────────────────────────────────────── */
@@ -904,5 +1445,6 @@ btnCsv.addEventListener('click', () => {
   .cbar-lbl { font-size: 10px; }
   .ref-bar { gap: 10px; }
   .ref-select, .ref-input { min-width: unset; width: 100%; }
+  .fl-cols-area { grid-template-columns: 1fr; }
 }
 </style>
