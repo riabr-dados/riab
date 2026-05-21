@@ -1407,6 +1407,348 @@ footer{
   .stat{padding:22px 20px 20px}
   .stat::before{left:20px}
 }
+
+/* ═══════════════ TRANSFORMAR ═══════════════ */
+
+.jmap-wrap{
+  padding:44px 0 48px;
+  border-bottom:1px solid var(--border);
+  margin-bottom:56px;
+  overflow-x:auto;
+}
+.jmap-eyebrow{
+  font-family:var(--font-m);
+  font-size:10.5px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--ink-3);
+  margin-bottom:28px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.jmap-eyebrow::before{
+  content:'';
+  display:inline-block;
+  width:24px;height:1px;
+  background:var(--border-2);
+}
+.jmap-svg{width:100%;max-width:660px;display:block;overflow:visible}
+.jmap-legend{
+  display:flex;
+  gap:22px;
+  flex-wrap:wrap;
+  margin-top:18px;
+}
+.jleg{
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  font-family:var(--font-m);
+  font-size:10.5px;
+  color:var(--ink-3);
+  letter-spacing:.04em;
+}
+.jleg-line{display:inline-block;width:28px;height:2px}
+.jleg-exact .jleg-line{background:#007a3c}
+.jleg-proxy .jleg-line{background:transparent;border-top:2px dashed #c8920a;height:0}
+.jleg-salic .jleg-line{background:transparent;border-top:2px solid #1f3bb8;height:0}
+.jleg-cnpj  .jleg-line{background:#5a2244}
+
+/* Regras de ligação */
+.regras-section{margin-bottom:56px}
+.regras-eyebrow{
+  font-family:var(--font-m);
+  font-size:10.5px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--ink-3);
+  margin-bottom:28px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.regras-eyebrow::before{
+  content:'';
+  display:inline-block;
+  width:24px;height:1px;
+  background:var(--border-2);
+}
+.regras-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  background:var(--border);
+  gap:1px;
+  border:1px solid var(--border);
+}
+@media(min-width:760px){.regras-grid{grid-template-columns:1fr 1fr}}
+.regra-card{
+  background:var(--bg);
+  padding:28px 30px 32px;
+  position:relative;
+}
+.regra-card:hover{background:var(--surface)}
+.rc-bar{
+  position:absolute;
+  top:0;left:0;right:0;
+  height:3px;
+}
+.rc-exact .rc-bar{background:#007a3c}
+.rc-proxy .rc-bar{background:#c8920a}
+.rc-salic .rc-bar{background:#1f3bb8}
+.rc-crt   .rc-bar{background:#6b6450}
+.rc-tag{
+  font-family:var(--font-m);
+  font-size:10px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  margin-bottom:10px;
+}
+.rc-exact .rc-tag{color:#007a3c}
+.rc-proxy .rc-tag{color:#c8920a}
+.rc-salic .rc-tag{color:#1f3bb8}
+.rc-crt   .rc-tag{color:#6b6450}
+.rc-name{
+  font-family:var(--font-d);
+  font-variation-settings:'opsz' 14,'wdth' 90,'wght' 650;
+  font-size:17px;
+  letter-spacing:-.02em;
+  color:var(--ink);
+  margin-bottom:14px;
+}
+.rc-body{
+  font-size:13.5px;
+  line-height:1.65;
+  color:var(--ink-2);
+}
+.rc-body p{margin-bottom:10px}
+.rc-where{
+  margin-top:14px;
+  padding:12px 14px;
+  background:var(--bg-2);
+  border:1px solid var(--border);
+  font-family:var(--font-m);
+  font-size:11px;
+  line-height:1.9;
+  color:var(--ink-3);
+}
+.rc-where-h{
+  font-size:10px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--ink-2);
+  font-weight:500;
+  margin-bottom:4px;
+}
+.rc-where code{color:var(--vermilion);font-family:var(--font-m)}
+.rc-note{
+  margin-top:12px;
+  padding:9px 12px;
+  border-left:3px solid;
+  font-size:12.5px;
+  color:var(--ink-2);
+  line-height:1.55;
+}
+.rc-note-warn{border-color:#c8920a;background:rgba(200,146,10,.06)}
+.rc-note-info{border-color:#1f3bb8;background:rgba(31,59,184,.05)}
+.rc-note-ok  {border-color:#007a3c;background:rgba(0,122,60,.05)}
+.rc-algo{
+  margin-top:10px;
+  font-family:var(--font-m);
+  font-size:11.5px;
+  color:var(--forest);
+  padding:8px 12px;
+  background:rgba(0,122,60,.05);
+  border-left:2px solid var(--forest);
+  word-break:break-all;
+}
+
+/* Cruzamentos */
+.cruzamentos-section{margin-bottom:72px}
+.cruzamentos-eyebrow{
+  font-family:var(--font-m);
+  font-size:10.5px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--ink-3);
+  margin-bottom:24px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.cruzamentos-eyebrow::before{
+  content:'';
+  display:inline-block;
+  width:24px;height:1px;
+  background:var(--border-2);
+}
+.cpicker-bar{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-bottom:28px;
+}
+.cpick{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 14px;
+  background:transparent;
+  border:1px solid var(--border-2);
+  font-family:var(--font-b);
+  font-size:12.5px;
+  font-weight:500;
+  color:var(--ink-3);
+  cursor:pointer;
+  transition:all .14s;
+  white-space:nowrap;
+  letter-spacing:-.003em;
+}
+.cpick:hover{color:var(--ink);border-color:var(--ink)}
+.cpick.active{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.cpick .cjtype{
+  font-size:9px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  padding:2px 6px;
+  border-radius:2px;
+  margin-left:2px;
+}
+.cjtype-exact{background:rgba(0,122,60,.15);color:#007a3c}
+.cjtype-proxy{background:rgba(200,146,10,.15);color:#c8920a}
+.cjtype-salic{background:rgba(31,59,184,.1);color:#1f3bb8}
+.cjtype-cnpj {background:rgba(90,34,68,.1);color:#5a2244}
+.cpick.active .cjtype{background:rgba(250,248,239,.15);color:rgba(250,248,239,.7)}
+.cdetail{border:1px solid var(--border);background:var(--surface)}
+.cdetail-top{
+  display:grid;
+  grid-template-columns:1fr;
+}
+@media(min-width:760px){.cdetail-top{grid-template-columns:1.1fr 1fr}}
+.cdetail-info{
+  padding:28px 32px;
+  border-right:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
+@media(min-width:760px){.cdetail-info{border-bottom:none}}
+.cdetail-bases{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:16px;
+}
+.cbase{
+  font-family:var(--font-m);
+  font-size:11px;
+  padding:4px 10px;
+  background:var(--bg-2);
+  border:1px solid var(--border-2);
+  color:var(--ink-2);
+}
+.cbase-op{
+  font-family:var(--font-d);
+  font-variation-settings:'wght' 300;
+  font-size:16px;
+  color:var(--ink-4);
+}
+.cjoin-pill{
+  font-family:var(--font-m);
+  font-size:10px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  padding:4px 10px;
+  border-radius:999px;
+  white-space:nowrap;
+}
+.cjoin-exact{background:rgba(0,122,60,.1);color:#007a3c;border:1px solid rgba(0,122,60,.2)}
+.cjoin-proxy{background:rgba(200,146,10,.1);color:#c8920a;border:1px solid rgba(200,146,10,.25)}
+.cjoin-salic{background:rgba(31,59,184,.08);color:#1f3bb8;border:1px solid rgba(31,59,184,.18)}
+.cjoin-cnpj {background:rgba(90,34,68,.08);color:#5a2244;border:1px solid rgba(90,34,68,.15)}
+.cdetail-title{
+  font-family:var(--font-d);
+  font-variation-settings:'opsz' 14,'wdth' 90,'wght' 650;
+  font-size:19px;
+  letter-spacing:-.025em;
+  color:var(--ink);
+  margin-bottom:10px;
+}
+.cdetail-desc{
+  font-size:13.5px;
+  line-height:1.65;
+  color:var(--ink-2);
+  margin-bottom:16px;
+}
+.ckey-box{
+  font-family:var(--font-m);
+  font-size:11.5px;
+  color:var(--ink-3);
+  padding:10px 12px;
+  background:var(--bg-2);
+  border:1px solid var(--border);
+  margin-bottom:16px;
+  line-height:1.5;
+}
+.ckey-box b{color:var(--ink-2)}
+.cquestions-h{
+  font-family:var(--font-m);
+  font-size:10px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--ink-3);
+  margin-bottom:8px;
+}
+.cquestions{
+  list-style:none;
+  padding:0;
+  font-size:13px;
+  color:var(--ink-3);
+  line-height:1.75;
+}
+.cquestions li::before{content:'→ ';color:var(--ink-4)}
+.cdetail-code{
+  padding:28px 32px;
+  background:#0a0906;
+}
+.ccode-label{
+  font-family:var(--font-m);
+  font-size:10px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:rgba(250,248,239,.35);
+  margin-bottom:14px;
+}
+.ccode-pre{
+  font-family:var(--font-m);
+  font-size:11.5px;
+  line-height:1.7;
+  color:rgba(250,248,239,.82);
+  white-space:pre;
+  overflow-x:auto;
+  margin:0;
+}
+.kw{color:#a5e7c8}.cm{color:rgba(250,248,239,.35)}.sv{color:#ffd680}.fn{color:#c4a6ff}
+.cdetail-foot{
+  padding:16px 32px;
+  border-top:1px solid #1e1c19;
+  display:flex;
+  align-items:center;
+  gap:20px;
+  flex-wrap:wrap;
+}
+.cconf-label{
+  font-family:var(--font-m);
+  font-size:11px;
+  color:rgba(250,248,239,.4);
+  letter-spacing:.04em;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.cconf-dots{display:inline-flex;gap:4px}
+.cconf-dot{width:8px;height:8px;border-radius:50%;background:rgba(250,248,239,.15)}
+.cconf-dot.on{background:rgba(250,248,239,.8)}
+.cconf-caveat{font-family:var(--font-m);font-size:11px;color:rgba(250,248,239,.35)}
 </style>
 </head>
 
@@ -1480,6 +1822,10 @@ footer{
         Obras brasileiras
         <span class="tn">3 vistas</span>
       </button>
+      <button class="tab-btn" data-tab="transformar" role="tab">
+        Transformar
+        <span class="tn">6 cruzamentos</span>
+      </button>
       <div class="tab-spacer"></div>
       <div class="tab-side"><span id="tab-sub">trinta e três conjuntos de dados abertos</span></div>
     </nav>
@@ -1549,6 +1895,174 @@ footer{
       </div>
       <div class="chamadas-lbl">As <em>chamadas públicas</em> com mais projetos apoiados</div>
       <div class="chamadas" id="chamadas"></div>
+    </div>
+  </section>
+
+  <!-- ═════ TRANSFORMAR ═════ -->
+  <section id="view-transformar" class="hidden">
+    <div class="section-eyebrow">§ 03 &mdash; transformar dados</div>
+    <h2 class="section-h">Cruzar bases, <em>ler conexões</em>.</h2>
+    <p class="section-deck">
+      As bases do audiovisual brasileiro não falam entre si por acidente &mdash; elas se ligam por chaves definidas: o CPB, o NUMERO_SALIC, o CNPJ e, quando nenhum desses está disponível, o título normalizado como proxy. Escolha um cruzamento pronto ou leia as regras antes de montar o seu próprio.
+    </p>
+
+    <!-- MAPA DE LIGAÇÕES -->
+    <div class="jmap-wrap">
+      <div class="jmap-eyebrow">Mapa de ligações</div>
+      <svg class="jmap-svg" viewBox="0 0 660 316" preserveAspectRatio="xMinYMid meet" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <!-- obras box -->
+        <rect x="0" y="96" width="138" height="124" fill="#0a0906"/>
+        <text x="69" y="133" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" letter-spacing="1.5" fill="rgba(250,248,239,0.42)">ANCINE / SAV</text>
+        <text x="69" y="151" text-anchor="middle" font-family="'Bricolage Grotesque',system-ui,sans-serif" font-size="14" font-weight="600" fill="#faf8ef">obras</text>
+        <text x="69" y="167" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" letter-spacing="1" fill="rgba(250,248,239,0.38)">não-pub</text>
+        <text x="69" y="181" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="rgba(250,248,239,0.3)">61.360 obras</text>
+        <!-- CPB group label -->
+        <text x="202" y="12" font-family="'JetBrains Mono',monospace" font-size="9" letter-spacing="1.5" fill="#007a3c">CPB EXATO</text>
+        <!-- diretores -->
+        <path d="M138,112 C169,112 169,36 200,36" fill="none" stroke="#007a3c" stroke-width="1.5"/>
+        <rect x="200" y="18" width="172" height="36" fill="#ffffff" stroke="#e7e0c9" stroke-width="1"/>
+        <text x="203" y="30" font-family="'JetBrains Mono',monospace" font-size="8.5" fill="#6b6450" letter-spacing="0.3">CPB</text>
+        <text x="286" y="41" text-anchor="middle" font-family="'Geist','Inter',system-ui" font-size="12" fill="#2a241a">diretores-obras</text>
+        <!-- produtores -->
+        <path d="M138,130 C169,130 169,84 200,84" fill="none" stroke="#007a3c" stroke-width="1.5"/>
+        <rect x="200" y="66" width="172" height="36" fill="#ffffff" stroke="#e7e0c9" stroke-width="1"/>
+        <text x="203" y="78" font-family="'JetBrains Mono',monospace" font-size="8.5" fill="#6b6450" letter-spacing="0.3">CPB</text>
+        <text x="286" y="89" text-anchor="middle" font-family="'Geist','Inter',system-ui" font-size="12" fill="#2a241a">produtores-obras</text>
+        <!-- bilheteria-agregada -->
+        <path d="M138,148 C169,148 169,132 200,132" fill="none" stroke="#007a3c" stroke-width="1.5"/>
+        <rect x="200" y="114" width="182" height="36" fill="#ffffff" stroke="#e7e0c9" stroke-width="1"/>
+        <text x="203" y="126" font-family="'JetBrains Mono',monospace" font-size="8.5" fill="#6b6450" letter-spacing="0.3">CPB_ROE</text>
+        <text x="291" y="137" text-anchor="middle" font-family="'Geist','Inter',system-ui" font-size="12" fill="#2a241a">bilheteria-agregada</text>
+        <!-- CNPJ chain: produtores → agentes -->
+        <path d="M372,84 H432" fill="none" stroke="#5a2244" stroke-width="1.5"/>
+        <rect x="432" y="66" width="172" height="36" fill="#ffffff" stroke="#e7e0c9" stroke-width="1"/>
+        <text x="435" y="78" font-family="'JetBrains Mono',monospace" font-size="8.5" fill="#5a2244" letter-spacing="0.3">CNPJ</text>
+        <text x="518" y="89" text-anchor="middle" font-family="'Geist','Inter',system-ui" font-size="12" fill="#2a241a">agentes-econômicos</text>
+        <!-- separator -->
+        <line x1="200" y1="160" x2="500" y2="160" stroke="#e7e0c9" stroke-width="1" stroke-dasharray="4 3"/>
+        <!-- PROXY group label -->
+        <text x="202" y="174" font-family="'JetBrains Mono',monospace" font-size="9" letter-spacing="1.5" fill="#c8920a">PROXY TÍTULO</text>
+        <!-- fsa-projetos -->
+        <path d="M138,168 C169,168 169,200 200,200" fill="none" stroke="#c8920a" stroke-width="1.5" stroke-dasharray="5 3"/>
+        <rect x="200" y="182" width="162" height="36" fill="#ffffff" stroke="#e7e0c9" stroke-width="1"/>
+        <text x="203" y="194" font-family="'JetBrains Mono',monospace" font-size="8.5" fill="#6b6450" letter-spacing="0.3">título norm.</text>
+        <text x="281" y="205" text-anchor="middle" font-family="'Geist','Inter',system-ui" font-size="12" fill="#2a241a">fsa-projetos</text>
+        <!-- bilheteria-consolidada -->
+        <path d="M138,186 C169,186 169,248 200,248" fill="none" stroke="#c8920a" stroke-width="1.5" stroke-dasharray="5 3"/>
+        <rect x="200" y="230" width="184" height="36" fill="#ffffff" stroke="#e7e0c9" stroke-width="1"/>
+        <text x="203" y="242" font-family="'JetBrains Mono',monospace" font-size="8.5" fill="#6b6450" letter-spacing="0.3">título norm.</text>
+        <text x="292" y="253" text-anchor="middle" font-family="'Geist','Inter',system-ui" font-size="12" fill="#2a241a">bilh-consolidada</text>
+        <!-- renuncia-fiscal -->
+        <path d="M138,204 C169,204 169,296 200,296" fill="none" stroke="#1f3bb8" stroke-width="1.5" stroke-dasharray="5 3"/>
+        <rect x="200" y="278" width="176" height="36" fill="#ffffff" stroke="#e7e0c9" stroke-width="1"/>
+        <text x="203" y="290" font-family="'JetBrains Mono',monospace" font-size="8.5" fill="#1f3bb8" letter-spacing="0.3">NUMERO_SALIC</text>
+        <text x="288" y="301" text-anchor="middle" font-family="'Geist','Inter',system-ui" font-size="12" fill="#2a241a">renuncia-fiscal</text>
+      </svg>
+      <div class="jmap-legend">
+        <span class="jleg jleg-exact"><span class="jleg-line"></span>CPB exato</span>
+        <span class="jleg jleg-proxy"><span class="jleg-line"></span>proxy título</span>
+        <span class="jleg jleg-salic"><span class="jleg-line"></span>NUMERO_SALIC</span>
+        <span class="jleg jleg-cnpj"><span class="jleg-line"></span>CNPJ exato</span>
+      </div>
+    </div>
+
+    <!-- REGRAS DE LIGAÇÃO -->
+    <div class="regras-section">
+      <div class="regras-eyebrow">Regras de ligação</div>
+      <div class="regras-grid">
+
+        <!-- CPB -->
+        <div class="regra-card rc-exact">
+          <div class="rc-bar"></div>
+          <div class="rc-tag">Join exato</div>
+          <div class="rc-name">CPB &mdash; Código de Produto Brasileiro</div>
+          <div class="rc-body">
+            <p>O CPB é o identificador único emitido pela ANCINE no momento do registro de cada obra audiovisual. É o elo mais confiável entre as bases &mdash; uma obra identificada pelo CPB pode ser ligada sem ambiguidade a seus diretores, produtoras e dados de bilheteria.</p>
+            <p>Formato: <code style="font-family:var(--font-m);color:var(--vermilion)">B[YY][seq. 7 dígitos][00000]</code> para obras brasileiras e <code style="font-family:var(--font-m);color:var(--vermilion)">E[...]</code> para obras estrangeiras (ROE).</p>
+            <div class="rc-where">
+              <div class="rc-where-h">Presente em</div>
+              obras-nao-publicitarias &rarr; campo <code>CPB</code><br>
+              diretores-obras &rarr; campo <code>CPB</code><br>
+              produtores-obras &rarr; campo <code>CPB</code><br>
+              bilheteria-agregada &rarr; campo <code>CPB_ROE</code> (prefixo B = obra brasileira, E = estrangeira)
+            </div>
+            <div class="rc-note rc-note-ok">Join direto, sem normalização. Cobertura desde 2002 com CPB retroativo para obras mais antigas.</div>
+          </div>
+        </div>
+
+        <!-- Proxy título -->
+        <div class="regra-card rc-proxy">
+          <div class="rc-bar"></div>
+          <div class="rc-tag">Join aproximado</div>
+          <div class="rc-name">Proxy título &mdash; normalização por nome</div>
+          <div class="rc-body">
+            <p>Quando o CPB não está disponível na base de destino (como FSA, bilheteria consolidada ou Lumiere), o elo é feito por normalização do <code style="font-family:var(--font-m);color:var(--vermilion)">TITULO_ORIGINAL</code> da obra contra o <code style="font-family:var(--font-m);color:var(--vermilion)">TITULO_PROJETO</code> da base alvo.</p>
+            <div class="rc-algo">title.toLowerCase()<br>&nbsp;&nbsp;.normalize('NFD').replace(/[̀-ͯ]/g, '')<br>&nbsp;&nbsp;.replace(/[^a-z0-9 ]/g, '').trim()</div>
+            <div class="rc-where">
+              <div class="rc-where-h">Usado em</div>
+              obras &rarr; fsa-projetos (<code>TITULO_PROJETO</code>)<br>
+              obras &rarr; bilh-consolidada (título sem CPB)<br>
+              obras &rarr; lumiere-europa (título internacional)<br>
+              bilh-agregada.TITULO_BRASIL &rarr; lumiere (cruzado)
+            </div>
+            <div class="rc-note rc-note-warn">Risco de falso positivo em títulos curtos (&ldquo;Sol&rdquo;, &ldquo;Amor&rdquo;, &ldquo;Brasil&rdquo;). Sempre validar manualmente uma amostra do join antes de usar em análise.</div>
+          </div>
+        </div>
+
+        <!-- SALIC -->
+        <div class="regra-card rc-salic">
+          <div class="rc-bar"></div>
+          <div class="rc-tag">Via sistema MinC</div>
+          <div class="rc-name">CPB &harr; SALIC &mdash; ligação com a Lei do Audiovisual</div>
+          <div class="rc-body">
+            <p>A base de renúncia fiscal exportada pela ANCINE contém o <code style="font-family:var(--font-m);color:var(--vermilion)">NUMERO_SALIC</code>, o identificador do projeto no Sistema de Apoio às Leis de Incentivo à Cultura (MinC). Não há campo CPB nessa base.</p>
+            <p>O elo CPB&harr;SALIC exige uma das duas estratégias:</p>
+            <div class="rc-where">
+              <div class="rc-where-h">Estratégia 1 — proxy título</div>
+              normalizar(<code>obras.TITULO_ORIGINAL</code>) = normalizar(<code>renuncia.TITULO_PROJETO</code>)<br>
+              <em style="font-size:11px;color:var(--ink-4)">risco: homônimos e variações de título</em>
+            </div>
+            <div class="rc-where" style="margin-top:8px">
+              <div class="rc-where-h">Estratégia 2 — CNPJ (empresa-level)</div>
+              <code>obras.CNPJ_REQUERENTE</code> = <code>renuncia.CNPJ_PROPONENTE</code><br>
+              <em style="font-size:11px;color:var(--ink-4)">join N:M — empresa com múltiplos projetos</em>
+            </div>
+            <div class="rc-note rc-note-info">Quando o dataset SALIC/MinC for incorporado ao catálogo, o elo direto CPB&harr;SALIC poderá ser feito via campo de referência cruzada. O <code style="font-family:var(--font-m)">NUMERO_SALIC</code> (ex: 00-0040) é diferente do CPB &mdash; não confundir.</div>
+          </div>
+        </div>
+
+        <!-- CRT -->
+        <div class="regra-card rc-crt">
+          <div class="rc-bar"></div>
+          <div class="rc-tag">Janela de distribuição</div>
+          <div class="rc-name">CRT &mdash; Certificado de Registro de Título</div>
+          <div class="rc-body">
+            <p>O CRT não é um identificador de obra &mdash; é um certificado condicionado ao pagamento de CONDECINE (Contribuição para o Desenvolvimento da Indústria Cinematográfica Nacional). Sem CRT, uma obra não pode ser veiculada comercialmente no Brasil.</p>
+            <p>O CRT é emitido <strong>por janela de distribuição</strong>: uma obra pode ter um CRT para salas de cinema, outro para TV por assinatura e outro para streaming (VoD). Cada janela exige um certificado separado vinculado ao pagamento do tributo correspondente.</p>
+            <div class="rc-where">
+              <div class="rc-where-h">O que o CRT indica</div>
+              CRT para <strong>salas de cinema</strong> → obra foi comercialmente exibida em cinemas<br>
+              CRT para <strong>TV por assinatura</strong> → obra foi veiculada em TV paga<br>
+              CRT para <strong>VoD / streaming</strong> → obra foi disponibilizada em plataforma<br>
+              <em style="font-size:11px;color:var(--ink-4)">Indicador de circulação, não prova de audiência</em>
+            </div>
+            <div class="rc-where" style="margin-top:8px">
+              <div class="rc-where-h">Ligação com obras</div>
+              CRT referencia a obra via CPB &rarr; join exato (quando o dataset CRT for incorporado)<br>
+              Enquanto ausente do catálogo: <code>obras.SEGMENTO_DESTINACAO_INICIAL</code> registra a janela declarada no ato do registro &mdash; proxy imperfeito, pois é a <em>intenção</em>, não o CRT efetivo
+            </div>
+            <div class="rc-note rc-note-info">Dataset CRT é uma lacuna conhecida do catálogo. Quando incorporado, permitirá mapear quais obras efetivamente circularam em cada janela &mdash; informação de alto valor para análises de mercado e política pública.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- CRUZAMENTOS DISPONÍVEIS -->
+    <div class="cruzamentos-section">
+      <div class="cruzamentos-eyebrow">Cruzamentos disponíveis</div>
+      <div class="cpicker-bar" id="cpicker-bar"></div>
+      <div class="cdetail" id="cdetail"></div>
     </div>
   </section>
 
@@ -1935,8 +2449,10 @@ document.querySelectorAll('.tab-btn').forEach(b => {
     const t = b.dataset.tab;
     document.getElementById('view-catalog').classList.toggle('hidden', t !== 'catalog');
     document.getElementById('view-obras').classList.toggle('hidden', t !== 'obras');
+    document.getElementById('view-transformar').classList.toggle('hidden', t !== 'transformar');
     const sub = document.getElementById('tab-sub');
-    if (sub) sub.textContent = t === 'catalog' ? 'trinta e três conjuntos de dados abertos' : 'salas, bilheteria e fomento';
+    const subtitles = {catalog:'trinta e três conjuntos de dados abertos',obras:'salas, bilheteria e fomento',transformar:'seis cruzamentos disponíveis'};
+    if (sub) sub.textContent = subtitles[t] || '';
   });
 });
 
@@ -1951,6 +2467,233 @@ document.querySelectorAll('.chip').forEach(ch => {
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') closeModal();
 });
+
+// ═════ CRUZAMENTOS ═════
+
+const CRUZAMENTOS = [
+  {
+    id:'ficha-tecnica',label:'Ficha técnica',
+    bases:['obras-nao-pub','diretores-obras','produtores-obras'],
+    join:'exact',joinLabel:'CPB exato',
+    title:'Obras com ficha técnica completa',
+    desc:'Consolida diretor(es), produtora(s) e dados cadastrais de cada obra usando o CPB como chave de ligação direta. Sem ambiguidade.',
+    key:'<b>obras.CPB</b> = <b>diretores.CPB</b> = <b>produtores.CPB</b>',
+    questions:['Quais produtoras têm maior portfolio de obras registradas?','Quantas obras foram codirigidas (múltiplos diretores)?','Qual a filmografia completa de um diretor por segmento?'],
+    conf:3,caveat:'',
+    code:`<span class="cm">-- DuckDB: obras + ficha técnica completa</span>
+<span class="kw">SELECT</span>
+  o.TITULO_ORIGINAL,
+  o.ANO_PRODUCAO_INICIAL  <span class="kw">AS</span> ano,
+  o.TIPO_OBRA,
+  <span class="fn">string_agg</span>(<span class="kw">DISTINCT</span> d.DIRETOR, <span class="sv">' / '</span>) <span class="kw">AS</span> diretores,
+  <span class="fn">string_agg</span>(<span class="kw">DISTINCT</span> p.PRODUTOR, <span class="sv">' | '</span>) <span class="kw">AS</span> produtoras
+<span class="kw">FROM</span> obras o
+<span class="kw">LEFT JOIN</span> diretores d  <span class="kw">ON</span> d.CPB = o.CPB
+<span class="kw">LEFT JOIN</span> produtores p  <span class="kw">ON</span> p.CPB = o.CPB
+<span class="kw">WHERE</span> o.TIPO_OBRA = <span class="sv">'LONGA-METRAGEM'</span>
+<span class="kw">GROUP BY ALL</span>
+<span class="kw">ORDER BY</span> o.ANO_PRODUCAO_INICIAL <span class="kw">DESC</span>
+<span class="kw">LIMIT</span> <span class="sv">20</span>;`
+  },
+  {
+    id:'obras-bilheteria',label:'Obras + bilheteria',
+    bases:['obras-nao-pub','bilheteria-agregada'],
+    join:'exact',joinLabel:'CPB exato',
+    title:'Obra registrada → público real',
+    desc:'Liga o registro oficial (ANCINE/SAV) ao público por ano de exibição via CPB_ROE. Para obras brasileiras o CPB_ROE começa com "B" — igual ao CPB da obra.',
+    key:'<b>obras.CPB</b> = <b>bilheteria_agregada.CPB_ROE</b> (WHERE CPB_ROE LIKE \'B%\')',
+    questions:['De 61 mil obras registradas, quantas têm bilheteria real?','Qual a renda por ano de exibição de cada obra?','Como evoluiu o público de longas de animação no mercado doméstico?'],
+    conf:3,caveat:'',
+    code:`<span class="cm">-- DuckDB: obra registrada com bilheteria por ano</span>
+<span class="kw">SELECT</span>
+  o.TITULO_ORIGINAL,
+  o.TIPO_OBRA,
+  b.ANO,
+  b.PUBLICO
+<span class="kw">FROM</span> obras o
+<span class="kw">INNER JOIN</span> bilheteria_agregada b
+  <span class="kw">ON</span> b.CPB_ROE = o.CPB
+<span class="kw">WHERE</span> b.CPB_ROE <span class="kw">LIKE</span> <span class="sv">'B%'</span>
+<span class="kw">ORDER BY</span> b.PUBLICO <span class="kw">DESC</span>
+<span class="kw">LIMIT</span> <span class="sv">20</span>;`
+  },
+  {
+    id:'obras-fsa',label:'Obras + FSA',
+    bases:['obras-nao-pub','fsa-projetos'],
+    join:'proxy',joinLabel:'proxy título',
+    title:'Obra registrada → fomento FSA',
+    desc:'Liga obras ANCINE a projetos apoiados pelo Fundo Setorial do Audiovisual via normalização do título. A base FSA não tem CPB — é necessário o proxy.',
+    key:'<b>normalizar(obras.TITULO_ORIGINAL)</b> = <b>normalizar(fsa.TITULO_PROJETO)</b>',
+    questions:['Qual o valor de fomento recebido por obra?','Obras de quais segmentos captaram mais via FSA?','Quais produtoras acumulam mais projetos apoiados?'],
+    conf:2,caveat:'Validar amostra manualmente — títulos curtos geram colisões.',
+    code:`<span class="cm">-- DuckDB: obras com fomento FSA via proxy título</span>
+<span class="kw">WITH</span> obras_n <span class="kw">AS</span> (
+  <span class="kw">SELECT</span> CPB, TITULO_ORIGINAL,
+    <span class="fn">lower</span>(<span class="fn">regexp_replace</span>(TITULO_ORIGINAL,
+      <span class="sv">'[^a-zA-Z0-9 ]'</span>, <span class="sv">''</span>, <span class="sv">'g'</span>)) <span class="kw">AS</span> titulo_n
+  <span class="kw">FROM</span> obras
+),
+fsa_n <span class="kw">AS</span> (
+  <span class="kw">SELECT</span> TITULO_PROJETO, CHAMADA_PUBLICA,
+    VALOR_CONTRATO_DOU, RAZAO_SOCIAL_PRODUTORA,
+    <span class="fn">lower</span>(<span class="fn">regexp_replace</span>(TITULO_PROJETO,
+      <span class="sv">'[^a-zA-Z0-9 ]'</span>, <span class="sv">''</span>, <span class="sv">'g'</span>)) <span class="kw">AS</span> titulo_n
+  <span class="kw">FROM</span> fsa_projetos
+)
+<span class="kw">SELECT</span>
+  o.TITULO_ORIGINAL, o.CPB,
+  f.CHAMADA_PUBLICA, f.VALOR_CONTRATO_DOU
+<span class="kw">FROM</span> obras_n o
+<span class="kw">JOIN</span> fsa_n f <span class="kw">ON</span> f.titulo_n = o.titulo_n
+<span class="kw">LIMIT</span> <span class="sv">20</span>;`
+  },
+  {
+    id:'obras-renuncia',label:'Obras + renúncia fiscal',
+    bases:['obras-nao-pub','renuncia-fiscal'],
+    join:'salic',joinLabel:'proxy / SALIC',
+    title:'Obra registrada → captação via Lei do Audiovisual',
+    desc:'A base de renúncia fiscal tem NUMERO_SALIC mas não CPB. O elo é feito por título normalizado (obra-level) ou por CNPJ (empresa-level, join N:M).',
+    key:'<b>normalizar(obras.TITULO_ORIGINAL)</b> ≈ <b>normalizar(renuncia.TITULO_PROJETO)</b><br><small>ou</small> <b>obras.CNPJ_REQUERENTE</b> = <b>renuncia.CNPJ_PROPONENTE</b>',
+    questions:['Quantas obras com CPB captaram via Lei do Audiovisual?','Qual o total captado por obra via Art. 1º, 3º e 3ºA?','Quais empresas concentram mais captação de renúncia fiscal?'],
+    conf:2,caveat:'Duas estratégias possíveis — proxy título para obra-level, CNPJ para empresa-level.',
+    code:`<span class="cm">-- Estratégia 1: proxy título (obra-level)</span>
+<span class="kw">WITH</span> obras_n <span class="kw">AS</span> (
+  <span class="kw">SELECT</span> CPB, TITULO_ORIGINAL, CNPJ_REQUERENTE,
+    <span class="fn">lower</span>(<span class="fn">regexp_replace</span>(TITULO_ORIGINAL,
+      <span class="sv">'[^a-zA-Z0-9 ]'</span>, <span class="sv">''</span>, <span class="sv">'g'</span>)) <span class="kw">AS</span> titulo_n
+  <span class="kw">FROM</span> obras
+),
+ren_n <span class="kw">AS</span> (
+  <span class="kw">SELECT</span> NUMERO_SALIC, TITULO_PROJETO, TOTAL_CAPTADO,
+    <span class="fn">lower</span>(<span class="fn">regexp_replace</span>(TITULO_PROJETO,
+      <span class="sv">'[^a-zA-Z0-9 ]'</span>, <span class="sv">''</span>, <span class="sv">'g'</span>)) <span class="kw">AS</span> titulo_n
+  <span class="kw">FROM</span> renuncia_fiscal
+)
+<span class="kw">SELECT</span> o.CPB, o.TITULO_ORIGINAL,
+  r.NUMERO_SALIC, r.TOTAL_CAPTADO
+<span class="kw">FROM</span> obras_n o
+<span class="kw">JOIN</span> ren_n r <span class="kw">ON</span> r.titulo_n = o.titulo_n
+<span class="kw">LIMIT</span> <span class="sv">20</span>;`
+  },
+  {
+    id:'br-eu',label:'Brasil ↔ Europa',
+    bases:['bilheteria-agregada','lumiere-cinemas-europa'],
+    join:'proxy',joinLabel:'proxy título',
+    title:'Mercado doméstico vs. salas da Europa',
+    desc:'Cruza bilheteria brasileira (ANCINE) com admissões em salas europeias (Lumiere/OEA) via título normalizado. Permite comparar alcance doméstico e internacional.',
+    key:'<b>normalizar(bilh_agr.TITULO_BRASIL)</b> ≈ <b>normalizar(lumiere.titulo)</b>',
+    questions:['Filmes com grande público no Brasil também chegaram à Europa?','Há correlação entre desempenho doméstico e alcance em salas europeias?','Quais filmes fizeram menos de 50 mil no BR mas tiveram expressiva presença europeia?'],
+    conf:2,caveat:'Títulos em português vs. títulos internacionais exigem validação do match.',
+    code:`<span class="cm">-- DuckDB: bilheteria Brasil vs admissões Europa</span>
+<span class="kw">WITH</span> br <span class="kw">AS</span> (
+  <span class="kw">SELECT</span> CPB_ROE, TITULO_BRASIL, ANO,
+    <span class="fn">SUM</span>(PUBLICO) <span class="kw">AS</span> publico_br,
+    <span class="fn">lower</span>(<span class="fn">regexp_replace</span>(TITULO_BRASIL,
+      <span class="sv">'[^a-zA-Z0-9 ]'</span>, <span class="sv">''</span>, <span class="sv">'g'</span>)) <span class="kw">AS</span> titulo_n
+  <span class="kw">FROM</span> bilheteria_agregada
+  <span class="kw">WHERE</span> CPB_ROE <span class="kw">LIKE</span> <span class="sv">'B%'</span>
+  <span class="kw">GROUP BY ALL</span>
+),
+eu <span class="kw">AS</span> (
+  <span class="kw">SELECT</span> titulo, admissoes_total,
+    <span class="fn">lower</span>(<span class="fn">regexp_replace</span>(titulo,
+      <span class="sv">'[^a-zA-Z0-9 ]'</span>, <span class="sv">''</span>, <span class="sv">'g'</span>)) <span class="kw">AS</span> titulo_n
+  <span class="kw">FROM</span> lumiere_cinemas_europa
+)
+<span class="kw">SELECT</span>
+  br.TITULO_BRASIL,
+  br.publico_br,
+  eu.admissoes_total <span class="kw">AS</span> admissoes_eu
+<span class="kw">FROM</span> br
+<span class="kw">JOIN</span> eu <span class="kw">ON</span> eu.titulo_n = br.titulo_n
+<span class="kw">ORDER BY</span> br.publico_br <span class="kw">DESC</span>;`
+  },
+  {
+    id:'obras-agentes',label:'Obras + agentes',
+    bases:['produtores-obras','agentes-econômicos'],
+    join:'cnpj',joinLabel:'CNPJ exato',
+    title:'Portfolio de obras por produtora regulada',
+    desc:'Liga o portfolio de obras de cada produtora (via produtores-obras) ao cadastro regulatório de agentes econômicos via CNPJ. Join exato, alta confiança.',
+    key:'<b>produtores.CNPJ_PRODUTOR</b> = <b>agentes.CNPJ</b>',
+    questions:['Produtoras ativas na ANCINE com maior portfolio de obras registradas?','Portfolio por UF de sede &mdash; concentração regional?','Quantas obras por produtora com registro regular vigente?'],
+    conf:3,caveat:'',
+    code:`<span class="cm">-- DuckDB: portfolio de obras por produtora regulada</span>
+<span class="kw">SELECT</span>
+  a.RAZAO_SOCIAL,
+  a.UF,
+  a.MUNICIPIO,
+  a.CLASSIFICACAO_AGENTE_ECONOMICO,
+  <span class="fn">COUNT</span>(<span class="kw">DISTINCT</span> p.CPB)  <span class="kw">AS</span> total_obras,
+  <span class="fn">COUNT</span>(<span class="kw">DISTINCT</span> p.TITULO_ORIGINAL) <span class="kw">AS</span> titulos
+<span class="kw">FROM</span> produtores_obras p
+<span class="kw">JOIN</span> agentes_economicos a
+  <span class="kw">ON</span> a.CNPJ = p.CNPJ_PRODUTOR
+<span class="kw">GROUP BY ALL</span>
+<span class="kw">ORDER BY</span> total_obras <span class="kw">DESC</span>
+<span class="kw">LIMIT</span> <span class="sv">20</span>;`
+  }
+];
+
+const JOIN_PILLS = {
+  exact:'<span class="cjoin-pill cjoin-exact">CPB exato</span>',
+  proxy:'<span class="cjoin-pill cjoin-proxy">proxy título</span>',
+  salic:'<span class="cjoin-pill cjoin-salic">NUMERO_SALIC</span>',
+  cnpj: '<span class="cjoin-pill cjoin-cnpj">CNPJ exato</span>'
+};
+const JTYPE_CHIPS = {
+  exact:'<span class="cjtype cjtype-exact">CPB</span>',
+  proxy:'<span class="cjtype cjtype-proxy">proxy</span>',
+  salic:'<span class="cjtype cjtype-salic">SALIC</span>',
+  cnpj: '<span class="cjtype cjtype-cnpj">CNPJ</span>'
+};
+
+function renderCruzamento(idx) {
+  const c = CRUZAMENTOS[idx];
+  const dots = [1,2,3].map(i =>
+    `<span class="cconf-dot${i<=c.conf?' on':''}"></span>`).join('');
+  const confLabels = {1:'baixa confiança',2:'confiança média',3:'alta confiança'};
+  document.getElementById('cdetail').innerHTML = `
+    <div class="cdetail-top">
+      <div class="cdetail-info">
+        <div class="cdetail-bases">
+          ${c.bases.map((b,i)=>`${i?'<span class="cbase-op">+</span>':''}
+            <span class="cbase">${b}</span>`).join('')}
+          ${JOIN_PILLS[c.join]}
+        </div>
+        <div class="cdetail-title">${c.title}</div>
+        <div class="cdetail-desc">${c.desc}</div>
+        <div class="ckey-box"><b>Chave:</b> ${c.key}</div>
+        <div class="cquestions-h">Perguntas que esse cruzamento responde</div>
+        <ul class="cquestions">${c.questions.map(q=>`<li>${q}</li>`).join('')}</ul>
+      </div>
+      <div class="cdetail-code">
+        <div class="ccode-label">DuckDB SQL</div>
+        <pre class="ccode-pre">${c.code}</pre>
+        <div class="cdetail-foot">
+          <span class="cconf-label">
+            <span class="cconf-dots">${dots}</span>
+            ${confLabels[c.conf]}
+          </span>
+          ${c.caveat?`<span class="cconf-caveat">${c.caveat}</span>`:''}
+        </div>
+      </div>
+    </div>`;
+}
+
+(function initCruzamentos(){
+  const bar = document.getElementById('cpicker-bar');
+  bar.innerHTML = CRUZAMENTOS.map((c,i)=>`
+    <button class="cpick${i===0?' active':''}"
+      data-ci="${i}">${c.label}${JTYPE_CHIPS[c.join]}</button>`).join('');
+  bar.querySelectorAll('.cpick').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      bar.querySelectorAll('.cpick').forEach(x=>x.classList.remove('active'));
+      btn.classList.add('active');
+      renderCruzamento(+btn.dataset.ci);
+    });
+  });
+  renderCruzamento(0);
+})();
 
 renderCatalog('');
 renderLumiere();
