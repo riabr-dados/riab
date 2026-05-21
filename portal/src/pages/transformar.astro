@@ -778,23 +778,46 @@ btnCopySql.addEventListener('click', async () => {
   btnCopySql.textContent = 'Copiado!';
   setTimeout(() => { btnCopySql.textContent = 'Copiar'; }, 1500);
 });
-btnCsv.addEventListener('click', () => {
-  if (!lastRows.length) return;
+function stripLimit(sql) {
+  return sql.replace(/\s+LIMIT\s+\d+\s*$/i, '');
+}
+
+function makeCsvBlob(rows, cols) {
   const sep = ';';
-  const header = lastCols.join(sep);
-  const body   = lastRows.map(r =>
-    lastCols.map(c => {
+  const header = cols.join(sep);
+  const body = rows.map(r =>
+    cols.map(c => {
       const v = r[c]; if (v == null) return '';
       const s = String(v);
       return (s.includes(sep) || s.includes('"') || s.includes('\n'))
         ? `"${s.replace(/"/g, '""')}"` : s;
     }).join(sep)
   ).join('\n');
-  const blob = new Blob(['﻿' + header + '\n' + body], { type: 'text/csv;charset=utf-8;' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `ridab_${activeCrz?.id ?? 'export'}_${new Date().toISOString().slice(0, 10)}.csv`;
-  a.click();
+  return new Blob(['﻿' + header + '\n' + body], { type: 'text/csv;charset=utf-8;' });
+}
+
+btnCsv.addEventListener('click', async () => {
+  if (!lastSQL || !lastCols.length) return;
+  const sqlAll = stripLimit(lastSQL);
+  const orig = btnCsv.textContent;
+  btnCsv.textContent = '⏳…';
+  btnCsv.disabled = true;
+  try {
+    const res  = await conn.query(sqlAll);
+    const rows = res.toArray();
+    const cols = res.schema.fields.map(f => f.name);
+    const blob = makeCsvBlob(rows, cols);
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `ridab_${activeCrz?.id ?? 'export'}_${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    resInfo.textContent = `${lastRows.length} exibidas · ${rows.length} exportadas`;
+  } catch (e) {
+    statusEl.textContent = 'Erro ao exportar: ' + e.message;
+  } finally {
+    btnCsv.textContent = orig;
+    btnCsv.disabled = false;
+  }
 });
 
 // ── CAMPOS LIVRES ──────────────────────────────────────────────
