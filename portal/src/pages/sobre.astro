@@ -13,133 +13,55 @@ const base = import.meta.env.BASE_URL;
 
     <section class="doc-section">
       <p>
-        Acho que até pela minha posição de servidor público que trabalhou na área de dados da Ancine
-        alguns anos, é mais fácil começar a falar do que essa iniciativa <strong>não é</strong>. Não é a mesma
-        coisa, não tem a mesma função e nem os mesmos objetivos do Observatório Brasileiro do Cinema
-        e do Audiovisual — OCA, gerido pela Ancine, que é o repositório oficial do Estado brasileiro
-        no que abrange os dados do audiovisual. O OCA é a ponta de uma política regulatória e de
-        fomento que obriga os agentes do mercado a compartilharem informações para terem acesso ao
-        mercado audiovisual brasileiro. O OCA existe justamente para reduzir a assimetria de
-        informação do setor, permitindo que as empresas qualifiquem as suas decisões estratégicas,
-        a academia tenha insumos para produzir conhecimento e que a sociedade como um todo possa
-        fiscalizar em caráter de transparência.
+        Acho que até pela minha posição de servidor público que trabalhou na área de dados da Ancine alguns anos, é mais fácil começar a falar do que essa iniciativa não é. Não é a mesma coisa, não tem a mesma função e nem os mesmos objetivos do Observatório Brasileiro do Cinema e do Audiovisual - OCA, gerido pela Ancine, que é o repositório oficial do Estado brasileiro no que abrange os dados do audiovisual. O OCA é a ponta de uma política regulatória e de fomento que obriga os agentes do mercado a compartilharem informações para terem acesso ao mercado audiovisual brasileiro. O OCA existe justamente para reduzir a assimetria de informação do setor, permitindo que as empresas qualifiquem as suas decisões estratégicas, a academia tenha insumos para produzir conhecimento e que a sociedade como um todo possa fiscalizar em caráter de transparência.
       </p>
     </section>
 
     <section class="doc-section">
       <h2>Objetivo 1 — Acessibilidade</h2>
       <p>
-        O meu primeiro objetivo com esse Repositório Independente dos Dados do Audiovisual Brasileiro —
-        RIDAB é contribuir para uma maior acessibilidade dos dados do audiovisual brasileiro. A
-        institucionalidade sobre a gestão dos dados amadureceu muito na Ancine após o Plano de Dados
-        Abertos — PDA. O Brasil está com certeza entre os países que mais disponibilizam dados do setor,
-        só rivalizando com CNC (França) e KOFIC (Coreia do Sul), até onde tenho conhecimento.
-      </p>
-      <p>
-        O PDA oferece uma quantidade inacreditável de dados — são mais de 7 GB após a descompactação,
-        incluindo toda a programação linear da TV Paga Brasileira, trecho por trecho de veiculação.
-        Um prato cheio para qualquer cientista de dados. Acontece que até justamente por isso navegar
-        por esses dados não é nada trivial: desde entender as conexões entre as bases (SALIC, CPB,
-        CRT, CNPJ e até título, que são as chaves primordiais) até uma compreensão da evolução
-        regulatória que pode afetar a interpretação histórica dos dados e às vezes justificar a
-        ausência deles.
+        O meu primeiro objetivo com esse Repositório Independente dos Dados do Audiovisual Brasileiro -- RIDAB é contribuir para uma maior acessibilidade dos dados do audiovisual brasileiro. A institucionalidade sobre a gestão dos dados amadureceu muito na Ancine após o Plano de Dados Abertos -- PDA. O Brasil está com certeza entre os países que mais disponibilizam dados do setor, só rivalizando com CNC (França) e KOFIC (Coréia do Sul), até onde tenho conhecimento. O PDA oferece uma quantidade inacreditável de dados, acho seguro dizer que nenhum outro país do mundo oferece os dados dos cinemas brasileiros por sessão(!). São mais de 7gb de dados após a descompactação. Tem toda a programação linear da TV Paga Brasileira, trecho por trecho de veiculação. É um prato cheio para qualquer cientista de dados. Acontece que até justamente por isso navegar por esses dados não é nada trivial. Desde entender as conexões entre as bases, SALIC, CPB, CRT, CNPJ e até título, que são as chaves primordiais para a conexão dos dados, até uma compreensão da evolução regulatória que pode afetar a interpretação da evolução histórica dos dados e às vezes justificar a ausência deles.
       </p>
     </section>
 
     <section class="doc-section">
       <h2>Explorar e Transformar</h2>
       <p>
-        Então uma parte significativa desse esforço é a existência das abas
-        <a href={`${base}explorar/`}>Explorar</a> e <a href={`${base}transformar/`}>Transformar</a>.
-        Ali tentei documentar e disponibilizar uma metodologia de integração, limpeza e normalização
-        dos dados, incluindo até proxies de título e CNPJ quando outra alternativa não existe. É uma
-        receita de bolo de quem trabalha com esses dados há 12 anos — não é a receita perfeita, tem
-        falhas a ser corrigidas, omissões a serem enfrentadas, além de mil melhorias que novos
-        contribuidores podem fazer, mas funciona bem como um ponto de partida.
+        Então uma parte significativa desse esforço é a existência das abas <a href={`${base}explorar/`}>EXPLORAR</a> E <a href={`${base}transformar/`}>TRANSFORMAR</a>. ali tentei documentar e disponibilizar uma metodologia de integração, limpeza e normalização dos dados, incluindo até proxys de titulo e cnpj quando outra alternativa não existe. É uma receita de bolo de quem trabalha com esses dados há 12 anos, não é a receita perfeita, tem falhas a ser corrigidas, omissões a serem enfrentadas, além de mil melhorias que novos contribuidores podem fazer, mas funcionam bem como um ponto de partida.
       </p>
     </section>
 
     <section class="doc-section">
       <h2>Objetivo 2 — Preservação</h2>
       <p>
-        O segundo objetivo é o da preservação. Sou testemunha de que mesmo o Brasil estando muito à
-        frente dos seus pares em termos de governança dos dados do setor audiovisual, a instabilidade
-        política pode impactar na disponibilidade da informação no futuro, assim como já aconteceu no
-        passado. Então esse RIDAB tem a política de ir gravando (snapshot) o histórico de atualizações
-        dos dados fornecidos pelo PDA a cada ano e de outras fontes também.
+        O segundo objetivo é o da preservação. Sou testemunha de mesmo que o Brasil esteja muito à frente dos seus pares em termos de governança dos dados do setor audiovisual, a instabilidade política pode impactar na disponibilidade da informação no futuro, assim como já aconteceu no passado. Então esse RIDAB tem a política de ir gravando (snapshot) o histórico de atualizações dos dados fornecidos pelo PDA a cada ano e de outras fontes também.
       </p>
       <p>
-        O argumento mais forte não é a "fiscalização independente", como poderia se imaginar. É ainda
-        mais importante amadurecer o debate sobre qual dado o Estado tem o "dever e o direito" em
-        disponibilizar — um assunto menos óbvio do que pode parecer.
+        O argumento mais forte não é a "fiscalização independente", como poderia se imaginar. É ainda mais importante amadurecer o debate sobre qual dado o Estado tem o "dever e o direito" em disponibilizar. É um assunto menos óbvio do que pode parecer. Temos dados regulatórios dos agentes privados em uma granularidade excepcional, tão excepcional que alguns agentes privados podem achar que deveriam estar protegidos por vantagem competitiva. Eu acho que não, acho que qualquer dado que é público por natureza (em tese qualquer pessoa poderia verificar manualmente todas as sessões de cinema ou programação de tv) ou tem opção paga no mercado e confere vantagem competitiva, o Estado deve agir para reduzir assimetria de informação e dirimir barreiras de entrada. Confesso que eu sou um radical dos dados, alguns diriam, tão radical que eu acho que hoje a Ancine tem condições de publicar todo e qualquer pagamento realizado por todos os projetos de fomento até dois dias após a transferência bancária. Não é um dado regulatório, é um dado de fomento, que deveria ter ainda mais rigor na transparência. As empresas responsáveis por esses pagamentos diriam que essa transparência geraria um risco de assédio e perseguição, atentaria contra a segurança delas. E eu não teria como discordar e possivelmente ao final de um debate talvez devesse prevalecer o argumento da segurança mesmo. Agora, sabe quem também alega há anos essa questão de segurança? Os centenas de pequenos exibidores espalhados pelo país, porque em tese estamos publicando um dado que permite inferir o faturamento das empresas deles (sem contar bomboniere, mas que é fácil extrapolar a partir da bilheteria). Qual empresa tem seu faturamento exposto assim ao escrutínio público? E o pior é que pequeno exibidor está no interior do país com um dado exposto que pode ser mal interpretado por seus vizinhos, já que alguém poderia ver uma tabela do OCA e achar que a renda do seu vizinho é X R$, sendo que o lucro é uma fração disso.
       </p>
       <p>
-        Temos dados regulatórios dos agentes privados em uma granularidade excepcional, tão excepcional
-        que alguns agentes privados podem achar que deveriam estar protegidos por vantagem competitiva.
-        Eu acho que não: qualquer dado que é público por natureza — em tese qualquer pessoa poderia
-        verificar manualmente todas as sessões de cinema ou a programação de TV — ou tem opção paga no
-        mercado e confere vantagem competitiva, o Estado deve agir para reduzir assimetria de
-        informação e dirimir barreiras de entrada.
-      </p>
-      <p>
-        Confesso que sou um radical dos dados. Tão radical que acho que hoje a Ancine tem condições
-        de publicar todo e qualquer pagamento realizado por todos os projetos de fomento até dois dias
-        após a transferência bancária. O contra-argumento da segurança dos beneficiários é real e
-        precisa ser sopesado — o mesmo argumento que pequenos exibidores no interior do país poderiam
-        levantar, pois os dados do OCA permitem inferir o faturamento das suas empresas. Qual empresa
-        tem seu faturamento exposto assim ao escrutínio público? Esse debate precisa ser feito com
-        rigor. E um futuro amadurecimento institucional pode fazer com que certos dados deixem de
-        estar disponíveis — razão adicional para que esse repositório preserve o estado dos dados a
-        cada atualização.
+        Enfim, esse é um debate que me interessa como um todo, mas o mais importante especificamente é que em um futuro pode ser que esse dado não esteja mais disponível não por censura, mas por amadurecimento institucional, então esse repositório serve também no sentido da preservação do estado dos dados a cada atualização.
       </p>
     </section>
 
     <section class="doc-section">
       <h2>Objetivo 3 — Um hub mais amplo</h2>
       <p>
-        Outro óbvio objetivo é que o RIDAB não precisa se restringir aos dados oficiais da Ancine;
-        ele pode ser um hub muito maior e mais diverso. Já aproveitei as facilidades da busca via
-        agentes e trouxe uma primeira leva de dados das outras agências similares à Ancine: CNC,
-        FFA, BFI, INCAA… E acho que o projeto não precisa se restringir aos dados oficiais — pode-se
-        unir esforços para reunir a maior quantidade de dados qualificados, como dados históricos da
-        Embrafilme e do CONCINE, índices de crítica, enriquecimento de gênero cinematográfico via
-        IMDB e de diversidade de gênero e raça.
-      </p>
-      <p>
-        O horizonte é gigante e o trabalho também. O mais importante é que esses dados estejam
-        disponíveis com segurança e que seja possível manter a qualidade através de uma curadoria
-        que alie pessoas com entendimento na sustentação de bases de dados e com conhecimento
-        específico sobre o setor audiovisual.
+        Outro óbvio objetivo é que o RIDAB não precisa se restringir aos dados oficiais da Ancine, ele pode ser um hub muito maior e mais diverso. Em primeiro lugar já aproveitei as facilidades da busca via agentes e tentei trazer uma primeira leva de dados das outras agências similares a Ancine (CNC, FFA, BFI, INCAA...). E acho que o projeto não precisa se restringir aos dados oficiais, pode-se unir esforços para reunir a maior quantidade de dados qualificados, como dados históricos da Embrafilme e do CONCINE, índices de crítica, enriquecer os dados de gênero cinematográfico via IMDB e de diversidade de gênero e raça, enfim, o horizonte é gigante e o trabalho também. O mais importante é que esses dados estejam disponíveis com segurança e que seja possível manter a qualidade através de uma curadoria que alie pessoas com entendimento na sustentação de bases de dados e de pessoas com conhecimento específico sobre o setor audiovisual.
       </p>
     </section>
 
     <section class="doc-section">
       <h2>Objetivo 4 — Geração de conhecimento e o Mural</h2>
       <p>
-        O último e mais consequente dos objetivos do RIDAB é fomentar a geração de conhecimento
-        através da análise de dados do audiovisual e, com isso, buscar um debate público e ampliado
-        da política setorial — mas que seja baseado em evidências e nas melhores práticas da ciência
-        de dados. Com esse intuito, e não me esquivando com uma primeira contribuição, há uma área no
-        RIDAB chamada <a href={`${base}mural/`}>Mural</a>, para publicar e dar destaque a iniciativas
-        de "analisadores de dados" que usem os serviços de dados do RIDAB.
+        O último e mais consequente dos objetivos do RIDAB é fomentar a geração de conhecimento através da análise de dados do audiovisual e com isso buscar um debate público e ampliado da política setorial, mas que seja baseado em evidências e nas melhores práticas da ciência de dados. Com esse intuito e não me esquivando com uma primeira contribuição tem uma área no RIDAB chamada <a href={`${base}mural/`}>MURAL</a>, para publicar e dar destaque a iniciativas de "analisadores de dados" que usem os serviços de dados do RIDAB.
       </p>
     </section>
 
     <section class="doc-section">
       <h2>A origem e o chamado</h2>
       <p>
-        Dei aqui o pontapé inicial que só foi possível ser feito no meu "tempo livre" por causa dos
-        avanços recentes dos agentes de IA como o Claude Code. Isso não é tanto um elogio — está mais
-        para um alerta. Eu sou muito afeito à área e tenho conhecimento o suficiente para ser o PO
-        (project owner, no jargão dos devs) de um projeto como esse. Sei, olhando os dados, que eles
-        estão mais certos do que errados. Mas eu não sei escrever e muito menos avaliar uma única
-        linha de código — que foi 100% feito pelo Claude Code. Então é claro que há de se reconhecer
-        a existência de erros ou inconsistências que podem existir no tratamento dos dados.
-      </p>
-      <p>
-        É fundamental reconhecer que, para evoluir, um projeto como esse precisa encontrar outros
-        voluntários dos mais diferentes perfis para ir deixando o RIDAB cada vez mais sólido e para
-        que ele possa se tornar efetivamente um bem do setor audiovisual brasileiro.
+        Dei aqui o pontapé inicial que só foi possível ser feito no meu "tempo livre" por causa dos avanços recentes dos agentes de IA como o Claude Code. Isso não é tanto um elogio, está mais para um alerta. Eu sou muito afeito a área e tenho conhecimento o suficiente para ser o PO (project owner, no jargão dos devs) de um projeto como esse, sei olhando os dados que eles estão mais certos do que errados. Mas eu não sei escrever e muito menos avaliar uma única linha de código, que foi 100% feito pelo Claude Code, então é claro que há de se reconhecer a existência de erros ou inconsistência que podem existir no tratamento dos dados. E é fundamental reconhecer que para evoluir, um projeto como esse precisa encontrar outros voluntários dos mais diferentes perfis para ir deixando o RIDAB cada vez mais sólido e possa se tornar efetivamente um bem do setor audiovisual brasileiro.
       </p>
       <a class="btn-outline" href="https://github.com/riabr-dados/riab" target="_blank" rel="noopener">
         Contribuir no GitHub →
@@ -182,12 +104,5 @@ const base = import.meta.env.BASE_URL;
   text-transform: uppercase;
   color: var(--br);
   margin-bottom: 12px;
-}
-.manifesto-sub {
-  font-family: var(--font-m);
-  font-size: 11px;
-  color: var(--muted);
-  letter-spacing: .04em;
-  margin-top: 10px;
 }
 </style>
