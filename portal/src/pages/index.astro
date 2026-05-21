@@ -18,51 +18,79 @@ const COUNTRIES = [
 
 const SECTIONS = [
   {
-    href: "explorar/",
-    label: "▶ Explorar",
-    desc: "Consulte datasets via SQL ou em português natural, direto no navegador — sem instalar nada.",
-    accent: "explorar",
-  },
-  {
-    href: "transformar/",
-    label: "Transformar",
-    desc: "Metodologia aberta de integração, limpeza e normalização dos dados por quem trabalhou com eles há 12 anos.",
-    accent: "",
-  },
-  {
+    num: "01",
     href: "datasets/",
     label: "Datasets",
-    desc: `${stats.total_datasets} datasets de fontes oficiais de ${stats.total_paises} países — ANCINE, CNC, BFI, INCAA, ACAU, Lumière, IBGE.`,
-    accent: "",
+    desc: `Catálogo de ${stats.total_datasets} datasets de fontes oficiais de ${stats.total_paises} países — ANCINE, CNC, BFI, INCAA, ACAU, Lumière, IBGE.`,
+    tag: `${stats.total_datasets} datasets · ${stats.total_paises} países`,
+    featured: true,
   },
   {
-    href: "consulta/",
-    label: "Docs",
-    desc: "Guia de uso, schema completo de colunas e acesso programático via Python, R ou DuckDB.",
-    accent: "",
+    num: "02",
+    href: "explorar/",
+    label: "▶ Explorar",
+    desc: "Consulte qualquer dataset via SQL ou em português natural, direto no navegador — sem instalar nada, sem cadastro.",
+    tag: "DuckDB-WASM · IA em português",
+    featured: false,
   },
   {
+    num: "03",
+    href: "transformar/",
+    label: "Transformar",
+    desc: "Metodologia aberta de integração, limpeza e normalização dos dados. A receita de quem trabalha com eles há 12 anos.",
+    tag: "Scripts reproduzíveis · documentados",
+    featured: false,
+  },
+  {
+    num: "04",
     href: "mural/",
     label: "Mural",
-    desc: "Análises e trabalhos que usam os dados do RIDAB como fonte. A inteligência que esses dados podem gerar.",
-    accent: "mural",
+    desc: "Análises e trabalhos produzidos com os dados do RIDAB. O debate sobre o audiovisual brasileiro baseado em evidências.",
+    tag: "Novo",
+    featured: false,
     isNew: true,
   },
   {
+    num: "05",
+    href: "consulta/",
+    label: "Docs",
+    desc: "Guia de uso, schema completo de colunas e acesso programático via Python, R ou DuckDB.",
+    tag: "CSV · Parquet · API",
+    featured: false,
+  },
+  {
+    num: "06",
     href: "sobre/",
     label: "Sobre",
-    desc: "Manifesto, princípios e governança do projeto. Por que o RIDAB existe e para onde vai.",
-    accent: "",
+    desc: "Manifesto, princípios e governança do projeto. Por que o RIDAB existe e o que busca.",
+    tag: "Manifesto RIDAB 01",
+    featured: false,
   },
 ];
+
+// Country breakdown for chart
+const byCountry = [
+  { code: "BR", label: "Brasil",       color: "var(--br)", count: datasets.filter(d => d.source?.country === "BR").length },
+  { code: "FR", label: "França",       color: "var(--fr)", count: datasets.filter(d => d.source?.country === "FR").length },
+  { code: "UK", label: "Reino Unido",  color: "var(--uk)", count: datasets.filter(d => d.source?.country === "UK").length },
+  { code: "AR", label: "Argentina",    color: "var(--ar)", count: datasets.filter(d => d.source?.country === "AR").length },
+  { code: "EU", label: "Europa",       color: "var(--eu)", count: datasets.filter(d => d.source?.country === "EU").length },
+  { code: "UY", label: "Uruguai",      color: "var(--uy)", count: datasets.filter(d => d.source?.country === "UY").length },
+].filter(c => c.count > 0).sort((a, b) => b.count - a.count);
+
+const maxCount = Math.max(...byCountry.map(c => c.count));
 
 const base = import.meta.env.BASE_URL;
 ---
 
-<Base title="Repositório Independente do Audiovisual Brasileiro" description="Dados abertos do cinema brasileiro e internacional — ANCINE, CNC, BFI, INCAA, Lumière. Consulte e exporte direto do navegador.">
+<Base
+  title="Repositório Independente do Audiovisual Brasileiro"
+  description="Dados abertos do cinema brasileiro e internacional — ANCINE, CNC, BFI, INCAA, Lumière. Consulte e exporte direto do navegador."
+>
 
 <!-- ── HERO ──────────────────────────────────────────────────────── -->
 <section class="hero">
+
   <p class="hero-eyebrow">
     <a class="hero-ey__manifesto" href={`${base}sobre/`}>Leia o manifesto →</a>
     <span class="hero-ey__sep"></span>
@@ -76,39 +104,43 @@ const base = import.meta.env.BASE_URL;
   </p>
 
   <div class="hero-split">
+
+    <!-- LEFT: título + desc + CTAs -->
     <div class="hero-left">
       <h1 class="hero-h">
         <span class="hero-h__l">O cinema</span>
         <span class="hero-h__l">brasileiro</span>
         <span class="hero-h__l hero-h__l--em">como dado público.</span>
       </h1>
-      <div class="hero-deck">
-        <p>
-          {stats.total_datasets} datasets de fontes oficiais — ANCINE, CNC, BFI, INCAA, ACAU, Lumière, IBGE.
-          Consulte, cruze e exporte direto do navegador — sem instalar nada, sem cadastro, sem custo.
-        </p>
-        <div class="hero-cta">
-          <a class="btn-primary" href={`${base}explorar/`}>▶ Explorar dados</a>
-          <a class="btn-ghost" href={`${base}datasets/`}>Ver catálogo</a>
-        </div>
+      <p class="hero-desc">
+        {stats.total_datasets} datasets de fontes oficiais — ANCINE, CNC, BFI, INCAA, ACAU, Lumière, IBGE.
+        Consulte, cruze e exporte direto do navegador. Sem instalar nada, sem cadastro, sem custo.
+      </p>
+      <div class="hero-cta">
+        <a class="btn-primary" href={`${base}datasets/`}>Ver catálogo →</a>
+        <a class="btn-ghost"   href={`${base}explorar/`}>▶ Explorar dados</a>
       </div>
     </div>
 
+    <!-- RIGHT: Como funciona — espelho da nav -->
     <div class="hero-right">
-      <nav class="sections-panel">
-        <div class="sections-panel__label">Seções do RIDAB</div>
+      <div class="hf-label">Como funciona</div>
+      <div class="hf-list">
         {SECTIONS.map((s) => (
-          <a href={`${base}${s.href}`} class={`spi${s.accent ? ` spi--${s.accent}` : ""}`}>
-            <div class="spi__top">
-              <span class="spi__name">{s.label}</span>
-              {s.isNew && <span class="spi__badge">novo</span>}
-              <span class="spi__arrow">→</span>
+          <a href={`${base}${s.href}`} class={`hf-item${s.featured ? " hf-item--featured" : ""}${s.isNew ? " hf-item--new" : ""}`}>
+            <div class="hf-item__head">
+              <span class="hf-item__num">{s.num}</span>
+              <span class="hf-item__name">{s.label}</span>
+              {s.isNew && <span class="hf-item__badge">novo</span>}
+              <span class="hf-item__arrow">→</span>
             </div>
-            <p class="spi__desc">{s.desc}</p>
+            <p class="hf-item__desc">{s.desc}</p>
+            <span class="hf-item__tag">{s.tag}</span>
           </a>
         ))}
-      </nav>
+      </div>
     </div>
+
   </div>
 </section>
 
@@ -136,143 +168,73 @@ const base = import.meta.env.BASE_URL;
   </div>
 </div>
 
-<!-- ── MURAL DESTAQUE ─────────────────────────────────────────────── -->
-<section class="home-section home-section--mural">
+<!-- ── MURAL ──────────────────────────────────────────────────── -->
+<section class="home-section home-section--alt">
   <div class="sec-label">Mural</div>
-  <h2 class="sec-title">Dados em uso.<br/>Conhecimento em movimento.</h2>
-  <p class="sec-sub">Análises e trabalhos produzidos com os dados do RIDAB.</p>
+  <h2 class="sec-title">Dados em uso.</h2>
+  <p class="sec-sub">Análises produzidas com os dados do RIDAB.</p>
 
-  <div class="mural-grid">
-    <a href="https://cainanbaladez-bot.github.io/fomento-audiovisual/politica.html"
-       target="_blank" rel="noopener" class="mural-card mural-card--featured">
-      <div class="mural-card__glow"></div>
+  <a
+    href="https://cainanbaladez-bot.github.io/fomento-audiovisual/politica.html"
+    target="_blank" rel="noopener"
+    class="mural-card"
+  >
+    <div class="mural-card__stripe"></div>
+    <div class="mural-card__inner">
       <div class="mural-card__meta">
-        <span class="mural-card__num">001</span>
-        <span class="mural-card__tag">Política pública · FSA · Fomento</span>
+        <span class="mural-num">001</span>
+        <span class="mural-tag-pill">Política pública · FSA · Fomento</span>
       </div>
       <h3 class="mural-card__title">Uma política de fomento baseada em evidências</h3>
       <p class="mural-card__desc">
-        Análise de 3.968 filmes lançados entre 2014 e 2023 para avaliar o retorno doméstico e
-        internacional de cada modalidade de fomento do FSA e do incentivo fiscal. Qual metodologia
-        de seleção produz melhores resultados para o audiovisual brasileiro?
+        Análise de 3.968 filmes (2014–2023) avaliando o retorno doméstico e internacional
+        de cada modalidade de fomento — FSA e incentivo fiscal.
+        Qual metodologia de seleção produz os melhores resultados?
       </p>
-      <div class="mural-card__footer">
-        <span class="mural-card__author">Cainan Baladez</span>
-        <span class="mural-card__data">ANCINE FSA · Bilheteria Consolidada</span>
-        <span class="mural-card__link">Ver análise ↗</span>
+      <div class="mural-card__foot">
+        <div class="mural-foot__left">
+          <span class="mural-author">Cainan Baladez</span>
+          <span class="mural-datasets">ANCINE FSA · Bilheteria Consolidada · Lumière</span>
+        </div>
+        <span class="mural-cta">Ver análise ↗</span>
       </div>
-    </a>
-  </div>
+    </div>
+  </a>
 
-  <div style="margin-top: 28px">
+  <div style="margin-top:24px">
     <a class="btn-ghost" href={`${base}mural/`}>Ver todo o Mural →</a>
   </div>
 </section>
 
-<!-- ── DISCOVER ───────────────────────────────────────────────────── -->
-<section class="home-section">
-  <div class="sec-label">O que você pode descobrir</div>
-  <h2 class="sec-title">Perguntas reais.<br/>Dados reais.</h2>
-  <p class="sec-sub">Clique para explorar qualquer pergunta no explorador.</p>
-
-  <div class="disc-grid">
-    <a href={`${base}explorar/`} class="disc-card disc-card--br">
-      <div class="disc-card__glow"></div>
-      <div class="disc-card__tag">Brasil · ANCINE</div>
-      <div class="disc-card__q">Qual estado brasileiro produz mais filmes — e como isso mudou nos últimos 20 anos?</div>
-      <div class="disc-card__detail">61.335 obras cadastradas · 2002–2026</div>
-      <span class="disc-card__arrow">→</span>
-    </a>
-    <a href={`${base}explorar/`} class="disc-card disc-card--br">
-      <div class="disc-card__glow"></div>
-      <div class="disc-card__tag">Brasil · FSA</div>
-      <div class="disc-card__q">Quanto o Fundo Setorial do Audiovisual investiu por tipo de projeto e produtora?</div>
-      <div class="disc-card__detail">4.588 contratos FSA · 2008–2023</div>
-      <span class="disc-card__arrow">→</span>
-    </a>
-    <a href={`${base}explorar/`} class="disc-card disc-card--eu">
-      <div class="disc-card__glow"></div>
-      <div class="disc-card__tag">Europa · Lumiere</div>
-      <div class="disc-card__q">Quais filmes brasileiros chegaram à Europa — e em quais países tiveram mais público?</div>
-      <div class="disc-card__detail">Dados Lumiere · 37 países europeus</div>
-      <span class="disc-card__arrow">→</span>
-    </a>
-    <a href={`${base}explorar/`} class="disc-card disc-card--fr">
-      <div class="disc-card__glow"></div>
-      <div class="disc-card__tag">França · CNC</div>
-      <div class="disc-card__q">Como o mercado de cinema francês evoluiu nos últimos 10 anos em salas e VOD?</div>
-      <div class="disc-card__detail">Dados CNC · frequentação + distribuição</div>
-      <span class="disc-card__arrow">→</span>
-    </a>
-  </div>
-</section>
-
-<!-- ── HOW ────────────────────────────────────────────────────────── -->
-<section class="home-section home-section--alt">
-  <div class="sec-label">Como funciona</div>
-  <h2 class="sec-title">Três passos.</h2>
-  <p class="sec-sub">Sem cadastro. Sem download obrigatório. Sem servidor.</p>
-
-  <div class="how-grid">
-    <div class="how-step">
-      <div class="how-step__num">01</div>
-      <div class="how-step__title">Escolha um dataset</div>
-      <p class="how-step__desc">
-        {stats.total_datasets} datasets de fontes oficiais — ANCINE, CNC, BFI, INCAA, ACAU, Lumiere, IBGE —
-        organizados e documentados com schema completo de colunas e tipos.
-      </p>
-      <span class="how-step__tag">{stats.total_datasets} datasets · {stats.total_paises} países</span>
-    </div>
-    <div class="how-step">
-      <div class="how-step__num">02</div>
-      <div class="how-step__title">Escreva SQL ou pergunte em português</div>
-      <p class="how-step__desc">
-        O explorador roda no seu navegador via DuckDB-WASM. Os dados chegam diretamente
-        do Hugging Face. Sem servidor, sem espera — e você pode cruzar tabelas de países diferentes.
-      </p>
-      <span class="how-step__tag">DuckDB · IA em português</span>
-    </div>
-    <div class="how-step">
-      <div class="how-step__num">03</div>
-      <div class="how-step__title">Exporte e use onde quiser</div>
-      <p class="how-step__desc">
-        Baixe CSV com um clique, ou acesse os dados diretamente do Python, R ou DuckDB
-        com uma linha de código — via Hugging Face.
-      </p>
-      <span class="how-step__tag">CSV · Python · R · DuckDB</span>
-    </div>
-  </div>
-
-  <div style="margin-top: 32px">
-    <a class="btn-primary" href={`${base}explorar/`}>Começar agora →</a>
-  </div>
-</section>
-
-<!-- ── CATALOG ────────────────────────────────────────────────────── -->
+<!-- ── CATÁLOGO ───────────────────────────────────────────────── -->
 <section class="home-section">
   <div class="sec-label">Catálogo completo</div>
   <h2 class="sec-title">{stats.total_datasets} datasets.</h2>
   <p class="sec-sub">Filtre por país ou busque pelo nome.</p>
 
-  <div class="catalog__filters" id="filters" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:24px;">
+  <div class="catalog__filters" id="filters">
     {COUNTRIES.map((c) => (
       <button class={`chip${c.code === "" ? " chip--active" : ""}`} data-country={c.code}>
         {c.label}
       </button>
     ))}
-    <input class="catalog__search" id="search" type="search" placeholder="Buscar dataset..." autocomplete="off" />
+    <input class="catalog__search" id="search" type="search" placeholder="Buscar dataset…" autocomplete="off" />
   </div>
 
   <div class="catalog__grid" id="catalog-grid">
     {datasets.map((ds) => (
-      <div data-country={ds.source?.country ?? ""} data-tags={(ds.tags ?? []).join(" ")} data-title={ds.title.toLowerCase()}>
+      <div
+        data-country={ds.source?.country ?? ""}
+        data-tags={(ds.tags ?? []).join(" ")}
+        data-title={ds.title.toLowerCase()}
+      >
         <DatasetCard ds={ds} />
       </div>
     ))}
   </div>
 </section>
 
-<!-- ── CODE ──────────────────────────────────────────────────────── -->
+<!-- ── CÓDIGO ─────────────────────────────────────────────────── -->
 <section class="home-section home-section--alt">
   <div class="sec-label">Use no seu código</div>
   <h2 class="sec-title">Uma linha. Dados diretos.</h2>
@@ -285,12 +247,9 @@ const base = import.meta.env.BASE_URL;
       <button class="ctab" data-tab="r">R</button>
       <button class="ctab" data-tab="cli">CLI</button>
     </div>
-
     <div class="code-panels">
       <div class="code-panel code-panel--active" id="ctab-duckdb">
-        <div class="code-header">
-          <span class="code-filename">query.py</span>
-        </div>
+        <div class="code-header"><span class="code-filename">query.py</span></div>
         <pre class="code-block"><span class="ck">import</span> duckdb
 
 conn <span class="co">=</span> duckdb.<span class="cf">connect</span>()
@@ -299,47 +258,28 @@ conn.<span class="cf">sql</span>(<span class="cs">"INSTALL httpfs; LOAD httpfs;"
 conn.<span class="cf">sql</span>(<span class="cs">"""
   SELECT tipo_obra, COUNT(*) AS total
   FROM 'hf://datasets/riabr-dados/riab/cleaned/obras.parquet'
-  GROUP BY tipo_obra
-  ORDER BY total DESC
+  GROUP BY tipo_obra ORDER BY total DESC
 """</span>).<span class="cf">show</span>()</pre>
       </div>
       <div class="code-panel" id="ctab-pandas">
-        <div class="code-header">
-          <span class="code-filename">analise.py</span>
-        </div>
+        <div class="code-header"><span class="code-filename">analise.py</span></div>
         <pre class="code-block"><span class="ck">import</span> pandas <span class="ck">as</span> pd
 
 df <span class="co">=</span> pd.<span class="cf">read_parquet</span>(
     <span class="cs">"hf://datasets/riabr-dados/riab/cleaned/obras.parquet"</span>
 )
-
-top_ufs <span class="co">=</span> (
-    df.<span class="cf">groupby</span>(<span class="cs">"uf_requerente"</span>)
-      .<span class="cf">size</span>()
-      .<span class="cf">sort_values</span>(ascending<span class="co">=</span><span class="ck">False</span>)
-      .<span class="cf">head</span>(<span class="cn">10</span>)
-)
+top_ufs <span class="co">=</span> df.<span class="cf">groupby</span>(<span class="cs">"uf_requerente"</span>).<span class="cf">size</span>().<span class="cf">sort_values</span>(ascending<span class="co">=</span><span class="ck">False</span>).<span class="cf">head</span>(<span class="cn">10</span>)
 <span class="cf">print</span>(top_ufs)</pre>
       </div>
       <div class="code-panel" id="ctab-r">
-        <div class="code-header">
-          <span class="code-filename">analise.R</span>
-        </div>
-        <pre class="code-block"><span class="cf">library</span>(arrow)
-<span class="cf">library</span>(dplyr)
+        <div class="code-header"><span class="code-filename">analise.R</span></div>
+        <pre class="code-block"><span class="cf">library</span>(arrow); <span class="cf">library</span>(dplyr)
 
-obras <span class="co">&lt;-</span> <span class="cf">read_parquet</span>(
-    <span class="cs">"hf://datasets/riabr-dados/riab/cleaned/obras.parquet"</span>
-)
-
-obras <span class="co">|&gt;</span>
-    <span class="cf">count</span>(tipo_obra, sort <span class="co">=</span> <span class="ck">TRUE</span>) <span class="co">|&gt;</span>
-    <span class="cf">head</span>(<span class="cn">10</span>)</pre>
+obras <span class="co">&lt;-</span> <span class="cf">read_parquet</span>(<span class="cs">"hf://datasets/riabr-dados/riab/cleaned/obras.parquet"</span>)
+obras <span class="co">|&gt;</span> <span class="cf">count</span>(tipo_obra, sort <span class="co">=</span> <span class="ck">TRUE</span>) <span class="co">|&gt;</span> <span class="cf">head</span>(<span class="cn">10</span>)</pre>
       </div>
       <div class="code-panel" id="ctab-cli">
-        <div class="code-header">
-          <span class="code-filename">terminal</span>
-        </div>
+        <div class="code-header"><span class="code-filename">terminal</span></div>
         <pre class="code-block">huggingface-cli download riabr-dados/riab \
     --repo-type dataset \
     --include <span class="cs">"cleaned/*.parquet"</span> \
@@ -347,15 +287,105 @@ obras <span class="co">|&gt;</span>
       </div>
     </div>
   </div>
-
-  <div style="margin-top: 24px">
+  <div style="margin-top:24px">
     <a class="btn-ghost" href={`${base}consulta/`}>Ver guia completo →</a>
+  </div>
+</section>
+
+<!-- ── DADOS EM NÚMEROS ───────────────────────────────────────── -->
+<section class="home-section viz-section">
+  <div class="sec-label">Os dados em números</div>
+  <h2 class="sec-title">O que está disponível.</h2>
+  <p class="sec-sub">Distribuição do acervo por país de origem e destaques do catálogo.</p>
+
+  <div class="viz-grid">
+
+    <!-- Gráfico: datasets por país -->
+    <div class="viz-card">
+      <div class="viz-card__title">Datasets por país de origem</div>
+      <div class="viz-bar-chart">
+        {byCountry.map(c => (
+          <div class="vbc-row">
+            <span class="vbc-label">{c.label}</span>
+            <div class="vbc-track">
+              <div
+                class="vbc-fill"
+                style={`width:${Math.round((c.count / maxCount) * 100)}%;background:${c.color}`}
+              ></div>
+            </div>
+            <span class="vbc-count">{c.count}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Cobertura temporal -->
+    <div class="viz-card">
+      <div class="viz-card__title">Cobertura temporal</div>
+      <div class="viz-timeline">
+        <div class="vtl-labels">
+          <span>1945</span>
+          <span>1970</span>
+          <span>1995</span>
+          <span>2026</span>
+        </div>
+        <div class="vtl-track">
+          <!-- CNC França: 1945-presente -->
+          <div class="vtl-bar vtl-bar--fr" style="left:0%;width:100%" title="França · CNC · 1945–2026"></div>
+          <!-- Lumière: 1996-presente -->
+          <div class="vtl-bar vtl-bar--eu" style="left:62.4%;width:37.6%" title="Europa · Lumière · 1996–2026"></div>
+          <!-- ANCINE: 2002-presente -->
+          <div class="vtl-bar vtl-bar--br" style="left:70.1%;width:29.9%" title="Brasil · ANCINE · 2002–2026"></div>
+          <!-- FSA: 2008-2023 -->
+          <div class="vtl-bar vtl-bar--br2" style="left:78%;width:18.5%" title="Brasil · FSA · 2008–2023"></div>
+        </div>
+        <div class="vtl-legend">
+          <span class="vtl-leg vtl-leg--fr">França · CNC</span>
+          <span class="vtl-leg vtl-leg--eu">Europa · Lumière</span>
+          <span class="vtl-leg vtl-leg--br">Brasil · ANCINE</span>
+          <span class="vtl-leg vtl-leg--br2">Brasil · FSA</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Destaques do acervo -->
+    <div class="viz-card viz-card--highlights">
+      <div class="viz-card__title">Destaques do acervo</div>
+      <div class="viz-highlights">
+        <div class="vh-item">
+          <div class="vh-v">61.335</div>
+          <div class="vh-l">obras audiovisuais brasileiras registradas</div>
+          <div class="vh-src">ANCINE · 2002–2026</div>
+        </div>
+        <div class="vh-item">
+          <div class="vh-v">95<small>mil+</small></div>
+          <div class="vh-l">filmes com visa de exibição na França</div>
+          <div class="vh-src">CNC · 1945–presente</div>
+        </div>
+        <div class="vh-item">
+          <div class="vh-v">4.588</div>
+          <div class="vh-l">contratos de fomento FSA</div>
+          <div class="vh-src">ANCINE · 2008–2023</div>
+        </div>
+        <div class="vh-item">
+          <div class="vh-v">37</div>
+          <div class="vh-l">países europeus com dados de bilheteria</div>
+          <div class="vh-src">Observatório Europeu · Lumière</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="margin-top:32px">
+    <a class="btn-primary" href={`${base}datasets/`}>Explorar catálogo completo →</a>
   </div>
 </section>
 
 </Base>
 
 <script>
+  // Catalog filter
   const chips = document.querySelectorAll(".chip[data-country]");
   const cards = document.querySelectorAll("#catalog-grid > div");
   const search = document.getElementById("search") as HTMLInputElement | null;
@@ -380,6 +410,7 @@ obras <span class="co">|&gt;</span>
   });
   search?.addEventListener("input", applyFilters);
 
+  // Code tabs
   document.querySelectorAll(".ctab").forEach(tab => {
     tab.addEventListener("click", () => {
       document.querySelectorAll(".ctab").forEach(t => t.classList.remove("ctab--active"));
@@ -392,9 +423,9 @@ obras <span class="co">|&gt;</span>
 </script>
 
 <style>
-/* ── HERO ── */
+/* ─── HERO ─────────────────────────────────────────────────────── */
 .hero {
-  padding: 64px 0 60px;
+  padding: 60px 0 56px;
   border-bottom: 1px solid var(--border);
 }
 
@@ -407,116 +438,130 @@ obras <span class="co">|&gt;</span>
   letter-spacing: .1em;
   text-transform: uppercase;
   color: var(--dim);
-  margin-bottom: 40px;
+  margin-bottom: 44px;
   flex-wrap: wrap;
-  animation: rise .6s ease both;
+  animation: rise .5s ease both;
 }
 .hero-ey__manifesto {
   color: var(--br);
-  text-decoration: none;
   font-weight: 500;
   letter-spacing: .06em;
+  text-decoration: none;
   transition: opacity .15s;
 }
 .hero-ey__manifesto:hover { opacity: .7; text-decoration: none; }
 .hero-ey__live {
-  color: var(--br);
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
+  color: var(--br);
 }
 .hero-ey__live::before {
   content: '';
-  width: 7px; height: 7px; border-radius: 50%;
+  width: 6px; height: 6px;
+  border-radius: 50%;
   background: var(--br);
-  animation: blink 2.2s ease-in-out infinite;
+  animation: blink 2.4s ease-in-out infinite;
 }
 .hero-ey__sep { width: 14px; height: 1px; background: var(--border2); flex-shrink: 0; }
 
-/* ── HERO SPLIT ── */
+/* Split layout */
 .hero-split {
   display: grid;
-  grid-template-columns: 1fr 360px;
-  gap: 60px;
+  grid-template-columns: 1fr 400px;
+  gap: 64px;
   align-items: start;
 }
+
+/* LEFT */
+.hero-left { animation: rise .7s .05s ease both; }
 
 .hero-h {
   font-family: var(--font-d);
   font-variation-settings: 'opsz' 96,'wdth' 84,'wght' 700;
-  font-size: clamp(52px, 8vw, 120px);
-  line-height: .9;
+  font-size: clamp(54px, 8.5vw, 130px);
+  line-height: .88;
   letter-spacing: -.04em;
   color: var(--text);
-  margin-bottom: 40px;
+  margin-bottom: 36px;
 }
-.hero-h__l {
-  display: block;
-  animation: rise .9s cubic-bezier(.2,.7,.3,1) backwards;
-}
-.hero-h__l:nth-child(1) { animation-delay: .05s; }
-.hero-h__l:nth-child(2) { animation-delay: .13s; }
+.hero-h__l { display: block; animation: rise .9s cubic-bezier(.2,.7,.3,1) backwards; }
+.hero-h__l:nth-child(1) { animation-delay: .06s; }
+.hero-h__l:nth-child(2) { animation-delay: .14s; }
 .hero-h__l--em {
   color: var(--muted);
   font-style: italic;
-  font-size: .8em;
+  font-size: .78em;
   animation-delay: .22s;
 }
 
-.hero-deck {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  max-width: 520px;
+.hero-desc {
+  font-size: clamp(13.5px, 1.1vw, 15.5px);
+  color: var(--muted);
+  line-height: 1.7;
+  font-weight: 300;
+  max-width: 460px;
+  margin-bottom: 32px;
   animation: rise .7s .3s ease both;
 }
-.hero-deck p {
-  font-size: clamp(14px, 1.2vw, 16px);
-  color: var(--muted);
-  line-height: 1.65;
-  font-weight: 300;
+.hero-cta {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  animation: rise .7s .38s ease both;
 }
-.hero-cta { display: flex; gap: 10px; flex-wrap: wrap; }
 
-/* ── SECTIONS PANEL ── */
+/* RIGHT: Como funciona */
 .hero-right {
-  animation: rise .7s .2s ease both;
   position: sticky;
-  top: 80px;
+  top: 72px;
+  animation: rise .7s .1s ease both;
 }
-.sections-panel {
+.hf-label {
+  font-family: var(--font-m);
+  font-size: 9px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 12px;
+}
+.hf-list {
   border: 1px solid var(--border2);
   border-radius: var(--r);
   overflow: hidden;
-  background: var(--surface);
 }
-.sections-panel__label {
-  font-family: var(--font-m);
-  font-size: 9px;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: var(--dim);
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--border);
-  background: var(--bg2);
-}
-.spi {
+.hf-item {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 5px;
   padding: 14px 16px;
   border-bottom: 1px solid var(--border);
   text-decoration: none !important;
   transition: background .15s;
+  background: var(--surface);
 }
-.spi:last-child { border-bottom: none; }
-.spi:hover { background: var(--bg2); }
-.spi__top {
+.hf-item:last-child { border-bottom: none; }
+.hf-item:hover { background: var(--bg2); }
+.hf-item--featured {
+  background: var(--green-d);
+  border-left: 3px solid var(--br);
+}
+.hf-item--featured:hover { background: rgba(0,122,60,.1); }
+
+.hf-item__head {
   display: flex;
   align-items: center;
   gap: 8px;
 }
-.spi__name {
+.hf-item__num {
+  font-family: var(--font-m);
+  font-size: 8px;
+  letter-spacing: .1em;
+  color: var(--dim);
+  width: 18px;
+  flex-shrink: 0;
+}
+.hf-item__name {
   font-family: var(--font-m);
   font-size: 10px;
   letter-spacing: .06em;
@@ -524,39 +569,47 @@ obras <span class="co">|&gt;</span>
   color: var(--text);
   font-weight: 500;
 }
-.spi--explorar .spi__name { color: var(--br); }
-.spi--mural .spi__name { color: var(--uy); }
-.spi__badge {
+.hf-item--featured .hf-item__name { color: var(--br); }
+.hf-item__badge {
   font-family: var(--font-m);
-  font-size: 8px;
-  letter-spacing: .08em;
+  font-size: 7px;
+  letter-spacing: .1em;
   text-transform: uppercase;
   background: var(--uy);
   color: #fff;
-  padding: 2px 6px;
+  padding: 2px 5px;
   border-radius: 99px;
 }
-.spi__arrow {
+.hf-item__arrow {
   margin-left: auto;
-  font-size: 11px;
+  font-size: 10px;
   color: var(--dim);
   transition: transform .15s, color .15s;
 }
-.spi:hover .spi__arrow { transform: translateX(3px); color: var(--text); }
-.spi__desc {
-  font-size: 11.5px;
+.hf-item:hover .hf-item__arrow { transform: translateX(3px); color: var(--text); }
+.hf-item__desc {
+  padding-left: 26px;
+  font-size: 11px;
   color: var(--muted);
   line-height: 1.55;
 }
+.hf-item__tag {
+  padding-left: 26px;
+  font-family: var(--font-m);
+  font-size: 8.5px;
+  letter-spacing: .08em;
+  color: var(--dim);
+}
+.hf-item--featured .hf-item__tag { color: var(--br); }
+.hf-item--new .hf-item__tag { color: var(--uy); }
 
-/* ── STATS STRIP ── */
+/* ─── STATS ─────────────────────────────────────────────────────── */
 .statstrip {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2,1fr);
   border-bottom: 1px solid var(--border);
 }
-@media (min-width: 760px) { .statstrip { grid-template-columns: repeat(5, 1fr); } }
-
+@media (min-width:760px) { .statstrip { grid-template-columns: repeat(5,1fr); } }
 .stat {
   padding: 28px 28px 26px;
   border-right: 1px solid var(--border);
@@ -565,7 +618,7 @@ obras <span class="co">|&gt;</span>
   background: var(--bg);
   transition: background .15s;
 }
-@media (min-width: 760px) { .stat { border-bottom: none; } }
+@media (min-width:760px) { .stat { border-bottom: none; } }
 .stat:last-child { border-right: none; }
 .stat:hover { background: var(--surface); }
 .stat::before {
@@ -574,23 +627,22 @@ obras <span class="co">|&gt;</span>
   top: 0; left: 28px;
   width: 32px; height: 3px;
 }
-.stat--br::before { background: var(--br); }
-.stat--fr::before { background: var(--fr); }
+.stat--br::before  { background: var(--br); }
+.stat--fr::before  { background: var(--fr); }
 .stat--red::before { background: #e8341a; }
-.stat--uy::before { background: var(--uy); }
-.stat--uk::before { background: var(--uk); }
-
+.stat--uy::before  { background: var(--uy); }
+.stat--uk::before  { background: var(--uk); }
 .stat-v {
   font-family: var(--font-d);
   font-variation-settings: 'opsz' 96,'wdth' 85,'wght' 700;
-  font-size: clamp(40px, 5vw, 64px);
+  font-size: clamp(40px,5vw,64px);
   line-height: .95;
   letter-spacing: -.04em;
   color: var(--text);
   font-feature-settings: 'tnum';
   margin-bottom: 6px;
 }
-.stat-v small { font-size: .5em; letter-spacing: -.02em; margin-left: .05em; color: var(--dim); }
+.stat-v small { font-size:.5em; letter-spacing:-.02em; margin-left:.05em; color:var(--dim); }
 .stat-l {
   font-family: var(--font-m);
   font-size: 10px;
@@ -599,61 +651,41 @@ obras <span class="co">|&gt;</span>
   color: var(--muted);
 }
 
-/* ── MURAL SECTION ── */
-.home-section--mural { background: var(--bg2); }
-
-.mural-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
-}
-@media (min-width: 900px) { .mural-grid { grid-template-columns: repeat(2, 1fr); } }
-
+/* ─── MURAL ──────────────────────────────────────────────────────── */
 .mural-card {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 36px 32px;
+  display: block;
   border: 1px solid var(--border2);
   border-radius: var(--r);
   background: var(--bg);
   text-decoration: none !important;
   position: relative;
   overflow: hidden;
-  transition: background .2s, border-color .2s;
+  transition: border-color .2s, background .2s;
 }
-.mural-card:hover { background: var(--surface); border-color: var(--br); }
-.mural-card--featured::before {
-  content: '';
+.mural-card:hover { border-color: var(--br); background: var(--surface); }
+.mural-card__stripe {
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 3px;
   background: linear-gradient(90deg, var(--br) 0%, var(--uy) 100%);
 }
-.mural-card__glow {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at 0% 0%, rgba(0,122,60,.05), transparent 60%);
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity .3s;
-}
-.mural-card:hover .mural-card__glow { opacity: 1; }
-.mural-card__meta {
+.mural-card__inner {
+  padding: 32px 28px 28px;
   display: flex;
-  gap: 12px;
-  align-items: center;
+  flex-direction: column;
+  gap: 14px;
 }
-.mural-card__num {
+.mural-card__meta { display: flex; align-items: center; gap: 12px; }
+.mural-num {
   font-family: var(--font-m);
   font-size: 9px;
   letter-spacing: .12em;
   color: var(--br);
-  font-weight: 500;
+  font-weight: 600;
 }
-.mural-card__tag {
+.mural-tag-pill {
   font-family: var(--font-m);
-  font-size: 9px;
+  font-size: 8.5px;
   letter-spacing: .1em;
   text-transform: uppercase;
   color: var(--dim);
@@ -661,7 +693,7 @@ obras <span class="co">|&gt;</span>
 .mural-card__title {
   font-family: var(--font-d);
   font-variation-settings: 'opsz' 24,'wdth' 85,'wght' 650;
-  font-size: clamp(18px, 2.2vw, 26px);
+  font-size: clamp(18px,2vw,24px);
   line-height: 1.15;
   letter-spacing: -.02em;
   color: var(--text);
@@ -671,139 +703,39 @@ obras <span class="co">|&gt;</span>
   color: var(--muted);
   line-height: 1.65;
   font-weight: 300;
+  max-width: 680px;
 }
-.mural-card__footer {
+.mural-card__foot {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
+  justify-content: space-between;
   gap: 16px;
   flex-wrap: wrap;
-  margin-top: auto;
-  padding-top: 12px;
+  padding-top: 14px;
   border-top: 1px solid var(--border);
 }
-.mural-card__author {
-  font-family: var(--font-m);
-  font-size: 10px;
-  color: var(--text);
-  letter-spacing: .04em;
-}
-.mural-card__data {
-  font-family: var(--font-m);
-  font-size: 9px;
-  color: var(--dim);
-  letter-spacing: .06em;
-}
-.mural-card__link {
-  margin-left: auto;
+.mural-foot__left { display: flex; flex-direction: column; gap: 3px; }
+.mural-author { font-family: var(--font-m); font-size: 10px; color: var(--text); letter-spacing: .04em; }
+.mural-datasets { font-family: var(--font-m); font-size: 9px; color: var(--dim); letter-spacing: .06em; }
+.mural-cta {
   font-family: var(--font-m);
   font-size: 10px;
   color: var(--br);
   letter-spacing: .06em;
   transition: letter-spacing .15s;
 }
-.mural-card:hover .mural-card__link { letter-spacing: .1em; }
+.mural-card:hover .mural-cta { letter-spacing: .1em; }
 
-/* ── Animations ── */
-@keyframes rise {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes blink {
-  0%,100% { opacity: 1; }
-  50%      { opacity: .35; }
-}
-
-@media (max-width: 1024px) {
-  .hero-split { grid-template-columns: 1fr; gap: 40px; }
-  .hero-right { position: static; }
-}
-@media (max-width: 760px) {
-  .hero-cta { flex-direction: column; }
-}
-
-/* SECTIONS */
-.home-section { padding: 80px 0; border-bottom: 1px solid var(--border); }
-.home-section:last-child { border-bottom: none; }
-.home-section--alt { background: var(--bg2); }
-
-/* DISCOVER */
-.disc-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1px;
-  background: var(--border2);
-  border: 1px solid var(--border2);
-  border-radius: var(--r);
-  overflow: hidden;
-}
-.disc-card {
-  background: var(--bg);
-  padding: 32px 28px;
+/* ─── CATALOG ────────────────────────────────────────────────────── */
+.catalog__filters {
   display: flex;
-  flex-direction: column;
-  gap: 14px;
-  position: relative;
-  transition: background .2s;
-  overflow: hidden;
-  text-decoration: none !important;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 24px;
 }
-.disc-card:hover { background: var(--surface); }
-.disc-card::before {
-  content: '';
-  position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: 3px;
-}
-.disc-card--br::before { background: var(--br); }
-.disc-card--eu::before { background: var(--eu); }
-.disc-card--fr::before { background: var(--fr); }
-.disc-card--ar::before { background: var(--ar); }
-.disc-card__glow {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transition: opacity .3s;
-  pointer-events: none;
-}
-.disc-card--br .disc-card__glow { background: radial-gradient(circle at 0% 50%, rgba(0,122,60,.06), transparent 70%); }
-.disc-card--eu .disc-card__glow { background: radial-gradient(circle at 0% 50%, rgba(168,85,247,.06), transparent 70%); }
-.disc-card--fr .disc-card__glow { background: radial-gradient(circle at 0% 50%, rgba(72,120,232,.06), transparent 70%); }
-.disc-card:hover .disc-card__glow { opacity: 1; }
-.disc-card__tag { font-family: var(--font-m); font-size: 8px; letter-spacing: .14em; text-transform: uppercase; }
-.disc-card--br .disc-card__tag { color: var(--br); }
-.disc-card--eu .disc-card__tag { color: var(--eu); }
-.disc-card--fr .disc-card__tag { color: var(--fr); }
-.disc-card--ar .disc-card__tag { color: var(--ar); }
-.disc-card__q { font-size: 16px; font-weight: 500; color: var(--text); line-height: 1.4; }
-.disc-card__detail { font-family: var(--font-m); font-size: 10px; color: var(--muted); margin-top: auto; }
-.disc-card__arrow { font-size: 12px; color: var(--muted); transition: transform .2s, color .2s; align-self: flex-end; }
-.disc-card:hover .disc-card__arrow { transform: translateX(4px); color: var(--text); }
 
-/* HOW */
-.how-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  background: var(--border2);
-  border: 1px solid var(--border2);
-  border-radius: var(--r);
-  overflow: hidden;
-}
-.how-step {
-  background: var(--bg2);
-  padding: 40px 32px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  transition: background .2s;
-}
-.how-step:hover { background: var(--surface); }
-.how-step__num { font-family: var(--font-d); font-size: 72px; line-height: 1; color: var(--dim); letter-spacing: 1px; }
-.how-step__title { font-weight: 600; font-size: 15px; color: var(--text); line-height: 1.3; }
-.how-step__desc { font-size: 13px; color: var(--muted); line-height: 1.7; font-weight: 300; }
-.how-step__tag { font-family: var(--font-m); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--br); margin-top: auto; }
-
-/* CODE TABS */
+/* ─── CODE ───────────────────────────────────────────────────────── */
 .code-tabs-wrap { border: 1px solid var(--border2); border-radius: var(--r); overflow: hidden; }
 .code-tabs { display: flex; border-bottom: 1px solid var(--border2); background: var(--surface); }
 .ctab {
@@ -824,11 +756,7 @@ obras <span class="co">|&gt;</span>
 .code-panels { background: var(--bg); }
 .code-panel { display: none; }
 .code-panel--active { display: block; }
-.code-header {
-  background: var(--surface);
-  padding: 10px 16px;
-  border-bottom: 1px solid var(--border2);
-}
+.code-header { background: var(--surface); padding: 10px 16px; border-bottom: 1px solid var(--border2); }
 .code-filename { font-family: var(--font-m); font-size: 10px; color: var(--muted); }
 pre.code-block {
   padding: 24px;
@@ -845,8 +773,186 @@ pre.code-block {
 .co { color: var(--br); }
 .cn { color: #f78c6c; }
 
-@media (max-width: 900px) {
-  .disc-grid { grid-template-columns: 1fr; }
-  .how-grid { grid-template-columns: 1fr; }
+/* ─── VIZ SECTION ────────────────────────────────────────────────── */
+.viz-section { background: var(--bg); }
+
+.viz-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+@media (max-width: 900px) { .viz-grid { grid-template-columns: 1fr; } }
+
+.viz-card {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--r);
+  padding: 28px 24px;
+}
+.viz-card--highlights { grid-column: span 2; }
+@media (max-width: 900px) { .viz-card--highlights { grid-column: span 1; } }
+
+.viz-card__title {
+  font-family: var(--font-m);
+  font-size: 9px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 20px;
+}
+
+/* Bar chart */
+.viz-bar-chart { display: flex; flex-direction: column; gap: 12px; }
+.vbc-row { display: flex; align-items: center; gap: 10px; }
+.vbc-label {
+  font-family: var(--font-m);
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: .04em;
+  width: 90px;
+  flex-shrink: 0;
+}
+.vbc-track {
+  flex: 1;
+  height: 10px;
+  background: var(--bg2);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.vbc-fill {
+  height: 100%;
+  border-radius: 99px;
+  opacity: .82;
+  transition: width .6s cubic-bezier(.2,.8,.3,1);
+}
+.vbc-count {
+  font-family: var(--font-m);
+  font-size: 10px;
+  color: var(--text);
+  font-feature-settings: 'tnum';
+  width: 22px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* Timeline */
+.viz-timeline { display: flex; flex-direction: column; gap: 10px; }
+.vtl-labels {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-m);
+  font-size: 8.5px;
+  color: var(--dim);
+  letter-spacing: .06em;
+}
+.vtl-track {
+  position: relative;
+  height: 56px;
+  background: var(--bg2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.vtl-bar {
+  position: absolute;
+  height: 11px;
+  border-radius: 3px;
+  opacity: .75;
+}
+.vtl-bar--fr  { background: var(--fr); top: 6px; }
+.vtl-bar--eu  { background: var(--eu); top: 22px; opacity: .6; }
+.vtl-bar--br  { background: var(--br); top: 38px; }
+.vtl-bar--br2 { background: var(--br); top: 38px; opacity: .4; }
+.vtl-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 4px;
+}
+.vtl-leg {
+  font-family: var(--font-m);
+  font-size: 8.5px;
+  color: var(--muted);
+  letter-spacing: .06em;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.vtl-leg::before {
+  content: '';
+  display: inline-block;
+  width: 12px;
+  height: 4px;
+  border-radius: 99px;
+  opacity: .8;
+}
+.vtl-leg--fr::before  { background: var(--fr); }
+.vtl-leg--eu::before  { background: var(--eu); }
+.vtl-leg--br::before  { background: var(--br); }
+.vtl-leg--br2::before { background: var(--br); opacity: .4; }
+
+/* Highlights */
+.viz-highlights {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 1px;
+  background: var(--border2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+@media (max-width: 760px) { .viz-highlights { grid-template-columns: repeat(2,1fr); } }
+.vh-item {
+  background: var(--bg);
+  padding: 20px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  transition: background .15s;
+}
+.vh-item:hover { background: var(--surface); }
+.vh-v {
+  font-family: var(--font-d);
+  font-variation-settings: 'opsz' 48,'wdth' 85,'wght' 700;
+  font-size: clamp(28px,3vw,42px);
+  line-height: .95;
+  letter-spacing: -.03em;
+  color: var(--text);
+  font-feature-settings: 'tnum';
+}
+.vh-v small { font-size: .5em; letter-spacing: -.01em; color: var(--dim); }
+.vh-l {
+  font-size: 11.5px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+.vh-src {
+  font-family: var(--font-m);
+  font-size: 8.5px;
+  letter-spacing: .08em;
+  color: var(--dim);
+  margin-top: 2px;
+}
+
+/* ─── SECTIONS ───────────────────────────────────────────────────── */
+.home-section { padding: 80px 0; border-bottom: 1px solid var(--border); }
+.home-section:last-child { border-bottom: none; }
+.home-section--alt { background: var(--bg2); }
+
+/* ─── ANIMATIONS ─────────────────────────────────────────────────── */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes blink {
+  0%,100% { opacity: 1; }
+  50%      { opacity: .3; }
+}
+
+/* ─── RESPONSIVE ─────────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .hero-split { grid-template-columns: 1fr; gap: 48px; }
+  .hero-right  { position: static; }
+}
+@media (max-width: 640px) {
+  .hero-cta { flex-direction: column; }
 }
 </style>
