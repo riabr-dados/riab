@@ -1,8 +1,8 @@
 ---
 const { title, description } = Astro.props;
-const siteTitle = "RIAB — Repositorio Independente do Audiovisual Brasileiro";
-const pageTitle = title ? `${title} · RIAB` : siteTitle;
-const pageDesc = description ?? "Hub de inteligencia de dados do audiovisual brasileiro e internacional.";
+const siteTitle = "RIDAB — Repositório Independente dos Dados do Audiovisual Brasileiro";
+const pageTitle = title ? `${title} · RIDAB` : siteTitle;
+const pageDesc = description ?? "Repositório Independente dos Dados do Audiovisual Brasileiro — dados abertos do cinema e audiovisual nacional e internacional.";
 const base = import.meta.env.BASE_URL;
 ---
 <!doctype html>
@@ -23,7 +23,7 @@ const base = import.meta.env.BASE_URL;
 </head>
 <body>
   <nav class="topnav">
-    <a href={base} class="nav-logo">RIAB</a>
+    <a href={base} class="nav-logo">RIDAB</a>
     <div class="nav-links">
       <a href={`${base}explorar/`} class="nav-explorar">▶ Explorar</a>
       <a href={`${base}transformar/`}>Transformar</a>
@@ -39,7 +39,7 @@ const base = import.meta.env.BASE_URL;
   </main>
 
   <footer class="sitefooter">
-    <span class="sitefooter-logo">RIAB</span>
+    <span class="sitefooter-logo">RIDAB</span>
     <div class="sitefooter-links">
       <a href="https://huggingface.co/datasets/riabr-dados/riab" target="_blank">Hugging Face</a>
       <a href="https://github.com/riabr-dados/riab" target="_blank">GitHub</a>

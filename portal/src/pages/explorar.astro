@@ -83,7 +83,7 @@ const featuredJson   = JSON.stringify(FEATURED);
 
     <!-- Empty: before table selection -->
     <div class="builder-empty" id="builder-empty">
-      <div class="bem-eyebrow">RIAB · EXPLORADOR</div>
+      <div class="bem-eyebrow">RIDAB · EXPLORADOR</div>
       <h2 class="bem-title">Selecione uma<br/>tabela para começar</h2>
       <p class="bem-sub">Escolha na barra lateral ou comece por uma das mais acessadas:</p>
       <div class="bem-shortcuts" id="bem-shortcuts"></div>
@@ -216,7 +216,7 @@ const featuredJson   = JSON.stringify(FEATURED);
 </Base>
 
 <script define:vars={{ parquetMapJson, tablesJson, featuredJson }}>
-  window.__RIAB__ = {
+  window.__RIDAB__ = {
     parquetMap: JSON.parse(parquetMapJson),
     tables:     JSON.parse(tablesJson),
     featured:   JSON.parse(featuredJson),
@@ -226,7 +226,7 @@ const featuredJson   = JSON.stringify(FEATURED);
 <script type="module">
 import * as duckdb from "https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.29.0/+esm";
 
-const { parquetMap, tables, featured } = window.__RIAB__;
+const { parquetMap, tables, featured } = window.__RIDAB__;
 
 // ── DOM ────────────────────────────────────────────────────────
 const dot             = document.getElementById("ex-dot");
