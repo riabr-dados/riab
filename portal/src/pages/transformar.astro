@@ -1,1124 +1,913 @@
 ---
 import Base from "../layouts/Base.astro";
+---
 
-const HF_BASE = "https://huggingface.co/datasets/riabr-dados/riab/resolve/main/cleaned";
+<Base
+  title="Transformar · Cruzar bases"
+  description="Mapa de ligações, regras de join e cruzamentos prontos para as bases do audiovisual brasileiro."
+>
 
-const JOINS = [
+<div class="tr-page">
+
+  <header class="tr-head">
+    <div class="tr-eyebrow">RIAB · TRANSFORMAR</div>
+    <h1 class="tr-h1">Cruzar bases, <em>ler conexões</em>.</h1>
+    <p class="tr-deck">
+      As bases do audiovisual brasileiro não falam entre si por acidente &mdash; elas se ligam
+      por chaves definidas: o CPB, o NUMERO_SALIC, o CNPJ e, quando nenhum desses está
+      disponível, o título normalizado como proxy. Escolha um cruzamento pronto ou leia as
+      regras antes de montar o seu próprio.
+    </p>
+  </header>
+
+  <!-- ░░ MAPA DE LIGAÇÕES ░░ -->
+  <div class="jmap-wrap">
+    <div class="jmap-eyebrow">Mapa de ligações</div>
+    <svg class="jmap-svg" viewBox="0 0 660 316" preserveAspectRatio="xMinYMid meet"
+         xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <!-- obras box -->
+      <rect x="0" y="96" width="138" height="124" fill="#0a0906"/>
+      <text x="69" y="133" text-anchor="middle" font-family="'JetBrains Mono',monospace"
+            font-size="9" letter-spacing="1.5" fill="rgba(250,248,239,0.42)">ANCINE / SAV</text>
+      <text x="69" y="151" text-anchor="middle"
+            font-family="'Bricolage Grotesque',system-ui,sans-serif"
+            font-size="14" font-weight="600" fill="#faf8ef">obras</text>
+      <text x="69" y="167" text-anchor="middle" font-family="'JetBrains Mono',monospace"
+            font-size="9" letter-spacing="1" fill="rgba(250,248,239,0.38)">não-pub</text>
+      <text x="69" y="181" text-anchor="middle" font-family="'JetBrains Mono',monospace"
+            font-size="9" fill="rgba(250,248,239,0.3)">61.360 obras</text>
+      <!-- CPB group label -->
+      <text x="202" y="12" font-family="'JetBrains Mono',monospace"
+            font-size="9" letter-spacing="1.5" fill="#007a3c">CPB EXATO</text>
+      <!-- diretores -->
+      <path d="M138,112 C169,112 169,36 200,36" fill="none" stroke="#007a3c" stroke-width="1.5"/>
+      <rect x="200" y="18" width="172" height="36" fill="#ffffff" stroke="#e7e0c9" stroke-width="1"/>
+      <text x="203" y="30" font-family="'JetBrains Mono',monospace"
+            font-size="8.5" fill="#6b6450" letter-spacing="0.3">CPB</text>
+      <text x="286" y="41" text-anchor="middle"
+            font-family="'Geist','Inter',system-ui" font-size="12" fill="#2a241a">diretores-obras</text>
+      <!-- produtores -->
+      <path d="M138,130 C169,130 169,84 200,84" fill="none" stroke="#007a3c" stroke-width="1.5"/>
+      <rect x="200" y="66" width="172" height="36" fill="#ffffff" stroke="#e7e0c9" stroke-width="1"/>
+      <text x="203" y="78" font-family="'JetBrains Mono',monospace"
+            font-size="8.5" fill="#6b6450" letter-spacing="0.3">CPB</text>
+      <text x="286" y="89" text-anchor="middle"
+            font-family="'Geist','Inter',system-ui" font-size="12" fill="#2a241a">produtores-obras</text>
+      <!-- bilheteria-agregada -->
+      <path d="M138,148 C169,148 169,132 200,132" fill="none" stroke="#007a3c" stroke-width="1.5"/>
+      <rect x="200" y="114" width="182" height="36" fill="#ffffff" stroke="#e7e0c9" stroke-width="1"/>
+      <text x="203" y="126" font-family="'JetBrains Mono',monospace"
+            font-size="8.5" fill="#6b6450" letter-spacing="0.3">CPB_ROE</text>
+      <text x="291" y="137" text-anchor="middle"
+            font-family="'Geist','Inter',system-ui" font-size="12" fill="#2a241a">bilheteria-agregada</text>
+      <!-- CNPJ chain: produtores → agentes -->
+      <path d="M372,84 H432" fill="none" stroke="#5a2244" stroke-width="1.5"/>
+      <rect x="432" y="66" width="172" height="36" fill="#ffffff" stroke="#e7e0c9" stroke-width="1"/>
+      <text x="435" y="78" font-family="'JetBrains Mono',monospace"
+            font-size="8.5" fill="#5a2244" letter-spacing="0.3">CNPJ</text>
+      <text x="518" y="89" text-anchor="middle"
+            font-family="'Geist','Inter',system-ui" font-size="12" fill="#2a241a">agentes-econômicos</text>
+      <!-- separator -->
+      <line x1="200" y1="160" x2="500" y2="160" stroke="#e7e0c9" stroke-width="1" stroke-dasharray="4 3"/>
+      <!-- PROXY group label -->
+      <text x="202" y="174" font-family="'JetBrains Mono',monospace"
+            font-size="9" letter-spacing="1.5" fill="#c8920a">PROXY TÍTULO</text>
+      <!-- fsa-projetos -->
+      <path d="M138,168 C169,168 169,200 200,200" fill="none"
+            stroke="#c8920a" stroke-width="1.5" stroke-dasharray="5 3"/>
+      <rect x="200" y="182" width="162" height="36" fill="#ffffff" stroke="#e7e0c9" stroke-width="1"/>
+      <text x="203" y="194" font-family="'JetBrains Mono',monospace"
+            font-size="8.5" fill="#6b6450" letter-spacing="0.3">título norm.</text>
+      <text x="281" y="205" text-anchor="middle"
+            font-family="'Geist','Inter',system-ui" font-size="12" fill="#2a241a">fsa-projetos</text>
+      <!-- bilheteria-consolidada -->
+      <path d="M138,186 C169,186 169,248 200,248" fill="none"
+            stroke="#c8920a" stroke-width="1.5" stroke-dasharray="5 3"/>
+      <rect x="200" y="230" width="184" height="36" fill="#ffffff" stroke="#e7e0c9" stroke-width="1"/>
+      <text x="203" y="242" font-family="'JetBrains Mono',monospace"
+            font-size="8.5" fill="#6b6450" letter-spacing="0.3">título norm.</text>
+      <text x="292" y="253" text-anchor="middle"
+            font-family="'Geist','Inter',system-ui" font-size="12" fill="#2a241a">bilh-consolidada</text>
+      <!-- renuncia-fiscal -->
+      <path d="M138,204 C169,204 169,296 200,296" fill="none"
+            stroke="#1f3bb8" stroke-width="1.5" stroke-dasharray="5 3"/>
+      <rect x="200" y="278" width="176" height="36" fill="#ffffff" stroke="#e7e0c9" stroke-width="1"/>
+      <text x="203" y="290" font-family="'JetBrains Mono',monospace"
+            font-size="8.5" fill="#1f3bb8" letter-spacing="0.3">NUMERO_SALIC</text>
+      <text x="288" y="301" text-anchor="middle"
+            font-family="'Geist','Inter',system-ui" font-size="12" fill="#2a241a">renuncia-fiscal</text>
+    </svg>
+    <div class="jmap-legend">
+      <span class="jleg jleg-exact"><span class="jleg-line"></span>CPB exato</span>
+      <span class="jleg jleg-proxy"><span class="jleg-line"></span>proxy título</span>
+      <span class="jleg jleg-salic"><span class="jleg-line"></span>NUMERO_SALIC</span>
+      <span class="jleg jleg-cnpj"><span class="jleg-line"></span>CNPJ exato</span>
+    </div>
+  </div>
+
+  <!-- ░░ REGRAS DE LIGAÇÃO ░░ -->
+  <div class="regras-section">
+    <div class="regras-eyebrow">Regras de ligação</div>
+    <div class="regras-grid">
+
+      <!-- CPB -->
+      <div class="regra-card rc-exact">
+        <div class="rc-bar"></div>
+        <div class="rc-tag">Join exato</div>
+        <div class="rc-name">CPB &mdash; Código de Produto Brasileiro</div>
+        <div class="rc-body">
+          <p>O CPB é o identificador único emitido pela ANCINE no momento do registro de cada
+          obra audiovisual. É o elo mais confiável entre as bases &mdash; uma obra identificada
+          pelo CPB pode ser ligada sem ambiguidade a seus diretores, produtoras e dados de
+          bilheteria.</p>
+          <p>Formato: <code>B[YY][seq. 7 dígitos][00000]</code> para obras brasileiras e
+          <code>E[...]</code> para obras estrangeiras (ROE).</p>
+          <div class="rc-where">
+            <div class="rc-where-h">Presente em</div>
+            obras-nao-publicitarias &rarr; campo <code>CPB</code><br>
+            diretores-obras &rarr; campo <code>CPB</code><br>
+            produtores-obras &rarr; campo <code>CPB</code><br>
+            bilheteria-agregada &rarr; campo <code>CPB_ROE</code>
+            (prefixo B = obra brasileira, E = estrangeira)
+          </div>
+          <div class="rc-note rc-note-ok">Join direto, sem normalização. Cobertura desde 2002
+          com CPB retroativo para obras mais antigas.</div>
+        </div>
+      </div>
+
+      <!-- Proxy título -->
+      <div class="regra-card rc-proxy">
+        <div class="rc-bar"></div>
+        <div class="rc-tag">Join aproximado</div>
+        <div class="rc-name">Proxy título &mdash; normalização por nome</div>
+        <div class="rc-body">
+          <p>Quando o CPB não está disponível na base de destino (como FSA, bilheteria
+          consolidada ou Lumiere), o elo é feito por normalização do
+          <code>TITULO_ORIGINAL</code> da obra contra o <code>TITULO_PROJETO</code>
+          da base alvo.</p>
+          <div class="rc-algo">title.toLowerCase()<br>&nbsp;&nbsp;.normalize('NFD').replace(/[̀-ͯ]/g, '')<br>&nbsp;&nbsp;.replace(/[^a-z0-9 ]/g, '').trim()</div>
+          <div class="rc-where">
+            <div class="rc-where-h">Usado em</div>
+            obras &rarr; fsa-projetos (<code>TITULO_PROJETO</code>)<br>
+            obras &rarr; bilh-consolidada (título sem CPB)<br>
+            obras &rarr; lumiere-europa (título internacional)<br>
+            bilh-agregada.TITULO_BRASIL &rarr; lumiere (cruzado)
+          </div>
+          <div class="rc-note rc-note-warn">Risco de falso positivo em títulos curtos
+          (&ldquo;Sol&rdquo;, &ldquo;Amor&rdquo;, &ldquo;Brasil&rdquo;). Sempre validar
+          manualmente uma amostra do join antes de usar em análise.</div>
+        </div>
+      </div>
+
+      <!-- SALIC -->
+      <div class="regra-card rc-salic">
+        <div class="rc-bar"></div>
+        <div class="rc-tag">Via sistema MinC</div>
+        <div class="rc-name">CPB &harr; SALIC &mdash; ligação com a Lei do Audiovisual</div>
+        <div class="rc-body">
+          <p>A base de renúncia fiscal exportada pela ANCINE contém o
+          <code>NUMERO_SALIC</code>, o identificador do projeto no Sistema de Apoio às Leis
+          de Incentivo à Cultura (MinC). Não há campo CPB nessa base.</p>
+          <p>O elo CPB&harr;SALIC exige uma das duas estratégias:</p>
+          <div class="rc-where">
+            <div class="rc-where-h">Estratégia 1 &mdash; proxy título</div>
+            normalizar(<code>obras.TITULO_ORIGINAL</code>) =
+            normalizar(<code>renuncia.TITULO_PROJETO</code>)<br>
+            <em class="rc-em">risco: homônimos e variações de título</em>
+          </div>
+          <div class="rc-where" style="margin-top:8px">
+            <div class="rc-where-h">Estratégia 2 &mdash; CNPJ (empresa-level)</div>
+            <code>obras.CNPJ_REQUERENTE</code> = <code>renuncia.CNPJ_PROPONENTE</code><br>
+            <em class="rc-em">join N:M &mdash; empresa com múltiplos projetos</em>
+          </div>
+          <div class="rc-note rc-note-info">Quando o dataset SALIC/MinC for incorporado ao
+          catálogo, o elo direto CPB&harr;SALIC poderá ser feito via campo de referência
+          cruzada. O <code>NUMERO_SALIC</code> (ex: 00-0040) é diferente do CPB &mdash;
+          não confundir.</div>
+        </div>
+      </div>
+
+      <!-- CRT -->
+      <div class="regra-card rc-crt">
+        <div class="rc-bar"></div>
+        <div class="rc-tag">Janela de distribuição</div>
+        <div class="rc-name">CRT &mdash; Certificado de Registro de Título</div>
+        <div class="rc-body">
+          <p>O CRT não é um identificador de obra &mdash; é um certificado condicionado ao
+          pagamento de CONDECINE (Contribuição para o Desenvolvimento da Indústria
+          Cinematográfica Nacional). Sem CRT, uma obra não pode ser veiculada comercialmente
+          no Brasil.</p>
+          <p>O CRT é emitido <strong>por janela de distribuição</strong>: uma obra pode ter
+          um CRT para salas de cinema, outro para TV por assinatura e outro para streaming
+          (VoD). Cada janela exige um certificado separado vinculado ao pagamento do tributo
+          correspondente.</p>
+          <div class="rc-where">
+            <div class="rc-where-h">O que o CRT indica</div>
+            CRT para <strong>salas de cinema</strong> &rarr; obra foi comercialmente exibida<br>
+            CRT para <strong>TV por assinatura</strong> &rarr; obra veiculada em TV paga<br>
+            CRT para <strong>VoD / streaming</strong> &rarr; obra disponibilizada em plataforma<br>
+            <em class="rc-em">Indicador de circulação, não prova de audiência</em>
+          </div>
+          <div class="rc-where" style="margin-top:8px">
+            <div class="rc-where-h">Ligação com obras</div>
+            CRT referencia a obra via CPB &rarr; join exato (quando o dataset CRT for incorporado)<br>
+            Enquanto ausente: <code>obras.SEGMENTO_DESTINACAO_INICIAL</code> registra a janela
+            declarada no registro &mdash; proxy imperfeito (intenção, não CRT efetivo)
+          </div>
+          <div class="rc-note rc-note-info">Dataset CRT é uma lacuna conhecida do catálogo.
+          Quando incorporado, permitirá mapear quais obras efetivamente circularam em cada
+          janela &mdash; informação de alto valor para análises de mercado e política pública.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ░░ CRUZAMENTOS DISPONÍVEIS ░░ -->
+  <div class="cruzamentos-section">
+    <div class="cruzamentos-eyebrow">Cruzamentos disponíveis</div>
+    <div class="cpicker-bar" id="cpicker-bar"></div>
+    <div class="cdetail" id="cdetail"></div>
+  </div>
+
+</div>
+</Base>
+
+<script>
+const CRUZAMENTOS = [
   {
-    id: "obras_bilheteria",
-    label: "Obras × Bilheteria",
-    desc: "Público por obra e ano (2014–)",
-    quality: 100,
-    fromSQL: `obras o\n  JOIN bilheteria_por_filme_ano b ON o.CPB = b.CPB_ROE`,
-    joinNote: "Chave: CPB · exato",
-    tablesNeeded: ["obras", "bilheteria_por_filme_ano"],
+    id: 'ficha-tecnica', label: 'Ficha técnica',
+    bases: ['obras-nao-pub', 'diretores-obras', 'produtores-obras'],
+    join: 'exact', joinLabel: 'CPB exato',
+    title: 'Obras com ficha técnica completa',
+    desc: 'Consolida diretor(es), produtora(s) e dados cadastrais de cada obra usando o CPB como chave de ligação direta. Sem ambiguidade.',
+    key: '<b>obras.CPB</b> = <b>diretores.CPB</b> = <b>produtores.CPB</b>',
+    questions: [
+      'Quais produtoras têm maior portfolio de obras registradas?',
+      'Quantas obras foram codirigidas (múltiplos diretores)?',
+      'Qual a filmografia completa de um diretor por segmento?',
+    ],
+    conf: 3, caveat: '',
+    code: `<span class="cm">-- DuckDB: obras + ficha técnica completa</span>
+<span class="kw">SELECT</span>
+  o.TITULO_ORIGINAL,
+  o.ANO_PRODUCAO_INICIAL  <span class="kw">AS</span> ano,
+  o.TIPO_OBRA,
+  <span class="fn">string_agg</span>(<span class="kw">DISTINCT</span> d.DIRETOR, <span class="sv">' / '</span>) <span class="kw">AS</span> diretores,
+  <span class="fn">string_agg</span>(<span class="kw">DISTINCT</span> p.PRODUTOR, <span class="sv">' | '</span>) <span class="kw">AS</span> produtoras
+<span class="kw">FROM</span> obras o
+<span class="kw">LEFT JOIN</span> diretores d  <span class="kw">ON</span> d.CPB = o.CPB
+<span class="kw">LEFT JOIN</span> produtores p  <span class="kw">ON</span> p.CPB = o.CPB
+<span class="kw">WHERE</span> o.TIPO_OBRA = <span class="sv">'LONGA-METRAGEM'</span>
+<span class="kw">GROUP BY ALL</span>
+<span class="kw">ORDER BY</span> o.ANO_PRODUCAO_INICIAL <span class="kw">DESC</span>
+<span class="kw">LIMIT</span> <span class="sv">20</span>;`
   },
   {
-    id: "obras_diretores",
-    label: "Obras × Diretores",
-    desc: "Diretores por obra cadastrada na ANCINE",
-    quality: 100,
-    fromSQL: `obras o\n  JOIN diretores_obras d ON o.CPB = d.CPB`,
-    joinNote: "Chave: CPB · exato",
-    tablesNeeded: ["obras", "diretores_obras"],
+    id: 'obras-bilheteria', label: 'Obras + bilheteria',
+    bases: ['obras-nao-pub', 'bilheteria-agregada'],
+    join: 'exact', joinLabel: 'CPB exato',
+    title: 'Obra registrada → público real',
+    desc: 'Liga o registro oficial (ANCINE/SAV) ao público por ano de exibição via CPB_ROE. Para obras brasileiras o CPB_ROE começa com "B" — igual ao CPB da obra.',
+    key: '<b>obras.CPB</b> = <b>bilheteria_agregada.CPB_ROE</b> (WHERE CPB_ROE LIKE \'B%\')',
+    questions: [
+      'De 61 mil obras registradas, quantas têm bilheteria real?',
+      'Qual a renda por ano de exibição de cada obra?',
+      'Como evoluiu o público de longas de animação no mercado doméstico?',
+    ],
+    conf: 3, caveat: '',
+    code: `<span class="cm">-- DuckDB: obra registrada com bilheteria por ano</span>
+<span class="kw">SELECT</span>
+  o.TITULO_ORIGINAL,
+  o.TIPO_OBRA,
+  b.ANO,
+  b.PUBLICO
+<span class="kw">FROM</span> obras o
+<span class="kw">INNER JOIN</span> bilheteria_agregada b
+  <span class="kw">ON</span> b.CPB_ROE = o.CPB
+<span class="kw">WHERE</span> b.CPB_ROE <span class="kw">LIKE</span> <span class="sv">'B%'</span>
+<span class="kw">ORDER BY</span> b.PUBLICO <span class="kw">DESC</span>
+<span class="kw">LIMIT</span> <span class="sv">20</span>;`
   },
   {
-    id: "obras_produtoras",
-    label: "Obras × Produtoras",
-    desc: "Empresas produtoras por obra",
-    quality: 100,
-    fromSQL: `obras o\n  JOIN produtores_obras p ON o.CPB = p.CPB`,
-    joinNote: "Chave: CPB · exato",
-    tablesNeeded: ["obras", "produtores_obras"],
+    id: 'obras-fsa', label: 'Obras + FSA',
+    bases: ['obras-nao-pub', 'fsa-projetos'],
+    join: 'proxy', joinLabel: 'proxy título',
+    title: 'Obra registrada → fomento FSA',
+    desc: 'Liga obras ANCINE a projetos apoiados pelo Fundo Setorial do Audiovisual via normalização do título. A base FSA não tem CPB — é necessário o proxy.',
+    key: '<b>normalizar(obras.TITULO_ORIGINAL)</b> = <b>normalizar(fsa.TITULO_PROJETO)</b>',
+    questions: [
+      'Qual o valor de fomento recebido por obra?',
+      'Obras de quais segmentos captaram mais via FSA?',
+      'Quais produtoras acumulam mais projetos apoiados?',
+    ],
+    conf: 2, caveat: 'Validar amostra manualmente — títulos curtos geram colisões.',
+    code: `<span class="cm">-- DuckDB: obras com fomento FSA via proxy título</span>
+<span class="kw">WITH</span> obras_n <span class="kw">AS</span> (
+  <span class="kw">SELECT</span> CPB, TITULO_ORIGINAL,
+    <span class="fn">lower</span>(<span class="fn">regexp_replace</span>(TITULO_ORIGINAL,
+      <span class="sv">'[^a-zA-Z0-9 ]'</span>, <span class="sv">''</span>, <span class="sv">'g'</span>)) <span class="kw">AS</span> titulo_n
+  <span class="kw">FROM</span> obras
+),
+fsa_n <span class="kw">AS</span> (
+  <span class="kw">SELECT</span> TITULO_PROJETO, CHAMADA_PUBLICA,
+    VALOR_CONTRATO_DOU, RAZAO_SOCIAL_PRODUTORA,
+    <span class="fn">lower</span>(<span class="fn">regexp_replace</span>(TITULO_PROJETO,
+      <span class="sv">'[^a-zA-Z0-9 ]'</span>, <span class="sv">''</span>, <span class="sv">'g'</span>)) <span class="kw">AS</span> titulo_n
+  <span class="kw">FROM</span> fsa_projetos
+)
+<span class="kw">SELECT</span>
+  o.TITULO_ORIGINAL, o.CPB,
+  f.CHAMADA_PUBLICA, f.VALOR_CONTRATO_DOU
+<span class="kw">FROM</span> obras_n o
+<span class="kw">JOIN</span> fsa_n f <span class="kw">ON</span> f.titulo_n = o.titulo_n
+<span class="kw">LIMIT</span> <span class="sv">20</span>;`
   },
   {
-    id: "obras_fsa",
-    label: "Obras × FSA",
-    desc: "Contratos do Fundo Setorial Audiovisual",
-    quality: 85,
-    fromSQL: `obras o\n  LEFT JOIN fomento_fsa f\n    ON upper(regexp_replace(o.TITULO_ORIGINAL, '[^A-Za-z0-9 ]', ' ', 'g'))\n     = upper(regexp_replace(f.TITULO_PROJETO,   '[^A-Za-z0-9 ]', ' ', 'g'))`,
-    joinNote: "Chave: título normalizado · ~85%",
-    tablesNeeded: ["obras", "fomento_fsa"],
+    id: 'obras-renuncia', label: 'Obras + renúncia fiscal',
+    bases: ['obras-nao-pub', 'renuncia-fiscal'],
+    join: 'salic', joinLabel: 'proxy / SALIC',
+    title: 'Obra registrada → captação via Lei do Audiovisual',
+    desc: 'A base de renúncia fiscal tem NUMERO_SALIC mas não CPB. O elo é feito por título normalizado (obra-level) ou por CNPJ (empresa-level, join N:M).',
+    key: '<b>normalizar(obras.TITULO_ORIGINAL)</b> ≈ <b>normalizar(renuncia.TITULO_PROJETO)</b><br><small>ou</small> <b>obras.CNPJ_REQUERENTE</b> = <b>renuncia.CNPJ_PROPONENTE</b>',
+    questions: [
+      'Quantas obras com CPB captaram via Lei do Audiovisual?',
+      'Qual o total captado por obra via Art. 1º, 3º e 3ºA?',
+      'Quais empresas concentram mais captação de renúncia fiscal?',
+    ],
+    conf: 2, caveat: 'Duas estratégias possíveis — proxy título para obra-level, CNPJ para empresa-level.',
+    code: `<span class="cm">-- Estratégia 1: proxy título (obra-level)</span>
+<span class="kw">WITH</span> obras_n <span class="kw">AS</span> (
+  <span class="kw">SELECT</span> CPB, TITULO_ORIGINAL, CNPJ_REQUERENTE,
+    <span class="fn">lower</span>(<span class="fn">regexp_replace</span>(TITULO_ORIGINAL,
+      <span class="sv">'[^a-zA-Z0-9 ]'</span>, <span class="sv">''</span>, <span class="sv">'g'</span>)) <span class="kw">AS</span> titulo_n
+  <span class="kw">FROM</span> obras
+),
+ren_n <span class="kw">AS</span> (
+  <span class="kw">SELECT</span> NUMERO_SALIC, TITULO_PROJETO, TOTAL_CAPTADO,
+    <span class="fn">lower</span>(<span class="fn">regexp_replace</span>(TITULO_PROJETO,
+      <span class="sv">'[^a-zA-Z0-9 ]'</span>, <span class="sv">''</span>, <span class="sv">'g'</span>)) <span class="kw">AS</span> titulo_n
+  <span class="kw">FROM</span> renuncia_fiscal
+)
+<span class="kw">SELECT</span> o.CPB, o.TITULO_ORIGINAL,
+  r.NUMERO_SALIC, r.TOTAL_CAPTADO
+<span class="kw">FROM</span> obras_n o
+<span class="kw">JOIN</span> ren_n r <span class="kw">ON</span> r.titulo_n = o.titulo_n
+<span class="kw">LIMIT</span> <span class="sv">20</span>;`
   },
   {
-    id: "obras_renuncia",
-    label: "Obras × Renúncia Fiscal",
-    desc: "Captação via lei de incentivo (SALIC)",
-    quality: 80,
-    fromSQL: `obras o\n  LEFT JOIN renuncia_fiscal r\n    ON upper(regexp_replace(o.TITULO_ORIGINAL, '[^A-Za-z0-9 ]', ' ', 'g'))\n     = upper(regexp_replace(r.TITULO_PROJETO,   '[^A-Za-z0-9 ]', ' ', 'g'))`,
-    joinNote: "Chave: título normalizado · ~80%",
-    tablesNeeded: ["obras", "renuncia_fiscal"],
+    id: 'br-eu', label: 'Brasil ↔ Europa',
+    bases: ['bilheteria-agregada', 'lumiere-cinemas-europa'],
+    join: 'proxy', joinLabel: 'proxy título',
+    title: 'Mercado doméstico vs. salas da Europa',
+    desc: 'Cruza bilheteria brasileira (ANCINE) com admissões em salas europeias (Lumiere/OEA) via título normalizado. Permite comparar alcance doméstico e internacional.',
+    key: '<b>normalizar(bilh_agr.TITULO_BRASIL)</b> ≈ <b>normalizar(lumiere.titulo)</b>',
+    questions: [
+      'Filmes com grande público no Brasil também chegaram à Europa?',
+      'Há correlação entre desempenho doméstico e alcance em salas europeias?',
+      'Quais filmes fizeram menos de 50 mil no BR mas tiveram expressiva presença europeia?',
+    ],
+    conf: 2, caveat: 'Títulos em português vs. títulos internacionais exigem validação do match.',
+    code: `<span class="cm">-- DuckDB: bilheteria Brasil vs admissões Europa</span>
+<span class="kw">WITH</span> br <span class="kw">AS</span> (
+  <span class="kw">SELECT</span> CPB_ROE, TITULO_BRASIL, ANO,
+    <span class="fn">SUM</span>(PUBLICO) <span class="kw">AS</span> publico_br,
+    <span class="fn">lower</span>(<span class="fn">regexp_replace</span>(TITULO_BRASIL,
+      <span class="sv">'[^a-zA-Z0-9 ]'</span>, <span class="sv">''</span>, <span class="sv">'g'</span>)) <span class="kw">AS</span> titulo_n
+  <span class="kw">FROM</span> bilheteria_agregada
+  <span class="kw">WHERE</span> CPB_ROE <span class="kw">LIKE</span> <span class="sv">'B%'</span>
+  <span class="kw">GROUP BY ALL</span>
+),
+eu <span class="kw">AS</span> (
+  <span class="kw">SELECT</span> titulo, admissoes_total,
+    <span class="fn">lower</span>(<span class="fn">regexp_replace</span>(titulo,
+      <span class="sv">'[^a-zA-Z0-9 ]'</span>, <span class="sv">''</span>, <span class="sv">'g'</span>)) <span class="kw">AS</span> titulo_n
+  <span class="kw">FROM</span> lumiere_cinemas_europa
+)
+<span class="kw">SELECT</span>
+  br.TITULO_BRASIL,
+  br.publico_br,
+  eu.admissoes_total <span class="kw">AS</span> admissoes_eu
+<span class="kw">FROM</span> br
+<span class="kw">JOIN</span> eu <span class="kw">ON</span> eu.titulo_n = br.titulo_n
+<span class="kw">ORDER BY</span> br.publico_br <span class="kw">DESC</span>;`
   },
   {
-    id: "obras_lumiere",
-    label: "Obras × Lumière EU",
-    desc: "Admissões em 37 países europeus (1996–2026)",
-    quality: 70,
-    fromSQL: `obras o\n  LEFT JOIN bilheteria_europa l\n    ON upper(regexp_replace(o.TITULO_ORIGINAL, '[^A-Za-z0-9 ]', ' ', 'g'))\n     = upper(regexp_replace(l."Original title", '[^A-Za-z0-9 ]', ' ', 'g'))`,
-    joinNote: "Chave: título original normalizado · ~70%",
-    tablesNeeded: ["obras", "bilheteria_europa"],
-  },
-  {
-    id: "obras_vod",
-    label: "Obras × VOD Europa",
-    desc: "Plataformas VOD em países europeus",
-    quality: 70,
-    fromSQL: `obras o\n  LEFT JOIN vod_europa v\n    ON upper(regexp_replace(o.TITULO_ORIGINAL, '[^A-Za-z0-9 ]', ' ', 'g'))\n     = upper(regexp_replace(v."Original title", '[^A-Za-z0-9 ]', ' ', 'g'))`,
-    joinNote: "Chave: título original normalizado · ~70%",
-    tablesNeeded: ["obras", "vod_europa"],
+    id: 'obras-agentes', label: 'Obras + agentes',
+    bases: ['produtores-obras', 'agentes-econômicos'],
+    join: 'cnpj', joinLabel: 'CNPJ exato',
+    title: 'Portfolio de obras por produtora regulada',
+    desc: 'Liga o portfolio de obras de cada produtora (via produtores-obras) ao cadastro regulatório de agentes econômicos via CNPJ. Join exato, alta confiança.',
+    key: '<b>produtores.CNPJ_PRODUTOR</b> = <b>agentes.CNPJ</b>',
+    questions: [
+      'Produtoras ativas na ANCINE com maior portfolio de obras registradas?',
+      'Portfolio por UF de sede — concentração regional?',
+      'Quantas obras por produtora com registro regular vigente?',
+    ],
+    conf: 3, caveat: '',
+    code: `<span class="cm">-- DuckDB: portfolio de obras por produtora regulada</span>
+<span class="kw">SELECT</span>
+  a.RAZAO_SOCIAL,
+  a.UF,
+  a.MUNICIPIO,
+  a.CLASSIFICACAO_AGENTE_ECONOMICO,
+  <span class="fn">COUNT</span>(<span class="kw">DISTINCT</span> p.CPB)           <span class="kw">AS</span> total_obras,
+  <span class="fn">COUNT</span>(<span class="kw">DISTINCT</span> p.TITULO_ORIGINAL) <span class="kw">AS</span> titulos
+<span class="kw">FROM</span> produtores_obras p
+<span class="kw">JOIN</span> agentes_economicos a
+  <span class="kw">ON</span> a.CNPJ = p.CNPJ_PRODUTOR
+<span class="kw">GROUP BY ALL</span>
+<span class="kw">ORDER BY</span> total_obras <span class="kw">DESC</span>
+<span class="kw">LIMIT</span> <span class="sv">20</span>;`
   },
 ];
 
-const PARQUET = {
-  obras:                   `${HF_BASE}/obras.parquet`,
-  diretores_obras:         `${HF_BASE}/diretores_obras.parquet`,
-  produtores_obras:        `${HF_BASE}/produtores_obras.parquet`,
-  fomento_fsa:             `${HF_BASE}/fomento_fsa.parquet`,
-  renuncia_fiscal:         `${HF_BASE}/renuncia_fiscal.parquet`,
-  bilheteria_por_filme_ano:`${HF_BASE}/bilheteria_por_filme_ano.parquet`,
-  bilheteria_europa:       `${HF_BASE}/bilheteria_europa.parquet`,
-  vod_europa:              `${HF_BASE}/vod_europa.parquet`,
+const JOIN_PILLS = {
+  exact: '<span class="cjoin-pill cjoin-exact">CPB exato</span>',
+  proxy: '<span class="cjoin-pill cjoin-proxy">proxy título</span>',
+  salic: '<span class="cjoin-pill cjoin-salic">NUMERO_SALIC</span>',
+  cnpj:  '<span class="cjoin-pill cjoin-cnpj">CNPJ exato</span>',
+};
+const JTYPE_CHIPS = {
+  exact: '<span class="cjtype cjtype-exact">CPB</span>',
+  proxy: '<span class="cjtype cjtype-proxy">proxy</span>',
+  salic: '<span class="cjtype cjtype-salic">SALIC</span>',
+  cnpj:  '<span class="cjtype cjtype-cnpj">CNPJ</span>',
 };
 
-const joinsJson   = JSON.stringify(JOINS);
-const parquetJson = JSON.stringify(PARQUET);
----
-
-<Base title="Transformar Dados" description="Cruze tabelas canônicas ANCINE e gere bases prontas para análise, com SQL reutilizável.">
-
-<div class="tr" id="tr-root">
-
-  <!-- ░░ HEADER ░░ -->
-  <header class="tr-header">
-    <div class="tr-header__eyebrow">RIAB · TRANSFORMAR</div>
-    <h1 class="tr-header__title">Gerador de bases cruzadas</h1>
-    <p class="tr-header__sub">Cruze tabelas canônicas ANCINE, gere agregados e exporte o SQL reutilizável.</p>
-    <div class="tr-header__status">
-      <span class="tdot" id="tr-dot"></span>
-      <span id="tr-status">Iniciando motor de consultas…</span>
-    </div>
-  </header>
-
-  <!-- ░░ BUILDER ░░ -->
-  <div class="tr-body">
-
-    <!-- STEP 01: Join selection -->
-    <section class="tr-step" id="step-join">
-      <div class="tr-step__head">
-        <span class="tr-step__num">01</span>
-        <span class="tr-step__label">Escolha o cruzamento</span>
-      </div>
-      <div class="join-grid" id="join-grid">
-        {JOINS.map(j => (
-          <button
-            class="jcard"
-            data-join={j.id}
-            title={j.joinNote}
-          >
-            <div class="jcard__top">
-              <span class="jcard__label">{j.label}</span>
-              <span class={`jcard__badge jcard__badge--${j.quality === 100 ? 'ok' : j.quality >= 85 ? 'good' : j.quality >= 80 ? 'warn' : 'low'}`}>
-                {j.quality === 100 ? '100%' : `~${j.quality}%`}
-              </span>
-            </div>
-            <div class="jcard__desc">{j.desc}</div>
-            <div class="jcard__note">{j.joinNote}</div>
-          </button>
-        ))}
-      </div>
-    </section>
-
-    <!-- STEP 02: Dimensions (GROUP BY) -->
-    <section class="tr-step tr-step--locked" id="step-dims">
-      <div class="tr-step__head">
-        <span class="tr-step__num">02</span>
-        <span class="tr-step__label">Agrupar por</span>
-        <span class="tr-step__hint" id="dims-hint">selecione o cruzamento primeiro</span>
-      </div>
-      <div class="dims-wrap" id="dims-wrap">
-        <div class="dim-row" id="dim-row-1">
-          <label class="dim-label">Dimensão 1</label>
-          <select class="dim-select" id="dim1" disabled>
-            <option value="">— escolha uma coluna —</option>
-          </select>
+function renderCruzamento(idx) {
+  const c = CRUZAMENTOS[idx];
+  const dots = [1, 2, 3].map(i =>
+    `<span class="cconf-dot${i <= c.conf ? ' on' : ''}"></span>`
+  ).join('');
+  const confLabels = { 1: 'baixa confiança', 2: 'confiança média', 3: 'alta confiança' };
+  document.getElementById('cdetail').innerHTML = `
+    <div class="cdetail-top">
+      <div class="cdetail-info">
+        <div class="cdetail-bases">
+          ${c.bases.map((b, i) => `${i ? '<span class="cbase-op">+</span>' : ''}
+            <span class="cbase">${b}</span>`).join('')}
+          ${JOIN_PILLS[c.join]}
         </div>
-        <div class="dim-row" id="dim-row-2">
-          <label class="dim-label">Dimensão 2 <span class="dim-optional">(opcional)</span></label>
-          <select class="dim-select" id="dim2" disabled>
-            <option value="">— nenhuma —</option>
-          </select>
+        <div class="cdetail-title">${c.title}</div>
+        <div class="cdetail-desc">${c.desc}</div>
+        <div class="ckey-box"><b>Chave:</b> ${c.key}</div>
+        <div class="cquestions-h">Perguntas que esse cruzamento responde</div>
+        <ul class="cquestions">${c.questions.map(q => `<li>${q}</li>`).join('')}</ul>
+      </div>
+      <div class="cdetail-code">
+        <div class="ccode-label">DuckDB SQL</div>
+        <pre class="ccode-pre">${c.code}</pre>
+        <div class="cdetail-foot">
+          <span class="cconf-label">
+            <span class="cconf-dots">${dots}</span>
+            ${confLabels[c.conf]}
+          </span>
+          ${c.caveat ? `<span class="cconf-caveat">${c.caveat}</span>` : ''}
         </div>
       </div>
-    </section>
-
-    <!-- STEP 03: Metric -->
-    <section class="tr-step tr-step--locked" id="step-metric">
-      <div class="tr-step__head">
-        <span class="tr-step__num">03</span>
-        <span class="tr-step__label">Medir</span>
-        <span class="tr-step__hint" id="metric-hint">selecione o cruzamento primeiro</span>
-      </div>
-      <div class="metric-wrap" id="metric-wrap">
-        <div class="metric-row">
-          <label class="dim-label">Função</label>
-          <select class="dim-select" id="agg-fn" disabled>
-            <option value="COUNT_STAR">COUNT — total de registros</option>
-            <option value="SUM">SUM — soma</option>
-            <option value="AVG">AVG — média</option>
-            <option value="MAX">MAX — máximo</option>
-            <option value="MIN">MIN — mínimo</option>
-          </select>
-        </div>
-        <div class="metric-row" id="agg-col-wrap" style="display:none">
-          <label class="dim-label">Coluna</label>
-          <select class="dim-select" id="agg-col" disabled>
-            <option value="">— escolha uma coluna numérica —</option>
-          </select>
-        </div>
-      </div>
-    </section>
-
-    <!-- STEP 04: Filters -->
-    <section class="tr-step tr-step--locked" id="step-filters">
-      <div class="tr-step__head">
-        <span class="tr-step__num">04</span>
-        <span class="tr-step__label">Filtros</span>
-        <span class="tr-step__hint">opcional</span>
-        <button class="add-filter-btn" id="btn-add-filter" disabled>+ Adicionar filtro</button>
-      </div>
-      <div class="filters-list" id="filters-list">
-        <div class="filters-empty">Nenhum filtro — todos os registros serão incluídos.</div>
-      </div>
-    </section>
-
-    <!-- CTA -->
-    <div class="tr-cta">
-      <button class="cta-btn" id="btn-run" disabled>
-        <span class="cta-btn__icon">&#9654;</span>
-        Gerar tabela
-      </button>
-    </div>
-
-  </div><!-- /tr-body -->
-
-  <!-- ░░ RESULTS ░░ -->
-  <div class="tr-results" id="tr-results">
-
-    <div class="results-empty" id="results-empty">
-      <div class="ree-grid">
-        {Array.from({length: 12}).map(() => <div class="ree-cell"></div>)}
-      </div>
-      <p class="ree-text">O resultado aparecerá aqui depois que você clicar em <strong>Gerar tabela</strong></p>
-    </div>
-
-    <div class="results-active" id="results-active" style="display:none">
-
-      <div class="results-toolbar">
-        <span class="rt-count" id="rt-count"></span>
-        <span class="rt-join"  id="rt-join"></span>
-        <div class="rt-actions">
-          <button class="rt-btn" id="btn-csv">&#8595; CSV</button>
-          <button class="rt-btn rt-btn--sql" id="btn-show-sql">&#60;/&#62; SQL</button>
-        </div>
-      </div>
-
-      <!-- SQL panel -->
-      <div class="sql-panel" id="sql-panel" style="display:none">
-        <div class="sql-panel__head">
-          <span class="sql-panel__label">SQL reutilizável · DuckDB / MotherDuck / dbt</span>
-          <button class="sql-copy-btn" id="btn-copy-sql">Copiar</button>
-        </div>
-        <pre class="sql-pre" id="sql-pre"></pre>
-      </div>
-
-      <!-- Table -->
-      <div class="result-table-wrap" id="result-table-wrap"></div>
-
-    </div>
-
-  </div><!-- /tr-results -->
-
-</div><!-- /tr-root -->
-
-</Base>
-
-<script define:vars={{ joinsJson, parquetJson }}>
-  window.__TR__ = {
-    joins:   JSON.parse(joinsJson),
-    parquet: JSON.parse(parquetJson),
-  };
-</script>
-
-<script type="module">
-import * as duckdb from "https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.29.0/+esm";
-
-const { joins, parquet } = window.__TR__;
-
-// ── DOM ────────────────────────────────────────────────────────────────────
-const dot          = document.getElementById("tr-dot");
-const statusEl     = document.getElementById("tr-status");
-const joinGrid     = document.getElementById("join-grid");
-const dim1         = document.getElementById("dim1");
-const dim2         = document.getElementById("dim2");
-const aggFn        = document.getElementById("agg-fn");
-const aggCol       = document.getElementById("agg-col");
-const aggColWrap   = document.getElementById("agg-col-wrap");
-const filtersList  = document.getElementById("filters-list");
-const btnAddFilter = document.getElementById("btn-add-filter");
-const btnRun       = document.getElementById("btn-run");
-const dimsHint     = document.getElementById("dims-hint");
-const metricHint   = document.getElementById("metric-hint");
-const resultsEmpty = document.getElementById("results-empty");
-const resultsActive= document.getElementById("results-active");
-const rtCount      = document.getElementById("rt-count");
-const rtJoin       = document.getElementById("rt-join");
-const btnCsv       = document.getElementById("btn-csv");
-const btnShowSql   = document.getElementById("btn-show-sql");
-const sqlPanel     = document.getElementById("sql-panel");
-const sqlPre       = document.getElementById("sql-pre");
-const btnCopySql   = document.getElementById("btn-copy-sql");
-const tableWrap    = document.getElementById("result-table-wrap");
-
-// ── State ──────────────────────────────────────────────────────────────────
-let db, conn;
-let ready         = false;
-let currentJoin   = null;
-let allColumns    = [];   // { name, type, alias, qualified }
-let textCols      = [];
-let numCols       = [];
-let filters       = [];
-let filterId      = 0;
-let lastSQL       = "";
-let lastRows      = [];
-let lastColNames  = [];
-
-// ── INIT ───────────────────────────────────────────────────────────────────
-(async () => {
-  try {
-    const bundles  = duckdb.getJsDelivrBundles();
-    const bundle   = await duckdb.selectBundle(bundles);
-    const workerUrl = URL.createObjectURL(
-      new Blob([`importScripts("${bundle.mainWorker}");`], { type: "text/javascript" })
-    );
-    db = new duckdb.AsyncDuckDB(new duckdb.ConsoleLogger(), new Worker(workerUrl));
-    await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
-    conn = await db.connect();
-    await conn.query("INSTALL httpfs; LOAD httpfs; SET s3_region='us-east-1';");
-
-    const names = Object.keys(parquet);
-    statusEl.textContent = `Registrando ${names.length} tabelas…`;
-    for (const [name, url] of Object.entries(parquet)) {
-      await conn.query(`CREATE OR REPLACE VIEW ${name} AS SELECT * FROM '${url}'`);
-    }
-
-    dot.className = "tdot tdot--ok";
-    statusEl.textContent = `${names.length} tabelas · pronto`;
-    ready = true;
-  } catch (e) {
-    dot.className = "tdot tdot--err";
-    statusEl.textContent = "Erro ao iniciar motor: " + e.message;
-  }
-})();
-
-// ── JOIN SELECTION ─────────────────────────────────────────────────────────
-joinGrid.addEventListener("click", async e => {
-  const card = e.target.closest("[data-join]");
-  if (!card || !ready) return;
-
-  joinGrid.querySelectorAll(".jcard").forEach(c => c.classList.remove("jcard--active"));
-  card.classList.add("jcard--active");
-
-  const jid = card.dataset.join;
-  currentJoin = joins.find(j => j.id === jid);
-  filters = [];
-  renderFilters();
-
-  statusEl.textContent = `Carregando esquema de ${currentJoin.label}…`;
-
-  try {
-    const { tablesNeeded, fromSQL } = currentJoin;
-    const [tA, tB] = tablesNeeded;
-
-    const [colsA, colsB] = await Promise.all([
-      describeTable(tA),
-      describeTable(tB),
-    ]);
-
-    // Build qualified column list (alias.COLNAME), dedup by name to avoid collisions
-    const seen = new Set();
-    allColumns = [];
-    const aliasA = "o";
-    const aliasB = tB === "bilheteria_por_filme_ano" ? "b"
-                 : tB === "diretores_obras"          ? "d"
-                 : tB === "produtores_obras"          ? "p"
-                 : tB === "fomento_fsa"               ? "f"
-                 : tB === "renuncia_fiscal"            ? "r"
-                 : tB === "bilheteria_europa"          ? "l"
-                 : tB === "vod_europa"                ? "v"
-                 : "b";
-
-    for (const c of colsA) {
-      const key = c.name.toLowerCase();
-      if (!seen.has(key)) {
-        seen.add(key);
-        allColumns.push({ name: c.name, type: c.type, alias: aliasA, qualified: `${aliasA}.${c.name}` });
-      }
-    }
-    for (const c of colsB) {
-      const key = c.name.toLowerCase();
-      if (!seen.has(key)) {
-        seen.add(key);
-        allColumns.push({ name: c.name, type: c.type, alias: aliasB, qualified: `${aliasB}."${c.name}"` });
-      } else {
-        // Name collision: qualify with table alias
-        allColumns.push({ name: `${tB}.${c.name}`, type: c.type, alias: aliasB, qualified: `${aliasB}."${c.name}"` });
-      }
-    }
-
-    textCols = allColumns.filter(c => isText(c.type));
-    numCols  = allColumns.filter(c => isNumeric(c.type));
-
-    populateDimSelects();
-    populateAggColSelect();
-    unlockSteps();
-
-    statusEl.textContent = `${currentJoin.label} · ${allColumns.length} colunas disponíveis`;
-  } catch (e) {
-    statusEl.textContent = "Erro ao carregar esquema: " + e.message;
-  }
-});
-
-async function describeTable(name) {
-  const res = await conn.query(`DESCRIBE ${name}`);
-  return res.toArray().map(r => ({ name: r.column_name, type: r.column_type }));
+    </div>`;
 }
 
-function isText(t)    { return /varchar|char|text|string|date|timestamp/i.test(t); }
-function isNumeric(t) { return /int|float|double|decimal|number|bigint|real|hugeint/i.test(t); }
-
-// ── POPULATE SELECTS ───────────────────────────────────────────────────────
-function populateDimSelects() {
-  const opts = textCols.map(c =>
-    `<option value="${c.qualified}">${c.name} (${c.type})</option>`
-  ).join("");
-
-  dim1.innerHTML = `<option value="">— escolha uma coluna —</option>${opts}`;
-  dim2.innerHTML = `<option value="">— nenhuma —</option>${opts}`;
-
-  [dim1, dim2, aggFn].forEach(el => { el.disabled = false; });
-  dimsHint.textContent = `${textCols.length} colunas de texto disponíveis`;
-  metricHint.textContent = `${numCols.length} colunas numéricas disponíveis`;
-}
-
-function populateAggColSelect() {
-  const opts = numCols.map(c =>
-    `<option value="${c.qualified}">${c.name} (${c.type})</option>`
-  ).join("");
-  aggCol.innerHTML = `<option value="">— escolha uma coluna —</option>${opts}`;
-  aggCol.disabled = false;
-}
-
-function unlockSteps() {
-  ["step-dims", "step-metric", "step-filters"].forEach(id => {
-    document.getElementById(id).classList.remove("tr-step--locked");
-  });
-  btnAddFilter.disabled = false;
-  checkRunReady();
-}
-
-// ── AGG FN CHANGE ──────────────────────────────────────────────────────────
-aggFn.addEventListener("change", () => {
-  const needsCol = aggFn.value !== "COUNT_STAR";
-  aggColWrap.style.display = needsCol ? "flex" : "none";
-  checkRunReady();
-});
-
-dim1.addEventListener("change", checkRunReady);
-
-function checkRunReady() {
-  const hasJoin = !!currentJoin;
-  const hasDim  = dim1.value !== "";
-  const hasMetric = aggFn.value === "COUNT_STAR" || (aggFn.value && aggCol.value);
-  btnRun.disabled = !(hasJoin && hasDim && hasMetric && ready);
-}
-
-// ── FILTERS ────────────────────────────────────────────────────────────────
-btnAddFilter.addEventListener("click", () => {
-  if (!currentJoin) return;
-  const id = ++filterId;
-  const colOpts = allColumns.map(c =>
-    `<option value="${c.qualified}">${c.name}</option>`
-  ).join("");
-
-  const div = document.createElement("div");
-  div.className = "filter-row";
-  div.dataset.fid = id;
-  div.innerHTML = `
-    <select class="f-col">${colOpts}</select>
-    <select class="f-op">
-      <option value="=">=</option>
-      <option value="!=">≠</option>
-      <option value="CONTAINS">contém</option>
-      <option value=">">&#62;</option>
-      <option value=">=">&#62;=</option>
-      <option value="<">&#60;</option>
-      <option value="<=">&#60;=</option>
-      <option value="IS NULL">é nulo</option>
-      <option value="IS NOT NULL">não é nulo</option>
-    </select>
-    <input class="f-val" type="text" placeholder="valor" />
-    <button class="f-rm" data-fid="${id}">×</button>
-  `;
-  // Hide val input for null checks
-  div.querySelector(".f-op").addEventListener("change", e => {
-    div.querySelector(".f-val").style.display =
-      ["IS NULL", "IS NOT NULL"].includes(e.target.value) ? "none" : "";
-  });
-  div.querySelector(".f-rm").addEventListener("click", () => {
-    div.remove();
-    filters = filters.filter(f => f.id !== id);
-    if (!filtersList.querySelector(".filter-row")) {
-      filtersList.innerHTML = '<div class="filters-empty">Nenhum filtro — todos os registros serão incluídos.</div>';
-    }
-  });
-
-  // Remove empty state
-  const empty = filtersList.querySelector(".filters-empty");
-  if (empty) empty.remove();
-
-  filtersList.appendChild(div);
-  filters.push({ id });
-});
-
-function collectFilters() {
-  const clauses = [];
-  filtersList.querySelectorAll(".filter-row").forEach(row => {
-    const col = row.querySelector(".f-col").value;
-    const op  = row.querySelector(".f-op").value;
-    const val = row.querySelector(".f-val").value.trim();
-    if (!col) return;
-    if (op === "IS NULL" || op === "IS NOT NULL") {
-      clauses.push(`${col} ${op}`);
-    } else if (op === "CONTAINS") {
-      clauses.push(`${col} ILIKE '%${val.replace(/'/g, "''")}%'`);
-    } else {
-      const quoted = isNaN(val) ? `'${val.replace(/'/g, "''")}'` : val;
-      clauses.push(`${col} ${op} ${quoted}`);
-    }
-  });
-  return clauses;
-}
-
-// ── BUILD SQL ──────────────────────────────────────────────────────────────
-function buildSQL() {
-  const j = currentJoin;
-  const d1 = dim1.value;
-  const d2 = dim2.value || null;
-  const fn = aggFn.value;
-  const ac = aggCol.value;
-
-  const metricExpr = fn === "COUNT_STAR"
-    ? "COUNT(*) AS n"
-    : `${fn}(${ac}) AS valor`;
-
-  const dims = [d1, d2].filter(Boolean);
-  const groupBy = dims.join(",\n  ");
-  const selectDims = dims.join(",\n  ");
-
-  const whereClauses = collectFilters();
-  const whereSQL = whereClauses.length ? `\nWHERE\n  ${whereClauses.join("\n  AND ")}` : "";
-
-  const qualityNote = j.quality < 100
-    ? `-- ⚠ Join aproximado (${j.quality === 85 ? '~85%' : j.quality === 80 ? '~80%' : '~70%'}): ${j.joinNote}\n-- Casos com título alterado entre edital e lançamento podem não casar\n`
-    : "";
-
-  const sql = `-- Cruzamento: ${j.label}
--- ${j.joinNote}
-${qualityNote}-- Gerado por RIAB Transformar · riabr-dados.github.io/riab/transformar/
-
-SELECT
-  ${selectDims},
-  ${metricExpr}
-FROM ${j.fromSQL}${whereSQL}
-GROUP BY
-  ${groupBy}
-ORDER BY
-  ${fn === "COUNT_STAR" ? "n" : "valor"} DESC;`;
-
-  return sql;
-}
-
-// ── RUN ────────────────────────────────────────────────────────────────────
-btnRun.addEventListener("click", run);
-
-async function run() {
-  if (!ready || !currentJoin || !dim1.value) return;
-
-  btnRun.disabled = true;
-  btnRun.querySelector(".cta-btn__icon").textContent = "◌";
-  statusEl.textContent = "Executando consulta…";
-
-  const sql = buildSQL();
-  lastSQL = sql;
-
-  try {
-    const t0  = Date.now();
-    const res = await conn.query(sql);
-    const ms  = Date.now() - t0;
-
-    lastRows    = res.toArray();
-    lastColNames= res.schema.fields.map(f => f.name);
-
-    renderResults(ms);
-    sqlPre.textContent = sql;
-
-    statusEl.textContent = `${lastRows.length} linhas · ${ms}ms`;
-  } catch (e) {
-    statusEl.textContent = "Erro: " + e.message;
-    tableWrap.innerHTML = `<div class="query-error">${e.message}</div>`;
-    resultsEmpty.style.display = "none";
-    resultsActive.style.display = "block";
-  } finally {
-    btnRun.disabled = false;
-    btnRun.querySelector(".cta-btn__icon").textContent = "▶";
-  }
-}
-
-// ── RENDER TABLE ───────────────────────────────────────────────────────────
-function renderResults(ms) {
-  resultsEmpty.style.display = "none";
-  resultsActive.style.display = "block";
-
-  rtCount.textContent = `${lastRows.length} linhas · ${ms}ms`;
-  rtJoin.textContent  = currentJoin.label;
-
-  if (lastRows.length === 0) {
-    tableWrap.innerHTML = `<div class="query-error">Nenhum resultado para os filtros selecionados.</div>`;
-    return;
-  }
-
-  // Find the metric column (last column) for bar visualization
-  const metricCol = lastColNames[lastColNames.length - 1];
-  const vals = lastRows.map(r => Number(r[metricCol]) || 0);
-  const maxVal = Math.max(...vals);
-
-  let html = `<table class="rt"><thead><tr>`;
-  lastColNames.forEach(c => { html += `<th>${c}</th>`; });
-  html += `</tr></thead><tbody>`;
-
-  lastRows.forEach(row => {
-    html += `<tr>`;
-    lastColNames.forEach((col, i) => {
-      const v = row[col];
-      const display = v === null || v === undefined ? "—" : String(v);
-      if (i === lastColNames.length - 1 && maxVal > 0) {
-        const pct = Math.round((Number(v) / maxVal) * 100);
-        html += `<td class="rt__metric">
-          <div class="rt__bar-wrap">
-            <div class="rt__bar" style="width:${pct}%"></div>
-            <span class="rt__val">${Number.isInteger(Number(v)) ? Number(v).toLocaleString("pt-BR") : Number(v).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-          </div>
-        </td>`;
-      } else {
-        html += `<td>${display}</td>`;
-      }
+(function initCruzamentos() {
+  const bar = document.getElementById('cpicker-bar');
+  bar.innerHTML = CRUZAMENTOS.map((c, i) => `
+    <button class="cpick${i === 0 ? ' active' : ''}" data-ci="${i}">
+      ${c.label}${JTYPE_CHIPS[c.join]}
+    </button>`).join('');
+  bar.querySelectorAll('.cpick').forEach(btn => {
+    btn.addEventListener('click', () => {
+      bar.querySelectorAll('.cpick').forEach(x => x.classList.remove('active'));
+      btn.classList.add('active');
+      renderCruzamento(+btn.dataset.ci);
     });
-    html += `</tr>`;
   });
-  html += `</tbody></table>`;
-  tableWrap.innerHTML = html;
-}
-
-// ── EXPORT CSV ─────────────────────────────────────────────────────────────
-btnCsv.addEventListener("click", () => {
-  if (!lastRows.length) return;
-  const sep = ";";
-  const header = lastColNames.join(sep);
-  const rows = lastRows.map(r =>
-    lastColNames.map(c => {
-      const v = r[c];
-      if (v === null || v === undefined) return "";
-      const s = String(v);
-      return s.includes(sep) || s.includes('"') || s.includes("\n")
-        ? `"${s.replace(/"/g, '""')}"`
-        : s;
-    }).join(sep)
-  ).join("\n");
-  const blob = new Blob(["﻿" + header + "\n" + rows], { type: "text/csv;charset=utf-8;" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = `riab_${currentJoin.id}_${new Date().toISOString().slice(0,10)}.csv`;
-  a.click();
-});
-
-// ── SQL PANEL ──────────────────────────────────────────────────────────────
-btnShowSql.addEventListener("click", () => {
-  const visible = sqlPanel.style.display !== "none";
-  sqlPanel.style.display = visible ? "none" : "block";
-  btnShowSql.classList.toggle("rt-btn--active", !visible);
-});
-
-btnCopySql.addEventListener("click", async () => {
-  await navigator.clipboard.writeText(sqlPre.textContent);
-  btnCopySql.textContent = "Copiado!";
-  setTimeout(() => { btnCopySql.textContent = "Copiar"; }, 1500);
-});
-
-// ── LISTEN FOR COL CHANGES ─────────────────────────────────────────────────
-aggCol.addEventListener("change", checkRunReady);
+  renderCruzamento(0);
+})();
 </script>
 
-<style>
-  /* ── Local alias (herda tokens de global.css) ── */
-  :root {
-    --radius: 8px;
-    --mono: var(--font-m);
-  }
+<style is:global>
 
-  /* ── Layout ── */
-  .tr {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem 1.5rem 4rem;
-    font-family: var(--font-s);
-    color: var(--text);
-  }
+/* ── Page wrapper ────────────────────────────────────────────── */
+.tr-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px var(--pad) 96px;
+}
 
-  /* ── Header ── */
-  .tr-header {
-    margin-bottom: 2.5rem;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 1.5rem;
-  }
-  .tr-header__eyebrow {
-    font-family: var(--mono);
-    font-size: .7rem;
-    letter-spacing: .12em;
-    color: var(--br);
-    margin-bottom: .5rem;
-  }
-  .tr-header__title {
-    font-size: 1.75rem;
-    font-weight: 700;
-    margin: 0 0 .4rem;
-    letter-spacing: -.02em;
-    font-family: var(--font-d);
-  }
-  .tr-header__sub {
-    color: var(--muted);
-    font-size: .9rem;
-    margin: 0 0 .75rem;
-  }
-  .tr-header__status {
-    display: flex;
-    align-items: center;
-    gap: .5rem;
-    font-size: .8rem;
-    color: var(--dim);
-    font-family: var(--mono);
-  }
-  .tdot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--dim);
-    flex-shrink: 0;
-    transition: background .3s;
-  }
-  .tdot--ok  { background: var(--br); box-shadow: 0 0 6px rgba(0,122,60,.4); }
-  .tdot--err { background: #e8341a; }
+/* ── Header ──────────────────────────────────────────────────── */
+.tr-head {
+  margin-bottom: 64px;
+}
+.tr-eyebrow {
+  font-family: var(--font-m);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+.tr-h1 {
+  font-family: var(--font-d);
+  font-variation-settings: 'opsz' 14, 'wdth' 90, 'wght' 700;
+  font-size: clamp(28px, 4vw, 42px);
+  letter-spacing: -.03em;
+  color: var(--text);
+  margin-bottom: 18px;
+  line-height: 1.15;
+}
+.tr-h1 em {
+  font-style: italic;
+  font-family: var(--font-d);
+}
+.tr-deck {
+  font-size: 15px;
+  line-height: 1.7;
+  color: #2a241a;
+  max-width: 680px;
+}
 
-  /* ── Step ── */
-  .tr-body { display: flex; flex-direction: column; gap: 1.5rem; }
+/* ── Join map ────────────────────────────────────────────────── */
+.jmap-wrap {
+  padding: 44px 0 48px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 56px;
+  overflow-x: auto;
+}
+.jmap-eyebrow {
+  font-family: var(--font-m);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.jmap-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 24px; height: 1px;
+  background: var(--border2);
+}
+.jmap-svg {
+  width: 100%;
+  max-width: 660px;
+  display: block;
+  overflow: visible;
+  min-width: 480px;
+}
+.jmap-legend {
+  display: flex;
+  gap: 22px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+}
+.jleg {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--font-m);
+  font-size: 10.5px;
+  color: var(--muted);
+  letter-spacing: .04em;
+}
+.jleg-line { display: inline-block; width: 28px; height: 2px; }
+.jleg-exact .jleg-line { background: #007a3c; }
+.jleg-proxy .jleg-line { background: transparent; border-top: 2px dashed #c8920a; height: 0; }
+.jleg-salic .jleg-line { background: transparent; border-top: 2px solid #1f3bb8; height: 0; }
+.jleg-cnpj  .jleg-line { background: #5a2244; }
 
-  .tr-step {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1.25rem 1.5rem;
-    box-shadow: var(--sh-sm);
-    transition: opacity .2s;
-  }
-  .tr-step--locked { opacity: .45; pointer-events: none; }
+/* ── Rule cards ──────────────────────────────────────────────── */
+.regras-section { margin-bottom: 56px; }
+.regras-eyebrow {
+  font-family: var(--font-m);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.regras-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 24px; height: 1px;
+  background: var(--border2);
+}
+.regras-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  background: var(--border);
+  gap: 1px;
+  border: 1px solid var(--border);
+}
+@media (min-width: 760px) {
+  .regras-grid { grid-template-columns: 1fr 1fr; }
+}
+.regra-card {
+  background: var(--bg);
+  padding: 28px 30px 32px;
+  position: relative;
+  transition: background .15s;
+}
+.regra-card:hover { background: var(--surface); }
+.rc-bar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+.rc-exact .rc-bar { background: #007a3c; }
+.rc-proxy .rc-bar { background: #c8920a; }
+.rc-salic .rc-bar { background: #1f3bb8; }
+.rc-crt   .rc-bar { background: #6b6450; }
+.rc-tag {
+  font-family: var(--font-m);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.rc-exact .rc-tag { color: #007a3c; }
+.rc-proxy .rc-tag { color: #c8920a; }
+.rc-salic .rc-tag { color: #1f3bb8; }
+.rc-crt   .rc-tag { color: #6b6450; }
+.rc-name {
+  font-family: var(--font-d);
+  font-variation-settings: 'opsz' 14, 'wdth' 90, 'wght' 650;
+  font-size: 17px;
+  letter-spacing: -.02em;
+  color: var(--text);
+  margin-bottom: 14px;
+}
+.rc-body { font-size: 13.5px; line-height: 1.65; color: #2a241a; }
+.rc-body p { margin-bottom: 10px; }
+.rc-body code {
+  font-family: var(--font-m);
+  font-size: 11.5px;
+  color: #e8341a;
+}
+.rc-where {
+  margin-top: 14px;
+  padding: 12px 14px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  font-family: var(--font-m);
+  font-size: 11px;
+  line-height: 1.9;
+  color: var(--muted);
+}
+.rc-where code { color: #e8341a; font-family: var(--font-m); font-size: 11px; }
+.rc-where-h {
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #2a241a;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+.rc-em { font-size: 11px; color: var(--dim); }
+.rc-note {
+  margin-top: 12px;
+  padding: 9px 12px;
+  border-left: 3px solid;
+  font-size: 12.5px;
+  color: #2a241a;
+  line-height: 1.55;
+}
+.rc-note-warn { border-color: #c8920a; background: rgba(200,146,10,.06); }
+.rc-note-info { border-color: #1f3bb8; background: rgba(31,59,184,.05); }
+.rc-note-ok   { border-color: #007a3c; background: rgba(0,122,60,.05); }
+.rc-algo {
+  margin-top: 10px;
+  font-family: var(--font-m);
+  font-size: 11.5px;
+  color: #007a3c;
+  padding: 8px 12px;
+  background: rgba(0,122,60,.05);
+  border-left: 2px solid #007a3c;
+  word-break: break-all;
+}
 
-  .tr-step__head {
-    display: flex;
-    align-items: center;
-    gap: .75rem;
-    margin-bottom: 1rem;
-  }
-  .tr-step__num {
-    font-family: var(--mono);
-    font-size: .75rem;
-    font-weight: 700;
-    color: var(--br);
-    background: rgba(0,122,60,.1);
-    border: 1px solid rgba(0,122,60,.25);
-    border-radius: 4px;
-    padding: .15rem .4rem;
-    letter-spacing: .06em;
-  }
-  .tr-step__label {
-    font-weight: 600;
-    font-size: .95rem;
-  }
-  .tr-step__hint {
-    margin-left: auto;
-    font-size: .78rem;
-    color: var(--dim);
-    font-family: var(--mono);
-  }
+/* ── Cruzamentos picker ──────────────────────────────────────── */
+.cruzamentos-section { margin-bottom: 72px; }
+.cruzamentos-eyebrow {
+  font-family: var(--font-m);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.cruzamentos-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 24px; height: 1px;
+  background: var(--border2);
+}
+.cpicker-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 28px;
+}
+.cpick {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: transparent;
+  border: 1px solid var(--border2);
+  font-family: var(--font-s);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all .14s;
+  white-space: nowrap;
+  letter-spacing: -.003em;
+}
+.cpick:hover { color: var(--text); border-color: var(--text); }
+.cpick.active { background: var(--text); color: var(--bg); border-color: var(--text); }
+.cpick .cjtype {
+  font-size: 9px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 2px;
+  margin-left: 2px;
+}
+.cjtype-exact { background: rgba(0,122,60,.15);   color: #007a3c; }
+.cjtype-proxy { background: rgba(200,146,10,.15); color: #c8920a; }
+.cjtype-salic { background: rgba(31,59,184,.10);  color: #1f3bb8; }
+.cjtype-cnpj  { background: rgba(90,34,68,.10);   color: #5a2244; }
+.cpick.active .cjtype { background: rgba(250,248,239,.15); color: rgba(250,248,239,.7); }
 
-  /* ── Join grid ── */
-  .join-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: .75rem;
-  }
+/* ── Cruzamento detail ───────────────────────────────────────── */
+.cdetail { border: 1px solid var(--border); background: var(--surface); }
+.cdetail-top {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 760px) {
+  .cdetail-top { grid-template-columns: 1.1fr 1fr; }
+}
+.cdetail-info {
+  padding: 28px 32px;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+@media (min-width: 760px) {
+  .cdetail-info { border-bottom: none; }
+}
+.cdetail-bases {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.cbase {
+  font-family: var(--font-m);
+  font-size: 11px;
+  padding: 4px 10px;
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  color: #2a241a;
+}
+.cbase-op {
+  font-family: var(--font-d);
+  font-variation-settings: 'wght' 300;
+  font-size: 16px;
+  color: var(--dim);
+}
+.cjoin-pill {
+  font-family: var(--font-m);
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.cjoin-exact { background: rgba(0,122,60,.10);   color: #007a3c; border: 1px solid rgba(0,122,60,.2);   }
+.cjoin-proxy { background: rgba(200,146,10,.10); color: #c8920a; border: 1px solid rgba(200,146,10,.25); }
+.cjoin-salic { background: rgba(31,59,184,.08);  color: #1f3bb8; border: 1px solid rgba(31,59,184,.18); }
+.cjoin-cnpj  { background: rgba(90,34,68,.08);   color: #5a2244; border: 1px solid rgba(90,34,68,.15);  }
+.cdetail-title {
+  font-family: var(--font-d);
+  font-variation-settings: 'opsz' 14, 'wdth' 90, 'wght' 650;
+  font-size: 19px;
+  letter-spacing: -.025em;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+.cdetail-desc {
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: #2a241a;
+  margin-bottom: 16px;
+}
+.ckey-box {
+  font-family: var(--font-m);
+  font-size: 11.5px;
+  color: var(--muted);
+  padding: 10px 12px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+.ckey-box b { color: #2a241a; }
+.cquestions-h {
+  font-family: var(--font-m);
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.cquestions {
+  list-style: none;
+  padding: 0;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.75;
+}
+.cquestions li::before { content: '→ '; color: var(--dim); }
+.cdetail-code {
+  padding: 28px 32px;
+  background: #0a0906;
+}
+.ccode-label {
+  font-family: var(--font-m);
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(250,248,239,.35);
+  margin-bottom: 14px;
+}
+.ccode-pre {
+  font-family: var(--font-m);
+  font-size: 11.5px;
+  line-height: 1.7;
+  color: rgba(250,248,239,.82);
+  white-space: pre;
+  overflow-x: auto;
+  margin: 0;
+}
+/* SQL syntax highlighting */
+.kw { color: #a5e7c8; }
+.cm { color: rgba(250,248,239,.35); }
+.sv { color: #ffd680; }
+.fn { color: #c4a6ff; }
 
-  .jcard {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1rem;
-    text-align: left;
-    cursor: pointer;
-    transition: border-color .15s, background .15s, box-shadow .15s;
-    display: flex;
-    flex-direction: column;
-    gap: .35rem;
-  }
-  .jcard:hover { border-color: var(--br); box-shadow: var(--sh-sm); }
-  .jcard--active {
-    border-color: var(--br);
-    background: rgba(0,122,60,.06);
-  }
+.cdetail-foot {
+  padding: 16px 32px;
+  border-top: 1px solid #1e1c19;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.cconf-label {
+  font-family: var(--font-m);
+  font-size: 11px;
+  color: rgba(250,248,239,.4);
+  letter-spacing: .04em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cconf-dots { display: inline-flex; gap: 4px; }
+.cconf-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgba(250,248,239,.15);
+}
+.cconf-dot.on { background: rgba(250,248,239,.8); }
+.cconf-caveat {
+  font-family: var(--font-m);
+  font-size: 11px;
+  color: rgba(250,248,239,.35);
+}
 
-  .jcard__top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: .5rem;
-  }
-  .jcard__label {
-    font-weight: 600;
-    font-size: .85rem;
-    line-height: 1.3;
-  }
-  .jcard__badge {
-    font-family: var(--mono);
-    font-size: .65rem;
-    font-weight: 700;
-    border-radius: 3px;
-    padding: .1rem .35rem;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-  .jcard__badge--ok   { background: rgba(0,122,60,.12); color: #005c2e; border: 1px solid rgba(0,122,60,.3); }
-  .jcard__badge--good { background: rgba(0,122,60,.07); color: var(--br); border: 1px solid rgba(0,122,60,.2); }
-  .jcard__badge--warn { background: rgba(176,125,10,.12); color: #7a5500; border: 1px solid rgba(176,125,10,.3); }
-  .jcard__badge--low  { background: rgba(232,52,26,.10); color: #b5250e; border: 1px solid rgba(232,52,26,.2); }
-
-  .jcard__desc {
-    font-size: .78rem;
-    color: var(--muted);
-    line-height: 1.4;
-  }
-  .jcard__note {
-    font-family: var(--mono);
-    font-size: .65rem;
-    color: var(--dim);
-    margin-top: .15rem;
-  }
-
-  /* ── Dim / metric selects ── */
-  .dims-wrap, .metric-wrap { display: flex; flex-direction: column; gap: .75rem; }
-
-  .dim-row, .metric-row {
-    display: flex;
-    align-items: center;
-    gap: .75rem;
-  }
-  .dim-label {
-    font-size: .78rem;
-    color: var(--muted);
-    min-width: 90px;
-    font-family: var(--mono);
-  }
-  .dim-optional { color: var(--dim); }
-
-  .dim-select {
-    flex: 1;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 5px;
-    color: var(--text);
-    padding: .45rem .6rem;
-    font-size: .83rem;
-    font-family: var(--mono);
-    appearance: none;
-    cursor: pointer;
-    transition: border-color .15s;
-  }
-  .dim-select:hover:not(:disabled) { border-color: var(--br); }
-  .dim-select:disabled { opacity: .5; cursor: default; }
-
-  /* ── Filters ── */
-  .add-filter-btn {
-    margin-left: auto;
-    background: transparent;
-    border: 1px solid var(--border);
-    border-radius: 5px;
-    color: var(--muted);
-    font-size: .78rem;
-    padding: .3rem .7rem;
-    cursor: pointer;
-    transition: border-color .15s, color .15s;
-  }
-  .add-filter-btn:hover:not(:disabled) { border-color: var(--br); color: var(--br); }
-  .add-filter-btn:disabled { opacity: .5; cursor: default; }
-
-  .filters-empty {
-    font-size: .8rem;
-    color: var(--dim);
-    font-family: var(--mono);
-  }
-
-  .filter-row {
-    display: flex;
-    gap: .5rem;
-    align-items: center;
-    margin-bottom: .5rem;
-  }
-  .f-col, .f-op {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 5px;
-    color: var(--text);
-    padding: .35rem .5rem;
-    font-size: .8rem;
-    font-family: var(--mono);
-  }
-  .f-col { flex: 2; }
-  .f-op  { flex: 1; }
-  .f-val {
-    flex: 1;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 5px;
-    color: var(--text);
-    padding: .35rem .5rem;
-    font-size: .8rem;
-    font-family: var(--mono);
-  }
-  .f-rm {
-    background: transparent;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    color: var(--dim);
-    cursor: pointer;
-    padding: .3rem .55rem;
-    font-size: .9rem;
-    transition: border-color .15s, color .15s;
-  }
-  .f-rm:hover { border-color: #e8341a; color: #e8341a; }
-
-  /* ── CTA ── */
-  .tr-cta { display: flex; justify-content: flex-end; }
-
-  .cta-btn {
-    background: var(--br);
-    color: #fff;
-    border: none;
-    border-radius: var(--radius);
-    font-size: .9rem;
-    font-weight: 600;
-    padding: .7rem 1.6rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: .5rem;
-    transition: opacity .15s, box-shadow .15s;
-  }
-  .cta-btn:hover:not(:disabled) {
-    opacity: .9;
-    box-shadow: 0 0 12px rgba(0,122,60,.35);
-  }
-  .cta-btn:disabled { opacity: .4; cursor: default; }
-
-  /* ── Results ── */
-  .tr-results {
-    margin-top: 2rem;
-    min-height: 200px;
-  }
-
-  .results-empty {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    padding: 3rem 1rem;
-    border: 1px dashed var(--border);
-    border-radius: var(--radius);
-  }
-  .ree-grid {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 4px;
-    opacity: .4;
-  }
-  .ree-cell {
-    height: 18px;
-    background: var(--border);
-    border-radius: 3px;
-    animation: pulse 2s ease-in-out infinite;
-  }
-  .ree-cell:nth-child(odd)  { animation-delay: .2s; }
-  .ree-cell:nth-child(3n)   { animation-delay: .5s; }
-  @keyframes pulse {
-    0%,100% { opacity: .4; }
-    50%      { opacity: .85; }
-  }
-  .ree-text {
-    font-size: .85rem;
-    color: var(--dim);
-    text-align: center;
-  }
-
-  /* Results toolbar */
-  .results-toolbar {
-    display: flex;
-    align-items: center;
-    gap: .75rem;
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-  }
-  .rt-count {
-    font-family: var(--mono);
-    font-size: .78rem;
-    color: var(--dim);
-  }
-  .rt-join {
-    font-size: .78rem;
-    color: var(--br);
-    font-family: var(--mono);
-  }
-  .rt-actions { margin-left: auto; display: flex; gap: .5rem; }
-  .rt-btn {
-    background: transparent;
-    border: 1px solid var(--border);
-    border-radius: 5px;
-    color: var(--muted);
-    font-size: .78rem;
-    font-family: var(--mono);
-    padding: .35rem .75rem;
-    cursor: pointer;
-    transition: border-color .15s, color .15s;
-  }
-  .rt-btn:hover { border-color: var(--br); color: var(--br); }
-  .rt-btn--sql { border-color: rgba(0,122,60,.35); color: var(--br); }
-  .rt-btn--active { background: rgba(0,122,60,.08); }
-
-  /* SQL panel */
-  .sql-panel {
-    background: var(--bg2);
-    border: 1px solid rgba(0,122,60,.25);
-    border-radius: var(--radius);
-    margin-bottom: 1rem;
-    overflow: hidden;
-  }
-  .sql-panel__head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: .6rem 1rem;
-    border-bottom: 1px solid var(--border);
-    background: rgba(0,122,60,.05);
-  }
-  .sql-panel__label {
-    font-family: var(--mono);
-    font-size: .72rem;
-    color: var(--br);
-  }
-  .sql-copy-btn {
-    background: transparent;
-    border: 1px solid rgba(0,122,60,.35);
-    border-radius: 4px;
-    color: var(--br);
-    font-size: .72rem;
-    font-family: var(--mono);
-    padding: .2rem .55rem;
-    cursor: pointer;
-    transition: background .15s;
-  }
-  .sql-copy-btn:hover { background: rgba(0,122,60,.08); }
-  .sql-pre {
-    padding: 1rem;
-    font-family: var(--mono);
-    font-size: .8rem;
-    line-height: 1.6;
-    color: var(--text);
-    white-space: pre;
-    overflow-x: auto;
-    margin: 0;
-  }
-
-  /* Result table */
-  .result-table-wrap {
-    overflow-x: auto;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-  }
-  .rt {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: .82rem;
-  }
-  .rt th {
-    background: var(--bg2);
-    padding: .6rem .8rem;
-    text-align: left;
-    font-weight: 600;
-    font-size: .75rem;
-    letter-spacing: .04em;
-    color: var(--muted);
-    border-bottom: 1px solid var(--border);
-    white-space: nowrap;
-  }
-  .rt td {
-    padding: .5rem .8rem;
-    border-bottom: 1px solid var(--border);
-    white-space: nowrap;
-    max-width: 260px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-family: var(--mono);
-    font-size: .78rem;
-  }
-  .rt tbody tr:hover td { background: rgba(0,122,60,.04); }
-
-  .rt__metric { min-width: 160px; }
-  .rt__bar-wrap {
-    display: flex;
-    align-items: center;
-    gap: .5rem;
-  }
-  .rt__bar {
-    height: 6px;
-    background: var(--br);
-    border-radius: 3px;
-    opacity: .6;
-    flex-shrink: 0;
-    min-width: 2px;
-  }
-  .rt__val { color: var(--text); font-family: var(--mono); font-size: .78rem; }
-
-  .query-error {
-    padding: 1rem;
-    color: #b5250e;
-    font-family: var(--mono);
-    font-size: .82rem;
-    background: rgba(232,52,26,.07);
-    border: 1px solid rgba(232,52,26,.2);
-    border-radius: var(--radius);
-  }
+/* ── Mobile ──────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .tr-head { margin-bottom: 40px; }
+  .jmap-wrap { overflow-x: auto; }
+  .jmap-svg { min-width: 480px; }
+  .regra-card { padding: 22px 20px 24px; }
+  .cdetail-info, .cdetail-code { padding: 20px; }
+  .cdetail-foot { padding: 14px 20px; }
+  .ccode-pre { font-size: 10.5px; }
+  .cpicker-bar { gap: 5px; }
+  .cpick { padding: 7px 10px; font-size: 12px; }
+}
 </style>
