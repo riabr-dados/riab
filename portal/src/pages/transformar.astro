@@ -4,116 +4,91 @@ const HF = "https://huggingface.co/datasets/riabr-dados/riab/resolve/main/cleane
 ---
 
 <Base
-  title="Transformar · Construtor"
-  description="Monte tabelas cruzadas com os dados do audiovisual brasileiro — sem código, no browser."
+  title="Transformar · Cruzar bases"
+  description="Conecte as bases do audiovisual brasileiro e explore os dados — sem código."
 >
 
 <div class="tf">
 
   <!-- STATUS BAR -->
   <div class="tf-bar">
-    <span class="tf-eyebrow">RIDAB · TRANSFORMAR</span>
+    <span class="tf-ey">RIDAB · TRANSFORMAR</span>
     <div class="tf-status-row">
       <span class="tdot" id="tf-dot"></span>
       <span id="tf-status">Iniciando DuckDB…</span>
     </div>
-    <button class="tf-clear-btn" id="btn-clear" disabled>↺ Limpar</button>
   </div>
 
-  <!-- 3-PANEL LAYOUT -->
-  <div class="tf-panels">
+  <!-- CRUZAMENTO CARDS -->
+  <div class="cr-section">
+    <div class="cr-intro">
+      <h2 class="cr-h">Escolha uma conexão para explorar</h2>
+      <p class="cr-sub">Cada card liga duas ou mais bases. Clique para ver os dados imediatamente.</p>
+    </div>
+    <div class="cr-grid" id="cr-grid">
+      <!-- rendered by JS -->
+    </div>
+  </div>
 
-    <!-- LEFT: FIELD PICKER -->
-    <aside class="tf-panel tf-panel--left" id="panel-fields">
-      <div class="tfp-head">Campos</div>
-      <div class="tf-tables" id="tf-tables">
-        <div class="tf-skeleton">
-          <div class="skel-row"></div><div class="skel-row skel-row--sm"></div>
-          <div class="skel-row skel-row--sm"></div><div class="skel-row skel-row--sm"></div>
-          <div class="skel-row" style="margin-top:12px"></div>
-          <div class="skel-row skel-row--sm"></div><div class="skel-row skel-row--sm"></div>
-        </div>
+  <!-- RESULT AREA (hidden until a cruzamento is selected) -->
+  <div class="res-area" id="res-area" style="display:none">
+
+    <!-- REFINEMENT BAR -->
+    <div class="ref-bar">
+      <div class="ref-group">
+        <label class="ref-label" for="ref-dim">Agrupar por</label>
+        <select class="ref-select" id="ref-dim"></select>
       </div>
-    </aside>
-
-    <!-- MIDDLE: CONFIG -->
-    <div class="tf-panel tf-panel--mid" id="panel-config">
-      <div class="tfp-head">Configuração</div>
-
-      <div class="cfg-block">
-        <div class="cfg-label">Agrupar por</div>
-        <div class="cfg-dims" id="cfg-dims">
-          <div class="cfg-hint" id="cfg-dims-hint">← Marque campos ao lado</div>
-        </div>
+      <div class="ref-group" id="ref-metric-group">
+        <label class="ref-label" for="ref-metric">Mostrar</label>
+        <select class="ref-select" id="ref-metric"></select>
       </div>
-
-      <div class="cfg-block">
-        <div class="cfg-label">Medir</div>
-        <select class="cfg-select" id="cfg-fn">
-          <option value="COUNT_STAR">COUNT — total de registros</option>
-          <option value="SUM">SUM — soma</option>
-          <option value="AVG">AVG — média</option>
-          <option value="MAX">MAX — máximo</option>
-          <option value="MIN">MIN — mínimo</option>
-        </select>
-        <select class="cfg-select cfg-select--col" id="cfg-col" style="display:none">
-          <option value="">— escolha uma coluna numérica —</option>
-        </select>
+      <div class="ref-group ref-group--search">
+        <label class="ref-label" for="ref-search">Buscar</label>
+        <input class="ref-input" id="ref-search" type="text" placeholder="filtrar resultados…">
       </div>
+      <button class="ref-run-btn" id="btn-rerun">↻ Atualizar</button>
+    </div>
 
-      <div class="cfg-block">
-        <div class="cfg-label-row">
-          <span class="cfg-label">Filtros</span>
-          <button class="cfg-add-btn" id="btn-add-filter" disabled>+ adicionar</button>
-        </div>
-        <div id="cfg-filters">
-          <div class="cfg-hint">Nenhum — todos os registros</div>
-        </div>
-      </div>
-
-      <div class="cfg-block cfg-block--join" id="cfg-join" style="display:none">
-        <div class="cfg-label">Ligação detectada</div>
-        <div id="cfg-join-info"></div>
-      </div>
-
-      <div class="cfg-run-wrap">
-        <button class="cfg-run-btn" id="btn-run" disabled>
-          <span id="run-icon">▶</span> Gerar tabela
-        </button>
+    <!-- RESULT TOOLBAR -->
+    <div class="res-toolbar">
+      <span class="res-info" id="res-info"></span>
+      <div class="res-btns">
+        <button class="res-btn res-btn--active" id="btn-chart">◫ Gráfico</button>
+        <button class="res-btn" id="btn-table">⊞ Tabela</button>
+        <button class="res-btn" id="btn-sql">‹/› SQL</button>
+        <button class="res-btn" id="btn-csv">↓ CSV</button>
       </div>
     </div>
 
-    <!-- RIGHT: RESULTS -->
-    <div class="tf-panel tf-panel--right" id="panel-results">
-      <div class="tfp-head tfp-head--results" id="results-head" style="display:none">
-        <span class="res-count" id="res-count"></span>
-        <div class="res-actions">
-          <button class="res-btn" id="btn-toggle-chart">◫ Gráfico</button>
-          <button class="res-btn" id="btn-csv">↓ CSV</button>
-          <button class="res-btn" id="btn-sql">‹/› SQL</button>
-        </div>
+    <!-- SQL PANEL -->
+    <div class="sql-panel" id="sql-panel" style="display:none">
+      <div class="sql-head">
+        <span class="sql-label">SQL · DuckDB</span>
+        <span class="sql-note">reutilizável em Python, R, MotherDuck</span>
+        <button class="sql-copy" id="btn-copy-sql">Copiar</button>
       </div>
-      <div class="res-empty" id="res-empty">
-        <div class="re-icon">⊞</div>
-        <p class="re-text">Selecione campos e clique em <strong>Gerar tabela</strong></p>
-      </div>
-      <div class="sql-panel" id="sql-panel" style="display:none">
-        <div class="sql-head">
-          <span>SQL gerado · DuckDB</span>
-          <button class="sql-copy" id="btn-copy-sql">Copiar</button>
-        </div>
-        <pre class="sql-pre" id="sql-pre"></pre>
-      </div>
-      <div class="chart-wrap" id="chart-wrap" style="display:none"></div>
-      <div class="table-wrap" id="table-wrap"></div>
+      <pre class="sql-pre" id="sql-pre"></pre>
     </div>
 
-  </div><!-- /tf-panels -->
+    <!-- CHART VIEW -->
+    <div id="view-chart" class="chart-view"></div>
+
+    <!-- TABLE VIEW -->
+    <div id="view-table" class="table-view" style="display:none"></div>
+
+  </div><!-- /res-area -->
+
+  <!-- LOADING OVERLAY -->
+  <div class="res-loading" id="res-loading" style="display:none">
+    <div class="spinner"></div>
+    <span id="loading-msg">Carregando…</span>
+  </div>
+
 </div><!-- /tf -->
 
 </Base>
 
-<!-- pass server var to client -->
 <script define:vars={{ HF }}>
   window.__RIDAB_HF__ = HF;
 </script>
@@ -123,588 +98,510 @@ import * as duckdb from "https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.29.0
 
 const HF = window.__RIDAB_HF__;
 
-// ── TABLE DEFINITIONS ──────────────────────────────────────────────────────
-const TBLS = {
-  obras: {
-    label: 'Obras não-pub', src: 'ANCINE / SAV', alias: 'o', color: '#007a3c',
-    view: 'obras', url: `${HF}/obras.parquet`,
-    titleExpr: `lower(regexp_replace(TITULO_ORIGINAL,'[^a-zA-Z0-9 ]','','g'))`,
+// ── CRUZAMENTOS ────────────────────────────────────────────────────────────
+const CRZ = [
+  {
+    id: 'obras-ano',
+    label: 'Produção por ano',
+    desc: 'Como evoluiu o número de obras registradas na ANCINE desde 2000',
+    tables: [{ name: 'obras-nao-pub', color: '#007a3c' }],
+    join: null,
+    icon: '📅',
+    dims: [
+      { label: 'Ano de produção',  col: 'ANO_PRODUCAO_INICIAL' },
+      { label: 'Tipo de obra',     col: 'TIPO_OBRA' },
+      { label: 'Estado (UF)',      col: 'UF_REQUERENTE' },
+      { label: 'Janela de destino',col: 'SEGMENTO_DESTINACAO_INICIAL' },
+    ],
+    metrics: [
+      { label: 'Nº de obras', expr: 'COUNT(*)', alias: 'obras' },
+    ],
+    buildSQL: (dim, metric, search) => {
+      const where = buildWhere([
+        `${dim.col} IS NOT NULL`,
+        dim.col === 'ANO_PRODUCAO_INICIAL' ? `${dim.col} >= 2000` : null,
+        search ? `CAST(${dim.col} AS VARCHAR) ILIKE '%${esc(search)}%'` : null,
+      ]);
+      return `SELECT ${dim.col} AS dim, ${metric.expr} AS valor
+FROM obras
+${where}
+GROUP BY 1 ORDER BY 1 ${dim.col === 'ANO_PRODUCAO_INICIAL' ? 'ASC' : ''}
+LIMIT 60`;
+    },
   },
-  diretores: {
-    label: 'Diretores de obras', src: 'ANCINE / SAV', alias: 'd', color: '#007a3c',
-    view: 'diretores_obras', url: `${HF}/diretores_obras.parquet`,
+  {
+    id: 'obras-bilheteria',
+    label: 'Obras + bilheteria',
+    desc: 'Liga registro ANCINE ao público real no cinema via CPB',
+    tables: [
+      { name: 'obras-nao-pub',       color: '#007a3c' },
+      { name: 'bilheteria-agregada', color: '#007a3c' },
+    ],
+    join: { type: 'exact', label: 'CPB exato' },
+    icon: '🎟',
+    dims: [
+      { label: 'Obra (título)',   col: 'o.TITULO_ORIGINAL' },
+      { label: 'Tipo de obra',   col: 'o.TIPO_OBRA' },
+      { label: 'Estado (UF)',    col: 'o.UF_REQUERENTE' },
+      { label: 'Ano de exibição',col: 'b.ANO' },
+    ],
+    metrics: [
+      { label: 'Espectadores',  expr: 'SUM(b.PUBLICO)',         alias: 'espectadores' },
+      { label: 'Renda (R$)',    expr: 'SUM(b.RENDA)',           alias: 'renda_reais' },
+      { label: 'Nº de obras',   expr: 'COUNT(DISTINCT o.CPB)',  alias: 'obras' },
+    ],
+    buildSQL: (dim, metric, search) => {
+      const where = buildWhere([
+        `${dim.col} IS NOT NULL`,
+        search ? `CAST(${dim.col} AS VARCHAR) ILIKE '%${esc(search)}%'` : null,
+      ]);
+      return `SELECT ${dim.col} AS dim, ${metric.expr} AS valor
+FROM obras o
+INNER JOIN bilheteria_por_filme_ano b
+  ON b.CPB_ROE = o.CPB AND b.CPB_ROE LIKE 'B%'
+${where}
+GROUP BY 1 ORDER BY 2 DESC LIMIT 40`;
+    },
   },
-  produtores: {
-    label: 'Produtores de obras', src: 'ANCINE / SAV', alias: 'p', color: '#007a3c',
-    view: 'produtores_obras', url: `${HF}/produtores_obras.parquet`,
+  {
+    id: 'ficha-tecnica',
+    label: 'Ficha técnica',
+    desc: 'Obras com diretor(es) e produtora(s) — tudo via CPB exato',
+    tables: [
+      { name: 'obras-nao-pub',      color: '#007a3c' },
+      { name: 'diretores-obras',    color: '#007a3c' },
+      { name: 'produtores-obras',   color: '#007a3c' },
+    ],
+    join: { type: 'exact', label: 'CPB exato' },
+    icon: '🎬',
+    dims: [
+      { label: 'Diretor',          col: 'd.DIRETOR' },
+      { label: 'Produtora',        col: 'p.PRODUTOR' },
+      { label: 'Estado (UF)',      col: 'o.UF_REQUERENTE' },
+      { label: 'Tipo de obra',     col: 'o.TIPO_OBRA' },
+    ],
+    metrics: [
+      { label: 'Nº de obras', expr: 'COUNT(DISTINCT o.CPB)', alias: 'obras' },
+    ],
+    buildSQL: (dim, metric, search) => {
+      const where = buildWhere([
+        `${dim.col} IS NOT NULL`,
+        search ? `CAST(${dim.col} AS VARCHAR) ILIKE '%${esc(search)}%'` : null,
+      ]);
+      return `SELECT ${dim.col} AS dim, ${metric.expr} AS valor
+FROM obras o
+LEFT JOIN diretores_obras d ON d.CPB = o.CPB
+LEFT JOIN produtores_obras p ON p.CPB = o.CPB
+${where}
+GROUP BY 1 ORDER BY 2 DESC LIMIT 40`;
+    },
   },
-  bilheteria: {
-    label: 'Bilheteria agregada', src: 'ANCINE / OCA', alias: 'b', color: '#007a3c',
-    view: 'bilheteria_por_filme_ano', url: `${HF}/bilheteria_por_filme_ano.parquet`,
-    titleExpr: `lower(regexp_replace(TITULO_BRASIL,'[^a-zA-Z0-9 ]','','g'))`,
+  {
+    id: 'obras-fsa',
+    label: 'Obras + fomento FSA',
+    desc: 'Liga obras ANCINE a projetos do Fundo Setorial via título normalizado',
+    tables: [
+      { name: 'obras-nao-pub', color: '#007a3c' },
+      { name: 'fsa-projetos',  color: '#c8920a' },
+    ],
+    join: { type: 'proxy', label: 'proxy título' },
+    icon: '💰',
+    dims: [
+      { label: 'Chamada FSA',      col: 'f.CHAMADA_PUBLICA' },
+      { label: 'Tipo de obra',     col: 'o.TIPO_OBRA' },
+      { label: 'Produtora (FSA)',  col: 'f.RAZAO_SOCIAL_PRODUTORA' },
+      { label: 'Estado (UF)',      col: 'o.UF_REQUERENTE' },
+    ],
+    metrics: [
+      { label: 'Total investido (R$)', expr: 'SUM(f.VALOR_CONTRATO_DOU)', alias: 'total_reais' },
+      { label: 'Nº de projetos',       expr: 'COUNT(*)',                   alias: 'projetos' },
+    ],
+    buildSQL: (dim, metric, search) => {
+      const where = buildWhere([
+        `${dim.col} IS NOT NULL`,
+        search ? `CAST(${dim.col} AS VARCHAR) ILIKE '%${esc(search)}%'` : null,
+      ]);
+      return `WITH o_n AS (
+  SELECT *, lower(regexp_replace(TITULO_ORIGINAL,'[^a-zA-Z0-9 ]','','g')) AS _tn
+  FROM obras
+),
+f_n AS (
+  SELECT *, lower(regexp_replace(TITULO_PROJETO,'[^a-zA-Z0-9 ]','','g')) AS _tn
+  FROM fomento_fsa
+)
+SELECT ${dim.col} AS dim, ${metric.expr} AS valor
+FROM o_n o
+INNER JOIN f_n f ON f._tn = o._tn
+${where}
+GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 40`;
+    },
   },
-  fsa: {
-    label: 'Projetos FSA', src: 'ANCINE / FSA', alias: 'f', color: '#c8920a',
-    view: 'fomento_fsa', url: `${HF}/fomento_fsa.parquet`,
-    titleExpr: `lower(regexp_replace(TITULO_PROJETO,'[^a-zA-Z0-9 ]','','g'))`,
+  {
+    id: 'obras-renuncia',
+    label: 'Obras + renúncia fiscal',
+    desc: 'Obras que captaram via Lei do Audiovisual — ligação por título',
+    tables: [
+      { name: 'obras-nao-pub',   color: '#007a3c' },
+      { name: 'renuncia-fiscal', color: '#1f3bb8' },
+    ],
+    join: { type: 'proxy', label: 'proxy título' },
+    icon: '📋',
+    dims: [
+      { label: 'Obra (título)',    col: 'o.TITULO_ORIGINAL' },
+      { label: 'Tipo de obra',    col: 'o.TIPO_OBRA' },
+      { label: 'Estado (UF)',     col: 'o.UF_REQUERENTE' },
+    ],
+    metrics: [
+      { label: 'Total captado (R$)', expr: 'SUM(r.TOTAL_CAPTADO)', alias: 'total_captado' },
+      { label: 'Nº de projetos',     expr: 'COUNT(*)',              alias: 'projetos' },
+    ],
+    buildSQL: (dim, metric, search) => {
+      const where = buildWhere([
+        `${dim.col} IS NOT NULL`,
+        search ? `CAST(${dim.col} AS VARCHAR) ILIKE '%${esc(search)}%'` : null,
+      ]);
+      return `WITH o_n AS (
+  SELECT *, lower(regexp_replace(TITULO_ORIGINAL,'[^a-zA-Z0-9 ]','','g')) AS _tn
+  FROM obras
+),
+r_n AS (
+  SELECT *, lower(regexp_replace(TITULO_PROJETO,'[^a-zA-Z0-9 ]','','g')) AS _tn
+  FROM renuncia_fiscal
+)
+SELECT ${dim.col} AS dim, ${metric.expr} AS valor
+FROM o_n o
+INNER JOIN r_n r ON r._tn = o._tn
+${where}
+GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 40`;
+    },
   },
-  renuncia: {
-    label: 'Renúncia fiscal', src: 'ANCINE', alias: 'r', color: '#1f3bb8',
-    view: 'renuncia_fiscal', url: `${HF}/renuncia_fiscal.parquet`,
-    titleExpr: `lower(regexp_replace(TITULO_PROJETO,'[^a-zA-Z0-9 ]','','g'))`,
+  {
+    id: 'br-eu',
+    label: 'Brasil ↔ Europa',
+    desc: 'Filmes brasileiros com mais espectadores em salas europeias (Lumière)',
+    tables: [
+      { name: 'bilheteria-agregada',    color: '#007a3c' },
+      { name: 'lumiere-cinemas-europa', color: '#1f3bb8' },
+    ],
+    join: { type: 'proxy', label: 'proxy título' },
+    icon: '🌍',
+    dims: [
+      { label: 'Filme (título)',   col: 'l."Original title"' },
+    ],
+    metrics: [
+      { label: 'Admissões (Europa)', expr: 'SUM(l."Admissions")', alias: 'admissoes_europa' },
+    ],
+    buildSQL: (dim, metric, search) => {
+      const where = buildWhere([
+        `l."Original title" IS NOT NULL`,
+        search ? `l."Original title" ILIKE '%${esc(search)}%'` : null,
+      ]);
+      return `SELECT l."Original title" AS dim, ${metric.expr} AS valor
+FROM bilheteria_europa l
+${where}
+GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 40`;
+    },
   },
-  lumiere: {
-    label: 'Lumière Europa', src: 'Obs. Europeu', alias: 'l', color: '#1f3bb8',
-    view: 'bilheteria_europa', url: `${HF}/bilheteria_europa.parquet`,
-    titleExpr: `lower(regexp_replace("Original title",'[^a-zA-Z0-9 ]','','g'))`,
-  },
-};
+];
 
-// ── JOIN GRAPH (canonical key = sorted alphabetically) ─────────────────────
-const JGRAPH = {
-  'diretores-obras':  { type:'exact', conf:3, label:'CPB exato',
-    join: (a) => `LEFT JOIN diretores_obras ${a.diretores} ON ${a.diretores}.CPB = ${a.obras}.CPB` },
-  'obras-produtores': { type:'exact', conf:3, label:'CPB exato',
-    join: (a) => `LEFT JOIN produtores_obras ${a.produtores} ON ${a.produtores}.CPB = ${a.obras}.CPB` },
-  'bilheteria-obras': { type:'exact', conf:3, label:'CPB exato',
-    join: (a) => `LEFT JOIN bilheteria_por_filme_ano ${a.bilheteria} ON ${a.bilheteria}.CPB_ROE = ${a.obras}.CPB AND ${a.bilheteria}.CPB_ROE LIKE 'B%'` },
-  'fsa-obras':        { type:'proxy', conf:2, label:'proxy título', cteA:'obras', cteB:'fsa' },
-  'obras-renuncia':   { type:'proxy', conf:2, label:'proxy título', cteA:'obras', cteB:'renuncia' },
-  'lumiere-obras':    { type:'proxy', conf:2, label:'proxy título', cteA:'obras', cteB:'lumiere' },
-  'agentes-produtores': { type:'exact', conf:3, label:'CNPJ exato',
-    join: (a) => `LEFT JOIN agentes_economicos ${a.agentes} ON ${a.agentes}.CNPJ = ${a.produtores}.CNPJ_PRODUTOR` },
-  'bilheteria-lumiere': { type:'proxy', conf:2, label:'proxy título', cteA:'bilheteria', cteB:'lumiere' },
-};
+// ── HELPERS ────────────────────────────────────────────────────────────────
+function buildWhere(clauses) {
+  const valid = clauses.filter(Boolean);
+  return valid.length ? `WHERE ${valid.join('\n  AND ')}` : '';
+}
+function esc(s) { return String(s).replace(/'/g, "''"); }
 
-const JTYPE_COLOR = { exact:'#007a3c', proxy:'#c8920a' };
-const JTYPE_LABEL = { exact:'join exato', proxy:'proxy título' };
+const JOIN_COLOR = { exact: '#007a3c', proxy: '#c8920a' };
 
 // ── STATE ──────────────────────────────────────────────────────────────────
 let db, conn, ready = false;
-let selectedCols = [];   // {tbl, col, isNum, qualified, displayLabel}
-let allNumCols   = [];
-let filterCount  = 0;
-let lastSQL = '', lastRows = [], lastColNames = [];
-let showChart = false;
+let activeCrz = null;
+let lastSQL = '', lastRows = [], lastCols = [];
+let viewMode = 'chart'; // 'chart' | 'table'
 
 // ── DOM ────────────────────────────────────────────────────────────────────
 const dot      = document.getElementById('tf-dot');
 const statusEl = document.getElementById('tf-status');
-const btnClear = document.getElementById('btn-clear');
-const cfgDims  = document.getElementById('cfg-dims');
-const cfgDimsHint = document.getElementById('cfg-dims-hint');
-const cfgFn    = document.getElementById('cfg-fn');
-const cfgCol   = document.getElementById('cfg-col');
-const cfgJoin  = document.getElementById('cfg-join');
-const cfgJoinInfo = document.getElementById('cfg-join-info');
-const cfgFilters  = document.getElementById('cfg-filters');
-const btnAddFilter = document.getElementById('btn-add-filter');
-const btnRun   = document.getElementById('btn-run');
-const runIcon  = document.getElementById('run-icon');
-const resEmpty = document.getElementById('res-empty');
-const resHead  = document.getElementById('results-head');
-const resCount = document.getElementById('res-count');
-const tableWrap= document.getElementById('table-wrap');
-const chartWrap= document.getElementById('chart-wrap');
+const crGrid   = document.getElementById('cr-grid');
+const resArea  = document.getElementById('res-area');
+const resLoading = document.getElementById('res-loading');
+const loadingMsg = document.getElementById('loading-msg');
+const refDim   = document.getElementById('ref-dim');
+const refMetric= document.getElementById('ref-metric');
+const refMetricGroup = document.getElementById('ref-metric-group');
+const refSearch= document.getElementById('ref-search');
+const btnRerun = document.getElementById('btn-rerun');
+const resInfo  = document.getElementById('res-info');
+const btnChart = document.getElementById('btn-chart');
+const btnTable = document.getElementById('btn-table');
+const btnSql   = document.getElementById('btn-sql');
+const btnCsv   = document.getElementById('btn-csv');
 const sqlPanel = document.getElementById('sql-panel');
 const sqlPre   = document.getElementById('sql-pre');
-const btnToggleChart = document.getElementById('btn-toggle-chart');
-const btnCsv   = document.getElementById('btn-csv');
-const btnSql   = document.getElementById('btn-sql');
 const btnCopySql = document.getElementById('btn-copy-sql');
+const viewChart= document.getElementById('view-chart');
+const viewTable= document.getElementById('view-table');
 
-// ── INIT DUCKDB ────────────────────────────────────────────────────────────
+// ── INIT ───────────────────────────────────────────────────────────────────
 (async () => {
   try {
     const bundles = duckdb.getJsDelivrBundles();
     const bundle  = await duckdb.selectBundle(bundles);
-    const workerUrl = URL.createObjectURL(
+    const wUrl = URL.createObjectURL(
       new Blob([`importScripts("${bundle.mainWorker}");`], {type:'text/javascript'})
     );
-    db = new duckdb.AsyncDuckDB(new duckdb.ConsoleLogger(), new Worker(workerUrl));
+    db = new duckdb.AsyncDuckDB(new duckdb.ConsoleLogger(), new Worker(wUrl));
     await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
     conn = await db.connect();
     await conn.query("INSTALL httpfs; LOAD httpfs; SET s3_region='us-east-1';");
 
-    statusEl.textContent = `Registrando ${Object.keys(TBLS).length} tabelas…`;
-
-    // Create views + DESCRIBE
-    for (const [id, t] of Object.entries(TBLS)) {
-      try {
-        await conn.query(`CREATE OR REPLACE VIEW ${t.view} AS SELECT * FROM '${t.url}'`);
-        const desc = await conn.query(`DESCRIBE ${t.view}`);
-        t.cols = desc.toArray().map(r => ({
-          name: r.column_name,
-          isNum: /int|float|double|decimal|hugeint|bigint|real/i.test(r.column_type),
-        }));
-        t.ok = true;
-      } catch(e) {
-        t.ok = false; t.cols = [];
-        console.warn(`[RIDAB] ${id}: ${e.message}`);
-      }
+    // Register views
+    const views = {
+      obras:                    `${HF}/obras.parquet`,
+      diretores_obras:          `${HF}/diretores_obras.parquet`,
+      produtores_obras:         `${HF}/produtores_obras.parquet`,
+      bilheteria_por_filme_ano: `${HF}/bilheteria_por_filme_ano.parquet`,
+      fomento_fsa:              `${HF}/fomento_fsa.parquet`,
+      renuncia_fiscal:          `${HF}/renuncia_fiscal.parquet`,
+      bilheteria_europa:        `${HF}/bilheteria_europa.parquet`,
+    };
+    for (const [name, url] of Object.entries(views)) {
+      await conn.query(`CREATE OR REPLACE VIEW ${name} AS SELECT * FROM '${url}'`);
     }
 
     dot.className = 'tdot tdot--ok';
-    statusEl.textContent = `${Object.values(TBLS).filter(t=>t.ok).length} tabelas prontas`;
+    statusEl.textContent = `${Object.keys(views).length} tabelas prontas`;
     ready = true;
-    btnAddFilter.disabled = false;
-    btnClear.disabled = false;
-    renderFieldPicker();
+    renderCards();
   } catch(e) {
     dot.className = 'tdot tdot--err';
     statusEl.textContent = 'Erro ao iniciar: ' + e.message;
   }
 })();
 
-// ── FIELD PICKER ───────────────────────────────────────────────────────────
-function renderFieldPicker() {
-  const wrap = document.getElementById('tf-tables');
-  wrap.innerHTML = Object.entries(TBLS).map(([id, t]) => {
-    if (!t.ok) return '';
-    return `
-    <div class="t-card" data-tid="${id}">
-      <button class="t-card-head" data-tid="${id}">
-        <span class="t-dot" style="background:${t.color}"></span>
-        <span class="t-label">${t.label}</span>
-        <span class="t-src">${t.src}</span>
-        <span class="t-chevron">›</span>
-      </button>
-      <div class="t-fields" id="fields-${id}" style="display:none">
-        ${t.cols.map(c => `
-          <label class="t-field" data-tid="${id}" data-col="${c.name}">
-            <input type="checkbox" class="t-cb" data-tid="${id}" data-col="${c.name}" data-num="${c.isNum}">
-            <span class="t-col-name">${c.name}</span>
-            ${c.isNum ? '<span class="t-num-badge">num</span>' : ''}
-          </label>`).join('')}
+// ── RENDER CARDS ───────────────────────────────────────────────────────────
+function renderCards() {
+  crGrid.innerHTML = CRZ.map(c => {
+    const tablePills = c.tables.map(t =>
+      `<span class="cr-tbl-pill" style="border-color:${t.color};color:${t.color}">${t.name}</span>`
+    ).join('<span class="cr-plus">+</span>');
+
+    const joinBadge = c.join
+      ? `<span class="cr-join-badge" style="color:${JOIN_COLOR[c.join.type]};border-color:${JOIN_COLOR[c.join.type]}20;background:${JOIN_COLOR[c.join.type]}10">${c.join.label}</span>`
+      : '';
+
+    return `<button class="cr-card" data-id="${c.id}" ${!ready ? 'disabled' : ''}>
+      <div class="cr-card-top">
+        <div class="cr-tables">${tablePills}</div>
+        ${joinBadge}
       </div>
-    </div>`;
+      <div class="cr-card-icon">${c.icon}</div>
+      <div class="cr-card-label">${c.label}</div>
+      <div class="cr-card-desc">${c.desc}</div>
+      <div class="cr-card-cta">Explorar →</div>
+    </button>`;
   }).join('');
 
-  // Accordion toggle
-  wrap.querySelectorAll('.t-card-head').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const tid = btn.dataset.tid;
-      const fields = document.getElementById(`fields-${tid}`);
-      const chevron = btn.querySelector('.t-chevron');
-      const open = fields.style.display !== 'none';
-      fields.style.display = open ? 'none' : 'block';
-      chevron.textContent = open ? '›' : '⌄';
-      btn.classList.toggle('t-card-head--open', !open);
-    });
-  });
-
-  // Checkbox selection
-  wrap.querySelectorAll('.t-cb').forEach(cb => {
-    cb.addEventListener('change', () => {
-      const {tid, col, num} = cb.dataset;
-      if (cb.checked) {
-        if (!selectedCols.find(x => x.tbl===tid && x.col===col)) {
-          selectedCols.push({
-            tbl: tid, col, isNum: num==='true',
-            qualified: `${TBLS[tid].alias}."${col}"`,
-            displayLabel: `${col}`,
-            tableLabel: TBLS[tid].label,
-          });
-        }
-      } else {
-        selectedCols = selectedCols.filter(x => !(x.tbl===tid && x.col===col));
-      }
-      syncState();
-    });
+  crGrid.querySelectorAll('.cr-card').forEach(btn => {
+    btn.addEventListener('click', () => selectCrz(btn.dataset.id));
   });
 }
 
-// ── SYNC STATE (called on any change) ─────────────────────────────────────
-function syncState() {
-  // Update dims pills
-  if (selectedCols.length === 0) {
-    cfgDims.innerHTML = '<div class="cfg-hint" id="cfg-dims-hint">← Marque campos ao lado</div>';
-  } else {
-    cfgDims.innerHTML = selectedCols.map((c, i) => `
-      <div class="dim-pill" data-i="${i}">
-        <span class="dim-pill-tbl" style="color:${TBLS[c.tbl].color}">${TBLS[c.tbl].alias}.</span><span>${c.col}</span>
-        <button class="dim-pill-rm" data-i="${i}">×</button>
-      </div>`).join('');
-    cfgDims.querySelectorAll('.dim-pill-rm').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const i = +btn.dataset.i;
-        const removed = selectedCols[i];
-        selectedCols.splice(i, 1);
-        // uncheck the checkbox
-        const cb = document.querySelector(`.t-cb[data-tid="${removed.tbl}"][data-col="${removed.col}"]`);
-        if (cb) cb.checked = false;
-        syncState();
-      });
-    });
-  }
+// ── SELECT CRUZAMENTO ──────────────────────────────────────────────────────
+function selectCrz(id) {
+  activeCrz = CRZ.find(c => c.id === id);
+  if (!activeCrz) return;
 
-  // Update numeric column select
-  allNumCols = selectedCols.filter(c => c.isNum);
-  const needsCol = cfgFn.value !== 'COUNT_STAR';
-  cfgCol.style.display = needsCol ? 'block' : 'none';
-  if (needsCol) {
-    const prev = cfgCol.value;
-    cfgCol.innerHTML = `<option value="">— coluna numérica —</option>` +
-      allNumCols.map(c => `<option value="${c.qualified}" ${c.qualified===prev?'selected':''}>${c.tableLabel} · ${c.col}</option>`).join('');
-  }
-
-  // Update join status
-  const activeTbls = [...new Set(selectedCols.map(c => c.tbl))];
-  if (activeTbls.length > 1) {
-    const jinfo = detectJoins(activeTbls);
-    cfgJoin.style.display = 'block';
-    cfgJoinInfo.innerHTML = renderJoinInfo(jinfo);
-  } else {
-    cfgJoin.style.display = 'none';
-  }
-
-  // Enable run button
-  const canRun = ready && selectedCols.length > 0 &&
-    (cfgFn.value === 'COUNT_STAR' || cfgCol.value !== '');
-  btnRun.disabled = !canRun;
-}
-
-// ── JOIN DETECTION ─────────────────────────────────────────────────────────
-function edgeKey(a, b) { return [a,b].sort().join('-'); }
-
-function detectJoins(activeTbls) {
-  if (activeTbls.length <= 1) return { ok:true, edges:[], unresolved:[] };
-
-  const connected = new Set([activeTbls[0]]);
-  const edges = [];
-  const remaining = new Set(activeTbls.slice(1));
-
-  let progress = true;
-  while (progress && remaining.size > 0) {
-    progress = false;
-    for (const t of [...remaining]) {
-      for (const c of [...connected]) {
-        const key = edgeKey(c, t);
-        const edge = JGRAPH[key];
-        if (edge) {
-          edges.push({ from:c, to:t, key, ...edge });
-          connected.add(t);
-          remaining.delete(t);
-          progress = true;
-          break;
-        }
-      }
-      if (progress) break;
-    }
-  }
-
-  return { ok: remaining.size === 0, edges, unresolved: [...remaining] };
-}
-
-function renderJoinInfo(jinfo) {
-  if (!jinfo.ok) {
-    return `<div class="join-err">⚠ Sem ligação direta: ${jinfo.unresolved.map(t=>TBLS[t]?.label||t).join(', ')}</div>`;
-  }
-  return jinfo.edges.map(e => {
-    const col = JTYPE_COLOR[e.type];
-    return `<div class="join-row">
-      <span class="join-from">${TBLS[e.from]?.label}</span>
-      <span class="join-arrow" style="color:${col}">→</span>
-      <span class="join-to">${TBLS[e.to]?.label}</span>
-      <span class="join-type-badge" style="color:${col}">${e.label}</span>
-    </div>`;
-  }).join('');
-}
-
-// ── SQL BUILDER ────────────────────────────────────────────────────────────
-function buildSQL() {
-  const activeTbls = [...new Set(selectedCols.map(c => c.tbl))];
-  const jinfo = detectJoins(activeTbls);
-  if (!jinfo.ok) return null;
-
-  const a = Object.fromEntries(Object.entries(TBLS).map(([id,t]) => [id, t.alias]));
-
-  // Determine if any proxy joins are needed
-  const proxyEdges = jinfo.edges.filter(e => e.type === 'proxy');
-  const cteTbls = new Set(proxyEdges.flatMap(e => [e.cteA, e.cteB]));
-
-  // CTEs for proxy joins
-  const ctes = [...cteTbls].map(tid => {
-    const t = TBLS[tid];
-    return `${tid}_n AS (\n  SELECT *, ${t.titleExpr} AS _tn\n  FROM ${t.view}\n)`;
+  // Mark active card
+  crGrid.querySelectorAll('.cr-card').forEach(b => {
+    b.classList.toggle('cr-card--active', b.dataset.id === id);
   });
 
-  // Primary table (anchor — prefer obras)
-  const primary = activeTbls.includes('obras') ? 'obras'
-    : activeTbls.includes('produtores') ? 'produtores'
-    : activeTbls.includes('bilheteria') ? 'bilheteria'
-    : activeTbls[0];
+  // Populate dropdowns
+  refDim.innerHTML = activeCrz.dims.map((d, i) =>
+    `<option value="${i}">${d.label}</option>`).join('');
 
-  const primaryRef = cteTbls.has(primary)
-    ? `${primary}_n ${a[primary]}`
-    : `${TBLS[primary].view} ${a[primary]}`;
+  refMetric.innerHTML = activeCrz.metrics.map((m, i) =>
+    `<option value="${i}">${m.label}</option>`).join('');
 
-  // JOIN clauses
-  const joinClauses = jinfo.edges.map(e => {
-    if (e.type === 'exact' && e.join) return e.join(a);
-    // proxy
-    const toRef = cteTbls.has(e.to) ? `${e.to}_n` : TBLS[e.to].view;
-    const fromAlias = cteTbls.has(e.from) ? a[e.from] : a[e.from];
-    return `LEFT JOIN ${toRef} ${a[e.to]} ON ${a[e.to]}._tn = ${fromAlias}._tn`;
-  });
+  refMetricGroup.style.display = activeCrz.metrics.length > 1 ? 'flex' : 'none';
 
-  // SELECT
-  const selectDims = selectedCols.map(c => {
-    const ref = cteTbls.has(c.tbl) ? a[c.tbl] : a[c.tbl];
-    return `  ${ref}."${c.col}" AS "${c.tableLabel} · ${c.col}"`;
-  }).join(',\n');
+  refSearch.value = '';
 
-  const fn = cfgFn.value;
-  const metricExpr = fn === 'COUNT_STAR'
-    ? '  COUNT(*) AS _total'
-    : `  ${fn}(${cfgCol.value}) AS _valor`;
+  resArea.style.display = 'block';
+  sqlPanel.style.display = 'none';
+  btnSql.classList.remove('res-btn--active');
 
-  // WHERE (filters)
-  const whereClauses = collectFilterClauses();
-  const whereSQL = whereClauses.length
-    ? `\nWHERE\n  ${whereClauses.join('\n  AND ')}` : '';
-
-  // GROUP BY (1-based positions)
-  const groupBy = selectedCols.map((_, i) => i + 1).join(', ');
-  const orderMetric = fn === 'COUNT_STAR' ? '_total' : '_valor';
-
-  const withSQL = ctes.length ? `WITH\n${ctes.join(',\n')}\n` : '';
-  const fromSQL = [primaryRef, ...joinClauses].join('\n');
-
-  return `${withSQL}SELECT\n${selectDims},\n${metricExpr}\nFROM ${fromSQL}${whereSQL}\nGROUP BY ${groupBy}\nORDER BY ${orderMetric} DESC\nLIMIT 500;`;
+  runQuery();
 }
 
-// ── FILTERS ────────────────────────────────────────────────────────────────
-cfgFn.addEventListener('change', () => {
-  syncState();
-});
-cfgCol.addEventListener('change', syncState);
+// ── RUN QUERY ──────────────────────────────────────────────────────────────
+async function runQuery() {
+  if (!ready || !activeCrz) return;
 
-btnAddFilter.addEventListener('click', () => {
-  if (!ready || selectedCols.length === 0) return;
-  const id = ++filterCount;
-  const colOpts = selectedCols.map(c =>
-    `<option value="${c.qualified}">${c.tableLabel} · ${c.col}</option>`).join('');
-
-  // remove hint
-  const hint = cfgFilters.querySelector('.cfg-hint');
-  if (hint) hint.remove();
-
-  const row = document.createElement('div');
-  row.className = 'filter-row';
-  row.dataset.fid = id;
-  row.innerHTML = `
-    <select class="f-col">${colOpts}</select>
-    <select class="f-op">
-      <option value="=">=</option><option value="!=">≠</option>
-      <option value="CONTAINS">contém</option>
-      <option value=">">&gt;</option><option value=">=">&gt;=</option>
-      <option value="<">&lt;</option><option value="<=">&lt;=</option>
-      <option value="IS NULL">é nulo</option><option value="IS NOT NULL">não é nulo</option>
-    </select>
-    <input class="f-val" type="text" placeholder="valor">
-    <button class="f-rm">×</button>`;
-
-  row.querySelector('.f-op').addEventListener('change', e => {
-    row.querySelector('.f-val').style.display =
-      ['IS NULL','IS NOT NULL'].includes(e.target.value) ? 'none' : '';
-  });
-  row.querySelector('.f-rm').addEventListener('click', () => {
-    row.remove();
-    if (!cfgFilters.querySelector('.filter-row'))
-      cfgFilters.innerHTML = '<div class="cfg-hint">Nenhum — todos os registros</div>';
-  });
-  cfgFilters.appendChild(row);
-});
-
-function collectFilterClauses() {
-  return [...cfgFilters.querySelectorAll('.filter-row')].map(row => {
-    const col = row.querySelector('.f-col').value;
-    const op  = row.querySelector('.f-op').value;
-    const val = row.querySelector('.f-val').value.trim();
-    if (!col) return null;
-    if (op === 'IS NULL' || op === 'IS NOT NULL') return `${col} ${op}`;
-    if (op === 'CONTAINS') return `${col} ILIKE '%${val.replace(/'/g,"''")}%'`;
-    const quoted = isNaN(val) || val==='' ? `'${val.replace(/'/g,"''")}'` : val;
-    return `${col} ${op} ${quoted}`;
-  }).filter(Boolean);
-}
-
-// ── RUN ────────────────────────────────────────────────────────────────────
-btnRun.addEventListener('click', run);
-
-async function run() {
-  if (!ready || selectedCols.length === 0) return;
-  const sql = buildSQL();
-  if (!sql) { statusEl.textContent = 'Sem ligação válida entre as tabelas selecionadas.'; return; }
+  const dim    = activeCrz.dims[+refDim.value];
+  const metric = activeCrz.metrics[+refMetric.value];
+  const search = refSearch.value.trim();
+  const sql    = activeCrz.buildSQL(dim, metric, search);
 
   lastSQL = sql;
-  btnRun.disabled = true;
-  runIcon.textContent = '◌';
-  statusEl.textContent = 'Executando…';
-  resEmpty.style.display = 'none';
-  sqlPanel.style.display = 'none';
-  chartWrap.style.display = 'none';
-  tableWrap.innerHTML = '';
+  sqlPre.textContent = sql;
+
+  resLoading.style.display = 'flex';
+  loadingMsg.textContent   = `Consultando ${activeCrz.label}…`;
+  viewChart.innerHTML = '';
+  viewTable.innerHTML = '';
 
   try {
     const t0  = Date.now();
     const res = await conn.query(sql);
     const ms  = Date.now() - t0;
-    lastRows     = res.toArray();
-    lastColNames = res.schema.fields.map(f => f.name);
+    lastRows  = res.toArray();
+    lastCols  = res.schema.fields.map(f => f.name);
 
-    sqlPre.textContent = sql;
-    renderResults();
-    statusEl.textContent = `${lastRows.length} linhas · ${ms}ms`;
-    resHead.style.display = 'flex';
-    resCount.textContent = `${lastRows.length} linhas · ${ms}ms`;
+    resInfo.textContent = `${lastRows.length} linhas · ${ms}ms`;
+    statusEl.textContent = `${activeCrz.label} · ${lastRows.length} linhas · ${ms}ms`;
+    renderView();
   } catch(e) {
     statusEl.textContent = 'Erro: ' + e.message;
-    tableWrap.innerHTML = `<div class="query-err">${e.message}</div>`;
-    resEmpty.style.display = 'none';
-    resHead.style.display = 'none';
+    viewChart.innerHTML = `<div class="qerr">${e.message}</div>`;
+    viewTable.innerHTML = '';
   } finally {
-    btnRun.disabled = selectedCols.length === 0;
-    runIcon.textContent = '▶';
+    resLoading.style.display = 'none';
   }
 }
 
-// ── RENDER RESULTS ─────────────────────────────────────────────────────────
-function renderResults() {
-  if (showChart) renderChart();
-  else renderTable();
-}
+btnRerun.addEventListener('click', runQuery);
+refDim.addEventListener('change', runQuery);
+refMetric.addEventListener('change', runQuery);
+refSearch.addEventListener('keydown', e => { if (e.key === 'Enter') runQuery(); });
 
-function renderTable() {
-  if (!lastRows.length) {
-    tableWrap.innerHTML = '<div class="query-err">Nenhum resultado.</div>';
-    return;
-  }
-  const metricCol = lastColNames[lastColNames.length - 1];
-  const vals = lastRows.map(r => Number(r[metricCol]) || 0);
-  const maxVal = Math.max(...vals, 1);
-
-  let html = `<table class="res-tbl"><thead><tr>`;
-  lastColNames.forEach(c => { html += `<th>${c}</th>`; });
-  html += `</tr></thead><tbody>`;
-  lastRows.forEach(row => {
-    html += `<tr>`;
-    lastColNames.forEach((col, i) => {
-      const v = row[col];
-      const disp = v == null ? '—' : String(v);
-      if (i === lastColNames.length - 1 && maxVal > 0) {
-        const pct = Math.round((Number(v) / maxVal) * 100);
-        html += `<td class="res-metric">
-          <div class="res-bar-wrap">
-            <div class="res-bar" style="width:${pct}%"></div>
-            <span>${Number.isInteger(Number(v))
-              ? Number(v).toLocaleString('pt-BR')
-              : Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})
-            }</span>
-          </div></td>`;
-      } else {
-        html += `<td title="${disp}">${disp}</td>`;
-      }
-    });
-    html += `</tr>`;
-  });
-  html += `</tbody></table>`;
-  tableWrap.innerHTML = html;
-  chartWrap.style.display = 'none';
-  tableWrap.style.display = '';
+// ── RENDER VIEW ────────────────────────────────────────────────────────────
+function renderView() {
+  if (viewMode === 'chart') { renderChart(); viewChart.style.display='block'; viewTable.style.display='none'; }
+  else                      { renderTable(); viewChart.style.display='none';  viewTable.style.display='block'; }
 }
 
 function renderChart() {
-  if (!lastRows.length) return;
-  const metricCol = lastColNames[lastColNames.length - 1];
-  const labelCol  = lastColNames[0];
-  const top = lastRows.slice(0, 30);
-  const vals = top.map(r => Number(r[metricCol]) || 0);
+  if (!lastRows.length) { viewChart.innerHTML = '<div class="qerr">Nenhum resultado.</div>'; return; }
+  const dimCol = 'dim', valCol = 'valor';
+  const top    = lastRows.slice(0, 40);
+  const vals   = top.map(r => Number(r[valCol]) || 0);
   const maxVal = Math.max(...vals, 1);
+  const metric = activeCrz?.metrics[+refMetric.value];
+  const dim    = activeCrz?.dims[+refDim.value];
 
   const bars = top.map(r => {
-    const v   = Number(r[metricCol]) || 0;
-    const lbl = String(r[labelCol] ?? '—');
+    const v   = Number(r[valCol]) || 0;
+    const lbl = String(r[dimCol] ?? '—');
     const pct = (v / maxVal) * 100;
-    const fmt = Number.isInteger(v) ? v.toLocaleString('pt-BR') : v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
-    return `<div class="cbar-row">
-      <div class="cbar-label" title="${lbl}">${lbl}</div>
-      <div class="cbar-track">
-        <div class="cbar-fill" style="width:${pct}%"></div>
-      </div>
+    const fmt = fmtNum(v);
+    return `<div class="cbar">
+      <div class="cbar-lbl" title="${lbl}">${lbl}</div>
+      <div class="cbar-track"><div class="cbar-fill" style="width:${pct.toFixed(1)}%"></div></div>
       <div class="cbar-val">${fmt}</div>
     </div>`;
   }).join('');
 
-  chartWrap.innerHTML = `<div class="chart-inner">${bars}</div>`;
-  chartWrap.style.display = 'block';
-  tableWrap.style.display = 'none';
+  viewChart.innerHTML = `
+    <div class="chart-legend">
+      <span class="chart-x">${dim?.label ?? 'Dimensão'}</span>
+      <span class="chart-m">${metric?.label ?? 'Valor'}</span>
+    </div>
+    <div class="chart-bars">${bars}</div>`;
 }
 
-// ── TOOLBAR EVENTS ─────────────────────────────────────────────────────────
-btnToggleChart.addEventListener('click', () => {
-  showChart = !showChart;
-  btnToggleChart.classList.toggle('res-btn--active', showChart);
-  renderResults();
-});
+function renderTable() {
+  if (!lastRows.length) { viewTable.innerHTML = '<div class="qerr">Nenhum resultado.</div>'; return; }
+  const metricCol = lastCols[lastCols.length - 1];
+  const vals      = lastRows.map(r => Number(r[metricCol]) || 0);
+  const maxVal    = Math.max(...vals, 1);
 
+  let h = `<table class="dtbl"><thead><tr>`;
+  // friendly headers
+  const friendlyHeaders = lastCols.map((c, i) => {
+    if (c === 'dim')   return activeCrz?.dims[+refDim.value]?.label    ?? c;
+    if (c === 'valor') return activeCrz?.metrics[+refMetric.value]?.label ?? c;
+    return c;
+  });
+  friendlyHeaders.forEach(c => { h += `<th>${c}</th>`; });
+  h += `</tr></thead><tbody>`;
+  lastRows.forEach(row => {
+    h += `<tr>`;
+    lastCols.forEach((col, i) => {
+      const v = row[col];
+      const disp = v == null ? '—' : String(v);
+      if (i === lastCols.length - 1 && maxVal > 0) {
+        const pct = Math.round((Number(v) / maxVal) * 100);
+        h += `<td class="td-metric">
+          <div class="td-bar-wrap">
+            <div class="td-bar" style="width:${pct}%"></div>
+            <span>${fmtNum(Number(v))}</span>
+          </div></td>`;
+      } else {
+        h += `<td title="${disp}">${disp}</td>`;
+      }
+    });
+    h += `</tr>`;
+  });
+  h += `</tbody></table>`;
+  viewTable.innerHTML = h;
+}
+
+function fmtNum(n) {
+  if (!Number.isFinite(n)) return '—';
+  return Number.isInteger(n)
+    ? n.toLocaleString('pt-BR')
+    : n.toLocaleString('pt-BR', {minimumFractionDigits:2,maximumFractionDigits:2});
+}
+
+// ── TOOLBAR ────────────────────────────────────────────────────────────────
+btnChart.addEventListener('click', () => {
+  viewMode = 'chart';
+  btnChart.classList.add('res-btn--active');
+  btnTable.classList.remove('res-btn--active');
+  renderView();
+});
+btnTable.addEventListener('click', () => {
+  viewMode = 'table';
+  btnTable.classList.add('res-btn--active');
+  btnChart.classList.remove('res-btn--active');
+  renderView();
+});
 btnSql.addEventListener('click', () => {
   const vis = sqlPanel.style.display !== 'none';
   sqlPanel.style.display = vis ? 'none' : 'block';
   btnSql.classList.toggle('res-btn--active', !vis);
 });
-
 btnCopySql.addEventListener('click', async () => {
   await navigator.clipboard.writeText(sqlPre.textContent);
   btnCopySql.textContent = 'Copiado!';
   setTimeout(() => { btnCopySql.textContent = 'Copiar'; }, 1500);
 });
-
 btnCsv.addEventListener('click', () => {
   if (!lastRows.length) return;
   const sep = ';';
-  const header = lastColNames.join(sep);
+  const header = lastCols.join(sep);
   const rows = lastRows.map(r =>
-    lastColNames.map(c => {
-      const v = r[c];
-      if (v == null) return '';
+    lastCols.map(c => {
+      const v = r[c]; if (v == null) return '';
       const s = String(v);
-      return s.includes(sep) || s.includes('"') || s.includes('\n')
-        ? `"${s.replace(/"/g,'""')}"` : s;
+      return (s.includes(sep)||s.includes('"')||s.includes('\n')) ? `"${s.replace(/"/g,'""')}"` : s;
     }).join(sep)
   ).join('\n');
-  const blob = new Blob(['﻿' + header + '\n' + rows], {type:'text/csv;charset=utf-8;'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `ridab_${Date.now()}.csv`;
+  const blob = new Blob(['﻿'+header+'\n'+rows], {type:'text/csv;charset=utf-8;'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = `ridab_${activeCrz?.id ?? 'export'}_${new Date().toISOString().slice(0,10)}.csv`;
   a.click();
-});
-
-btnClear.addEventListener('click', () => {
-  selectedCols = [];
-  document.querySelectorAll('.t-cb').forEach(cb => { cb.checked = false; });
-  cfgFilters.innerHTML = '<div class="cfg-hint">Nenhum — todos os registros</div>';
-  resEmpty.style.display = 'flex';
-  resHead.style.display = 'none';
-  tableWrap.innerHTML = '';
-  chartWrap.innerHTML = '';
-  chartWrap.style.display = 'none';
-  sqlPanel.style.display = 'none';
-  showChart = false;
-  btnToggleChart.classList.remove('res-btn--active');
-  btnSql.classList.remove('res-btn--active');
-  syncState();
 });
 </script>
 
 <style is:global>
 /* ── Wrapper ─────────────────────────────────────────────────── */
 .tf {
-  display: flex;
-  flex-direction: column;
-  height: calc(100vh - 49px); /* minus topnav */
-  overflow: hidden;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--pad) 80px;
 }
 
 /* ── Status bar ──────────────────────────────────────────────── */
@@ -712,12 +609,11 @@ btnClear.addEventListener('click', () => {
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 10px var(--pad);
+  padding: 14px 0;
   border-bottom: 1px solid var(--border);
-  background: var(--bg2);
-  flex-shrink: 0;
+  margin-bottom: 48px;
 }
-.tf-eyebrow {
+.tf-ey {
   font-family: var(--font-m);
   font-size: 10px;
   letter-spacing: .14em;
@@ -726,299 +622,167 @@ btnClear.addEventListener('click', () => {
   flex-shrink: 0;
 }
 .tf-status-row {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  font-family: var(--font-m);
-  font-size: 11px;
-  color: var(--dim);
-  flex: 1;
+  display: flex; align-items: center; gap: 7px;
+  font-family: var(--font-m); font-size: 11px; color: var(--dim);
 }
 .tdot {
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  background: var(--dim);
-  flex-shrink: 0;
-  transition: background .3s;
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--dim); flex-shrink: 0; transition: background .3s;
 }
 .tdot--ok  { background: #007a3c; box-shadow: 0 0 6px rgba(0,122,60,.4); }
 .tdot--err { background: #e8341a; }
-.tf-clear-btn {
-  font-family: var(--font-m);
-  font-size: 11px;
-  color: var(--muted);
-  background: transparent;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 4px 10px;
-  cursor: pointer;
-  transition: all .15s;
-  flex-shrink: 0;
-}
-.tf-clear-btn:hover:not(:disabled) { border-color: var(--text); color: var(--text); }
-.tf-clear-btn:disabled { opacity: .4; cursor: default; }
 
-/* ── 3-panel grid ────────────────────────────────────────────── */
-.tf-panels {
+/* ── Cruzamento section ──────────────────────────────────────── */
+.cr-section { margin-bottom: 48px; }
+.cr-intro { margin-bottom: 28px; }
+.cr-h {
+  font-family: var(--font-d);
+  font-variation-settings: 'opsz' 14,'wdth' 90,'wght' 650;
+  font-size: 24px; letter-spacing: -.025em;
+  color: var(--text); margin-bottom: 6px;
+}
+.cr-sub { font-size: 13.5px; color: var(--muted); }
+
+.cr-grid {
   display: grid;
-  grid-template-columns: 260px 280px 1fr;
-  flex: 1;
-  overflow: hidden;
-}
-.tf-panel {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  border-right: 1px solid var(--border);
-}
-.tf-panel--right { border-right: none; }
-
-.tfp-head {
-  font-family: var(--font-m);
-  font-size: 10px;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--muted);
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--border);
-  background: var(--bg2);
-  flex-shrink: 0;
-}
-.tfp-head--results {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 11px;
-  letter-spacing: 0;
-  text-transform: none;
-  color: var(--dim);
-}
-
-/* ── Field picker (left) ─────────────────────────────────────── */
-.tf-tables {
-  overflow-y: auto;
-  flex: 1;
-}
-.tf-skeleton { padding: 16px; display: flex; flex-direction: column; gap: 8px; }
-.skel-row { height: 16px; background: var(--border); border-radius: 3px; animation: pulse 2s ease-in-out infinite; }
-.skel-row--sm { height: 12px; width: 70%; opacity: .6; }
-@keyframes pulse { 0%,100%{opacity:.5} 50%{opacity:1} }
-
-.t-card { border-bottom: 1px solid var(--border); }
-.t-card-head {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-  padding: 10px 14px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  text-align: left;
-  transition: background .12s;
-}
-.t-card-head:hover { background: var(--bg2); }
-.t-card-head--open { background: var(--bg2); }
-.t-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-.t-label { font-size: 12.5px; font-weight: 500; color: var(--text); flex: 1; }
-.t-src { font-family: var(--font-m); font-size: 9px; color: var(--dim); }
-.t-chevron { font-size: 14px; color: var(--dim); margin-left: 2px; }
-
-.t-fields { background: var(--surface); }
-.t-field {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 14px 6px 28px;
-  cursor: pointer;
-  transition: background .1s;
-}
-.t-field:hover { background: var(--bg2); }
-.t-cb { cursor: pointer; accent-color: var(--br); flex-shrink: 0; }
-.t-col-name { font-family: var(--font-m); font-size: 11px; color: #2a241a; flex: 1; }
-.t-num-badge {
-  font-family: var(--font-m);
-  font-size: 9px;
-  color: #1f3bb8;
-  background: rgba(31,59,184,.08);
-  border: 1px solid rgba(31,59,184,.15);
-  border-radius: 2px;
-  padding: 1px 5px;
-}
-
-/* ── Config (middle) ─────────────────────────────────────────── */
-.tf-panel--mid { overflow-y: auto; }
-.cfg-block {
-  padding: 16px;
-  border-bottom: 1px solid var(--border);
-}
-.cfg-block--join { background: rgba(0,122,60,.03); }
-.cfg-label {
-  font-family: var(--font-m);
-  font-size: 10px;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 10px;
-}
-.cfg-label-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-.cfg-label-row .cfg-label { margin-bottom: 0; }
-.cfg-hint { font-size: 12px; color: var(--dim); font-family: var(--font-m); }
-.cfg-dims { display: flex; flex-wrap: wrap; gap: 6px; }
-.dim-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 8px 4px 6px;
-  background: var(--bg2);
-  border: 1px solid var(--border2);
-  font-family: var(--font-m);
-  font-size: 11px;
-  color: var(--text);
-  border-radius: 3px;
-}
-.dim-pill-tbl { font-weight: 600; }
-.dim-pill-rm {
-  background: none; border: none;
-  color: var(--dim); cursor: pointer;
-  font-size: 13px; line-height: 1;
-  padding: 0 2px;
-  transition: color .1s;
-}
-.dim-pill-rm:hover { color: #e8341a; }
-.cfg-select {
-  width: 100%;
-  background: var(--surface);
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 1px;
+  background: var(--border);
   border: 1px solid var(--border);
-  border-radius: 4px;
-  color: var(--text);
-  padding: 7px 9px;
-  font-size: 12.5px;
-  font-family: var(--font-m);
-  cursor: pointer;
-  transition: border-color .15s;
-  margin-bottom: 8px;
 }
-.cfg-select:last-child { margin-bottom: 0; }
-.cfg-select:hover { border-color: var(--br); }
-.cfg-add-btn {
-  font-family: var(--font-m);
-  font-size: 10px;
-  color: var(--br);
-  background: transparent;
-  border: 1px solid rgba(0,122,60,.3);
-  border-radius: 4px;
-  padding: 3px 8px;
-  cursor: pointer;
-  transition: all .14s;
-}
-.cfg-add-btn:hover:not(:disabled) { background: rgba(0,122,60,.08); }
-.cfg-add-btn:disabled { opacity: .4; cursor: default; }
 
-/* Join status */
-.join-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 6px;
-  font-size: 12px;
-  flex-wrap: wrap;
+.cr-card {
+  background: var(--bg);
+  padding: 24px 22px 20px;
+  text-align: left;
+  cursor: pointer;
+  border: none;
+  display: flex; flex-direction: column; gap: 10px;
+  transition: background .14s;
+  position: relative;
 }
-.join-from, .join-to { font-family: var(--font-m); font-size: 11px; color: var(--text); }
-.join-arrow { font-size: 14px; }
-.join-type-badge {
-  font-family: var(--font-m);
-  font-size: 9px;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  padding: 2px 6px;
-  background: rgba(0,0,0,.06);
+.cr-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: transparent; transition: background .15s;
+}
+.cr-card:hover { background: var(--surface); }
+.cr-card:hover::before { background: var(--border2); }
+.cr-card--active { background: var(--surface); }
+.cr-card--active::before { background: var(--br); }
+.cr-card:disabled { opacity: .5; cursor: default; }
+
+.cr-card-top {
+  display: flex; align-items: center;
+  gap: 8px; flex-wrap: wrap;
+}
+.cr-tables { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.cr-tbl-pill {
+  font-family: var(--font-m); font-size: 9px;
+  letter-spacing: .06em; text-transform: uppercase;
+  padding: 3px 7px; border: 1px solid;
   border-radius: 2px;
 }
-.join-err { font-family: var(--font-m); font-size: 11.5px; color: #e8341a; }
+.cr-plus { font-size: 12px; color: var(--dim); }
+.cr-join-badge {
+  font-family: var(--font-m); font-size: 9px;
+  letter-spacing: .06em; text-transform: uppercase;
+  padding: 3px 7px; border: 1px solid;
+  border-radius: 2px; margin-left: auto; flex-shrink: 0;
+}
+.cr-card-icon { font-size: 24px; line-height: 1; }
+.cr-card-label {
+  font-family: var(--font-d);
+  font-variation-settings: 'opsz' 14,'wdth' 90,'wght' 600;
+  font-size: 15px; letter-spacing: -.02em; color: var(--text);
+}
+.cr-card-desc { font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+.cr-card-cta {
+  font-family: var(--font-m); font-size: 10.5px;
+  color: var(--dim); margin-top: 4px;
+  transition: color .13s;
+}
+.cr-card:hover .cr-card-cta,
+.cr-card--active .cr-card-cta { color: var(--br); }
 
-/* Filter rows */
-.filter-row { display: flex; gap: 5px; align-items: center; margin-bottom: 6px; }
-.f-col, .f-op {
+/* ── Result area ─────────────────────────────────────────────── */
+.res-area {
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+
+/* Refinement bar */
+.ref-bar {
+  display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap;
+  padding: 16px 20px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+}
+.ref-group { display: flex; flex-direction: column; gap: 5px; }
+.ref-group--search { flex: 1; min-width: 160px; }
+.ref-label {
+  font-family: var(--font-m); font-size: 9.5px;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--dim);
+}
+.ref-select {
   background: var(--surface); border: 1px solid var(--border);
   border-radius: 4px; color: var(--text);
-  padding: 5px 6px; font-size: 11px; font-family: var(--font-m);
+  padding: 7px 10px; font-size: 12.5px; font-family: var(--font-m);
+  cursor: pointer; min-width: 160px;
+  transition: border-color .14s;
 }
-.f-col { flex: 2; } .f-op { flex: 1; }
-.f-val {
-  flex: 1; background: var(--surface);
-  border: 1px solid var(--border); border-radius: 4px;
-  color: var(--text); padding: 5px 6px;
-  font-size: 11px; font-family: var(--font-m);
+.ref-select:hover { border-color: var(--br); }
+.ref-input {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 4px; color: var(--text);
+  padding: 7px 10px; font-size: 12.5px; font-family: var(--font-m);
+  width: 100%; transition: border-color .14s;
 }
-.f-rm {
-  background: transparent; border: 1px solid var(--border);
-  border-radius: 4px; color: var(--dim); cursor: pointer;
-  padding: 4px 8px; font-size: 13px; transition: all .13s;
+.ref-input:focus { outline: none; border-color: var(--br); }
+.ref-run-btn {
+  background: var(--br); color: #fff;
+  border: none; border-radius: 4px;
+  font-size: 12px; font-weight: 600; font-family: var(--font-s);
+  padding: 7px 16px; cursor: pointer; white-space: nowrap;
+  transition: opacity .14s;
+  align-self: flex-end;
 }
-.f-rm:hover { border-color: #e8341a; color: #e8341a; }
+.ref-run-btn:hover { opacity: .88; }
 
-/* Run button */
-.cfg-run-wrap { padding: 16px; }
-.cfg-run-btn {
-  width: 100%;
-  background: var(--br);
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  font-family: var(--font-s);
-  padding: 10px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: opacity .15s, box-shadow .15s;
+/* Toolbar */
+.res-toolbar {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
 }
-.cfg-run-btn:hover:not(:disabled) { opacity: .9; box-shadow: 0 0 12px rgba(0,122,60,.35); }
-.cfg-run-btn:disabled { opacity: .4; cursor: default; }
-
-/* ── Results (right) ─────────────────────────────────────────── */
-.tf-panel--right { overflow: hidden; display: flex; flex-direction: column; }
-.res-count { font-family: var(--font-m); font-size: 11px; }
-.res-actions { display: flex; gap: 5px; }
+.res-info { font-family: var(--font-m); font-size: 11px; color: var(--dim); flex: 1; }
+.res-btns { display: flex; gap: 4px; }
 .res-btn {
   font-family: var(--font-m); font-size: 11px;
   color: var(--muted); background: transparent;
   border: 1px solid var(--border); border-radius: 4px;
-  padding: 4px 10px; cursor: pointer;
-  transition: all .13s;
+  padding: 5px 11px; cursor: pointer;
+  transition: all .12s;
 }
 .res-btn:hover { border-color: var(--text); color: var(--text); }
-.res-btn--active { background: var(--bg2); border-color: var(--border2); color: var(--text); }
-
-.res-empty {
-  flex: 1; display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: 12px; color: var(--dim);
-}
-.re-icon { font-size: 48px; opacity: .25; }
-.re-text { font-size: 13px; text-align: center; max-width: 240px; line-height: 1.6; color: var(--muted); }
+.res-btn--active { background: var(--text); color: var(--bg); border-color: var(--text); }
 
 /* SQL panel */
 .sql-panel {
+  background: #0d0b08;
   border-bottom: 1px solid var(--border);
-  background: #0a0906;
-  flex-shrink: 0;
-  max-height: 240px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
 }
 .sql-head {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 8px 14px;
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 16px;
   border-bottom: 1px solid #1e1c19;
   font-family: var(--font-m); font-size: 10px;
   color: rgba(250,248,239,.35);
 }
+.sql-label { color: rgba(250,248,239,.55); }
+.sql-note { flex: 1; }
 .sql-copy {
   background: transparent; border: 1px solid rgba(250,248,239,.2);
   border-radius: 3px; color: rgba(250,248,239,.5);
@@ -1029,61 +793,86 @@ btnClear.addEventListener('click', () => {
 .sql-copy:hover { background: rgba(250,248,239,.08); }
 .sql-pre {
   font-family: var(--font-m); font-size: 11.5px;
-  line-height: 1.7; color: rgba(250,248,239,.75);
-  padding: 12px 14px; margin: 0;
-  overflow: auto; flex: 1;
+  line-height: 1.75; color: rgba(250,248,239,.78);
+  padding: 14px 16px; margin: 0; overflow-x: auto;
+  max-height: 220px;
 }
 
-/* Table */
-.table-wrap { flex: 1; overflow: auto; }
-.res-tbl { width: 100%; border-collapse: collapse; font-size: 12px; }
-.res-tbl th {
-  background: var(--bg2); padding: 8px 10px;
+/* Chart view */
+.chart-view { padding: 20px 24px 24px; background: var(--surface); }
+.chart-legend {
+  display: flex; justify-content: space-between;
+  font-family: var(--font-m); font-size: 10px;
+  color: var(--dim); margin-bottom: 16px;
+  letter-spacing: .06em; text-transform: uppercase;
+}
+.chart-bars { display: flex; flex-direction: column; gap: 6px; }
+.cbar { display: grid; grid-template-columns: 200px 1fr 100px; align-items: center; gap: 12px; }
+.cbar-lbl {
+  font-family: var(--font-m); font-size: 11.5px; color: var(--text);
+  text-align: right; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+}
+.cbar-track {
+  background: var(--border); border-radius: 2px; height: 8px; overflow: hidden;
+}
+.cbar-fill {
+  height: 100%; background: var(--br);
+  border-radius: 2px; transition: width .35s ease;
+}
+.cbar-val { font-family: var(--font-m); font-size: 11.5px; color: var(--muted); }
+
+/* Table view */
+.table-view { overflow-x: auto; background: var(--surface); }
+.dtbl { width: 100%; border-collapse: collapse; font-size: 12px; }
+.dtbl th {
+  background: var(--bg2); padding: 9px 12px;
   text-align: left; font-size: 10.5px; font-weight: 600;
   letter-spacing: .04em; color: var(--muted);
   border-bottom: 1px solid var(--border);
   white-space: nowrap; position: sticky; top: 0;
 }
-.res-tbl td {
-  padding: 6px 10px; border-bottom: 1px solid var(--border);
+.dtbl td {
+  padding: 7px 12px; border-bottom: 1px solid var(--border);
   font-family: var(--font-m); font-size: 11px;
-  white-space: nowrap; max-width: 280px;
+  white-space: nowrap; max-width: 300px;
   overflow: hidden; text-overflow: ellipsis;
 }
-.res-tbl tbody tr:hover td { background: rgba(0,122,60,.03); }
-.res-metric { min-width: 140px; }
-.res-bar-wrap { display: flex; align-items: center; gap: 8px; }
-.res-bar { height: 5px; background: var(--br); border-radius: 2px; opacity: .55; flex-shrink: 0; min-width: 2px; }
+.dtbl tbody tr:hover td { background: rgba(0,122,60,.03); }
+.td-metric { min-width: 160px; }
+.td-bar-wrap { display: flex; align-items: center; gap: 8px; }
+.td-bar { height: 5px; background: var(--br); border-radius: 2px; opacity: .5; min-width: 2px; }
 
-/* Chart */
-.chart-wrap { flex: 1; overflow-y: auto; padding: 16px; }
-.chart-inner { display: flex; flex-direction: column; gap: 5px; }
-.cbar-row { display: grid; grid-template-columns: 180px 1fr 90px; align-items: center; gap: 10px; }
-.cbar-label {
-  font-family: var(--font-m); font-size: 11px; color: var(--text);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  text-align: right;
+/* Loading */
+.res-loading {
+  position: fixed; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  gap: 12px; z-index: 50;
+  background: rgba(250,248,239,.7);
+  font-family: var(--font-m); font-size: 13px; color: var(--muted);
+  backdrop-filter: blur(2px);
 }
-.cbar-track { background: var(--border); border-radius: 2px; height: 8px; overflow: hidden; }
-.cbar-fill { height: 100%; background: var(--br); border-radius: 2px; transition: width .3s; }
-.cbar-val { font-family: var(--font-m); font-size: 11px; color: var(--muted); }
+.spinner {
+  width: 20px; height: 20px; border-radius: 50%;
+  border: 2px solid var(--border);
+  border-top-color: var(--br);
+  animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 
-.query-err {
-  padding: 16px; color: #b5250e; font-family: var(--font-m); font-size: 12px;
-  background: rgba(232,52,26,.06); border: 1px solid rgba(232,52,26,.2);
-  margin: 16px;
+.qerr {
+  padding: 20px; color: #b5250e;
+  font-family: var(--font-m); font-size: 12px;
+  background: rgba(232,52,26,.06);
+  border-top: 1px solid rgba(232,52,26,.15);
 }
 
 /* ── Mobile ──────────────────────────────────────────────────── */
-@media (max-width: 900px) {
-  .tf { height: auto; overflow: visible; }
-  .tf-panels {
-    grid-template-columns: 1fr;
-    overflow: visible;
-  }
-  .tf-panel { overflow: visible; border-right: none; border-bottom: 1px solid var(--border); }
-  .tf-panel--right { min-height: 400px; }
-  .table-wrap, .chart-wrap { overflow-x: auto; }
-  .cbar-row { grid-template-columns: 120px 1fr 70px; }
+@media (max-width: 680px) {
+  .cr-grid { grid-template-columns: 1fr; }
+  .cbar { grid-template-columns: 120px 1fr 80px; gap: 8px; }
+  .cbar-lbl { font-size: 10px; }
+  .ref-bar { gap: 10px; }
+  .ref-select, .ref-input { min-width: unset; width: 100%; }
 }
 </style>
