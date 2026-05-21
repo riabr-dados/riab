@@ -31,7 +31,17 @@ RENAME = {
 }
 
 
-def parse_brl(s) -> float | None:
+def fix_encoding(s: str) -> str:
+    """Corrige mojibake UTF-8 lido como latin-1 (mesmo padrão de clean_obras.py)."""
+    if not isinstance(s, str):
+        return s
+    try:
+        return s.encode("latin-1").decode("utf-8")
+    except Exception:
+        return s
+
+
+def parse_brl(s):
     """Extrai valor numerico de 'R$ 1.234.567,89' -> 1234567.89"""
     if pd.isna(s) or not isinstance(s, str):
         return None
@@ -67,11 +77,13 @@ def main():
     df = df[[c for c in df.columns if c in RENAME.values()]]
     print(f"  {len(df):,} linhas carregadas")
 
-    # Strings
-    for col in ["titulo_projeto", "chamada_publica", "razao_social_proponente",
-                "razao_social_produtora", "razao_social_programadora"]:
+    # Strings: corrige mojibake (fonte UTF-8 lida como latin-1)
+    str_cols = ["titulo_projeto", "chamada_publica", "razao_social_proponente",
+                "razao_social_produtora", "razao_social_programadora"]
+    for col in str_cols:
         if col in df.columns:
-            df[col] = df[col].str.strip().replace({"": None})
+            df[col] = df[col].apply(lambda x: fix_encoding(x).strip() if isinstance(x, str) else None)
+            df[col] = df[col].replace({"": None, "nan": None})
 
     # CNPJs: manter como string, apenas strip
     for col in ["cnpj_proponente", "cnpj_produtora", "cnpj_programadora"]:

@@ -55,9 +55,13 @@ rename = {
 df_ano = df_ano.rename(columns=rename)
 df_ano["ano"] = pd.to_numeric(df_ano["ano"], errors="coerce").astype("Int64")
 df_ano["publico"] = pd.to_numeric(df_ano["publico"], errors="coerce").astype("Int64")
-df_ano["titulo_brasil"] = df_ano["titulo_brasil"].astype(str).str.strip()
-df_ano["titulo_original"] = df_ano["titulo_original"].astype(str).str.strip()
-df_ano["pais_obra"] = df_ano["pais_obra"].astype(str).str.strip()
+def _clean_str(series):
+    """Strip sem converter NaN em string 'nan'."""
+    return series.where(series.notna(), other=None).str.strip().replace({"": None})
+
+df_ano["titulo_brasil"]   = _clean_str(df_ano["titulo_brasil"])
+df_ano["titulo_original"] = _clean_str(df_ano["titulo_original"])
+df_ano["pais_obra"]       = _clean_str(df_ano["pais_obra"])
 
 out2 = OUT / "bilheteria_por_filme_ano.parquet"
 df_ano.to_parquet(out2, index=False)
