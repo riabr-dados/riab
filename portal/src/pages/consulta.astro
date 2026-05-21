@@ -22,32 +22,34 @@ conn.sql("""
     titulo: "Top 20 filmes por bilheteria no Brasil (pandas)",
     lang: "python",
     code: `import pandas as pd
-df = pd.read_parquet("${HF_BASE}/bilheteria_domestica.parquet")
-top = df.sort_values("publico", ascending=False).head(20)
-print(top[["titulo_brasil", "pais_obra", "ano_exibicao", "publico"]])`,
+df = pd.read_parquet("${HF_BASE}/bilheteria_por_filme_ano.parquet")
+top = df.sort_values("PUBLICO", ascending=False).head(20)
+print(top[["TITULO_ORIGINAL", "ANO", "PUBLICO"]])`,
   },
   {
-    titulo: "Filmes brasileiros que receberam apoio FSA e chegaram a Europa",
+    titulo: "Obras com FSA e circulação europeia (DuckDB)",
     lang: "python",
     code: `import duckdb
 conn = duckdb.connect()
 conn.sql("INSTALL httpfs; LOAD httpfs;")
 conn.sql("""
-  SELECT o.titulo_original, o.ano_producao_inicial,
-         f.chamada_publica, f.valor_total_liberado_brl,
-         e.admissoes_eu
-  FROM '${HF_BASE}/obras.parquet' o
-  JOIN '${HF_BASE}/fomento_fsa.parquet' f
-    ON SUBSTR(o.cpb, 1, 10) = SUBSTR(f.titulo_projeto, 1, 10)
-  JOIN '${HF_BASE}/bilheteria_europa.parquet' e
-    ON o.cpb = e.cpb_roe
-  WHERE f.valor_total_liberado_brl > 0
-  ORDER BY e.admissoes_eu DESC
+  WITH o_n AS (
+    SELECT *, lower(regexp_replace(TITULO_ORIGINAL,'[^a-zA-Z0-9 ]','','g')) AS _tn
+    FROM '${HF_BASE}/obras.parquet'
+  ),
+  f_n AS (
+    SELECT *, lower(regexp_replace(TITULO_PROJETO,'[^a-zA-Z0-9 ]','','g')) AS _tn
+    FROM '${HF_BASE}/fomento_fsa.parquet'
+  )
+  SELECT o.TITULO_ORIGINAL, f.CHAMADA_PUBLICA, f.VALOR_CONTRATO_DOU
+  FROM o_n o
+  INNER JOIN f_n f ON f._tn = o._tn
+  ORDER BY f.VALOR_CONTRATO_DOU DESC NULLS LAST
   LIMIT 20
 """).show()`,
   },
   {
-    titulo: "Carregar dados brutos via CLI",
+    titulo: "Baixar via CLI",
     lang: "bash",
     code: `# Instalar o cliente HF
 pip install huggingface_hub
@@ -56,12 +58,6 @@ pip install huggingface_hub
 huggingface-cli download riabr-dados/riab \\
   --repo-type dataset \\
   --include "cleaned/*.parquet" \\
-  --local-dir ./dados
-
-# Baixar dados brutos de um dataset especifico
-huggingface-cli download riabr-dados/riab \\
-  --repo-type dataset \\
-  --include "raw/ancine-obras-nao-publicitarias/*" \\
   --local-dir ./dados`,
   },
   {
@@ -70,65 +66,379 @@ huggingface-cli download riabr-dados/riab \\
     code: `library(arrow)
 library(dplyr)
 
-obras <- read_parquet(
-  "${HF_BASE}/obras.parquet"
-)
+obras <- read_parquet("${HF_BASE}/obras.parquet")
 
-# Obras por UF do requerente
 obras |>
-  count(uf_requerente, sort = TRUE) |>
+  count(UF_REQUERENTE, sort = TRUE) |>
   head(10)`,
   },
 ];
 ---
 
-<Base title="Como Consultar" description="Guia de como acessar os dados do RIDAB via Python, R e DuckDB.">
+<Base title="Docs" description="Metodologia de transformação e guia de acesso aos dados do RIDAB.">
   <div class="page-inner page-inner--narrow">
-    <h1 class="page-title">Como Consultar os Dados</h1>
-    <p class="page-sub">
-      Todos os dados tratados estao no Hugging Face como arquivos Parquet.
-      Voce pode consultar direto da URL, sem baixar nada.
-    </p>
 
-    <section class="doc-section">
-      <h2>Requisitos minimos</h2>
-      <CodeSnippet lang="bash" code={`pip install pandas pyarrow duckdb huggingface_hub`} />
+    <!-- ─── METODOLOGIA ─────────────────────────────────────── -->
+    <section class="doc-section" id="metodologia">
+      <h1 class="page-title">Metodologia de Transformação</h1>
+      <p class="page-sub">
+        As bases do RIDAB vêm de fontes distintas que usam chaves diferentes.
+        Esta seção documenta como elas são conectadas, normalizadas e deflacionadas
+        — incluindo os casos onde não existe chave direta e o join é feito por título.
+      </p>
+
+      <!-- 1. Normalização -->
+      <div class="meta-block">
+        <h2 class="meta-h">1 · Normalização de título</h2>
+        <p class="meta-p">
+          Como não existe um identificador de texto padronizado entre todas as bases,
+          o pipeline usa uma função de normalização (<code>_norm</code>) antes de qualquer
+          busca textual. A sequência aplicada:
+        </p>
+        <ol class="meta-list">
+          <li>Converte para <strong>maiúsculas</strong></li>
+          <li>Remove acentos (decomposição NFD → descarta diacríticos: <em>ã→a, é→e</em>)</li>
+          <li>Substitui qualquer caractere fora de <code>[A-Z 0-9]</code> por espaço</li>
+          <li>Colapsa espaços múltiplos e remove bordas</li>
+        </ol>
+        <div class="meta-examples">
+          <div class="meta-ex"><span class="meta-ex-in">"Aquarius"</span><span class="meta-ex-arr">→</span><span class="meta-ex-out">AQUARIUS</span></div>
+          <div class="meta-ex"><span class="meta-ex-in">"O Som ao Redor"</span><span class="meta-ex-arr">→</span><span class="meta-ex-out">O SOM AO REDOR</span></div>
+          <div class="meta-ex"><span class="meta-ex-in">"Ela Volta na Quinta"</span><span class="meta-ex-arr">→</span><span class="meta-ex-out">ELA VOLTA NA QUINTA</span></div>
+          <div class="meta-ex"><span class="meta-ex-in">"Bacurau"</span><span class="meta-ex-arr">→</span><span class="meta-ex-out">BACURAU</span></div>
+        </div>
+        <p class="meta-note">
+          Em DuckDB (versão simplificada, sem remoção de acentos — adequada para a maioria dos casos):
+        </p>
+        <CodeSnippet lang="sql" code={`lower(regexp_replace(titulo, '[^a-zA-Z0-9 ]', '', 'g')) AS titulo_norm`} />
+      </div>
+
+      <!-- 2. Joins em cascata -->
+      <div class="meta-block">
+        <h2 class="meta-h">2 · Joins em cascata (proxy título)</h2>
+        <p class="meta-p">
+          Quando o CPB não está disponível como chave direta — casos FSA, renúncia fiscal,
+          Lumière e bilheteria pré-2014 — o join é feito por <strong>cascata de 3 níveis</strong>,
+          parando no primeiro nível que retorna resultado.
+        </p>
+
+        <div class="cascade-steps">
+          <div class="cascade-step">
+            <div class="cascade-n">1</div>
+            <div class="cascade-body">
+              <div class="cascade-label">Match exato</div>
+              <code class="cascade-code">titulo_norm_a = titulo_norm_b</code>
+              <p class="cascade-note">Acerto em ~85% dos casos com FSA. Rápido e sem ambiguidade.</p>
+            </div>
+          </div>
+          <div class="cascade-step">
+            <div class="cascade-n">2</div>
+            <div class="cascade-body">
+              <div class="cascade-label">Prefixo de 4 palavras</div>
+              <code class="cascade-code">prefix4 = " ".join(titulo_norm.split()[:4])</code>
+              <p class="cascade-note">Ativado apenas se o prefixo tem ≥ 3 palavras. Recupera variações leves (artigo diferente, truncamento).</p>
+            </div>
+          </div>
+          <div class="cascade-step">
+            <div class="cascade-n">3</div>
+            <div class="cascade-body">
+              <div class="cascade-label">Containment 80%</div>
+              <code class="cascade-code">overlap / min(len_a, len_b) ≥ 0,80 · (mín. 3 palavras)</code>
+              <p class="cascade-note">Cobre subtítulos, reordenação de palavras e variações maiores. Mais lento; aplicado apenas se os níveis anteriores falharem.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="meta-aside">
+          <strong>Desambiguação por CNPJ.</strong> Quando múltiplos candidatos passam pela cascata
+          (ex.: uma obra passou por dois editais FSA com o mesmo título), o pipeline prioriza
+          o registro cujo <code>CNPJ_PRODUTORA</code> ou <code>CNPJ_PROPONENTE</code> coincide com
+          o da obra. Se nenhum coincide, usa o registro de maior valor.
+        </div>
+
+        <div class="meta-aside">
+          <strong>Aliases de título.</strong> Algumas obras foram renomeadas entre o edital e o
+          lançamento (ex.: título no projeto FSA ≠ título no cinema). O pipeline mantém uma tabela
+          de aliases curada que substitui o título antes de qualquer busca.
+        </div>
+
+        <div class="meta-aside meta-aside--warn">
+          <strong>Quando o proxy falha.</strong> Obras com título muito curto (&lt; 3 palavras) têm
+          risco de falso positivo no nível 3. Nesses casos a obra não recebe o dado da base sem CPB
+          e o campo fica nulo — nenhum valor incorreto é inserido.
+        </div>
+      </div>
+
+      <!-- 3. Derivações financeiras -->
+      <div class="meta-block">
+        <h2 class="meta-h">3 · Derivações financeiras</h2>
+
+        <h3 class="meta-h3">Receita estimada por bilheteria</h3>
+        <p class="meta-p">
+          A receita de bilheteria não está direta nos dados brutos — é calculada a partir
+          do público e do <strong>Preço Médio de Ingresso (PMI)</strong> publicado anualmente pela ANCINE:
+        </p>
+        <div class="meta-formula">Receita nominal&nbsp;&nbsp;=&nbsp;&nbsp;Público × PMI do ano de exibição</div>
+        <div class="pmi-table-wrap">
+          <table class="pmi-table">
+            <thead><tr><th>Ano</th><th>PMI</th><th>Ano</th><th>PMI</th></tr></thead>
+            <tbody>
+              <tr><td>2014</td><td>R$ 12,28</td><td>2020</td><td>R$ 15,94</td></tr>
+              <tr><td>2015</td><td>R$ 13,59</td><td>2021</td><td>R$ 17,48</td></tr>
+              <tr><td>2016</td><td>R$ 14,10</td><td>2022</td><td>R$ 19,10</td></tr>
+              <tr><td>2017</td><td>R$ 15,00</td><td>2023</td><td>R$ 19,61</td></tr>
+              <tr><td>2018</td><td>R$ 15,04</td><td>2024+</td><td>R$ 19,88</td></tr>
+              <tr><td>2019</td><td>R$ 15,81</td><td></td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="meta-note">Bilheteria pré-2014: match por título normalizado + PMI de 2014 (R$12,28) como conservador.</p>
+
+        <h3 class="meta-h3">Deflação IPCA (base R$2024)</h3>
+        <p class="meta-p">
+          Para comparar valores monetários de anos diferentes, aplica-se o fator de correção
+          IPCA com base em 2024:
+        </p>
+        <div class="meta-formula">Valor R$2024&nbsp;&nbsp;=&nbsp;&nbsp;Valor nominal × fator_IPCA[ano de referência]</div>
+        <p class="meta-p">O <strong>ano de referência</strong> varia por tipo de dado:</p>
+        <table class="meta-table">
+          <thead><tr><th>Grandeza</th><th>Ano de referência</th></tr></thead>
+          <tbody>
+            <tr><td>Investimento FSA</td><td>Data do primeiro desembolso → fallback: ano do edital</td></tr>
+            <tr><td>Renúncia fiscal</td><td>Ano de produção da obra</td></tr>
+            <tr><td>Janelas domésticas (CRT)</td><td>Ano de emissão do CRT da janela → fallback: ano da obra</td></tr>
+          </tbody>
+        </table>
+
+        <h3 class="meta-h3">Bilheteria deflacionada (PMI base 2024)</h3>
+        <p class="meta-p">
+          Para comparar obras de diferentes períodos sem usar o IPCA — que mede custo de vida
+          geral, não preço de ingresso —, a bilheteria deflacionada usa o PMI de 2024
+          (R$&nbsp;19,88) aplicado ao público total, independentemente do ano de exibição:
+        </p>
+        <div class="meta-formula">Bilheteria R$2024&nbsp;&nbsp;=&nbsp;&nbsp;Público total × R$&nbsp;19,88</div>
+      </div>
+
+      <!-- 4. Diagrama -->
+      <div class="meta-block">
+        <h2 class="meta-h">4 · Diagrama de conexões por chave</h2>
+        <pre class="doc-pre doc-pre--diagram">CPB ────────────────────── obras, bilheteria 2014+, janelas CRT, diretores, produtores, festivais
+
+TITULO_NORM ───────────── FSA (cascata 3 níveis)
+(+ alias curado)          renúncia fiscal (cascata 3 níveis)
+                          bilheteria pré-2014
+                          Lumière (salas europeias)
+                          VOD internacional
+
+CNPJ ──────────────────── desambiguação de FSA e renúncia
+                          quando título tem múltiplos candidatos</pre>
+      </div>
     </section>
 
-    <section class="doc-section">
-      <h2>Estrutura dos dados no Hugging Face</h2>
-      <pre class="doc-pre">riabr-dados/riab  (dataset repo)
+    <div class="docs-divider"></div>
+
+    <!-- ─── COMO CONSULTAR ──────────────────────────────────── -->
+    <section class="doc-section" id="consulta">
+      <h2 class="page-title page-title--sm">Como Consultar os Dados</h2>
+      <p class="page-sub">
+        Todos os dados tratados estão no Hugging Face como arquivos Parquet.
+        Você pode consultar direto da URL, sem baixar nada.
+      </p>
+
+      <div class="meta-block">
+        <h3 class="meta-h3">Requisitos mínimos</h3>
+        <CodeSnippet lang="bash" code={`pip install pandas pyarrow duckdb huggingface_hub`} />
+      </div>
+
+      <div class="meta-block">
+        <h3 class="meta-h3">Estrutura dos dados no Hugging Face</h3>
+        <pre class="doc-pre">riabr-dados/riab  (dataset repo)
   raw/
     ancine-obras-nao-publicitarias/   ← dados brutos intocados
     ancine-fsa-projetos/
-    cnc-visas-exploitation/
+    cnc-lumiere/
     ...
   cleaned/
-    obras.parquet                     ← dados tratados por tema
-    bilheteria_domestica.parquet
-    fomento_fsa.parquet
-    bilheteria_europa.parquet
-    ...
-    obras_completa.parquet            ← join consolidado</pre>
+    obras.parquet                     ← obras ANCINE (cadastro)
+    bilheteria_por_filme_ano.parquet  ← público × CPB × ano
+    fomento_fsa.parquet               ← projetos FSA
+    renuncia_fiscal.parquet           ← captação Lei do Audiovisual
+    diretores_obras.parquet
+    produtores_obras.parquet
+    bilheteria_europa.parquet         ← Lumière (salas europeias)</pre>
+      </div>
+
+      <div class="meta-block">
+        <h3 class="meta-h3">Exemplos</h3>
+        {EXAMPLES.map((ex) => (
+          <div class="doc-example">
+            <h4 class="doc-example__title">{ex.titulo}</h4>
+            <CodeSnippet code={ex.code} lang={ex.lang} />
+          </div>
+        ))}
+      </div>
+
+      <div class="meta-block">
+        <h3 class="meta-h3">Tabelas disponíveis</h3>
+        <p class="meta-p">
+          Consulte o catálogo para ver todas as tabelas Parquet e seus campos.
+        </p>
+        <a class="btn-outline" href="/riab/datasets/">Ver catálogo de datasets</a>
+      </div>
     </section>
 
-    <section class="doc-section">
-      <h2>Exemplos</h2>
-      {EXAMPLES.map((ex) => (
-        <div class="doc-example">
-          <h3 class="doc-example__title">{ex.titulo}</h3>
-          <CodeSnippet code={ex.code} lang={ex.lang} />
-        </div>
-      ))}
-    </section>
-
-    <section class="doc-section">
-      <h2>Tabelas disponíveis</h2>
-      <p>
-        Consulte a pagina de cada dataset para ver quais tabelas Parquet
-        estao disponíveis e os snippets de codigo correspondentes.
-      </p>
-      <a class="btn-outline" href="/riab/datasets/">Ver catalogo de datasets</a>
-    </section>
   </div>
 </Base>
+
+<style>
+.page-title--sm { font-size: 26px; }
+.docs-divider {
+  border: none; border-top: 1px solid var(--border);
+  margin: 56px 0;
+}
+
+/* Meta blocks */
+.meta-block { margin-bottom: 48px; }
+.meta-h {
+  font-family: var(--font-d);
+  font-variation-settings: 'opsz' 14,'wdth' 90,'wght' 650;
+  font-size: 19px; letter-spacing: -.02em;
+  color: var(--text); margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.meta-h3 {
+  font-family: var(--font-d);
+  font-variation-settings: 'opsz' 14,'wdth' 90,'wght' 580;
+  font-size: 14px; letter-spacing: -.01em;
+  color: var(--text); margin: 24px 0 10px;
+}
+.meta-p { font-size: 13.5px; color: var(--muted); line-height: 1.65; margin-bottom: 12px; }
+.meta-note { font-size: 12px; color: var(--dim); line-height: 1.5; margin-top: 8px; }
+
+.meta-list {
+  font-size: 13px; color: var(--muted); line-height: 1.8;
+  padding-left: 20px; margin-bottom: 16px;
+}
+.meta-list li { margin-bottom: 2px; }
+
+/* Normalization examples */
+.meta-examples {
+  display: flex; flex-direction: column; gap: 6px;
+  margin: 16px 0;
+  padding: 16px 18px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--r);
+}
+.meta-ex { display: flex; align-items: center; gap: 12px; font-family: var(--font-m); font-size: 12px; }
+.meta-ex-in  { color: var(--muted); }
+.meta-ex-arr { color: var(--dim); flex-shrink: 0; }
+.meta-ex-out { color: var(--text); font-weight: 600; letter-spacing: .03em; }
+
+/* Cascade steps */
+.cascade-steps { display: flex; flex-direction: column; gap: 1px; margin: 16px 0; }
+.cascade-step {
+  display: flex; gap: 0;
+  border: 1px solid var(--border);
+  border-bottom: none;
+  background: var(--bg);
+}
+.cascade-steps .cascade-step:first-child { border-radius: var(--r) var(--r) 0 0; }
+.cascade-steps .cascade-step:last-child  { border-bottom: 1px solid var(--border); border-radius: 0 0 var(--r) var(--r); }
+.cascade-n {
+  width: 44px; flex-shrink: 0;
+  display: flex; align-items: flex-start; justify-content: center;
+  padding-top: 16px;
+  font-family: var(--font-m); font-size: 11px; font-weight: 700;
+  color: var(--br); border-right: 1px solid var(--border);
+}
+.cascade-body { padding: 14px 16px; flex: 1; }
+.cascade-label {
+  font-family: var(--font-m); font-size: 11px; font-weight: 600;
+  letter-spacing: .06em; text-transform: uppercase;
+  color: var(--text); margin-bottom: 6px;
+}
+.cascade-code {
+  display: block; font-family: var(--font-m); font-size: 11.5px;
+  color: var(--br); background: transparent;
+  margin-bottom: 6px;
+}
+.cascade-note { font-size: 12px; color: var(--dim); line-height: 1.5; }
+
+/* Aside callouts */
+.meta-aside {
+  font-size: 12.5px; color: var(--muted); line-height: 1.6;
+  margin: 10px 0;
+  padding: 12px 16px;
+  border-left: 3px solid var(--border);
+  background: var(--bg2);
+}
+.meta-aside strong { color: var(--text); }
+.meta-aside--warn { border-left-color: #c8920a; background: rgba(200,146,10,.05); }
+
+/* Formula display */
+.meta-formula {
+  font-family: var(--font-m); font-size: 13px;
+  color: var(--text); letter-spacing: .02em;
+  padding: 12px 18px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-left: 3px solid var(--br);
+  border-radius: var(--r);
+  margin: 12px 0;
+}
+
+/* PMI table */
+.pmi-table-wrap { overflow-x: auto; margin: 12px 0; }
+.pmi-table {
+  border-collapse: collapse; font-size: 12px; font-family: var(--font-m);
+  width: auto;
+}
+.pmi-table th {
+  background: var(--bg2); padding: 7px 18px;
+  text-align: left; font-size: 10px; font-weight: 600;
+  letter-spacing: .06em; text-transform: uppercase; color: var(--dim);
+  border: 1px solid var(--border);
+}
+.pmi-table td {
+  padding: 6px 18px; border: 1px solid var(--border);
+  color: var(--muted);
+}
+.pmi-table tr:first-child td,
+.pmi-table tr:last-child td { color: var(--text); font-weight: 600; }
+
+/* Generic meta table */
+.meta-table {
+  width: 100%; border-collapse: collapse;
+  font-size: 12.5px; font-family: var(--font-m); margin: 12px 0;
+}
+.meta-table th {
+  background: var(--bg2); padding: 8px 14px;
+  text-align: left; font-size: 10px; font-weight: 600;
+  letter-spacing: .06em; text-transform: uppercase; color: var(--dim);
+  border: 1px solid var(--border);
+}
+.meta-table td {
+  padding: 8px 14px; border: 1px solid var(--border); color: var(--muted);
+}
+
+/* Diagram */
+.doc-pre--diagram {
+  font-family: var(--font-m); font-size: 12px;
+  line-height: 1.9; color: var(--muted);
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 20px 22px;
+  overflow-x: auto; white-space: pre;
+}
+
+/* Doc examples */
+.doc-example { margin-bottom: 28px; }
+.doc-example__title {
+  font-size: 13px; font-weight: 600; color: var(--muted);
+  margin-bottom: 8px; font-family: var(--font-m);
+}
+
+@media (max-width: 600px) {
+  .cascade-step { flex-direction: column; }
+  .cascade-n { width: 100%; padding: 10px 14px 0; border-right: none; border-bottom: 1px solid var(--border); }
+}
+</style>

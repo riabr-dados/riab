@@ -19,6 +19,12 @@ const HF = "https://huggingface.co/datasets/riabr-dados/riab/resolve/main/cleane
     </div>
   </div>
 
+  <!-- DOCS LINK -->
+  <a class="tf-doclink" href="/riab/consulta/#metodologia">
+    <span class="tf-doclink-text">Como as bases são conectadas: normalização de título, joins em cascata e deflação IPCA</span>
+    <span class="tf-doclink-arr">Ler documentação →</span>
+  </a>
+
   <!-- CRUZAMENTO CARDS -->
   <div class="cr-section">
     <div class="cr-intro">
@@ -631,6 +637,30 @@ btnCsv.addEventListener('click', () => {
 }
 .tdot--ok  { background: #007a3c; box-shadow: 0 0 6px rgba(0,122,60,.4); }
 .tdot--err { background: #e8341a; }
+
+/* ── Docs link ───────────────────────────────────────────────── */
+.tf-doclink {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  margin-bottom: 40px;
+  padding: 12px 18px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--br);
+  border-radius: var(--r);
+  text-decoration: none;
+  transition: border-color .14s, background .14s;
+}
+.tf-doclink:hover {
+  background: var(--surface);
+  border-color: var(--br);
+}
+.tf-doclink-text {
+  font-family: var(--font-m); font-size: 12px; color: var(--muted); line-height: 1.5;
+}
+.tf-doclink-arr {
+  font-family: var(--font-m); font-size: 11px; font-weight: 600;
+  color: var(--br); white-space: nowrap; flex-shrink: 0;
+}
 
 /* ── Cruzamento section ──────────────────────────────────────── */
 .cr-section { margin-bottom: 48px; }
