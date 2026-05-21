@@ -1,0 +1,1133 @@
+---
+import Base from "../layouts/Base.astro";
+
+const HF_BASE = "https://huggingface.co/datasets/riabr-dados/riab/resolve/main/cleaned";
+
+const JOINS = [
+  {
+    id: "obras_bilheteria",
+    label: "Obras × Bilheteria",
+    desc: "Público por obra e ano (2014–)",
+    quality: 100,
+    fromSQL: `obras o\n  JOIN bilheteria_por_filme_ano b ON o.CPB = b.CPB_ROE`,
+    joinNote: "Chave: CPB · exato",
+    tablesNeeded: ["obras", "bilheteria_por_filme_ano"],
+  },
+  {
+    id: "obras_diretores",
+    label: "Obras × Diretores",
+    desc: "Diretores por obra cadastrada na ANCINE",
+    quality: 100,
+    fromSQL: `obras o\n  JOIN diretores_obras d ON o.CPB = d.CPB`,
+    joinNote: "Chave: CPB · exato",
+    tablesNeeded: ["obras", "diretores_obras"],
+  },
+  {
+    id: "obras_produtoras",
+    label: "Obras × Produtoras",
+    desc: "Empresas produtoras por obra",
+    quality: 100,
+    fromSQL: `obras o\n  JOIN produtores_obras p ON o.CPB = p.CPB`,
+    joinNote: "Chave: CPB · exato",
+    tablesNeeded: ["obras", "produtores_obras"],
+  },
+  {
+    id: "obras_fsa",
+    label: "Obras × FSA",
+    desc: "Contratos do Fundo Setorial Audiovisual",
+    quality: 85,
+    fromSQL: `obras o\n  LEFT JOIN fomento_fsa f\n    ON upper(regexp_replace(o.TITULO_ORIGINAL, '[^A-Za-z0-9 ]', ' ', 'g'))\n     = upper(regexp_replace(f.TITULO_PROJETO,   '[^A-Za-z0-9 ]', ' ', 'g'))`,
+    joinNote: "Chave: título normalizado · ~85%",
+    tablesNeeded: ["obras", "fomento_fsa"],
+  },
+  {
+    id: "obras_renuncia",
+    label: "Obras × Renúncia Fiscal",
+    desc: "Captação via lei de incentivo (SALIC)",
+    quality: 80,
+    fromSQL: `obras o\n  LEFT JOIN renuncia_fiscal r\n    ON upper(regexp_replace(o.TITULO_ORIGINAL, '[^A-Za-z0-9 ]', ' ', 'g'))\n     = upper(regexp_replace(r.TITULO_PROJETO,   '[^A-Za-z0-9 ]', ' ', 'g'))`,
+    joinNote: "Chave: título normalizado · ~80%",
+    tablesNeeded: ["obras", "renuncia_fiscal"],
+  },
+  {
+    id: "obras_lumiere",
+    label: "Obras × Lumière EU",
+    desc: "Admissões em 37 países europeus (1996–2026)",
+    quality: 70,
+    fromSQL: `obras o\n  LEFT JOIN bilheteria_europa l\n    ON upper(regexp_replace(o.TITULO_ORIGINAL, '[^A-Za-z0-9 ]', ' ', 'g'))\n     = upper(regexp_replace(l."Original title", '[^A-Za-z0-9 ]', ' ', 'g'))`,
+    joinNote: "Chave: título original normalizado · ~70%",
+    tablesNeeded: ["obras", "bilheteria_europa"],
+  },
+  {
+    id: "obras_vod",
+    label: "Obras × VOD Europa",
+    desc: "Plataformas VOD em países europeus",
+    quality: 70,
+    fromSQL: `obras o\n  LEFT JOIN vod_europa v\n    ON upper(regexp_replace(o.TITULO_ORIGINAL, '[^A-Za-z0-9 ]', ' ', 'g'))\n     = upper(regexp_replace(v."Original title", '[^A-Za-z0-9 ]', ' ', 'g'))`,
+    joinNote: "Chave: título original normalizado · ~70%",
+    tablesNeeded: ["obras", "vod_europa"],
+  },
+];
+
+const PARQUET = {
+  obras:                   `${HF_BASE}/obras.parquet`,
+  diretores_obras:         `${HF_BASE}/diretores_obras.parquet`,
+  produtores_obras:        `${HF_BASE}/produtores_obras.parquet`,
+  fomento_fsa:             `${HF_BASE}/fomento_fsa.parquet`,
+  renuncia_fiscal:         `${HF_BASE}/renuncia_fiscal.parquet`,
+  bilheteria_por_filme_ano:`${HF_BASE}/bilheteria_por_filme_ano.parquet`,
+  bilheteria_europa:       `${HF_BASE}/bilheteria_europa.parquet`,
+  vod_europa:              `${HF_BASE}/vod_europa.parquet`,
+};
+
+const joinsJson   = JSON.stringify(JOINS);
+const parquetJson = JSON.stringify(PARQUET);
+---
+
+<Base title="Transformar Dados" description="Cruze tabelas canônicas ANCINE e gere bases prontas para análise, com SQL reutilizável.">
+
+<div class="tr" id="tr-root">
+
+  <!-- ░░ HEADER ░░ -->
+  <header class="tr-header">
+    <div class="tr-header__eyebrow">RIAB · TRANSFORMAR</div>
+    <h1 class="tr-header__title">Gerador de bases cruzadas</h1>
+    <p class="tr-header__sub">Cruze tabelas canônicas ANCINE, gere agregados e exporte o SQL reutilizável.</p>
+    <div class="tr-header__status">
+      <span class="tdot" id="tr-dot"></span>
+      <span id="tr-status">Iniciando motor de consultas…</span>
+    </div>
+  </header>
+
+  <!-- ░░ BUILDER ░░ -->
+  <div class="tr-body">
+
+    <!-- STEP 01: Join selection -->
+    <section class="tr-step" id="step-join">
+      <div class="tr-step__head">
+        <span class="tr-step__num">01</span>
+        <span class="tr-step__label">Escolha o cruzamento</span>
+      </div>
+      <div class="join-grid" id="join-grid">
+        {JOINS.map(j => (
+          <button
+            class="jcard"
+            data-join={j.id}
+            title={j.joinNote}
+          >
+            <div class="jcard__top">
+              <span class="jcard__label">{j.label}</span>
+              <span class={`jcard__badge jcard__badge--${j.quality === 100 ? 'ok' : j.quality >= 85 ? 'good' : j.quality >= 80 ? 'warn' : 'low'}`}>
+                {j.quality === 100 ? '100%' : `~${j.quality}%`}
+              </span>
+            </div>
+            <div class="jcard__desc">{j.desc}</div>
+            <div class="jcard__note">{j.joinNote}</div>
+          </button>
+        ))}
+      </div>
+    </section>
+
+    <!-- STEP 02: Dimensions (GROUP BY) -->
+    <section class="tr-step tr-step--locked" id="step-dims">
+      <div class="tr-step__head">
+        <span class="tr-step__num">02</span>
+        <span class="tr-step__label">Agrupar por</span>
+        <span class="tr-step__hint" id="dims-hint">selecione o cruzamento primeiro</span>
+      </div>
+      <div class="dims-wrap" id="dims-wrap">
+        <div class="dim-row" id="dim-row-1">
+          <label class="dim-label">Dimensão 1</label>
+          <select class="dim-select" id="dim1" disabled>
+            <option value="">— escolha uma coluna —</option>
+          </select>
+        </div>
+        <div class="dim-row" id="dim-row-2">
+          <label class="dim-label">Dimensão 2 <span class="dim-optional">(opcional)</span></label>
+          <select class="dim-select" id="dim2" disabled>
+            <option value="">— nenhuma —</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 03: Metric -->
+    <section class="tr-step tr-step--locked" id="step-metric">
+      <div class="tr-step__head">
+        <span class="tr-step__num">03</span>
+        <span class="tr-step__label">Medir</span>
+        <span class="tr-step__hint" id="metric-hint">selecione o cruzamento primeiro</span>
+      </div>
+      <div class="metric-wrap" id="metric-wrap">
+        <div class="metric-row">
+          <label class="dim-label">Função</label>
+          <select class="dim-select" id="agg-fn" disabled>
+            <option value="COUNT_STAR">COUNT — total de registros</option>
+            <option value="SUM">SUM — soma</option>
+            <option value="AVG">AVG — média</option>
+            <option value="MAX">MAX — máximo</option>
+            <option value="MIN">MIN — mínimo</option>
+          </select>
+        </div>
+        <div class="metric-row" id="agg-col-wrap" style="display:none">
+          <label class="dim-label">Coluna</label>
+          <select class="dim-select" id="agg-col" disabled>
+            <option value="">— escolha uma coluna numérica —</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 04: Filters -->
+    <section class="tr-step tr-step--locked" id="step-filters">
+      <div class="tr-step__head">
+        <span class="tr-step__num">04</span>
+        <span class="tr-step__label">Filtros</span>
+        <span class="tr-step__hint">opcional</span>
+        <button class="add-filter-btn" id="btn-add-filter" disabled>+ Adicionar filtro</button>
+      </div>
+      <div class="filters-list" id="filters-list">
+        <div class="filters-empty">Nenhum filtro — todos os registros serão incluídos.</div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <div class="tr-cta">
+      <button class="cta-btn" id="btn-run" disabled>
+        <span class="cta-btn__icon">&#9654;</span>
+        Gerar tabela
+      </button>
+    </div>
+
+  </div><!-- /tr-body -->
+
+  <!-- ░░ RESULTS ░░ -->
+  <div class="tr-results" id="tr-results">
+
+    <div class="results-empty" id="results-empty">
+      <div class="ree-grid">
+        {Array.from({length: 12}).map(() => <div class="ree-cell"></div>)}
+      </div>
+      <p class="ree-text">O resultado aparecerá aqui depois que você clicar em <strong>Gerar tabela</strong></p>
+    </div>
+
+    <div class="results-active" id="results-active" style="display:none">
+
+      <div class="results-toolbar">
+        <span class="rt-count" id="rt-count"></span>
+        <span class="rt-join"  id="rt-join"></span>
+        <div class="rt-actions">
+          <button class="rt-btn" id="btn-csv">&#8595; CSV</button>
+          <button class="rt-btn rt-btn--sql" id="btn-show-sql">&#60;/&#62; SQL</button>
+        </div>
+      </div>
+
+      <!-- SQL panel -->
+      <div class="sql-panel" id="sql-panel" style="display:none">
+        <div class="sql-panel__head">
+          <span class="sql-panel__label">SQL reutilizável · DuckDB / MotherDuck / dbt</span>
+          <button class="sql-copy-btn" id="btn-copy-sql">Copiar</button>
+        </div>
+        <pre class="sql-pre" id="sql-pre"></pre>
+      </div>
+
+      <!-- Table -->
+      <div class="result-table-wrap" id="result-table-wrap"></div>
+
+    </div>
+
+  </div><!-- /tr-results -->
+
+</div><!-- /tr-root -->
+
+</Base>
+
+<script define:vars={{ joinsJson, parquetJson }}>
+  window.__TR__ = {
+    joins:   JSON.parse(joinsJson),
+    parquet: JSON.parse(parquetJson),
+  };
+</script>
+
+<script type="module">
+import * as duckdb from "https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.29.0/+esm";
+
+const { joins, parquet } = window.__TR__;
+
+// ── DOM ────────────────────────────────────────────────────────────────────
+const dot          = document.getElementById("tr-dot");
+const statusEl     = document.getElementById("tr-status");
+const joinGrid     = document.getElementById("join-grid");
+const dim1         = document.getElementById("dim1");
+const dim2         = document.getElementById("dim2");
+const aggFn        = document.getElementById("agg-fn");
+const aggCol       = document.getElementById("agg-col");
+const aggColWrap   = document.getElementById("agg-col-wrap");
+const filtersList  = document.getElementById("filters-list");
+const btnAddFilter = document.getElementById("btn-add-filter");
+const btnRun       = document.getElementById("btn-run");
+const dimsHint     = document.getElementById("dims-hint");
+const metricHint   = document.getElementById("metric-hint");
+const resultsEmpty = document.getElementById("results-empty");
+const resultsActive= document.getElementById("results-active");
+const rtCount      = document.getElementById("rt-count");
+const rtJoin       = document.getElementById("rt-join");
+const btnCsv       = document.getElementById("btn-csv");
+const btnShowSql   = document.getElementById("btn-show-sql");
+const sqlPanel     = document.getElementById("sql-panel");
+const sqlPre       = document.getElementById("sql-pre");
+const btnCopySql   = document.getElementById("btn-copy-sql");
+const tableWrap    = document.getElementById("result-table-wrap");
+
+// ── State ──────────────────────────────────────────────────────────────────
+let db, conn;
+let ready         = false;
+let currentJoin   = null;
+let allColumns    = [];   // { name, type, alias, qualified }
+let textCols      = [];
+let numCols       = [];
+let filters       = [];
+let filterId      = 0;
+let lastSQL       = "";
+let lastRows      = [];
+let lastColNames  = [];
+
+// ── INIT ───────────────────────────────────────────────────────────────────
+(async () => {
+  try {
+    const bundles  = duckdb.getJsDelivrBundles();
+    const bundle   = await duckdb.selectBundle(bundles);
+    const workerUrl = URL.createObjectURL(
+      new Blob([`importScripts("${bundle.mainWorker}");`], { type: "text/javascript" })
+    );
+    db = new duckdb.AsyncDuckDB(new duckdb.ConsoleLogger(), new Worker(workerUrl));
+    await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
+    conn = await db.connect();
+    await conn.query("INSTALL httpfs; LOAD httpfs; SET s3_region='us-east-1';");
+
+    const names = Object.keys(parquet);
+    statusEl.textContent = `Registrando ${names.length} tabelas…`;
+    for (const [name, url] of Object.entries(parquet)) {
+      await conn.query(`CREATE OR REPLACE VIEW ${name} AS SELECT * FROM '${url}'`);
+    }
+
+    dot.className = "tdot tdot--ok";
+    statusEl.textContent = `${names.length} tabelas · pronto`;
+    ready = true;
+  } catch (e) {
+    dot.className = "tdot tdot--err";
+    statusEl.textContent = "Erro ao iniciar motor: " + e.message;
+  }
+})();
+
+// ── JOIN SELECTION ─────────────────────────────────────────────────────────
+joinGrid.addEventListener("click", async e => {
+  const card = e.target.closest("[data-join]");
+  if (!card || !ready) return;
+
+  joinGrid.querySelectorAll(".jcard").forEach(c => c.classList.remove("jcard--active"));
+  card.classList.add("jcard--active");
+
+  const jid = card.dataset.join;
+  currentJoin = joins.find(j => j.id === jid);
+  filters = [];
+  renderFilters();
+
+  statusEl.textContent = `Carregando esquema de ${currentJoin.label}…`;
+
+  try {
+    const { tablesNeeded, fromSQL } = currentJoin;
+    const [tA, tB] = tablesNeeded;
+
+    const [colsA, colsB] = await Promise.all([
+      describeTable(tA),
+      describeTable(tB),
+    ]);
+
+    // Build qualified column list (alias.COLNAME), dedup by name to avoid collisions
+    const seen = new Set();
+    allColumns = [];
+    const aliasA = "o";
+    const aliasB = tB === "bilheteria_por_filme_ano" ? "b"
+                 : tB === "diretores_obras"          ? "d"
+                 : tB === "produtores_obras"          ? "p"
+                 : tB === "fomento_fsa"               ? "f"
+                 : tB === "renuncia_fiscal"            ? "r"
+                 : tB === "bilheteria_europa"          ? "l"
+                 : tB === "vod_europa"                ? "v"
+                 : "b";
+
+    for (const c of colsA) {
+      const key = c.name.toLowerCase();
+      if (!seen.has(key)) {
+        seen.add(key);
+        allColumns.push({ name: c.name, type: c.type, alias: aliasA, qualified: `${aliasA}.${c.name}` });
+      }
+    }
+    for (const c of colsB) {
+      const key = c.name.toLowerCase();
+      if (!seen.has(key)) {
+        seen.add(key);
+        allColumns.push({ name: c.name, type: c.type, alias: aliasB, qualified: `${aliasB}."${c.name}"` });
+      } else {
+        // Name collision: qualify with table alias
+        allColumns.push({ name: `${tB}.${c.name}`, type: c.type, alias: aliasB, qualified: `${aliasB}."${c.name}"` });
+      }
+    }
+
+    textCols = allColumns.filter(c => isText(c.type));
+    numCols  = allColumns.filter(c => isNumeric(c.type));
+
+    populateDimSelects();
+    populateAggColSelect();
+    unlockSteps();
+
+    statusEl.textContent = `${currentJoin.label} · ${allColumns.length} colunas disponíveis`;
+  } catch (e) {
+    statusEl.textContent = "Erro ao carregar esquema: " + e.message;
+  }
+});
+
+async function describeTable(name) {
+  const res = await conn.query(`DESCRIBE ${name}`);
+  return res.toArray().map(r => ({ name: r.column_name, type: r.column_type }));
+}
+
+function isText(t)    { return /varchar|char|text|string|date|timestamp/i.test(t); }
+function isNumeric(t) { return /int|float|double|decimal|number|bigint|real|hugeint/i.test(t); }
+
+// ── POPULATE SELECTS ───────────────────────────────────────────────────────
+function populateDimSelects() {
+  const opts = textCols.map(c =>
+    `<option value="${c.qualified}">${c.name} (${c.type})</option>`
+  ).join("");
+
+  dim1.innerHTML = `<option value="">— escolha uma coluna —</option>${opts}`;
+  dim2.innerHTML = `<option value="">— nenhuma —</option>${opts}`;
+
+  [dim1, dim2, aggFn].forEach(el => { el.disabled = false; });
+  dimsHint.textContent = `${textCols.length} colunas de texto disponíveis`;
+  metricHint.textContent = `${numCols.length} colunas numéricas disponíveis`;
+}
+
+function populateAggColSelect() {
+  const opts = numCols.map(c =>
+    `<option value="${c.qualified}">${c.name} (${c.type})</option>`
+  ).join("");
+  aggCol.innerHTML = `<option value="">— escolha uma coluna —</option>${opts}`;
+  aggCol.disabled = false;
+}
+
+function unlockSteps() {
+  ["step-dims", "step-metric", "step-filters"].forEach(id => {
+    document.getElementById(id).classList.remove("tr-step--locked");
+  });
+  btnAddFilter.disabled = false;
+  checkRunReady();
+}
+
+// ── AGG FN CHANGE ──────────────────────────────────────────────────────────
+aggFn.addEventListener("change", () => {
+  const needsCol = aggFn.value !== "COUNT_STAR";
+  aggColWrap.style.display = needsCol ? "flex" : "none";
+  checkRunReady();
+});
+
+dim1.addEventListener("change", checkRunReady);
+
+function checkRunReady() {
+  const hasJoin = !!currentJoin;
+  const hasDim  = dim1.value !== "";
+  const hasMetric = aggFn.value === "COUNT_STAR" || (aggFn.value && aggCol.value);
+  btnRun.disabled = !(hasJoin && hasDim && hasMetric && ready);
+}
+
+// ── FILTERS ────────────────────────────────────────────────────────────────
+btnAddFilter.addEventListener("click", () => {
+  if (!currentJoin) return;
+  const id = ++filterId;
+  const colOpts = allColumns.map(c =>
+    `<option value="${c.qualified}">${c.name}</option>`
+  ).join("");
+
+  const div = document.createElement("div");
+  div.className = "filter-row";
+  div.dataset.fid = id;
+  div.innerHTML = `
+    <select class="f-col">${colOpts}</select>
+    <select class="f-op">
+      <option value="=">=</option>
+      <option value="!=">≠</option>
+      <option value="CONTAINS">contém</option>
+      <option value=">">&#62;</option>
+      <option value=">=">&#62;=</option>
+      <option value="<">&#60;</option>
+      <option value="<=">&#60;=</option>
+      <option value="IS NULL">é nulo</option>
+      <option value="IS NOT NULL">não é nulo</option>
+    </select>
+    <input class="f-val" type="text" placeholder="valor" />
+    <button class="f-rm" data-fid="${id}">×</button>
+  `;
+  // Hide val input for null checks
+  div.querySelector(".f-op").addEventListener("change", e => {
+    div.querySelector(".f-val").style.display =
+      ["IS NULL", "IS NOT NULL"].includes(e.target.value) ? "none" : "";
+  });
+  div.querySelector(".f-rm").addEventListener("click", () => {
+    div.remove();
+    filters = filters.filter(f => f.id !== id);
+    if (!filtersList.querySelector(".filter-row")) {
+      filtersList.innerHTML = '<div class="filters-empty">Nenhum filtro — todos os registros serão incluídos.</div>';
+    }
+  });
+
+  // Remove empty state
+  const empty = filtersList.querySelector(".filters-empty");
+  if (empty) empty.remove();
+
+  filtersList.appendChild(div);
+  filters.push({ id });
+});
+
+function collectFilters() {
+  const clauses = [];
+  filtersList.querySelectorAll(".filter-row").forEach(row => {
+    const col = row.querySelector(".f-col").value;
+    const op  = row.querySelector(".f-op").value;
+    const val = row.querySelector(".f-val").value.trim();
+    if (!col) return;
+    if (op === "IS NULL" || op === "IS NOT NULL") {
+      clauses.push(`${col} ${op}`);
+    } else if (op === "CONTAINS") {
+      clauses.push(`${col} ILIKE '%${val.replace(/'/g, "''")}%'`);
+    } else {
+      const quoted = isNaN(val) ? `'${val.replace(/'/g, "''")}'` : val;
+      clauses.push(`${col} ${op} ${quoted}`);
+    }
+  });
+  return clauses;
+}
+
+// ── BUILD SQL ──────────────────────────────────────────────────────────────
+function buildSQL() {
+  const j = currentJoin;
+  const d1 = dim1.value;
+  const d2 = dim2.value || null;
+  const fn = aggFn.value;
+  const ac = aggCol.value;
+
+  const metricExpr = fn === "COUNT_STAR"
+    ? "COUNT(*) AS n"
+    : `${fn}(${ac}) AS valor`;
+
+  const dims = [d1, d2].filter(Boolean);
+  const groupBy = dims.join(",\n  ");
+  const selectDims = dims.join(",\n  ");
+
+  const whereClauses = collectFilters();
+  const whereSQL = whereClauses.length ? `\nWHERE\n  ${whereClauses.join("\n  AND ")}` : "";
+
+  const qualityNote = j.quality < 100
+    ? `-- ⚠ Join aproximado (${j.quality === 85 ? '~85%' : j.quality === 80 ? '~80%' : '~70%'}): ${j.joinNote}\n-- Casos com título alterado entre edital e lançamento podem não casar\n`
+    : "";
+
+  const sql = `-- Cruzamento: ${j.label}
+-- ${j.joinNote}
+${qualityNote}-- Gerado por RIAB Transformar · riabr-dados.github.io/riab/transformar/
+
+SELECT
+  ${selectDims},
+  ${metricExpr}
+FROM ${j.fromSQL}${whereSQL}
+GROUP BY
+  ${groupBy}
+ORDER BY
+  ${fn === "COUNT_STAR" ? "n" : "valor"} DESC;`;
+
+  return sql;
+}
+
+// ── RUN ────────────────────────────────────────────────────────────────────
+btnRun.addEventListener("click", run);
+
+async function run() {
+  if (!ready || !currentJoin || !dim1.value) return;
+
+  btnRun.disabled = true;
+  btnRun.querySelector(".cta-btn__icon").textContent = "◌";
+  statusEl.textContent = "Executando consulta…";
+
+  const sql = buildSQL();
+  lastSQL = sql;
+
+  try {
+    const t0  = Date.now();
+    const res = await conn.query(sql);
+    const ms  = Date.now() - t0;
+
+    lastRows    = res.toArray();
+    lastColNames= res.schema.fields.map(f => f.name);
+
+    renderResults(ms);
+    sqlPre.textContent = sql;
+
+    statusEl.textContent = `${lastRows.length} linhas · ${ms}ms`;
+  } catch (e) {
+    statusEl.textContent = "Erro: " + e.message;
+    tableWrap.innerHTML = `<div class="query-error">${e.message}</div>`;
+    resultsEmpty.style.display = "none";
+    resultsActive.style.display = "block";
+  } finally {
+    btnRun.disabled = false;
+    btnRun.querySelector(".cta-btn__icon").textContent = "▶";
+  }
+}
+
+// ── RENDER TABLE ───────────────────────────────────────────────────────────
+function renderResults(ms) {
+  resultsEmpty.style.display = "none";
+  resultsActive.style.display = "block";
+
+  rtCount.textContent = `${lastRows.length} linhas · ${ms}ms`;
+  rtJoin.textContent  = currentJoin.label;
+
+  if (lastRows.length === 0) {
+    tableWrap.innerHTML = `<div class="query-error">Nenhum resultado para os filtros selecionados.</div>`;
+    return;
+  }
+
+  // Find the metric column (last column) for bar visualization
+  const metricCol = lastColNames[lastColNames.length - 1];
+  const vals = lastRows.map(r => Number(r[metricCol]) || 0);
+  const maxVal = Math.max(...vals);
+
+  let html = `<table class="rt"><thead><tr>`;
+  lastColNames.forEach(c => { html += `<th>${c}</th>`; });
+  html += `</tr></thead><tbody>`;
+
+  lastRows.forEach(row => {
+    html += `<tr>`;
+    lastColNames.forEach((col, i) => {
+      const v = row[col];
+      const display = v === null || v === undefined ? "—" : String(v);
+      if (i === lastColNames.length - 1 && maxVal > 0) {
+        const pct = Math.round((Number(v) / maxVal) * 100);
+        html += `<td class="rt__metric">
+          <div class="rt__bar-wrap">
+            <div class="rt__bar" style="width:${pct}%"></div>
+            <span class="rt__val">${Number.isInteger(Number(v)) ? Number(v).toLocaleString("pt-BR") : Number(v).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+          </div>
+        </td>`;
+      } else {
+        html += `<td>${display}</td>`;
+      }
+    });
+    html += `</tr>`;
+  });
+  html += `</tbody></table>`;
+  tableWrap.innerHTML = html;
+}
+
+// ── EXPORT CSV ─────────────────────────────────────────────────────────────
+btnCsv.addEventListener("click", () => {
+  if (!lastRows.length) return;
+  const sep = ";";
+  const header = lastColNames.join(sep);
+  const rows = lastRows.map(r =>
+    lastColNames.map(c => {
+      const v = r[c];
+      if (v === null || v === undefined) return "";
+      const s = String(v);
+      return s.includes(sep) || s.includes('"') || s.includes("\n")
+        ? `"${s.replace(/"/g, '""')}"`
+        : s;
+    }).join(sep)
+  ).join("\n");
+  const blob = new Blob(["﻿" + header + "\n" + rows], { type: "text/csv;charset=utf-8;" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `riab_${currentJoin.id}_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+});
+
+// ── SQL PANEL ──────────────────────────────────────────────────────────────
+btnShowSql.addEventListener("click", () => {
+  const visible = sqlPanel.style.display !== "none";
+  sqlPanel.style.display = visible ? "none" : "block";
+  btnShowSql.classList.toggle("rt-btn--active", !visible);
+});
+
+btnCopySql.addEventListener("click", async () => {
+  await navigator.clipboard.writeText(sqlPre.textContent);
+  btnCopySql.textContent = "Copiado!";
+  setTimeout(() => { btnCopySql.textContent = "Copiar"; }, 1500);
+});
+
+// ── LISTEN FOR COL CHANGES ─────────────────────────────────────────────────
+aggCol.addEventListener("change", checkRunReady);
+</script>
+
+<style>
+  /* ── Tokens ── */
+  :root {
+    --bg:     #0f1117;
+    --bg2:    #171b26;
+    --bg3:    #1e2333;
+    --border: #2a2f45;
+    --ink:    #e8eaf0;
+    --ink2:   #8b90a8;
+    --ink3:   #5a5f78;
+    --green:  #00d68f;
+    --blue:   #4a9eff;
+    --yellow: #f5c842;
+    --red:    #ff6b6b;
+    --radius: 8px;
+    --mono: "Geist Mono", "Fira Code", monospace;
+  }
+
+  /* ── Layout ── */
+  .tr {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+    font-family: "Geist", "Inter", system-ui, sans-serif;
+    color: var(--ink);
+  }
+
+  /* ── Header ── */
+  .tr-header {
+    margin-bottom: 2.5rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1.5rem;
+  }
+  .tr-header__eyebrow {
+    font-family: var(--mono);
+    font-size: .7rem;
+    letter-spacing: .12em;
+    color: var(--blue);
+    margin-bottom: .5rem;
+  }
+  .tr-header__title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0 0 .4rem;
+    letter-spacing: -.02em;
+  }
+  .tr-header__sub {
+    color: var(--ink2);
+    font-size: .9rem;
+    margin: 0 0 .75rem;
+  }
+  .tr-header__status {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: .8rem;
+    color: var(--ink3);
+    font-family: var(--mono);
+  }
+  .tdot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--ink3);
+    flex-shrink: 0;
+    transition: background .3s;
+  }
+  .tdot--ok  { background: var(--green); box-shadow: 0 0 6px var(--green); }
+  .tdot--err { background: var(--red); }
+
+  /* ── Step ── */
+  .tr-body { display: flex; flex-direction: column; gap: 1.5rem; }
+
+  .tr-step {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    transition: opacity .2s;
+  }
+  .tr-step--locked { opacity: .45; pointer-events: none; }
+
+  .tr-step__head {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    margin-bottom: 1rem;
+  }
+  .tr-step__num {
+    font-family: var(--mono);
+    font-size: .75rem;
+    font-weight: 700;
+    color: var(--blue);
+    background: rgba(74,158,255,.12);
+    border: 1px solid rgba(74,158,255,.3);
+    border-radius: 4px;
+    padding: .15rem .4rem;
+    letter-spacing: .06em;
+  }
+  .tr-step__label {
+    font-weight: 600;
+    font-size: .95rem;
+  }
+  .tr-step__hint {
+    margin-left: auto;
+    font-size: .78rem;
+    color: var(--ink3);
+    font-family: var(--mono);
+  }
+
+  /* ── Join grid ── */
+  .join-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: .75rem;
+  }
+
+  .jcard {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+    display: flex;
+    flex-direction: column;
+    gap: .35rem;
+  }
+  .jcard:hover { border-color: var(--blue); }
+  .jcard--active {
+    border-color: var(--blue);
+    background: rgba(74,158,255,.08);
+  }
+
+  .jcard__top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: .5rem;
+  }
+  .jcard__label {
+    font-weight: 600;
+    font-size: .85rem;
+    line-height: 1.3;
+  }
+  .jcard__badge {
+    font-family: var(--mono);
+    font-size: .65rem;
+    font-weight: 700;
+    border-radius: 3px;
+    padding: .1rem .35rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .jcard__badge--ok   { background: rgba(0,214,143,.15); color: var(--green); border: 1px solid rgba(0,214,143,.3); }
+  .jcard__badge--good { background: rgba(0,214,143,.10); color: #6de7b8; border: 1px solid rgba(0,214,143,.2); }
+  .jcard__badge--warn { background: rgba(245,200,66,.10); color: var(--yellow); border: 1px solid rgba(245,200,66,.2); }
+  .jcard__badge--low  { background: rgba(255,107,107,.10); color: var(--red); border: 1px solid rgba(255,107,107,.2); }
+
+  .jcard__desc {
+    font-size: .78rem;
+    color: var(--ink2);
+    line-height: 1.4;
+  }
+  .jcard__note {
+    font-family: var(--mono);
+    font-size: .65rem;
+    color: var(--ink3);
+    margin-top: .15rem;
+  }
+
+  /* ── Dim / metric selects ── */
+  .dims-wrap, .metric-wrap { display: flex; flex-direction: column; gap: .75rem; }
+
+  .dim-row, .metric-row {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+  }
+  .dim-label {
+    font-size: .78rem;
+    color: var(--ink2);
+    min-width: 90px;
+    font-family: var(--mono);
+  }
+  .dim-optional { color: var(--ink3); }
+
+  .dim-select {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--ink);
+    padding: .45rem .6rem;
+    font-size: .83rem;
+    font-family: var(--mono);
+    appearance: none;
+    cursor: pointer;
+    transition: border-color .15s;
+  }
+  .dim-select:hover:not(:disabled) { border-color: var(--blue); }
+  .dim-select:disabled { opacity: .5; cursor: default; }
+
+  /* ── Filters ── */
+  .add-filter-btn {
+    margin-left: auto;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--ink2);
+    font-size: .78rem;
+    padding: .3rem .7rem;
+    cursor: pointer;
+    transition: border-color .15s, color .15s;
+  }
+  .add-filter-btn:hover:not(:disabled) { border-color: var(--blue); color: var(--blue); }
+  .add-filter-btn:disabled { opacity: .5; cursor: default; }
+
+  .filters-empty {
+    font-size: .8rem;
+    color: var(--ink3);
+    font-family: var(--mono);
+  }
+
+  .filter-row {
+    display: flex;
+    gap: .5rem;
+    align-items: center;
+    margin-bottom: .5rem;
+  }
+  .f-col, .f-op {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--ink);
+    padding: .35rem .5rem;
+    font-size: .8rem;
+    font-family: var(--mono);
+  }
+  .f-col { flex: 2; }
+  .f-op  { flex: 1; }
+  .f-val {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--ink);
+    padding: .35rem .5rem;
+    font-size: .8rem;
+    font-family: var(--mono);
+  }
+  .f-rm {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--ink3);
+    cursor: pointer;
+    padding: .3rem .55rem;
+    font-size: .9rem;
+    transition: border-color .15s, color .15s;
+  }
+  .f-rm:hover { border-color: var(--red); color: var(--red); }
+
+  /* ── CTA ── */
+  .tr-cta { display: flex; justify-content: flex-end; }
+
+  .cta-btn {
+    background: var(--blue);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    font-size: .9rem;
+    font-weight: 600;
+    padding: .7rem 1.6rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    transition: opacity .15s, box-shadow .15s;
+  }
+  .cta-btn:hover:not(:disabled) {
+    opacity: .9;
+    box-shadow: 0 0 12px rgba(74,158,255,.4);
+  }
+  .cta-btn:disabled { opacity: .4; cursor: default; }
+
+  /* ── Results ── */
+  .tr-results {
+    margin-top: 2rem;
+    min-height: 200px;
+  }
+
+  .results-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 3rem 1rem;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius);
+  }
+  .ree-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 4px;
+    opacity: .35;
+  }
+  .ree-cell {
+    height: 18px;
+    background: var(--bg3);
+    border-radius: 3px;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  .ree-cell:nth-child(odd)  { animation-delay: .2s; }
+  .ree-cell:nth-child(3n)   { animation-delay: .5s; }
+  @keyframes pulse {
+    0%,100% { opacity: .5; }
+    50%      { opacity: 1; }
+  }
+  .ree-text {
+    font-size: .85rem;
+    color: var(--ink3);
+    text-align: center;
+  }
+
+  /* Results toolbar */
+  .results-toolbar {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+  .rt-count {
+    font-family: var(--mono);
+    font-size: .78rem;
+    color: var(--ink3);
+  }
+  .rt-join {
+    font-size: .78rem;
+    color: var(--blue);
+    font-family: var(--mono);
+  }
+  .rt-actions { margin-left: auto; display: flex; gap: .5rem; }
+  .rt-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--ink2);
+    font-size: .78rem;
+    font-family: var(--mono);
+    padding: .35rem .75rem;
+    cursor: pointer;
+    transition: border-color .15s, color .15s;
+  }
+  .rt-btn:hover { border-color: var(--blue); color: var(--blue); }
+  .rt-btn--sql { border-color: rgba(74,158,255,.4); color: var(--blue); }
+  .rt-btn--active { background: rgba(74,158,255,.1); }
+
+  /* SQL panel */
+  .sql-panel {
+    background: var(--bg);
+    border: 1px solid rgba(74,158,255,.3);
+    border-radius: var(--radius);
+    margin-bottom: 1rem;
+    overflow: hidden;
+  }
+  .sql-panel__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: .6rem 1rem;
+    border-bottom: 1px solid var(--border);
+    background: rgba(74,158,255,.05);
+  }
+  .sql-panel__label {
+    font-family: var(--mono);
+    font-size: .72rem;
+    color: var(--blue);
+  }
+  .sql-copy-btn {
+    background: transparent;
+    border: 1px solid rgba(74,158,255,.4);
+    border-radius: 4px;
+    color: var(--blue);
+    font-size: .72rem;
+    font-family: var(--mono);
+    padding: .2rem .55rem;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .sql-copy-btn:hover { background: rgba(74,158,255,.1); }
+  .sql-pre {
+    padding: 1rem;
+    font-family: var(--mono);
+    font-size: .8rem;
+    line-height: 1.6;
+    color: var(--ink);
+    white-space: pre;
+    overflow-x: auto;
+    margin: 0;
+  }
+
+  /* Result table */
+  .result-table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .rt {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .82rem;
+  }
+  .rt th {
+    background: var(--bg3);
+    padding: .6rem .8rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: .75rem;
+    letter-spacing: .04em;
+    color: var(--ink2);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  .rt td {
+    padding: .5rem .8rem;
+    border-bottom: 1px solid rgba(42,47,69,.6);
+    white-space: nowrap;
+    max-width: 260px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: var(--mono);
+    font-size: .78rem;
+  }
+  .rt tbody tr:hover td { background: rgba(74,158,255,.04); }
+
+  .rt__metric { min-width: 160px; }
+  .rt__bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+  }
+  .rt__bar {
+    height: 6px;
+    background: var(--blue);
+    border-radius: 3px;
+    opacity: .7;
+    flex-shrink: 0;
+    min-width: 2px;
+  }
+  .rt__val { color: var(--ink); font-family: var(--mono); font-size: .78rem; }
+
+  .query-error {
+    padding: 1rem;
+    color: var(--red);
+    font-family: var(--mono);
+    font-size: .82rem;
+    background: rgba(255,107,107,.08);
+    border: 1px solid rgba(255,107,107,.2);
+    border-radius: var(--radius);
+  }
+</style>
