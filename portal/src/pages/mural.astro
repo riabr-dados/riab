@@ -1,0 +1,230 @@
+---
+import Base from "../layouts/Base.astro";
+const base = import.meta.env.BASE_URL;
+---
+
+<Base title="Mural" description="Análises e trabalhos produzidos com os dados do RIDAB — geração de conhecimento sobre o audiovisual brasileiro.">
+  <div class="page-inner">
+
+    <header class="mural-header">
+      <div class="mural-label">Mural</div>
+      <h1 class="page-title">Dados em uso.</h1>
+      <p class="mural-sub">
+        Análises, visualizações e trabalhos produzidos com os dados do RIDAB.
+        O debate sobre a política audiovisual brasileira baseado em evidências.
+      </p>
+    </header>
+
+    <section class="mural-section">
+      <div class="mural-grid">
+
+        <a href="https://cainanbaladez-bot.github.io/fomento-audiovisual/politica.html"
+           target="_blank" rel="noopener" class="mural-card mural-card--featured">
+          <div class="mural-card__stripe"></div>
+          <div class="mural-card__meta">
+            <span class="mural-card__num">001</span>
+            <span class="mural-card__sep">·</span>
+            <span class="mural-card__tag">Política pública · FSA · Fomento · Bilheteria</span>
+          </div>
+          <h2 class="mural-card__title">Uma política de fomento baseada em evidências</h2>
+          <p class="mural-card__desc">
+            Análise de 3.968 filmes lançados entre 2014 e 2023 para avaliar o retorno doméstico
+            e internacional de cada modalidade de fomento — FSA e incentivo fiscal. Qual metodologia
+            de seleção produz melhores resultados? Os dados do ANCINE usados para questionar as bases
+            da política setorial brasileira.
+          </p>
+          <div class="mural-card__datasets">
+            <span class="mural-tag">ANCINE · Projetos FSA</span>
+            <span class="mural-tag">ANCINE · Bilheteria Consolidada</span>
+            <span class="mural-tag">Lumière · Europa</span>
+          </div>
+          <div class="mural-card__footer">
+            <div class="mural-card__author-block">
+              <span class="mural-card__author">Cainan Baladez</span>
+              <span class="mural-card__date">Mai 2025</span>
+            </div>
+            <span class="mural-card__cta">Ver análise ↗</span>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    <section class="mural-cta-section">
+      <div class="mural-cta-inner">
+        <h2>Quer publicar sua análise?</h2>
+        <p>
+          Se você usou os dados do RIDAB em uma análise, visualização ou estudo, entre em contato.
+          O Mural é um espaço aberto para quem usa evidências para qualificar o debate sobre o
+          audiovisual brasileiro.
+        </p>
+        <a class="btn-outline" href="https://github.com/riabr-dados/riab/issues" target="_blank" rel="noopener">
+          Abrir uma issue no GitHub →
+        </a>
+      </div>
+    </section>
+
+  </div>
+</Base>
+
+<style>
+.mural-header {
+  padding: 64px 0 48px;
+  border-bottom: 1px solid var(--border);
+  max-width: 700px;
+}
+.mural-label {
+  font-family: var(--font-m);
+  font-size: 9px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--br);
+  margin-bottom: 16px;
+}
+.mural-sub {
+  font-size: 16px;
+  color: var(--muted);
+  line-height: 1.65;
+  font-weight: 300;
+  margin-top: 16px;
+}
+
+.mural-section { padding: 60px 0; }
+
+.mural-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+@media (min-width: 900px) {
+  .mural-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+.mural-card {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 40px 36px;
+  border: 1px solid var(--border2);
+  border-radius: var(--r);
+  background: var(--surface);
+  text-decoration: none !important;
+  position: relative;
+  overflow: hidden;
+  transition: border-color .2s, background .2s;
+}
+.mural-card:hover { border-color: var(--br); background: var(--bg); }
+.mural-card__stripe {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--br) 0%, var(--uy) 100%);
+}
+.mural-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.mural-card__num {
+  font-family: var(--font-m);
+  font-size: 10px;
+  letter-spacing: .1em;
+  color: var(--br);
+  font-weight: 600;
+}
+.mural-card__sep { color: var(--dim); }
+.mural-card__tag {
+  font-family: var(--font-m);
+  font-size: 9px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.mural-card__title {
+  font-family: var(--font-d);
+  font-variation-settings: 'opsz' 24,'wdth' 85,'wght' 650;
+  font-size: clamp(20px, 2.5vw, 30px);
+  line-height: 1.1;
+  letter-spacing: -.025em;
+  color: var(--text);
+}
+.mural-card__desc {
+  font-size: 13.5px;
+  color: var(--muted);
+  line-height: 1.7;
+  font-weight: 300;
+}
+.mural-card__datasets {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.mural-tag {
+  font-family: var(--font-m);
+  font-size: 9px;
+  letter-spacing: .08em;
+  color: var(--br);
+  background: var(--green-d);
+  border: 1px solid rgba(0,122,60,.15);
+  padding: 3px 8px;
+  border-radius: 99px;
+}
+.mural-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+}
+.mural-card__author-block {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.mural-card__author {
+  font-family: var(--font-m);
+  font-size: 11px;
+  color: var(--text);
+  letter-spacing: .04em;
+}
+.mural-card__date {
+  font-family: var(--font-m);
+  font-size: 9px;
+  color: var(--dim);
+  letter-spacing: .06em;
+}
+.mural-card__cta {
+  font-family: var(--font-m);
+  font-size: 11px;
+  color: var(--br);
+  letter-spacing: .06em;
+  transition: letter-spacing .15s;
+}
+.mural-card:hover .mural-card__cta { letter-spacing: .1em; }
+
+.mural-cta-section {
+  border-top: 1px solid var(--border);
+  padding: 60px 0;
+  background: var(--bg2);
+}
+.mural-cta-inner {
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.mural-cta-inner h2 {
+  font-family: var(--font-d);
+  font-variation-settings: 'opsz' 24,'wdth' 85,'wght' 650;
+  font-size: 24px;
+  color: var(--text);
+  letter-spacing: -.02em;
+}
+.mural-cta-inner p {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.65;
+}
+</style>

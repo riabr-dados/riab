@@ -78,6 +78,21 @@ obras |>
 <Base title="Docs" description="Metodologia de transformação e guia de acesso aos dados do RIDAB.">
   <div class="page-inner page-inner--narrow">
 
+    <!-- ─── INTRO MANIFESTO ─────────────────────────────────── -->
+    <section class="doc-section doc-section--intro">
+      <div class="docs-manifesto-ref">
+        <span class="docs-manifesto-label">Do manifesto</span>
+        <p>
+          "O PDA oferece uma quantidade inacreditável de dados. Acontece que até justamente por isso
+          navegar por esses dados não é nada trivial. Então uma parte significativa desse esforço é a
+          existência das abas Explorar e Transformar — ali tentei documentar e disponibilizar uma
+          metodologia de integração, limpeza e normalização dos dados. É uma receita de bolo de quem
+          trabalha com esses dados há 12 anos."
+        </p>
+        <a href="/riab/sobre/" class="docs-manifesto-link">Leia o manifesto completo →</a>
+      </div>
+    </section>
+
     <!-- ─── METODOLOGIA ─────────────────────────────────────── -->
     <section class="doc-section" id="metodologia">
       <h1 class="page-title">Metodologia de Transformação</h1>
@@ -291,6 +306,35 @@ CNPJ ──────────────────── desambiguaçã
 </Base>
 
 <style>
+.doc-section--intro { padding-bottom: 0; border-bottom: none; }
+.docs-manifesto-ref {
+  border-left: 3px solid var(--br);
+  padding: 20px 24px;
+  background: var(--green-d);
+  border-radius: 0 var(--r) var(--r) 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.docs-manifesto-label {
+  font-family: var(--font-m);
+  font-size: 9px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--br);
+}
+.docs-manifesto-ref p {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.65;
+  font-style: italic;
+}
+.docs-manifesto-link {
+  font-family: var(--font-m);
+  font-size: 10px;
+  letter-spacing: .06em;
+  color: var(--br);
+}
 .page-title--sm { font-size: 26px; }
 .docs-divider {
   border: none; border-top: 1px solid var(--border);

@@ -1,4 +1,4 @@
-﻿---
+---
 import Base from "../layouts/Base.astro";
 import DatasetCard from "../components/DatasetCard.astro";
 import { getDatasets, getCatalogStats } from "../lib/catalog.js";
@@ -16,6 +16,46 @@ const COUNTRIES = [
   { code: "EU", label: "Europa" },
 ];
 
+const SECTIONS = [
+  {
+    href: "explorar/",
+    label: "▶ Explorar",
+    desc: "Consulte datasets via SQL ou em português natural, direto no navegador — sem instalar nada.",
+    accent: "explorar",
+  },
+  {
+    href: "transformar/",
+    label: "Transformar",
+    desc: "Metodologia aberta de integração, limpeza e normalização dos dados por quem trabalhou com eles há 12 anos.",
+    accent: "",
+  },
+  {
+    href: "datasets/",
+    label: "Datasets",
+    desc: `${stats.total_datasets} datasets de fontes oficiais de ${stats.total_paises} países — ANCINE, CNC, BFI, INCAA, ACAU, Lumière, IBGE.`,
+    accent: "",
+  },
+  {
+    href: "consulta/",
+    label: "Docs",
+    desc: "Guia de uso, schema completo de colunas e acesso programático via Python, R ou DuckDB.",
+    accent: "",
+  },
+  {
+    href: "mural/",
+    label: "Mural",
+    desc: "Análises e trabalhos que usam os dados do RIDAB como fonte. A inteligência que esses dados podem gerar.",
+    accent: "mural",
+    isNew: true,
+  },
+  {
+    href: "sobre/",
+    label: "Sobre",
+    desc: "Manifesto, princípios e governança do projeto. Por que o RIDAB existe e para onde vai.",
+    accent: "",
+  },
+];
+
 const base = import.meta.env.BASE_URL;
 ---
 
@@ -24,6 +64,8 @@ const base = import.meta.env.BASE_URL;
 <!-- ── HERO ──────────────────────────────────────────────────────── -->
 <section class="hero">
   <p class="hero-eyebrow">
+    <a class="hero-ey__manifesto" href={`${base}sobre/`}>Leia o manifesto →</a>
+    <span class="hero-ey__sep"></span>
     <span class="hero-ey__live">atualizado</span>
     <span class="hero-ey__sep"></span>
     <span>{stats.total_datasets} datasets</span>
@@ -32,19 +74,40 @@ const base = import.meta.env.BASE_URL;
     <span class="hero-ey__sep"></span>
     <span>{stats.total_fontes} fontes</span>
   </p>
-  <h1 class="hero-h">
-    <span class="hero-h__l">Repositório</span>
-    <span class="hero-h__l">Independente</span>
-    <span class="hero-h__l hero-h__l--em">do Audiovisual Brasileiro.</span>
-  </h1>
-  <div class="hero-deck">
-    <p>
-      {stats.total_datasets} datasets de fontes oficiais — ANCINE, CNC, BFI, INCAA, ACAU, Lumière, IBGE.
-      Consulte, cruze e exporte direto do navegador — sem instalar nada, sem cadastro, sem custo.
-    </p>
-    <div class="hero-cta">
-      <a class="btn-primary" href={`${base}explorar/`}>▶ Explorar dados</a>
-      <a class="btn-ghost" href={`${base}datasets/`}>Ver catálogo</a>
+
+  <div class="hero-split">
+    <div class="hero-left">
+      <h1 class="hero-h">
+        <span class="hero-h__l">O cinema</span>
+        <span class="hero-h__l">brasileiro</span>
+        <span class="hero-h__l hero-h__l--em">como dado público.</span>
+      </h1>
+      <div class="hero-deck">
+        <p>
+          {stats.total_datasets} datasets de fontes oficiais — ANCINE, CNC, BFI, INCAA, ACAU, Lumière, IBGE.
+          Consulte, cruze e exporte direto do navegador — sem instalar nada, sem cadastro, sem custo.
+        </p>
+        <div class="hero-cta">
+          <a class="btn-primary" href={`${base}explorar/`}>▶ Explorar dados</a>
+          <a class="btn-ghost" href={`${base}datasets/`}>Ver catálogo</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <nav class="sections-panel">
+        <div class="sections-panel__label">Seções do RIDAB</div>
+        {SECTIONS.map((s) => (
+          <a href={`${base}${s.href}`} class={`spi${s.accent ? ` spi--${s.accent}` : ""}`}>
+            <div class="spi__top">
+              <span class="spi__name">{s.label}</span>
+              {s.isNew && <span class="spi__badge">novo</span>}
+              <span class="spi__arrow">→</span>
+            </div>
+            <p class="spi__desc">{s.desc}</p>
+          </a>
+        ))}
+      </nav>
     </div>
   </div>
 </section>
@@ -72,6 +135,39 @@ const base = import.meta.env.BASE_URL;
     <div class="stat-l">Custo de acesso</div>
   </div>
 </div>
+
+<!-- ── MURAL DESTAQUE ─────────────────────────────────────────────── -->
+<section class="home-section home-section--mural">
+  <div class="sec-label">Mural</div>
+  <h2 class="sec-title">Dados em uso.<br/>Conhecimento em movimento.</h2>
+  <p class="sec-sub">Análises e trabalhos produzidos com os dados do RIDAB.</p>
+
+  <div class="mural-grid">
+    <a href="https://cainanbaladez-bot.github.io/fomento-audiovisual/politica.html"
+       target="_blank" rel="noopener" class="mural-card mural-card--featured">
+      <div class="mural-card__glow"></div>
+      <div class="mural-card__meta">
+        <span class="mural-card__num">001</span>
+        <span class="mural-card__tag">Política pública · FSA · Fomento</span>
+      </div>
+      <h3 class="mural-card__title">Uma política de fomento baseada em evidências</h3>
+      <p class="mural-card__desc">
+        Análise de 3.968 filmes lançados entre 2014 e 2023 para avaliar o retorno doméstico e
+        internacional de cada modalidade de fomento do FSA e do incentivo fiscal. Qual metodologia
+        de seleção produz melhores resultados para o audiovisual brasileiro?
+      </p>
+      <div class="mural-card__footer">
+        <span class="mural-card__author">Cainan Baladez</span>
+        <span class="mural-card__data">ANCINE FSA · Bilheteria Consolidada</span>
+        <span class="mural-card__link">Ver análise ↗</span>
+      </div>
+    </a>
+  </div>
+
+  <div style="margin-top: 28px">
+    <a class="btn-ghost" href={`${base}mural/`}>Ver todo o Mural →</a>
+  </div>
+</section>
 
 <!-- ── DISCOVER ───────────────────────────────────────────────────── -->
 <section class="home-section">
@@ -260,7 +356,6 @@ obras <span class="co">|&gt;</span>
 </Base>
 
 <script>
-  // Catalog filter
   const chips = document.querySelectorAll(".chip[data-country]");
   const cards = document.querySelectorAll("#catalog-grid > div");
   const search = document.getElementById("search") as HTMLInputElement | null;
@@ -285,7 +380,6 @@ obras <span class="co">|&gt;</span>
   });
   search?.addEventListener("input", applyFilters);
 
-  // Code tabs
   document.querySelectorAll(".ctab").forEach(tab => {
     tab.addEventListener("click", () => {
       document.querySelectorAll(".ctab").forEach(t => t.classList.remove("ctab--active"));
@@ -300,7 +394,7 @@ obras <span class="co">|&gt;</span>
 <style>
 /* ── HERO ── */
 .hero {
-  padding: 72px 0 64px;
+  padding: 64px 0 60px;
   border-bottom: 1px solid var(--border);
 }
 
@@ -313,10 +407,18 @@ obras <span class="co">|&gt;</span>
   letter-spacing: .1em;
   text-transform: uppercase;
   color: var(--dim);
-  margin-bottom: 36px;
+  margin-bottom: 40px;
   flex-wrap: wrap;
   animation: rise .6s ease both;
 }
+.hero-ey__manifesto {
+  color: var(--br);
+  text-decoration: none;
+  font-weight: 500;
+  letter-spacing: .06em;
+  transition: opacity .15s;
+}
+.hero-ey__manifesto:hover { opacity: .7; text-decoration: none; }
 .hero-ey__live {
   color: var(--br);
   display: inline-flex;
@@ -331,15 +433,22 @@ obras <span class="co">|&gt;</span>
 }
 .hero-ey__sep { width: 14px; height: 1px; background: var(--border2); flex-shrink: 0; }
 
+/* ── HERO SPLIT ── */
+.hero-split {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 60px;
+  align-items: start;
+}
+
 .hero-h {
   font-family: var(--font-d);
   font-variation-settings: 'opsz' 96,'wdth' 84,'wght' 700;
-  font-size: clamp(60px, 10vw, 148px);
+  font-size: clamp(52px, 8vw, 120px);
   line-height: .9;
   letter-spacing: -.04em;
   color: var(--text);
   margin-bottom: 40px;
-  max-width: 1100px;
 }
 .hero-h__l {
   display: block;
@@ -355,20 +464,90 @@ obras <span class="co">|&gt;</span>
 }
 
 .hero-deck {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 40px;
-  align-items: end;
-  max-width: 960px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 520px;
   animation: rise .7s .3s ease both;
 }
 .hero-deck p {
-  font-size: clamp(15px, 1.4vw, 17px);
+  font-size: clamp(14px, 1.2vw, 16px);
   color: var(--muted);
   line-height: 1.65;
   font-weight: 300;
 }
-.hero-cta { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+.hero-cta { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* ── SECTIONS PANEL ── */
+.hero-right {
+  animation: rise .7s .2s ease both;
+  position: sticky;
+  top: 80px;
+}
+.sections-panel {
+  border: 1px solid var(--border2);
+  border-radius: var(--r);
+  overflow: hidden;
+  background: var(--surface);
+}
+.sections-panel__label {
+  font-family: var(--font-m);
+  font-size: 9px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--dim);
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg2);
+}
+.spi {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  text-decoration: none !important;
+  transition: background .15s;
+}
+.spi:last-child { border-bottom: none; }
+.spi:hover { background: var(--bg2); }
+.spi__top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.spi__name {
+  font-family: var(--font-m);
+  font-size: 10px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text);
+  font-weight: 500;
+}
+.spi--explorar .spi__name { color: var(--br); }
+.spi--mural .spi__name { color: var(--uy); }
+.spi__badge {
+  font-family: var(--font-m);
+  font-size: 8px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  background: var(--uy);
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 99px;
+}
+.spi__arrow {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--dim);
+  transition: transform .15s, color .15s;
+}
+.spi:hover .spi__arrow { transform: translateX(3px); color: var(--text); }
+.spi__desc {
+  font-size: 11.5px;
+  color: var(--muted);
+  line-height: 1.55;
+}
 
 /* ── STATS STRIP ── */
 .statstrip {
@@ -389,7 +568,6 @@ obras <span class="co">|&gt;</span>
 @media (min-width: 760px) { .stat { border-bottom: none; } }
 .stat:last-child { border-right: none; }
 .stat:hover { background: var(--surface); }
-
 .stat::before {
   content: '';
   position: absolute;
@@ -421,6 +599,110 @@ obras <span class="co">|&gt;</span>
   color: var(--muted);
 }
 
+/* ── MURAL SECTION ── */
+.home-section--mural { background: var(--bg2); }
+
+.mural-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+@media (min-width: 900px) { .mural-grid { grid-template-columns: repeat(2, 1fr); } }
+
+.mural-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 36px 32px;
+  border: 1px solid var(--border2);
+  border-radius: var(--r);
+  background: var(--bg);
+  text-decoration: none !important;
+  position: relative;
+  overflow: hidden;
+  transition: background .2s, border-color .2s;
+}
+.mural-card:hover { background: var(--surface); border-color: var(--br); }
+.mural-card--featured::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--br) 0%, var(--uy) 100%);
+}
+.mural-card__glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 0% 0%, rgba(0,122,60,.05), transparent 60%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .3s;
+}
+.mural-card:hover .mural-card__glow { opacity: 1; }
+.mural-card__meta {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.mural-card__num {
+  font-family: var(--font-m);
+  font-size: 9px;
+  letter-spacing: .12em;
+  color: var(--br);
+  font-weight: 500;
+}
+.mural-card__tag {
+  font-family: var(--font-m);
+  font-size: 9px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.mural-card__title {
+  font-family: var(--font-d);
+  font-variation-settings: 'opsz' 24,'wdth' 85,'wght' 650;
+  font-size: clamp(18px, 2.2vw, 26px);
+  line-height: 1.15;
+  letter-spacing: -.02em;
+  color: var(--text);
+}
+.mural-card__desc {
+  font-size: 13.5px;
+  color: var(--muted);
+  line-height: 1.65;
+  font-weight: 300;
+}
+.mural-card__footer {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.mural-card__author {
+  font-family: var(--font-m);
+  font-size: 10px;
+  color: var(--text);
+  letter-spacing: .04em;
+}
+.mural-card__data {
+  font-family: var(--font-m);
+  font-size: 9px;
+  color: var(--dim);
+  letter-spacing: .06em;
+}
+.mural-card__link {
+  margin-left: auto;
+  font-family: var(--font-m);
+  font-size: 10px;
+  color: var(--br);
+  letter-spacing: .06em;
+  transition: letter-spacing .15s;
+}
+.mural-card:hover .mural-card__link { letter-spacing: .1em; }
+
 /* ── Animations ── */
 @keyframes rise {
   from { opacity: 0; transform: translateY(16px); }
@@ -431,9 +713,12 @@ obras <span class="co">|&gt;</span>
   50%      { opacity: .35; }
 }
 
+@media (max-width: 1024px) {
+  .hero-split { grid-template-columns: 1fr; gap: 40px; }
+  .hero-right { position: static; }
+}
 @media (max-width: 760px) {
-  .hero-deck { grid-template-columns: 1fr; gap: 24px; }
-  .hero-cta { justify-content: flex-start; }
+  .hero-cta { flex-direction: column; }
 }
 
 /* SECTIONS */
