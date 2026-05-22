@@ -17,6 +17,7 @@ SCRIPTS = [
     "pipelines/transform/clean_deflator.py",
     "pipelines/transform/clean_lumiere.py",
     "pipelines/transform/clean_incaa.py",
+    "pipelines/transform/clean_acau.py",
 ]
 
 

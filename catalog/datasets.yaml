@@ -1089,4 +1089,4 @@ datasets:
       files: 1
       size_bytes: 515065
     cleaned:
-      tables: []
+      tables: [acau_apoios]
