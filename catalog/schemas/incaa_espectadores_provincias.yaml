@@ -2,6 +2,10 @@ table: incaa_espectadores_provincias
 description: >
   Espectadores de cinema por provincia argentina, formato longo,
   com codigo INDEC e nome da provincia, 2001-2023.
+  ATENCAO: no ano 2023 os valores de Cordoba (codigo 14) e Chaco (codigo 22)
+  estao trocados na fonte original (a04 do INCAA). O erro e confirmado pelo
+  cruzamento com a receita por provincia (a05), que apresenta valores coerentes.
+  Os dados sao preservados exatamente como publicados pelo INCAA.
 source_raw: incaa-espectadores-provincias
 columns:
   - name: ano
