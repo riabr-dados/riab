@@ -646,6 +646,10 @@ datasets:
       delimiter: ","
       files: 1
       size_bytes: 922
+    cleaned:
+      tables:
+        - name: incaa_espectadores_origem
+          parquet: incaa_espectadores_origem.parquet
 
   - slug: incaa-receita-origem
     title: "Receita Cinematografica por Origem do Filme"
@@ -664,6 +668,10 @@ datasets:
       delimiter: ","
       files: 1
       size_bytes: 1044
+    cleaned:
+      tables:
+        - name: incaa_receita_origem
+          parquet: incaa_receita_origem.parquet
 
   - slug: incaa-estreias-origem
     title: "Estreias Cinematograficas por Origem do Filme"
@@ -682,6 +690,10 @@ datasets:
       delimiter: ","
       files: 1
       size_bytes: 511
+    cleaned:
+      tables:
+        - name: incaa_estreias_origem
+          parquet: incaa_estreias_origem.parquet
 
   - slug: incaa-espectadores-provincias
     title: "Espectadores de Cinema por Provincias Argentinas"
@@ -700,6 +712,10 @@ datasets:
       delimiter: ","
       files: 1
       size_bytes: 4545
+    cleaned:
+      tables:
+        - name: incaa_espectadores_provincias
+          parquet: incaa_espectadores_provincias.parquet
 
   - slug: incaa-receita-provincias
     title: "Receita de Cinema por Provincias Argentinas"
@@ -718,6 +734,10 @@ datasets:
       delimiter: ","
       files: 1
       size_bytes: 5473
+    cleaned:
+      tables:
+        - name: incaa_receita_provincias
+          parquet: incaa_receita_provincias.parquet
 
   - slug: incaa-participacao-distribuidoras
     title: "Participacao das Distribuidoras no Mercado Argentino"
@@ -736,6 +756,10 @@ datasets:
       delimiter: ","
       files: 1
       size_bytes: 600
+    cleaned:
+      tables:
+        - name: incaa_participacao_distribuidoras
+          parquet: incaa_participacao_distribuidoras.parquet
 
   - slug: incaa-empregos-longa-metragem
     title: "Empregos em Longa-Metragem Nacional Argentina"
@@ -754,6 +778,10 @@ datasets:
       delimiter: ","
       files: 1
       size_bytes: 511
+    cleaned:
+      tables:
+        - name: incaa_empregos_longa_metragem
+          parquet: incaa_empregos_longa_metragem.parquet
 
   - slug: incaa-acessos-tv-assinatura
     title: "Acessos a Servicos de TV por Assinatura na Argentina"
@@ -772,6 +800,10 @@ datasets:
       delimiter: ","
       files: 1
       size_bytes: 271
+    cleaned:
+      tables:
+        - name: incaa_acessos_tv_assinatura
+          parquet: incaa_acessos_tv_assinatura.parquet
 
   - slug: incaa-receitas-tv-assinatura
     title: "Receitas de Servicos de TV por Assinatura na Argentina"
@@ -790,6 +822,10 @@ datasets:
       delimiter: ","
       files: 1
       size_bytes: 298
+    cleaned:
+      tables:
+        - name: incaa_receitas_tv_assinatura
+          parquet: incaa_receitas_tv_assinatura.parquet
 
   # ── REINO UNIDO / BFI ──────────────────────────────────────────────────────
 

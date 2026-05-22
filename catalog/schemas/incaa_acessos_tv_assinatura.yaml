@@ -1,0 +1,17 @@
+table: incaa_acessos_tv_assinatura
+description: >
+  Total de acessos a servicos de televisao por assinatura na Argentina
+  (cabo e satelite), dados do ENACOM.
+source_raw: incaa-acessos-tv-assinatura
+columns:
+  - name: ano
+    type: integer
+    description: "Ano de referencia"
+  - name: acessos_tv_cabo
+    type: integer
+    description: "Total de acessos a TV a cabo"
+    nullable: true
+  - name: acessos_tv_satelite
+    type: integer
+    description: "Total de acessos a TV por satelite"
+    nullable: true

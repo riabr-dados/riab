@@ -1,0 +1,13 @@
+table: incaa_empregos_longa_metragem
+description: >
+  Postos de trabalho gerados pela producao de longa-metragem nacional
+  argentina, serie historica.
+source_raw: incaa-empregos-longa-metragem
+columns:
+  - name: ano
+    type: integer
+    description: "Ano de referencia"
+  - name: postos_trabalho
+    type: integer
+    description: "Total de postos de trabalho em longa-metragem nacional"
+    nullable: true

@@ -1,0 +1,19 @@
+table: incaa_receita_provincias
+description: >
+  Receita bruta de cinema por provincia argentina, formato longo,
+  com codigo INDEC e nome da provincia, 2001-2023.
+source_raw: incaa-receita-provincias
+columns:
+  - name: ano
+    type: integer
+    description: "Ano de referencia"
+  - name: codigo_indec
+    type: integer
+    description: "Codigo INDEC da provincia (2=CABA, 6=Buenos Aires, etc.)"
+  - name: provincia
+    type: string
+    description: "Nome da provincia argentina"
+  - name: receita
+    type: integer
+    description: "Receita bruta de cinema na provincia (pesos argentinos)"
+    nullable: true

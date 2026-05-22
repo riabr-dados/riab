@@ -1,0 +1,19 @@
+table: incaa_espectadores_origem
+description: >
+  Serie historica de espectadores do cinema argentino por origem do filme
+  (nacionais, estrangeiros e festivais), 2001-2023.
+source_raw: incaa-espectadores-origem
+columns:
+  - name: ano
+    type: integer
+    description: "Ano de referencia"
+  - name: espectadores_nacionais
+    type: integer
+    description: "Total de espectadores de filmes nacionais"
+  - name: espectadores_estrangeiros
+    type: integer
+    description: "Total de espectadores de filmes estrangeiros"
+  - name: espectadores_festivais
+    type: integer
+    description: "Total de espectadores em festivais e mostras"
+    nullable: true

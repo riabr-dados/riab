@@ -1,0 +1,19 @@
+table: incaa_receita_origem
+description: >
+  Receita bruta do cinema argentino por origem de producao
+  (nacionais, estrangeiros e festivais), 2001-2023.
+source_raw: incaa-receita-origem
+columns:
+  - name: ano
+    type: integer
+    description: "Ano de referencia"
+  - name: receita_nacionais
+    type: integer
+    description: "Receita bruta de filmes nacionais (pesos argentinos)"
+  - name: receita_estrangeiros
+    type: integer
+    description: "Receita bruta de filmes estrangeiros (pesos argentinos)"
+  - name: receita_festivais
+    type: integer
+    description: "Receita bruta de festivais e mostras (pesos argentinos)"
+    nullable: true

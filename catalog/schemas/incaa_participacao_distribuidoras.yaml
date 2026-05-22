@@ -1,0 +1,18 @@
+table: incaa_participacao_distribuidoras
+description: >
+  Proporcao de espectadores atendidos por distribuidoras nacionais e
+  estrangeiras no mercado cinematografico argentino, 2000-2023.
+  Valores entre 0 e 1 (ex.: 0.18 = 18%).
+source_raw: incaa-participacao-distribuidoras
+columns:
+  - name: ano
+    type: integer
+    description: "Ano de referencia"
+  - name: proporcao_nacionais
+    type: float
+    description: "Fracao de espectadores atendidos por distribuidoras nacionais (0-1)"
+    nullable: true
+  - name: proporcao_estrangeiras
+    type: float
+    description: "Fracao de espectadores atendidos por distribuidoras estrangeiras (0-1)"
+    nullable: true

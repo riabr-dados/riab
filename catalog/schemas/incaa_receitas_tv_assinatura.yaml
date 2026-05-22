@@ -1,0 +1,17 @@
+table: incaa_receitas_tv_assinatura
+description: >
+  Receitas dos servicos de televisao por assinatura na Argentina
+  (cabo e satelite), dados do ENACOM.
+source_raw: incaa-receitas-tv-assinatura
+columns:
+  - name: ano
+    type: integer
+    description: "Ano de referencia"
+  - name: receitas_tv_cabo
+    type: integer
+    description: "Receitas de TV a cabo (pesos argentinos)"
+    nullable: true
+  - name: receitas_tv_satelite
+    type: integer
+    description: "Receitas de TV por satelite (pesos argentinos)"
+    nullable: true

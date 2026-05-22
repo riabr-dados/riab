@@ -1,0 +1,15 @@
+table: incaa_estreias_origem
+description: >
+  Numero de filmes estreados no mercado argentino por origem
+  (nacionais e estrangeiros), 2001-2023.
+source_raw: incaa-estreias-origem
+columns:
+  - name: ano
+    type: integer
+    description: "Ano de referencia"
+  - name: estreias_nacionais
+    type: integer
+    description: "Numero de estreias de filmes nacionais"
+  - name: estreias_estrangeiros
+    type: integer
+    description: "Numero de estreias de filmes estrangeiros"
