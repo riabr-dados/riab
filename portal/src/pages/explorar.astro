@@ -1,40 +1,42 @@
 ﻿---
 import Base from "../layouts/Base.astro";
+import { getDatasets } from "../lib/catalog.js";
 
 const HF_BASE = "https://huggingface.co/datasets/riabr-dados/riab/resolve/main/cleaned";
 
-const TABLES = [
-  {
-    group: "Brasil",
-    color: "br",
-    tables: [
-      { id: "obras", label: "Obras", desc: "61 mil obras audiovisuais (ANCINE 2002–2026)" },
-      { id: "diretores_obras", label: "Diretores", desc: "Diretores por CPB de obra" },
-      { id: "produtores_obras", label: "Produtoras", desc: "Produtoras por CPB de obra" },
-      { id: "fomento_fsa", label: "FSA Projetos", desc: "4.5 mil contratos do Fundo Setorial" },
-      { id: "renuncia_fiscal", label: "Renúncia Fiscal", desc: "Captação via lei de incentivo" },
-      { id: "bilheteria_por_filme_ano", label: "Bilheteria", desc: "Público por filme e ano" },
-      { id: "bilheteria_consolidada_br", label: "Bilheteria Histórica", desc: "Top obras brasileiras" },
-      { id: "agentes_economicos", label: "Empresas ANCINE", desc: "18 mil agentes registrados" },
-      { id: "preco_ingresso", label: "Preço do Ingresso", desc: "Série 2014–2024" },
-    ],
-  },
-  {
-    group: "Europa",
-    color: "eu",
-    tables: [
-      { id: "bilheteria_europa", label: "Bilheteria Europa", desc: "Admissões em 37 países (1996–2026)" },
-      { id: "vod_europa", label: "VOD Europa", desc: "Catálogo de filmes em plataformas" },
-    ],
-  },
-  {
-    group: "Referência",
-    color: "ref",
-    tables: [
-      { id: "deflator_ipca", label: "Deflator IPCA", desc: "Atualização monetária IBGE (base 2024)" },
-    ],
-  },
-];
+const COUNTRY_META = {
+  BR: { label: "Brasil",       color: "br" },
+  AR: { label: "Argentina",    color: "ar" },
+  UY: { label: "Uruguai",      color: "uy" },
+  FR: { label: "França",       color: "fr" },
+  UK: { label: "Reino Unido",  color: "uk" },
+  EU: { label: "Europa",       color: "eu" },
+};
+const COUNTRY_ORDER = ["BR", "AR", "UY", "FR", "UK", "EU"];
+
+function shortDesc(ds) {
+  const d = (ds.description ?? "").trim().replace(/\s+/g, " ");
+  return d.length > 80 ? d.slice(0, 78) + "…" : d;
+}
+
+const datasets = getDatasets();
+const groupMap = {};
+
+for (const ds of datasets) {
+  const rawTables = ds.cleaned?.tables ?? [];
+  if (rawTables.length === 0) continue;
+
+  const country = ds.source?.country ?? "??";
+  const meta = COUNTRY_META[country] ?? { label: country, color: "ref" };
+  if (!groupMap[country]) groupMap[country] = { group: meta.label, color: meta.color, tables: [] };
+
+  for (const t of rawTables) {
+    const id = typeof t === "string" ? t : t.name;
+    groupMap[country].tables.push({ id, label: ds.title, desc: shortDesc(ds) });
+  }
+}
+
+const TABLES = COUNTRY_ORDER.filter(c => groupMap[c]).map(c => groupMap[c]);
 
 const parquetMap = Object.fromEntries(
   TABLES.flatMap(g => g.tables.map(t => [t.id, `${HF_BASE}/${t.id}.parquet`]))
@@ -883,8 +885,12 @@ initDuckDB();
   text-transform: uppercase;
   color: var(--dim);
 }
-.sgroup--br .sgroup__label  { color: var(--br); }
-.sgroup--eu .sgroup__label  { color: var(--fr); }
+.sgroup--br  .sgroup__label { color: var(--br); }
+.sgroup--ar  .sgroup__label { color: var(--ar); }
+.sgroup--uy  .sgroup__label { color: var(--uy); }
+.sgroup--fr  .sgroup__label { color: var(--fr); }
+.sgroup--uk  .sgroup__label { color: var(--uk); }
+.sgroup--eu  .sgroup__label { color: var(--eu); }
 .sgroup--ref .sgroup__label { color: var(--muted); }
 
 .stable {
@@ -907,7 +913,11 @@ initDuckDB();
   background: rgba(0,122,60,0.06) !important;
   border-left-color: var(--br) !important;
 }
-.sgroup--eu .stable--active  { background: rgba(31,59,184,.06) !important; border-left-color: var(--fr) !important; }
+.sgroup--ar .stable--active  { background: rgba(45,112,196,.06) !important; border-left-color: var(--ar) !important; }
+.sgroup--uy .stable--active  { background: rgba(176,125,10,.06) !important;  border-left-color: var(--uy) !important; }
+.sgroup--fr .stable--active  { background: rgba(31,59,184,.06)  !important;  border-left-color: var(--fr) !important; }
+.sgroup--uk .stable--active  { background: rgba(90,34,68,.06)   !important;  border-left-color: var(--uk) !important; }
+.sgroup--eu .stable--active  { background: rgba(31,59,184,.06)  !important;  border-left-color: var(--eu) !important; }
 .stable__name {
   font-family: var(--font-m);
   font-size: 11px;
