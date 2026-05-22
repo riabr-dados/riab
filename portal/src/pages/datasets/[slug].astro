@@ -51,22 +51,49 @@ WHERE valor_total_liberado_brl > 0
 GROUP BY chamada_publica
 ORDER BY total_liberado_mi_brl DESC`,
 
-  bilheteria_domestica: `SELECT
+  bilheteria_consolidada_br: `SELECT
+  titulo,
+  ano_lancamento,
+  publico_total,
+  fonte
+FROM bilheteria_consolidada_br
+ORDER BY publico_total DESC
+LIMIT 30`,
+
+  bilheteria_por_filme_ano: `SELECT
   titulo_brasil,
   pais_obra,
-  SUM(publico) AS publico_total
-FROM bilheteria_domestica
-GROUP BY titulo_brasil, pais_obra
-ORDER BY publico_total DESC
+  ano,
+  publico
+FROM bilheteria_por_filme_ano
+ORDER BY publico DESC NULLS LAST
 LIMIT 30`,
 
   bilheteria_europa: `SELECT
   titulo_original,
-  SUM(admissoes) AS admissoes_totais,
-  COUNT(DISTINCT pais) AS paises
+  admissoes_1996_2026,
+  total_eu27_gb_desde_1996,
+  ano_producao
 FROM bilheteria_europa
-GROUP BY titulo_original
-ORDER BY admissoes_totais DESC
+ORDER BY admissoes_1996_2026 DESC NULLS LAST
+LIMIT 30`,
+
+  diretores_obras: `SELECT
+  diretor,
+  pais_diretor,
+  COUNT(DISTINCT cpb) AS obras
+FROM diretores_obras
+GROUP BY diretor, pais_diretor
+ORDER BY obras DESC
+LIMIT 30`,
+
+  produtores_obras: `SELECT
+  produtor,
+  pais_produtor,
+  COUNT(DISTINCT cpb) AS obras
+FROM produtores_obras
+GROUP BY produtor, pais_produtor
+ORDER BY obras DESC
 LIMIT 30`,
 };
 

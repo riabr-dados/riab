@@ -5,16 +5,17 @@ Saída: agentes_economicos.parquet
 """
 import pandas as pd
 from pathlib import Path
+from common import latest_snapshot
 
 RAW = Path("datasets")
 OUT = Path("pipelines/output/cleaned")
 OUT.mkdir(parents=True, exist_ok=True)
 
-SNAP = "snapshots/2026-05-19"
+SNAP = latest_snapshot(RAW / "ancine-agentes-economicos")
 
 print("Processando agentes-economicos-regulares.csv …")
 df = pd.read_csv(
-    RAW / f"ancine-agentes-economicos/{SNAP}/agentes-economicos-regulares.csv",
+    SNAP / "agentes-economicos-regulares.csv",
     encoding="latin1",
     sep=None,
     engine="python",

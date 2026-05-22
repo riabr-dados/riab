@@ -5,6 +5,7 @@ Saída: produtores_obras.parquet
 """
 import pandas as pd
 from pathlib import Path
+from common import latest_snapshot
 
 
 def fix_encoding(s: str) -> str:
@@ -20,11 +21,11 @@ RAW = Path("datasets")
 OUT = Path("pipelines/output/cleaned")
 OUT.mkdir(parents=True, exist_ok=True)
 
-SNAP = "snapshots/2026-05-19"
+SNAP = latest_snapshot(RAW / "ancine-produtores-obras")
 
 print("Processando produtores-de-obras-nao-publicitarias-brasileiras.csv …")
 df = pd.read_csv(
-    RAW / f"ancine-produtores-obras/{SNAP}/produtores-de-obras-nao-publicitarias-brasileiras.csv",
+    SNAP / "produtores-de-obras-nao-publicitarias-brasileiras.csv",
     encoding="latin1",
     sep=None,
     engine="python",

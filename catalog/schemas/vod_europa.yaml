@@ -1,0 +1,60 @@
+table: vod_europa
+description: >
+  Dados do Lumiere VOD sobre presenca de obras em catalogos europeus,
+  com paises de producao, catalogo, modelo de negocio e data de presenca.
+
+source_raw: lumiere-vod-europa
+
+columns:
+  - name: titulo_original
+    type: string
+    description: "Titulo original da obra"
+  - name: paises_producao
+    type: string
+    description: "Paises de producao informados"
+    nullable: true
+  - name: ano_producao
+    type: int64
+    description: "Ano de producao"
+    nullable: true
+  - name: diretores
+    type: string
+    description: "Diretores informados"
+    nullable: true
+  - name: tipo_obra
+    type: string
+    description: "Tipo de obra"
+    nullable: true
+  - name: season
+    type: float64
+    description: "Temporada quando aplicavel"
+    nullable: true
+  - name: catalog
+    type: string
+    description: "Catalogo/plataforma"
+  - name: catalog_group
+    type: string
+    description: "Grupo do catalogo"
+    nullable: true
+  - name: modelo_negocio
+    type: string
+    description: "Modelo de negocio"
+    nullable: true
+  - name: country
+    type: string
+    description: "Pais do catalogo"
+  - name: data_presenca
+    type: date
+    description: "Data de presenca no catalogo"
+    nullable: true
+  - name: lumiere_id
+    type: int64
+    description: "Identificador Lumiere"
+    nullable: true
+  - name: imdb_id
+    type: string
+    description: "Identificador IMDb"
+    nullable: true
+  - name: tem_brasil
+    type: boolean
+    description: "Indica se a producao inclui Brasil"

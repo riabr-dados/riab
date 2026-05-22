@@ -77,11 +77,17 @@ const parquetUrl = `${HF_BASE}/${table}.parquet`;
 
 </div>
 
+<script define:vars={{ parquetUrl }}>
+  window.__RIAB_DATA_EXPLORER__ = {
+    parquetUrl,
+  };
+</script>
+
 <!-- DuckDB WASM -->
 <script type="module">
 import * as duckdb from "https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.29.0/+esm";
 
-const PARQUET_URL = "PARQUET_URL_PLACEHOLDER";
+const PARQUET_URL = window.__RIAB_DATA_EXPLORER__?.parquetUrl;
 const statusDot  = document.getElementById("ex-dot");
 const statusText = document.getElementById("ex-status-text");
 const btnRun     = document.getElementById("btn-run");
@@ -131,11 +137,8 @@ async function runQuery(sql) {
   try {
     // Substitui referências curtas pela URL completa
     const finalSql = sql
-      .replace(/FROM\s+obras\b/gi,          `FROM '${PARQUET_URL.replace(/[^/]+\.parquet$/, "obras.parquet")}'`)
-      .replace(/FROM\s+fomento_fsa\b/gi,    `FROM '${PARQUET_URL.replace(/[^/]+\.parquet$/, "fomento_fsa.parquet")}'`)
-      .replace(/FROM\s+bilheteria_domestica\b/gi, `FROM '${PARQUET_URL.replace(/[^/]+\.parquet$/, "bilheteria_domestica.parquet")}'`)
-      .replace(/FROM\s+bilheteria_europa\b/gi, `FROM '${PARQUET_URL.replace(/[^/]+\.parquet$/, "bilheteria_europa.parquet")}'`)
-      .replace(/FROM\s+'([a-z_]+\.parquet)'/gi, (_, f) => `FROM '${PARQUET_URL.replace(/[^/]+\.parquet$/, f)}'`);
+      .replace(/\b(FROM|JOIN)\s+([a-z_][a-z0-9_]*)\b/gi, (_, kw, t) => `${kw} '${PARQUET_URL.replace(/[^/]+\.parquet$/, `${t}.parquet`)}'`)
+      .replace(/\b(FROM|JOIN)\s+'([a-z_][a-z0-9_]*\.parquet)'/gi, (_, kw, f) => `${kw} '${PARQUET_URL.replace(/[^/]+\.parquet$/, f)}'`);
 
     const res = await conn.query(finalSql);
     const elapsed = ((performance.now() - t0) / 1000).toFixed(2);
@@ -226,12 +229,7 @@ editor.addEventListener("keydown", e => {
 initDuckDB();
 </script>
 
-<script define:vars={{ parquetUrl, schemaContext, table }}>
-// Injeta a URL do Parquet no script acima
-document.querySelector('script[type="module"]').textContent =
-  document.querySelector('script[type="module"]').textContent
-    .replace("PARQUET_URL_PLACEHOLDER", parquetUrl);
-
+<script define:vars={{ schemaContext, table }}>
 // ── LINGUAGEM NATURAL → SQL ──────────────────────────────────
 const nlBody   = document.getElementById("nl-body");
 const nlToggle = document.getElementById("nl-toggle");
@@ -250,14 +248,14 @@ if (nlToggle) {
 const LS_KEY = "riab_anthropic_key";
 
 function getApiKey() {
-  let key = localStorage.getItem(LS_KEY);
+  let key = sessionStorage.getItem(LS_KEY);
   if (!key) {
     key = prompt(
       "Para gerar SQL por linguagem natural, informe sua chave da API Anthropic (anthropic.com).\n" +
-      "A chave fica salva apenas no seu navegador e nunca é enviada a nossos servidores.",
+      "A chave sera usada diretamente no seu navegador e fica salva apenas nesta sessao.",
       ""
     );
-    if (key) localStorage.setItem(LS_KEY, key.trim());
+    if (key) sessionStorage.setItem(LS_KEY, key.trim());
   }
   return key ? key.trim() : null;
 }
@@ -303,7 +301,7 @@ REGRAS OBRIGATORIAS:
     });
 
     if (res.status === 401) {
-      localStorage.removeItem(LS_KEY);
+      sessionStorage.removeItem(LS_KEY);
       nlHint.textContent = "Chave invalida. Clique em Gerar SQL para tentar novamente.";
       return;
     }

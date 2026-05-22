@@ -1,0 +1,21 @@
+table: diretores_obras
+description: >
+  Relacao entre diretores e obras brasileiras nao publicitarias, com CPB,
+  titulo original e pais do diretor.
+
+source_raw: ancine-diretores-obras
+
+columns:
+  - name: diretor
+    type: string
+    description: "Nome do diretor"
+  - name: pais_diretor
+    type: string
+    description: "Pais do diretor"
+    nullable: true
+  - name: titulo_original
+    type: string
+    description: "Titulo original da obra"
+  - name: cpb
+    type: string
+    description: "Certificado de Produto Brasileiro da obra"

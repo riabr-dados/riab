@@ -44,7 +44,7 @@ datasets:
       files: 1
       size_bytes: 5055603
     cleaned:
-      tables: [diretores]
+      tables: [diretores_obras]
     related:
       - ancine-obras-nao-publicitarias
       - ancine-produtores-obras
@@ -67,7 +67,7 @@ datasets:
       files: 1
       size_bytes: 7043223
     cleaned:
-      tables: [produtores]
+      tables: [produtores_obras]
     related:
       - ancine-obras-nao-publicitarias
       - ancine-agentes-economicos
@@ -88,7 +88,7 @@ datasets:
       files: 1
       size_bytes: 92341
     cleaned:
-      tables: [bilheteria_domestica]
+      tables: [bilheteria_consolidada_br]
     related:
       - ancine-bilheteria-agregada-filme-ano
       - ancine-preco-medio-ingresso
@@ -112,7 +112,7 @@ datasets:
       files: 1
       size_bytes: 558634
     cleaned:
-      tables: [bilheteria_domestica]
+      tables: [bilheteria_por_filme_ano]
     related:
       - ancine-bilheteria-consolidada
 
@@ -315,7 +315,7 @@ datasets:
       files: 1
       size_bytes: 12821667
     cleaned:
-      tables: [cnc_visas]
+      tables: []
     related:
       - cnc-films-million-entrees
       - cnc-distribution-salles
@@ -336,7 +336,7 @@ datasets:
       files: 1
       size_bytes: 436623
     cleaned:
-      tables: [cnc_frequentacao]
+      tables: []
     related:
       - cnc-parc-cinematographique
       - cnc-distribution-salles
@@ -357,7 +357,7 @@ datasets:
       files: 1
       size_bytes: 2640686
     cleaned:
-      tables: [cnc_estabelecimentos]
+      tables: []
     related:
       - cnc-geographie-cinema
       - cnc-parc-cinematographique
@@ -377,7 +377,7 @@ datasets:
       files: 1
       size_bytes: 109816
     cleaned:
-      tables: [cnc_filmes_milhao]
+      tables: []
     related:
       - cnc-frequentation-salles
       - cnc-visas-exploitation
@@ -398,7 +398,7 @@ datasets:
       files: 1
       size_bytes: 87814
     cleaned:
-      tables: [cnc_dados_internacionais]
+      tables: []
 
   - slug: cnc-films-agrees
     title: "Filmes com Agrement (Producao e Distribuicao)"
@@ -416,7 +416,7 @@ datasets:
       files: 1
       size_bytes: 843119
     cleaned:
-      tables: [cnc_filmes_aprovados]
+      tables: []
     related:
       - cnc-visas-exploitation
 
@@ -435,7 +435,7 @@ datasets:
       files: 1
       size_bytes: 77505
     cleaned:
-      tables: [cnc_audiencia_tv]
+      tables: []
     related:
       - cnc-films-television
 
@@ -454,7 +454,7 @@ datasets:
       files: 1
       size_bytes: 253628
     cleaned:
-      tables: [cnc_filmes_tv]
+      tables: []
     related:
       - cnc-audience-television
 
@@ -473,7 +473,7 @@ datasets:
       files: 1
       size_bytes: 77796
     cleaned:
-      tables: [cnc_exportacao]
+      tables: []
 
   - slug: cnc-geographie-cinema
     title: "Geografia do Cinema Frances"
@@ -490,7 +490,7 @@ datasets:
       files: 4
       size_bytes: 2822075
     cleaned:
-      tables: [cnc_geografia]
+      tables: []
     related:
       - cnc-etablissements
       - cnc-parc-cinematographique
@@ -510,7 +510,7 @@ datasets:
       files: 1
       size_bytes: 65787
     cleaned:
-      tables: [cnc_vod_publico]
+      tables: []
     related:
       - cnc-referencias-ativas-vod
       - cnc-consumo-vod
@@ -530,7 +530,7 @@ datasets:
       files: 1
       size_bytes: 77553
     cleaned:
-      tables: [cnc_vod_refs]
+      tables: []
     related:
       - cnc-public-vod
 
@@ -549,7 +549,7 @@ datasets:
       files: 1
       size_bytes: 71895
     cleaned:
-      tables: [cnc_vod_consumo]
+      tables: []
     related:
       - cnc-public-vod
 
@@ -568,7 +568,7 @@ datasets:
       files: 1
       size_bytes: 420992
     cleaned:
-      tables: [cnc_parque]
+      tables: []
     related:
       - cnc-etablissements
       - cnc-geographie-cinema
@@ -588,7 +588,7 @@ datasets:
       files: 1
       size_bytes: 78336
     cleaned:
-      tables: [cnc_financiamento_tv]
+      tables: []
 
   - slug: cnc-distribution-salles
     title: "Distribuicao de Filmes em Salas"
@@ -605,7 +605,7 @@ datasets:
       files: 1
       size_bytes: 185531
     cleaned:
-      tables: [cnc_distribuicao]
+      tables: []
     related:
       - cnc-frequentation-salles
       - cnc-visas-exploitation
@@ -625,7 +625,7 @@ datasets:
       files: 1
       size_bytes: 152164
     cleaned:
-      tables: [cnc_publico_filmes]
+      tables: []
 
   # ── ARGENTINA / INCAA ──────────────────────────────────────────────────────
 
@@ -1053,4 +1053,4 @@ datasets:
       files: 1
       size_bytes: 515065
     cleaned:
-      tables: [acau_apoios]
+      tables: []

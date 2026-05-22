@@ -1,0 +1,25 @@
+table: produtores_obras
+description: >
+  Relacao entre produtores e obras brasileiras nao publicitarias, com CNPJ,
+  pais do produtor, titulo original e CPB.
+
+source_raw: ancine-produtores-obras
+
+columns:
+  - name: produtor
+    type: string
+    description: "Nome do produtor"
+  - name: cnpj_produtor
+    type: string
+    description: "CNPJ do produtor"
+    nullable: true
+  - name: pais_produtor
+    type: string
+    description: "Pais do produtor"
+    nullable: true
+  - name: titulo_original
+    type: string
+    description: "Titulo original da obra"
+  - name: cpb
+    type: string
+    description: "Certificado de Produto Brasileiro da obra"

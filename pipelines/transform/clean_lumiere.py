@@ -6,17 +6,19 @@ Fontes:
 """
 import pandas as pd
 from pathlib import Path
+from common import latest_snapshot
 
 RAW = Path("datasets")
 OUT = Path("pipelines/output/cleaned")
 OUT.mkdir(parents=True, exist_ok=True)
 
-SNAP = "snapshots/2026-05-19"
+SNAP_CINEMAS = latest_snapshot(RAW / "lumiere-cinemas-europa")
+SNAP_VOD = latest_snapshot(RAW / "lumiere-vod-europa")
 
 # ── 1. Lumiere Cinemas Europa ─────────────────────────────────────────────────
 print("Processando lumiere_search.xlsx …")
 df = pd.read_excel(
-    RAW / f"lumiere-cinemas-europa/{SNAP}/lumiere_search.xlsx",
+    SNAP_CINEMAS / "lumiere_search.xlsx",
     sheet_name="lumiere search results",
 )
 
@@ -56,7 +58,7 @@ print(f"  -> {out1} ({len(df)} linhas)")
 # ── 2. Lumiere VOD Europa ─────────────────────────────────────────────────────
 print("Processando lumiere_vod_search.xlsx …")
 df_vod = pd.read_excel(
-    RAW / f"lumiere-vod-europa/{SNAP}/lumiere_vod_search.xlsx",
+    SNAP_VOD / "lumiere_vod_search.xlsx",
     sheet_name=0,
 )
 

@@ -143,11 +143,11 @@ columns:
 
 foreign_keys:
   - column: cpb
-    references: diretores.cpb
+    references: diretores_obras.cpb
     description: "Diretores desta obra"
   - column: cpb
-    references: produtores.cpb
+    references: produtores_obras.cpb
     description: "Produtoras desta obra"
   - column: cpb
-    references: bilheteria_domestica.cpb_roe
+    references: bilheteria_por_filme_ano.cpb_roe
     description: "Bilheteria domestica da obra"

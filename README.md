@@ -1,7 +1,7 @@
 # RIAB — Repositorio Independente do Audiovisual Brasileiro
 
 Hub de inteligencia de dados do audiovisual brasileiro e internacional.
-Dados brutos preservados. Dados tratados em Parquet, livres para consulta.
+Dados brutos preservados. Dados tratados em 12 Parquets, livres para consulta.
 Custo de hospedagem: zero.
 
 **Portal:** https://riabr-dados.github.io/riab
@@ -16,7 +16,7 @@ Custo de hospedagem: zero.
 |--------|------|-------|
 | **Raw** | `hf://riabr-dados/riab/raw/` | Dados brutos intocados das fontes oficiais |
 | **Cleaned** | `hf://riabr-dados/riab/cleaned/` | Dados tratados em Parquet, tipados, UTF-8 |
-| **Catalogo** | `catalog/` | YAML declarativo com 33 datasets |
+| **Catalogo** | `catalog/` | YAML declarativo com 55 datasets |
 | **Pipelines** | `pipelines/` | Scripts de transformacao e upload |
 | **Portal** | `portal/` | Site Astro gerado automaticamente do catalogo |
 
@@ -66,7 +66,7 @@ huggingface-cli download riabr-dados/riab \
 ```
 riab/
   catalog/
-    datasets.yaml      # Catalogo central (33 datasets)
+    datasets.yaml      # Catalogo central (55 datasets)
     sources.yaml       # Fontes oficiais (ANCINE, CNC, BFI, INCAA, ACAU, IBGE, Lumiere)
     schemas/           # Schema de cada tabela Parquet (colunas, tipos, chaves)
   pipelines/
@@ -85,7 +85,7 @@ riab/
   LICENSE-data         # CC-BY-4.0
 ```
 
-## Datasets — 33 de 6 paises
+## Datasets — 55 de 6 paises
 
 Brasil (ANCINE, IBGE, Lumiere), Franca (CNC), Argentina (INCAA),
 Reino Unido (BFI), Uruguai (ACAU).

@@ -25,28 +25,10 @@ jobs:
       - name: Instalar dependencias Python
         run: pip install -r pipelines/requirements.txt
 
-      - name: Extrair dados das fontes
-        run: python pipelines/extract/run_all.py
-        continue-on-error: true   # uma fonte fora do ar nao deve travar tudo
-
       - name: Transformar para Parquet
         run: python pipelines/transform/run_all.py
-
-      - name: Gerar tabela consolidada obras_completa
-        run: python pipelines/consolidate/obras_completa.py
-
-      - name: Gerar previews JSON para o portal
-        run: python pipelines/generate_previews.py
 
       - name: Publicar no Hugging Face
         run: python pipelines/upload_hf.py
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
-
-      - name: Commit dos previews atualizados
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "dados: atualiza previews [bot] $(date -u '+%Y-%m-%d')"
-          file_pattern: "portal/public/api/preview/*.json"
-          commit_user_name: "riab-bot"
-          commit_user_email: "bot@riab"

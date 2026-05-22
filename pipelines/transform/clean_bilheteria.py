@@ -9,17 +9,19 @@ Saída:
 """
 import pandas as pd
 from pathlib import Path
+from common import latest_snapshot
 
 RAW = Path("datasets")
 OUT = Path("pipelines/output/cleaned")
 OUT.mkdir(parents=True, exist_ok=True)
 
-SNAP = "snapshots/2026-05-19"
+SNAP_CONSOL = latest_snapshot(RAW / "ancine-bilheteria-consolidada")
+SNAP_ANO = latest_snapshot(RAW / "ancine-bilheteria-agregada-filme-ano")
 
 # ── 1. Bilheteria consolidada BR (Excel) ─────────────────────────────────────
 print("Processando bilheteria_brasileira_consolidada.xlsx …")
 df_consol = pd.read_excel(
-    RAW / f"ancine-bilheteria-consolidada/{SNAP}/bilheteria_brasileira_consolidada.xlsx",
+    SNAP_CONSOL / "bilheteria_brasileira_consolidada.xlsx",
     sheet_name="Bilheteria BR Completa",
 )
 df_consol.columns = ["rank", "titulo", "ano_lancamento", "publico_total", "fonte"]
@@ -37,7 +39,7 @@ print(f"  -> {out1} ({len(df_consol)} linhas)")
 # ── 2. Bilheteria por filme/ano (CSV) ────────────────────────────────────────
 print("Processando por_filme_ano.csv …")
 df_ano = pd.read_csv(
-    RAW / f"ancine-bilheteria-agregada-filme-ano/{SNAP}/por_filme_ano.csv",
+    SNAP_ANO / "por_filme_ano.csv",
     encoding="utf-8-sig",
     sep=None,
     engine="python",

@@ -1,0 +1,34 @@
+table: bilheteria_europa
+description: >
+  Dados do Lumiere sobre admissoes de filmes em salas europeias, filtrados e
+  normalizados para consulta no RIAB.
+
+source_raw: lumiere-cinemas-europa
+
+columns:
+  - name: titulo_original
+    type: string
+    description: "Titulo original da obra"
+  - name: paises_producao
+    type: string
+    description: "Paises de producao informados pelo Lumiere"
+    nullable: true
+  - name: ano_producao
+    type: int64
+    description: "Ano de producao"
+    nullable: true
+  - name: diretores
+    type: string
+    description: "Diretores informados"
+    nullable: true
+  - name: admissoes_1996_2026
+    type: int64
+    description: "Admissoes acumuladas no periodo 1996-2026"
+    nullable: true
+  - name: total_eu27_gb_desde_1996
+    type: int64
+    description: "Total acumulado EU27 + Reino Unido desde 1996"
+    nullable: true
+  - name: tem_brasil
+    type: boolean
+    description: "Indica se a producao inclui Brasil"

@@ -5,6 +5,7 @@ Saída: renuncia_fiscal.parquet
 """
 import pandas as pd
 from pathlib import Path
+from common import latest_snapshot
 
 
 def fix_encoding(s: str) -> str:
@@ -20,11 +21,11 @@ RAW = Path("datasets")
 OUT = Path("pipelines/output/cleaned")
 OUT.mkdir(parents=True, exist_ok=True)
 
-SNAP = "snapshots/2026-05-19"
+SNAP = latest_snapshot(RAW / "ancine-renuncia-fiscal")
 
 print("Processando projetos-com-renuncia-fiscal.csv …")
 df = pd.read_csv(
-    RAW / f"ancine-renuncia-fiscal/{SNAP}/projetos-com-renuncia-fiscal.csv",
+    SNAP / "projetos-com-renuncia-fiscal.csv",
     encoding="latin1",
     sep=None,
     engine="python",

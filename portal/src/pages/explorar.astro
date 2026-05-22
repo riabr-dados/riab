@@ -660,12 +660,12 @@ function exportCSV() {
 const LS_KEY = "riab_gemini_key";
 
 function getGeminiKey() {
-  let k = localStorage.getItem(LS_KEY);
+  let k = sessionStorage.getItem(LS_KEY);
   if (!k) {
     k = prompt(
-      "Chave gratuita da Google AI Studio:\naistudio.google.com/apikey\n\nFica salva só no seu navegador.",""
+      "Chave gratuita da Google AI Studio:\naistudio.google.com/apikey\n\nSera usada diretamente no seu navegador e fica salva apenas nesta sessao.",""
     );
-    if (k) localStorage.setItem(LS_KEY, k.trim());
+    if (k) sessionStorage.setItem(LS_KEY, k.trim());
   }
   return k ? k.trim() : null;
 }
@@ -690,7 +690,7 @@ Pergunta: ${q}`;
       { method:"POST", headers:{"Content-Type":"application/json"},
         body: JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{maxOutputTokens:600,temperature:0.1}}) }
     );
-    if (res.status===400||res.status===403){ localStorage.removeItem(LS_KEY); nlHint.textContent="Chave inválida."; return; }
+    if (res.status===400||res.status===403){ sessionStorage.removeItem(LS_KEY); nlHint.textContent="Chave inválida."; return; }
     if (!res.ok){ nlHint.textContent=`Erro ${res.status}.`; return; }
     const data = await res.json();
     const sql  = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim()??"";

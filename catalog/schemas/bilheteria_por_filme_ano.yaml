@@ -1,0 +1,29 @@
+table: bilheteria_por_filme_ano
+description: >
+  Serie anual de publico por filme, incluindo identificador CPB/ROE quando
+  disponivel, titulo no Brasil, titulo original, pais da obra e ano.
+
+source_raw: ancine-bilheteria-agregada-filme-ano
+
+columns:
+  - name: cpb_roe
+    type: string
+    description: "Identificador CPB ou ROE associado a obra"
+    nullable: true
+  - name: titulo_brasil
+    type: string
+    description: "Titulo de exibicao no Brasil"
+  - name: titulo_original
+    type: string
+    description: "Titulo original da obra"
+    nullable: true
+  - name: pais_obra
+    type: string
+    description: "Pais de origem informado"
+    nullable: true
+  - name: ano
+    type: int64
+    description: "Ano de exibicao"
+  - name: publico
+    type: int64
+    description: "Publico no ano"

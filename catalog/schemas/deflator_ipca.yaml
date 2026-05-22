@@ -1,0 +1,17 @@
+table: deflator_ipca
+description: >
+  Serie anual de IPCA e fator de correcao para valores reais em base 2024.
+
+source_raw: ibge-deflator-ipca
+
+columns:
+  - name: ano
+    type: int64
+    description: "Ano de referencia"
+    primary_key: true
+  - name: ipca_pct
+    type: float64
+    description: "Variacao anual do IPCA em percentual"
+  - name: fator_real_2024
+    type: float64
+    description: "Fator para converter valores nominais para reais de 2024"

@@ -1,0 +1,23 @@
+table: bilheteria_consolidada_br
+description: >
+  Ranking historico consolidado de bilheteria de filmes brasileiros publicado
+  pela ANCINE, com publico total acumulado por titulo.
+
+source_raw: ancine-bilheteria-consolidada
+
+columns:
+  - name: rank
+    type: int64
+    description: "Posicao no ranking consolidado"
+  - name: titulo
+    type: string
+    description: "Titulo do filme no ranking"
+  - name: ano_lancamento
+    type: int64
+    description: "Ano de lancamento"
+  - name: publico_total
+    type: int64
+    description: "Publico total acumulado"
+  - name: fonte
+    type: string
+    description: "Fonte indicada pela planilha original"

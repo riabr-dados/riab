@@ -1,0 +1,28 @@
+table: preco_ingresso
+description: >
+  Serie de preco medio de ingresso publicada pela ANCINE, com valores nominais,
+  fator de correcao e valores reais em base 2024.
+
+source_raw: ancine-preco-medio-ingresso
+
+columns:
+  - name: ano
+    type: int64
+    description: "Ano de referencia"
+    primary_key: true
+  - name: pmi_nominal
+    type: float64
+    description: "Preco medio de ingresso nominal"
+  - name: fator_real_2024
+    type: float64
+    description: "Fator de correcao para reais de 2024"
+  - name: pmi_real_2024
+    type: float64
+    description: "Preco medio de ingresso em reais de 2024"
+  - name: fonte
+    type: string
+    description: "Fonte indicada no arquivo original"
+  - name: observacao
+    type: string
+    description: "Observacoes metodologicas"
+    nullable: true

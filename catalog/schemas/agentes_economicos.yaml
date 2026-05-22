@@ -1,0 +1,49 @@
+table: agentes_economicos
+description: >
+  Cadastro de agentes economicos regulares na ANCINE, incluindo razao social,
+  CNPJ, localidade, classificacao e situacao de independencia brasileira.
+
+source_raw: ancine-agentes-economicos
+
+columns:
+  - name: registro_ancine
+    type: int64
+    description: "Numero de registro do agente na ANCINE"
+    primary_key: true
+  - name: data_registro
+    type: date
+    description: "Data de registro na ANCINE"
+  - name: razao_social
+    type: string
+    description: "Razao social do agente economico"
+  - name: cnpj
+    type: string
+    description: "CNPJ do agente economico"
+  - name: data_constituicao
+    type: date
+    description: "Data de constituicao da empresa"
+    nullable: true
+  - name: uf
+    type: string
+    description: "Unidade da federacao"
+    nullable: true
+  - name: municipio
+    type: string
+    description: "Municipio do agente"
+    nullable: true
+  - name: codigo_municipio_ibge
+    type: float64
+    description: "Codigo IBGE do municipio"
+    nullable: true
+  - name: classificacao_agente_economico
+    type: string
+    description: "Classificacao do agente economico"
+    nullable: true
+  - name: natureza_juridica
+    type: string
+    description: "Natureza juridica declarada"
+    nullable: true
+  - name: brasileiro_independente
+    type: string
+    description: "Indicador de brasileiro independente"
+    nullable: true

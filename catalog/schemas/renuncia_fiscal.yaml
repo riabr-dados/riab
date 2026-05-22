@@ -1,0 +1,100 @@
+table: renuncia_fiscal
+description: >
+  Projetos audiovisuais com captacao por mecanismos de renuncia fiscal,
+  incluindo datas, situacao, proponente e valores captados por mecanismo.
+
+source_raw: ancine-renuncia-fiscal
+
+columns:
+  - name: numero_salic
+    type: string
+    description: "Numero SALIC do projeto"
+  - name: titulo_projeto
+    type: string
+    description: "Titulo do projeto"
+  - name: data_pub_aprovacao_projeto
+    type: date
+    description: "Data de publicacao da aprovacao do projeto"
+    nullable: true
+  - name: data_primeira_liberacao
+    type: date
+    description: "Data da primeira liberacao"
+    nullable: true
+  - name: situacao_atual
+    type: string
+    description: "Situacao atual do projeto"
+    nullable: true
+  - name: mecanismo
+    type: string
+    description: "Mecanismo principal de captacao"
+    nullable: true
+  - name: captado_art1
+    type: float64
+    description: "Valor captado pelo Art. 1"
+  - name: captado_art1a
+    type: float64
+    description: "Valor captado pelo Art. 1-A"
+  - name: captado_art3
+    type: float64
+    description: "Valor captado pelo Art. 3"
+  - name: captado_art3a
+    type: float64
+    description: "Valor captado pelo Art. 3-A"
+  - name: captado_art18
+    type: float64
+    description: "Valor captado pelo Art. 18"
+  - name: captado_art25
+    type: float64
+    description: "Valor captado pelo Art. 25"
+  - name: captado_art39
+    type: float64
+    description: "Valor captado pelo Art. 39"
+  - name: captado_funcines
+    type: float64
+    description: "Valor captado via FUNCINES"
+  - name: captado_edital_ancine
+    type: float64
+    description: "Valor captado por edital ANCINE"
+  - name: captado_par
+    type: float64
+    description: "Valor captado em PAR"
+  - name: captado_paq
+    type: float64
+    description: "Valor captado em PAQ"
+  - name: captado_outros_editais
+    type: float64
+    description: "Valor captado por outros editais"
+  - name: captado_lei_estadual
+    type: float64
+    description: "Valor captado por lei estadual"
+  - name: captado_lei_municipal
+    type: float64
+    description: "Valor captado por lei municipal"
+  - name: captado_outras_fontes
+    type: float64
+    description: "Valor captado por outras fontes"
+  - name: captado_contrapartida
+    type: float64
+    description: "Valor captado como contrapartida"
+  - name: captado_conversao
+    type: float64
+    description: "Valor captado por conversao"
+  - name: total_captado
+    type: float64
+    description: "Valor total captado em reais"
+  - name: proponente
+    type: string
+    description: "Nome do proponente"
+    nullable: true
+  - name: cnpj_proponente
+    type: string
+    description: "CNPJ do proponente"
+    nullable: true
+  - name: municipio_proponente
+    type: string
+    description: "Municipio do proponente"
+    nullable: true
+  - name: uf_proponente
+    type: string
+    description: "UF do proponente"
+    nullable: true

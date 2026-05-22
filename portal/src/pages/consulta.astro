@@ -23,8 +23,8 @@ conn.sql("""
     lang: "python",
     code: `import pandas as pd
 df = pd.read_parquet("${HF_BASE}/bilheteria_por_filme_ano.parquet")
-top = df.sort_values("PUBLICO", ascending=False).head(20)
-print(top[["TITULO_ORIGINAL", "ANO", "PUBLICO"]])`,
+top = df.sort_values("publico", ascending=False).head(20)
+print(top[["titulo_original", "ano", "publico"]])`,
   },
   {
     titulo: "Obras com FSA e circulação europeia (DuckDB)",
@@ -34,17 +34,17 @@ conn = duckdb.connect()
 conn.sql("INSTALL httpfs; LOAD httpfs;")
 conn.sql("""
   WITH o_n AS (
-    SELECT *, lower(regexp_replace(TITULO_ORIGINAL,'[^a-zA-Z0-9 ]','','g')) AS _tn
+    SELECT *, lower(regexp_replace(titulo_original,'[^a-zA-Z0-9 ]','','g')) AS _tn
     FROM '${HF_BASE}/obras.parquet'
   ),
   f_n AS (
-    SELECT *, lower(regexp_replace(TITULO_PROJETO,'[^a-zA-Z0-9 ]','','g')) AS _tn
+    SELECT *, lower(regexp_replace(titulo_projeto,'[^a-zA-Z0-9 ]','','g')) AS _tn
     FROM '${HF_BASE}/fomento_fsa.parquet'
   )
-  SELECT o.TITULO_ORIGINAL, f.CHAMADA_PUBLICA, f.VALOR_CONTRATO_DOU
+  SELECT o.titulo_original, f.chamada_publica, f.valor_contrato_brl
   FROM o_n o
   INNER JOIN f_n f ON f._tn = o._tn
-  ORDER BY f.VALOR_CONTRATO_DOU DESC NULLS LAST
+  ORDER BY f.valor_contrato_brl DESC NULLS LAST
   LIMIT 20
 """).show()`,
   },
@@ -69,7 +69,7 @@ library(dplyr)
 obras <- read_parquet("${HF_BASE}/obras.parquet")
 
 obras |>
-  count(UF_REQUERENTE, sort = TRUE) |>
+  count(uf_requerente, sort = TRUE) |>
   head(10)`,
   },
 ];
