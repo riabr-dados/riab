@@ -19,7 +19,7 @@ const related = (ds.related ?? [])
   .map((r) => allDatasets.find((d) => d.slug === r))
   .filter(Boolean);
 
-const tables = ds.cleaned?.tables ?? [];
+const tables = (ds.cleaned?.tables ?? []).map((t) => (typeof t === "string" ? t : t.name));
 const primaryTable = tables[0] ?? null;
 
 const COUNTRY_FLAG = { BR: "🇧🇷", FR: "🇫🇷", AR: "🇦🇷", UK: "🇬🇧", UY: "🇺🇾", EU: "🇪🇺" };
