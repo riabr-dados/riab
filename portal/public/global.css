@@ -476,9 +476,10 @@ main:has(.exp-page) { max-width: 100%; padding: 0; }
   background: rgba(10,9,6,.45);
   z-index: 200;
   opacity: 0;
+  pointer-events: none;
   transition: opacity .2s;
 }
-.nav-mobile-overlay.is-open { opacity: 1; }
+.nav-mobile-overlay.is-open { opacity: 1; pointer-events: auto; }
 
 .nav-mobile-panel {
   position: absolute;
