@@ -173,6 +173,8 @@ const TABLE_META = [
   { id: 'diretores_obras',          alias: 'd', label: 'Diretores',         color: '#007a3c' },
   { id: 'produtores_obras',         alias: 'p', label: 'Produtores',        color: '#007a3c' },
   { id: 'fomento_fsa',              alias: 'f', label: 'Fomento FSA',       color: '#c8920a' },
+  { id: 'fsa_atas_festivais',       alias: 'af', label: 'Festivais FSA',    color: '#c8920a' },
+  { id: 'fsa_atas_resultados',      alias: 'ar', label: 'Atas FSA',         color: '#c8920a' },
   { id: 'renuncia_fiscal',          alias: 'r', label: 'Renúncia Fiscal',   color: '#1f3bb8' },
   { id: 'bilheteria_europa',        alias: 'l', label: 'Bilheteria Europa', color: '#1f3bb8' },
 ];
@@ -307,6 +309,38 @@ f_n AS (
 SELECT ${dim.col} AS dim, ${metric.expr} AS valor
 FROM o_n o
 INNER JOIN f_n f ON f._tn = o._tn
+${where}
+GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 40`;
+    },
+  },
+  {
+    id: 'festivais-fsa',
+    label: 'Festivais FSA',
+    desc: 'Participações e premiações registradas nas atas de desempenho artístico',
+    tables: [
+      { name: 'atas-fsa-festivais', color: '#c8920a' },
+    ],
+    join: null, icon: '★',
+    dims: [
+      { label: 'Ano da chamada', col: 'ano_chamada' },
+      { label: 'Evento',         col: 'evento' },
+      { label: 'País extraído',  col: 'pais_evento_extraido' },
+      { label: 'Tipo pontuação', col: 'tipo_pontuacao' },
+      { label: 'Obra',           col: 'titulo_obra' },
+    ],
+    metrics: [
+      { label: 'Registros',      expr: 'COUNT(*)',                    alias: 'registros' },
+      { label: 'Nº de obras',    expr: 'COUNT(DISTINCT titulo_obra)', alias: 'obras' },
+      { label: 'Pontos somados', expr: 'SUM(pontos_evento)',          alias: 'pontos' },
+    ],
+    buildSQL: (dim, metric, search) => {
+      const where = buildWhere([
+        `${dim.col} IS NOT NULL`,
+        `evento_internacional_estimado IS NOT FALSE`,
+        search ? `CAST(${dim.col} AS VARCHAR) ILIKE '%${esc(search)}%'` : null,
+      ]);
+      return `SELECT ${dim.col} AS dim, ${metric.expr} AS valor
+FROM fsa_atas_festivais
 ${where}
 GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 40`;
     },
@@ -456,6 +490,8 @@ const viewTable  = document.getElementById('view-table');
       bilheteria_por_filme_ano: `${HF}/bilheteria_por_filme_ano.parquet`,
       fomento_fsa:              `${HF}/fomento_fsa.parquet`,
       renuncia_fiscal:          `${HF}/renuncia_fiscal.parquet`,
+      fsa_atas_festivais:       `${HF}/fsa_atas_festivais.parquet`,
+      fsa_atas_resultados:      `${HF}/fsa_atas_resultados.parquet`,
       bilheteria_europa:        `${HF}/bilheteria_europa.parquet`,
     };
     for (const [name, url] of Object.entries(views)) {
@@ -1021,10 +1057,26 @@ function buildFromClause(tables) {
   const hasProd      = tables.includes('produtores_obras');
   const hasFSA       = tables.includes('fomento_fsa');
   const hasRen       = tables.includes('renuncia_fiscal');
+  const hasAtasFest  = tables.includes('fsa_atas_festivais');
+  const hasAtasRes   = tables.includes('fsa_atas_resultados');
 
   const joins = [];
   let ctes    = null;
   let from    = 'FROM obras o';
+
+  if ((hasAtasFest || hasAtasRes) && !hasObras && !hasBilh && !hasDir && !hasProd && !hasFSA && !hasRen) {
+    if (hasAtasFest && hasAtasRes) {
+      return {
+        from: `FROM fsa_atas_festivais af
+LEFT JOIN fsa_atas_resultados ar
+  ON COALESCE(af.cpb, '') = COALESCE(ar.cpb, '')
+  AND af.chave_titulo = ar.chave_titulo
+  AND af.ano_chamada = ar.ano_chamada`,
+        ctes: null,
+      };
+    }
+    return { from: hasAtasFest ? 'FROM fsa_atas_festivais af' : 'FROM fsa_atas_resultados ar', ctes: null };
+  }
 
   // Direct CPB joins
   if (hasBilh)  joins.push(`INNER JOIN bilheteria_por_filme_ano b ON b.cpb_roe = o.cpb AND b.cpb_roe LIKE 'B%'`);

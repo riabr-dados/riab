@@ -22,6 +22,7 @@ const related = (ds.related ?? [])
 const tables = (ds.cleaned?.tables ?? []).map((t) => (typeof t === "string" ? t : t.name));
 const primaryTable = tables[0] ?? null;
 const hasCleanedCsv = ds.slug === "brasil-no-mundo";
+const rawFolder = (ds.raw?.path ?? `${ds.slug}/`).replace(/^raw\//, "").replace(/\/$/, "");
 
 const COUNTRY_FLAG = { BR: "🇧🇷", FR: "🇫🇷", AR: "🇦🇷", UK: "🇬🇧", UY: "🇺🇾", EU: "🇪🇺" };
 const country = ds.source?.country ?? "";
@@ -78,6 +79,31 @@ LIMIT 30`,
 FROM bilheteria_europa
 ORDER BY admissoes_1996_2026 DESC NULLS LAST
 LIMIT 30`,
+
+  fsa_atas_festivais: `SELECT
+  ano_chamada,
+  titulo_obra,
+  evento,
+  pais_evento_extraido,
+  tipo_pontuacao,
+  pontos_evento,
+  source_file
+FROM fsa_atas_festivais
+WHERE evento_internacional_estimado IS NOT FALSE
+ORDER BY ano_chamada DESC, titulo_obra, pontos_evento DESC NULLS LAST
+LIMIT 100`,
+
+  fsa_atas_resultados: `SELECT
+  ano_chamada,
+  posicao,
+  beneficiario_indireto,
+  titulo_obra,
+  pontuacao_final,
+  resultado,
+  source_file
+FROM fsa_atas_resultados
+ORDER BY ano_chamada DESC, source_file, posicao
+LIMIT 100`,
 
   brasil_no_mundo_indice: `SELECT
   pais_fonte,
@@ -180,6 +206,81 @@ WHERE razao_social_produtora IS NOT NULL AND valor_total_liberado_brl > 0
 GROUP BY produtora
 ORDER BY total_mi_brl DESC
 LIMIT 20`,
+    },
+  ],
+  fsa_atas_festivais: [
+    {
+      label: "Eventos por chamada",
+      sql: `SELECT
+  ano_chamada,
+  COUNT(*) AS registros_evento,
+  COUNT(DISTINCT titulo_obra) AS obras,
+  ROUND(SUM(pontos_evento), 1) AS pontos
+FROM fsa_atas_festivais
+GROUP BY ano_chamada
+ORDER BY ano_chamada`,
+    },
+    {
+      label: "Obras mais pontuadas",
+      sql: `SELECT
+  titulo_obra,
+  ano_chamada,
+  COUNT(*) AS eventos,
+  ROUND(SUM(pontos_evento), 1) AS pontos
+FROM fsa_atas_festivais
+GROUP BY titulo_obra, ano_chamada
+ORDER BY pontos DESC NULLS LAST
+LIMIT 30`,
+    },
+    {
+      label: "Paises extraidos",
+      sql: `SELECT
+  pais_evento_extraido AS pais,
+  COUNT(*) AS registros,
+  COUNT(DISTINCT titulo_obra) AS obras
+FROM fsa_atas_festivais
+WHERE pais_evento_extraido IS NOT NULL
+GROUP BY pais
+ORDER BY registros DESC
+LIMIT 30`,
+    },
+    {
+      label: "Eventos internacionais",
+      sql: `SELECT
+  evento,
+  pais_evento_extraido,
+  COUNT(DISTINCT titulo_obra) AS obras,
+  ROUND(SUM(pontos_evento), 1) AS pontos
+FROM fsa_atas_festivais
+WHERE evento_internacional_estimado IS TRUE
+GROUP BY evento, pais_evento_extraido
+ORDER BY obras DESC, pontos DESC NULLS LAST
+LIMIT 40`,
+    },
+  ],
+  fsa_atas_resultados: [
+    {
+      label: "Resultados por chamada",
+      sql: `SELECT
+  ano_chamada,
+  chamada,
+  COUNT(*) AS obras,
+  ROUND(AVG(pontuacao_final), 2) AS media_pontuacao
+FROM fsa_atas_resultados
+GROUP BY ano_chamada, chamada
+ORDER BY ano_chamada`,
+    },
+    {
+      label: "Maiores pontuacoes",
+      sql: `SELECT
+  ano_chamada,
+  posicao,
+  titulo_obra,
+  beneficiario_indireto,
+  pontuacao_final
+FROM fsa_atas_resultados
+ORDER BY pontuacao_final DESC NULLS LAST
+LIMIT 40`,
     },
   ],
   brasil_no_mundo_indice: [
@@ -335,7 +436,7 @@ const schemaContext = primaryTable ? buildSchemaContext(primaryTable) : "";
         <div id="tab-duckdb"><CodeSnippet code={duckdbSnippet(primaryTable)} lang="python" /></div>
         <div id="tab-pandas" class="hidden"><CodeSnippet code={pandasSnippet(primaryTable)} lang="python" /></div>
         <div id="tab-r" class="hidden"><CodeSnippet code={rSnippet(primaryTable)} lang="r" /></div>
-        <div id="tab-cli" class="hidden"><CodeSnippet code={cliSnippet(ds.slug)} lang="bash" /></div>
+        <div id="tab-cli" class="hidden"><CodeSnippet code={cliSnippet(rawFolder)} lang="bash" /></div>
       </section>
     )}
 
@@ -364,12 +465,12 @@ const schemaContext = primaryTable ? buildSchemaContext(primaryTable) : "";
         )}
         <div class="raw-info__item">
           <span class="raw-info__label">Pasta no HF</span>
-          <code>raw/{ds.slug}/</code>
+          <code>raw/{rawFolder}/</code>
         </div>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
         <a class="btn-outline btn-sm"
-           href={`https://huggingface.co/datasets/riabr-dados/riab/tree/main/raw/${ds.slug}`}
+           href={`https://huggingface.co/datasets/riabr-dados/riab/tree/main/raw/${rawFolder}`}
            target="_blank" rel="noopener">
           Ver arquivos no HF
         </a>

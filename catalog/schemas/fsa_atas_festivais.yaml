@@ -1,0 +1,118 @@
+table: fsa_atas_festivais
+description: >
+  Eventos, selecoes e premiacoes extraidos das atas oficiais do FSA que
+  atribuem pontuacao de desempenho artistico a obras brasileiras. O dataset
+  e um levantamento nao exaustivo, limitado aos eventos registrados nas atas
+  e aceitos na metodologia das chamadas analisadas.
+
+source_raw: ancine-festivais-fsa
+source_columns_original: >
+  PDF text extraction from official FSA minutes; source_file and
+  source_sha256 identify the original document for audit.
+
+columns:
+  - name: ano_chamada
+    type: int64
+    description: "Ano da chamada publica ou da ata analisada"
+
+  - name: chamada
+    type: string
+    description: "Nome normalizado da chamada FSA"
+
+  - name: posicao_obra
+    type: int64
+    nullable: true
+    description: "Posicao da obra na tabela de resultado, quando extraida"
+
+  - name: beneficiario_indireto
+    type: string
+    nullable: true
+    description: "Empresa beneficiaria/proponente associada a obra na ata"
+
+  - name: cnpj_beneficiario
+    type: string
+    nullable: true
+    description: "CNPJ do beneficiario indireto, quando informado no PDF"
+
+  - name: uf_beneficiario
+    type: string
+    nullable: true
+    description: "UF do beneficiario/proponente, quando informada"
+
+  - name: cpb
+    type: string
+    nullable: true
+    description: "CPB da obra, quando informado no PDF"
+
+  - name: titulo_obra
+    type: string
+    description: "Titulo da obra pontuada"
+
+  - name: chave_titulo
+    type: string
+    description: "Titulo normalizado para busca e cruzamentos aproximados"
+
+  - name: ano_evento
+    type: int64
+    nullable: true
+    description: "Ano de realizacao/registro do evento, quando indicado no anexo"
+
+  - name: categoria_festival
+    type: string
+    nullable: true
+    description: "Categoria de pontuacao do edital, como Especial, AA, A, B ou C"
+
+  - name: evento
+    type: string
+    description: "Nome do festival, mostra, academia, premio ou evento"
+
+  - name: pais_evento_extraido
+    type: string
+    nullable: true
+    description: "Pais extraido de parenteses no nome do evento, quando presente"
+
+  - name: tipo_pontuacao
+    type: string
+    nullable: true
+    description: "Tipo de reconhecimento usado na pontuacao, quando informado"
+    examples:
+      - Competitiva
+      - Nao Competitiva
+      - Melhor Filme/Diretor
+      - Outros Premios
+
+  - name: pontos_evento
+    type: float64
+    description: "Pontuacao atribuida ao evento na ata"
+
+  - name: evento_internacional_estimado
+    type: boolean
+    nullable: true
+    description: >
+      Indicador heuristico de evento internacional. Usa pais extraido ou
+      palavras-chave no nome do evento; nulo quando a fonte nao permite inferir.
+
+  - name: source_file
+    type: string
+    description: "Nome do PDF oficial de origem"
+
+  - name: source_sha256
+    type: string
+    description: "Hash SHA-256 do PDF de origem"
+
+  - name: metodo_extracao
+    type: string
+    description: "Metodo usado para extracao e parseamento"
+
+  - name: observacao_metodologica
+    type: string
+    description: "Nota fixa sobre o escopo nao exaustivo da tabela"
+
+foreign_keys:
+  - column: cpb
+    references: obras.cpb
+    description: "Obra registrada na ANCINE, quando o CPB existe na ata"
+
+notes:
+  - "Linhas sem CPB ou sem pais extraido devem ser tratadas como evidencia documental, nao como cadastro completo de festivais."
+  - "Eventos nacionais tambem podem aparecer quando foram aceitos para pontuacao pela metodologia da chamada."

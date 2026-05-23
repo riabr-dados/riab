@@ -1,0 +1,88 @@
+table: fsa_atas_resultados
+description: >
+  Resultados e classificacoes extraidos das atas oficiais do FSA. Cada linha
+  representa uma obra/projeto identificado nas tabelas de resultado dos PDFs
+  analisados.
+
+source_raw: ancine-atas-fsa
+source_columns_original: >
+  PDF text extraction from official FSA minutes; source_file and
+  source_sha256 identify the original document for audit.
+
+columns:
+  - name: ano_chamada
+    type: int64
+    description: "Ano da chamada publica ou da ata analisada"
+
+  - name: chamada
+    type: string
+    description: "Nome normalizado da chamada FSA"
+
+  - name: posicao
+    type: int64
+    nullable: true
+    description: "Posicao da obra/projeto na tabela da ata"
+
+  - name: beneficiario_indireto
+    type: string
+    nullable: true
+    description: "Empresa beneficiaria/proponente extraida da ata"
+
+  - name: cnpj_beneficiario
+    type: string
+    nullable: true
+    description: "CNPJ do beneficiario indireto, quando informado no PDF"
+
+  - name: uf_beneficiario
+    type: string
+    nullable: true
+    description: "UF do beneficiario/proponente, quando informada"
+
+  - name: cpb
+    type: string
+    nullable: true
+    description: "CPB da obra, quando informado no PDF"
+
+  - name: titulo_obra
+    type: string
+    description: "Titulo da obra ou projeto"
+
+  - name: chave_titulo
+    type: string
+    description: "Titulo normalizado para busca e cruzamentos aproximados"
+
+  - name: pontuacao_final
+    type: float64
+    nullable: true
+    description: "Pontuacao final indicada na ata"
+
+  - name: empresa_vocacionada
+    type: boolean
+    nullable: true
+    description: "Indicador extraido das atas de 2024, quando a tabela informa empresa vocacionada"
+
+  - name: resultado
+    type: string
+    nullable: true
+    description: "Status textual da obra na ata, como Classificada ou Desclassificada"
+
+  - name: source_file
+    type: string
+    description: "Nome do PDF oficial de origem"
+
+  - name: source_sha256
+    type: string
+    description: "Hash SHA-256 do PDF de origem"
+
+  - name: metodo_extracao
+    type: string
+    description: "Metodo usado para extracao e parseamento"
+
+foreign_keys:
+  - column: cpb
+    references: obras.cpb
+    description: "Obra registrada na ANCINE, quando o CPB existe na ata"
+
+notes:
+  - "A estrutura dos PDFs varia por ano; preserve source_file/source_sha256 para auditoria."
+  - "Chamadas antigas podem nao informar CNPJ, CPB ou resultado textual."

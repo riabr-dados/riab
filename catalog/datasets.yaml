@@ -138,6 +138,7 @@ datasets:
     related:
       - ancine-renuncia-fiscal
       - ancine-atas-fsa
+      - ancine-festivais-fsa
 
   - slug: ancine-renuncia-fiscal
     title: "Renuncia Fiscal"
@@ -222,9 +223,42 @@ datasets:
       files: 6
       size_bytes: 3581758
     cleaned:
-      tables: []
-      notes: "Formato PDF — sem tabela Parquet. Consulte os arquivos brutos."
+      tables:
+        - fsa_atas_resultados
+      notes: >
+        PDFs convertidos por extracao textual e regex. Esta tabela preserva
+        os resultados/classificacoes das atas; mantenha source_file e
+        source_sha256 para auditoria das linhas extraidas.
     related:
+      - ancine-fsa-projetos
+      - ancine-festivais-fsa
+
+  - slug: ancine-festivais-fsa
+    title: "Participacao Brasileira em Festivais - FSA"
+    description: >
+      Levantamento nao exaustivo de eventos, selecoes e premios aceitos em
+      atas brasileiras do FSA como evidencia para pontuacao de desempenho
+      artistico de obras brasileiras. A fonte e brasileira (ANCINE/FSA), nao
+      uma base estrangeira de circulacao internacional.
+    source_id: ancine
+    status: ativo
+    coverage: "2015-2024"
+    tags: [festivais, internacional, fsa, desempenho-artistico, brasil, ancine]
+    raw:
+      path: ancine-atas-fsa/
+      format: pdf
+      files: 6
+      size_bytes: 3581758
+    cleaned:
+      tables:
+        - fsa_atas_festivais
+      notes: >
+        Tabela derivada dos PDFs oficiais do FSA por extracao textual e regex.
+        O escopo e documental: registra os eventos que aparecem nas atas e
+        foram aceitos para pontuacao, sem pretensao de cobrir todos os
+        festivais internacionais com participacao brasileira.
+    related:
+      - ancine-atas-fsa
       - ancine-fsa-projetos
 
   # ── BRASIL / IBGE ──────────────────────────────────────────────────────────

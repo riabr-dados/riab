@@ -184,8 +184,23 @@ def extract_all(base="datasets"):
     else:
         previews["ancine-preco-medio-ingresso"] = no_preview("Arquivo CSV não encontrado no snapshot.")
 
-    # ancine-atas-fsa — PDFs apenas
-    previews["ancine-atas-fsa"] = no_preview("Formato PDF — sem visualização tabular. Arquivos disponíveis na pasta do snapshot.")
+    # ancine-atas-fsa — resultados derivados dos PDFs
+    f = os.path.join("pipelines", "output", "cleaned", "fsa_atas_resultados.csv")
+    if os.path.exists(f):
+        cols, data = read_csv(f, enc="utf-8", delim=",")
+        note = "Amostra da tabela fsa_atas_resultados extraida dos PDFs oficiais."
+        previews["ancine-atas-fsa"] = dataset_entry(cols, data, note=note, filename="fsa_atas_resultados.csv")
+    else:
+        previews["ancine-atas-fsa"] = no_preview("Parquet/CSV tratado ainda nao encontrado. Rode pipelines/transform/clean_atas_fsa.py.")
+
+    # ancine-festivais-fsa — participacao brasileira em festivais, fonte brasileira
+    f = os.path.join("pipelines", "output", "cleaned", "fsa_atas_festivais.csv")
+    if os.path.exists(f):
+        cols, data = read_csv(f, enc="utf-8", delim=",")
+        note = "Amostra da tabela fsa_atas_festivais extraida dos PDFs oficiais; levantamento nao exaustivo."
+        previews["ancine-festivais-fsa"] = dataset_entry(cols, data, note=note, filename="fsa_atas_festivais.csv")
+    else:
+        previews["ancine-festivais-fsa"] = no_preview("Parquet/CSV tratado ainda nao encontrado. Rode pipelines/transform/clean_atas_fsa.py.")
 
     # lumiere-cinemas-europa
     f = os.path.join(snap("lumiere-cinemas-europa"), "lumiere_search.xlsx")
