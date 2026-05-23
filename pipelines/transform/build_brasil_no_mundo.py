@@ -2,11 +2,17 @@
 
 Outputs:
   pipelines/output/cleaned/brasil_no_mundo_indice.parquet
+  pipelines/output/cleaned/brasil_no_mundo_indice.csv
   pipelines/output/cleaned/brasil_no_mundo_obras_franca_cnc.parquet
+  pipelines/output/cleaned/brasil_no_mundo_obras_franca_cnc.csv
   pipelines/output/cleaned/brasil_no_mundo_bilheteria_europa.parquet
+  pipelines/output/cleaned/brasil_no_mundo_bilheteria_europa.csv
   pipelines/output/cleaned/brasil_no_mundo_vod_europa.parquet
+  pipelines/output/cleaned/brasil_no_mundo_vod_europa.csv
   pipelines/output/cleaned/brasil_no_mundo_mercado_bfi.parquet
+  pipelines/output/cleaned/brasil_no_mundo_mercado_bfi.csv
   pipelines/output/cleaned/brasil_no_mundo_mencoes_outros_paises.parquet
+  pipelines/output/cleaned/brasil_no_mundo_mencoes_outros_paises.csv
 """
 from __future__ import annotations
 
@@ -67,6 +73,13 @@ def to_numeric(value: object) -> float | None:
 
 def read_table(table: str) -> pd.DataFrame:
     return pd.read_parquet(OUT / f"{table}.parquet")
+
+
+def write_derived_table(df: pd.DataFrame, table: str) -> None:
+    write_parquet(df, table, OUT)
+    out = OUT / f"{table}.csv"
+    df.to_csv(out, index=False, encoding="utf-8")
+    print(f"{table}.csv  {len(df)} linhas")
 
 
 def unique_join(values: pd.Series, limit: int | None = None) -> str | None:
@@ -452,6 +465,7 @@ def build_indice(
                 "descricao_curta": descricao_curta,
                 "linhas_relacionadas": linhas_relacionadas,
                 "arquivo_derivado": f"{dataset_derivado}.parquet",
+                "arquivo_derivado_csv": f"{dataset_derivado}.csv",
             }
         )
 
@@ -557,12 +571,12 @@ def main() -> None:
     mencoes = build_mencoes_outros_paises()
     indice = build_indice(obras_franca, bilheteria_europa, vod_europa, mercado_bfi, mencoes)
 
-    write_parquet(indice, "brasil_no_mundo_indice", OUT)
-    write_parquet(obras_franca, "brasil_no_mundo_obras_franca_cnc", OUT)
-    write_parquet(bilheteria_europa, "brasil_no_mundo_bilheteria_europa", OUT)
-    write_parquet(vod_europa, "brasil_no_mundo_vod_europa", OUT)
-    write_parquet(mercado_bfi, "brasil_no_mundo_mercado_bfi", OUT)
-    write_parquet(mencoes, "brasil_no_mundo_mencoes_outros_paises", OUT)
+    write_derived_table(indice, "brasil_no_mundo_indice")
+    write_derived_table(obras_franca, "brasil_no_mundo_obras_franca_cnc")
+    write_derived_table(bilheteria_europa, "brasil_no_mundo_bilheteria_europa")
+    write_derived_table(vod_europa, "brasil_no_mundo_vod_europa")
+    write_derived_table(mercado_bfi, "brasil_no_mundo_mercado_bfi")
+    write_derived_table(mencoes, "brasil_no_mundo_mencoes_outros_paises")
 
 
 if __name__ == "__main__":

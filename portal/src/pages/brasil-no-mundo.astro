@@ -98,7 +98,8 @@ ORDER BY achados DESC;`;
         </p>
         <div class="bnm-actions">
           <a class="btn-primary" href={`${base}datasets/brasil-no-mundo/`}>Explorar dataset</a>
-          <a class="btn-ghost" href={cleanedUrl("brasil_no_mundo_indice")} target="_blank" rel="noopener">Baixar indice</a>
+          <a class="btn-ghost" href={cleanedUrl("brasil_no_mundo_indice", "csv")} target="_blank" rel="noopener">Baixar indice CSV</a>
+          <a class="btn-ghost" href={cleanedUrl("brasil_no_mundo_indice")} target="_blank" rel="noopener">Baixar indice Parquet</a>
         </div>
       </div>
       <div class="bnm-hero__panel">
@@ -150,14 +151,20 @@ ORDER BY achados DESC;`;
 
       <div class="bnm-table-grid">
         {tables.map((item) => (
-          <a class="bnm-table" href={cleanedUrl(item.table)} target="_blank" rel="noopener">
+          <article class="bnm-table">
             <div class="bnm-table__head">
               <span>{item.rows} linhas</span>
               <strong>{item.label}</strong>
             </div>
             <p>{item.desc}</p>
-            <code>{item.table}.parquet</code>
-          </a>
+            <div class="bnm-table__footer">
+              <code>{item.table}</code>
+              <div class="bnm-table__downloads" aria-label={`Baixar ${item.label}`}>
+                <a href={cleanedUrl(item.table, "csv")} target="_blank" rel="noopener" title={`Baixar ${item.table}.csv`}>CSV</a>
+                <a href={cleanedUrl(item.table)} target="_blank" rel="noopener" title={`Baixar ${item.table}.parquet`}>Parquet</a>
+              </div>
+            </div>
+          </article>
         ))}
       </div>
     </section>
@@ -314,23 +321,55 @@ ORDER BY achados DESC;`;
 
   .bnm-table {
     min-height: 238px;
-    text-decoration: none;
+    display: flex;
+    flex-direction: column;
     transition: background .15s, transform .15s;
   }
 
   .bnm-table:hover {
     background: var(--surface2);
     transform: translateY(-2px);
-    text-decoration: none;
+  }
+
+  .bnm-table__footer {
+    margin-top: auto;
+    padding-top: 24px;
   }
 
   .bnm-table code {
     display: block;
-    margin-top: 24px;
     color: var(--dim);
     font-family: var(--font-m);
     font-size: 10px;
     overflow-wrap: anywhere;
+  }
+
+  .bnm-table__downloads {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .bnm-table__downloads a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    padding: 0 10px;
+    border: 1px solid var(--border2);
+    color: var(--text);
+    background: var(--paper);
+    font-family: var(--font-m);
+    font-size: 10px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+
+  .bnm-table__downloads a:hover {
+    border-color: var(--br);
+    color: var(--br);
+    text-decoration: none;
   }
 
   .bnm-table-grid {

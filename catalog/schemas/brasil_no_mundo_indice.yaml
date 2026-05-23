@@ -51,3 +51,6 @@ columns:
   - name: arquivo_derivado
     type: string
     description: "Arquivo Parquet derivado com os detalhes"
+  - name: arquivo_derivado_csv
+    type: string
+    description: "Arquivo CSV derivado com os detalhes"

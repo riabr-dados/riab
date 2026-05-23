@@ -21,6 +21,7 @@ const related = (ds.related ?? [])
 
 const tables = (ds.cleaned?.tables ?? []).map((t) => (typeof t === "string" ? t : t.name));
 const primaryTable = tables[0] ?? null;
+const hasCleanedCsv = ds.slug === "brasil-no-mundo";
 
 const COUNTRY_FLAG = { BR: "🇧🇷", FR: "🇫🇷", AR: "🇦🇷", UK: "🇬🇧", UY: "🇺🇾", EU: "🇪🇺" };
 const country = ds.source?.country ?? "";
@@ -269,11 +270,17 @@ const schemaContext = primaryTable ? buildSchemaContext(primaryTable) : "";
         )}
         {tables.length > 0 && (
           <div class="ds-meta-item">
-            <span class="ds-meta-label">Tabela Parquet</span>
+            <span class="ds-meta-label">Tabelas tratadas</span>
             <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:2px">
               {tables.map((t) => (
-                <a class="tag dcard__tag--cleaned" href={cleanedUrl(t)} target="_blank"
+                <>
+                  <a class="tag dcard__tag--cleaned" href={cleanedUrl(t)} target="_blank"
                    title={`Baixar ${t}.parquet`}>{t} ↓</a>
+                  {hasCleanedCsv && (
+                    <a class="tag dcard__tag--cleaned" href={cleanedUrl(t, "csv")} target="_blank"
+                       title={`Baixar ${t}.csv`}>{t} csv</a>
+                  )}
+                </>
               ))}
             </div>
           </div>

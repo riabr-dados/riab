@@ -4,6 +4,7 @@ Publica os dados no Hugging Face.
 Estrutura no HF (org: riabr-dados, repo: riab, tipo: dataset):
   raw/{slug-dataset}/    <- dados brutos dos snapshots atuais
   cleaned/*.parquet      <- parquets tratados
+  cleaned/*.csv          <- versoes CSV tratadas
 
 Requer: HF_TOKEN no ambiente (com permissao de escrita no repo).
 Execute a partir da raiz: python pipelines/upload_hf.py
@@ -108,13 +109,17 @@ def build_operations(datasets: list) -> list:
             ops.append(CommitOperationAdd(path_in_repo=hf_path, path_or_fileobj=local_path))
             print(f"  + raw/{slug}/{rel}")
 
-    # 2. Dados tratados — todos os Parquets em pipelines/output/cleaned/
+    # 2. Dados tratados: Parquet e CSV em pipelines/output/cleaned/
     if os.path.isdir(CLEANED_LOCAL):
-        for parquet in glob.glob(os.path.join(CLEANED_LOCAL, "*.parquet")):
-            fname = os.path.basename(parquet)
+        cleaned_files = []
+        for pattern in ("*.parquet", "*.csv"):
+            cleaned_files.extend(glob.glob(os.path.join(CLEANED_LOCAL, pattern)))
+
+        for local_path in sorted(cleaned_files):
+            fname = os.path.basename(local_path)
             hf_path = f"cleaned/{fname}"
-            ops.append(CommitOperationAdd(path_in_repo=hf_path, path_or_fileobj=parquet))
-            size_mb = os.path.getsize(parquet) / 1048576
+            ops.append(CommitOperationAdd(path_in_repo=hf_path, path_or_fileobj=local_path))
+            size_mb = os.path.getsize(local_path) / 1048576
             print(f"  + cleaned/{fname} ({size_mb:.1f} MB)")
 
     return ops

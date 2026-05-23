@@ -11,8 +11,9 @@ export function rawUrl(slug, filename) {
   return `${HF_BASE}/raw/${slug}/${filename}`;
 }
 
-export function cleanedUrl(table) {
-  return `${HF_BASE}/cleaned/${table}.parquet`;
+export function cleanedUrl(table, format = "parquet") {
+  const ext = format === "csv" ? "csv" : "parquet";
+  return `${HF_BASE}/cleaned/${table}.${ext}`;
 }
 
 /** Snippet DuckDB para uma tabela cleaned */
