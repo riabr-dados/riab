@@ -98,7 +98,14 @@ ORDER BY achados DESC;`;
         </p>
         <div class="bnm-actions">
           <a class="btn-primary" href={`${base}datasets/brasil-no-mundo/`}>Explorar dataset</a>
-          <a class="btn-ghost" href={cleanedUrl("brasil_no_mundo_indice", "csv")} target="_blank" rel="noopener">Baixar indice CSV</a>
+          <a
+            class="btn-ghost"
+            href={cleanedUrl("brasil_no_mundo_indice", "csv")}
+            target="_blank"
+            rel="noopener"
+            data-force-download
+            download="brasil_no_mundo_indice.csv"
+          >Baixar indice CSV</a>
           <a class="btn-ghost" href={cleanedUrl("brasil_no_mundo_indice")} target="_blank" rel="noopener">Baixar indice Parquet</a>
         </div>
       </div>
@@ -160,7 +167,14 @@ ORDER BY achados DESC;`;
             <div class="bnm-table__footer">
               <code>{item.table}</code>
               <div class="bnm-table__downloads" aria-label={`Baixar ${item.label}`}>
-                <a href={cleanedUrl(item.table, "csv")} target="_blank" rel="noopener" title={`Baixar ${item.table}.csv`}>CSV</a>
+                <a
+                  href={cleanedUrl(item.table, "csv")}
+                  target="_blank"
+                  rel="noopener"
+                  title={`Baixar ${item.table}.csv`}
+                  data-force-download
+                  download={`${item.table}.csv`}
+                >CSV</a>
                 <a href={cleanedUrl(item.table)} target="_blank" rel="noopener" title={`Baixar ${item.table}.parquet`}>Parquet</a>
               </div>
             </div>

@@ -278,7 +278,7 @@ const schemaContext = primaryTable ? buildSchemaContext(primaryTable) : "";
                    title={`Baixar ${t}.parquet`}>{t} ↓</a>
                   {hasCleanedCsv && (
                     <a class="tag dcard__tag--cleaned" href={cleanedUrl(t, "csv")} target="_blank"
-                       title={`Baixar ${t}.csv`}>{t} csv</a>
+                       title={`Baixar ${t}.csv`} data-force-download download={`${t}.csv`}>{t} csv</a>
                   )}
                 </>
               ))}
