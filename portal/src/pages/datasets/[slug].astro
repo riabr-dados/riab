@@ -78,6 +78,16 @@ FROM bilheteria_europa
 ORDER BY admissoes_1996_2026 DESC NULLS LAST
 LIMIT 30`,
 
+  brasil_no_mundo_indice: `SELECT
+  pais_fonte,
+  instituicao,
+  tipo_aparicao,
+  nivel_evidencia,
+  COUNT(*) AS achados
+FROM brasil_no_mundo_indice
+GROUP BY pais_fonte, instituicao, tipo_aparicao, nivel_evidencia
+ORDER BY achados DESC`,
+
   diretores_obras: `SELECT
   diretor,
   pais_diretor,
@@ -169,6 +179,41 @@ WHERE razao_social_produtora IS NOT NULL AND valor_total_liberado_brl > 0
 GROUP BY produtora
 ORDER BY total_mi_brl DESC
 LIMIT 20`,
+    },
+  ],
+  brasil_no_mundo_indice: [
+    {
+      label: "Titulos com mais presencas VOD",
+      sql: `SELECT
+  titulo_ou_indicador AS titulo,
+  ano,
+  linhas_relacionadas AS presencas_vod
+FROM brasil_no_mundo_indice
+WHERE dataset_derivado = 'brasil_no_mundo_vod_europa'
+ORDER BY presencas_vod DESC
+LIMIT 25`,
+    },
+    {
+      label: "Obras brasileiras na Franca",
+      sql: `SELECT
+  ano,
+  titulo_ou_indicador AS titulo,
+  tipo_aparicao,
+  linhas_relacionadas
+FROM brasil_no_mundo_indice
+WHERE dataset_derivado = 'brasil_no_mundo_obras_franca_cnc'
+ORDER BY ano DESC NULLS LAST, titulo
+LIMIT 50`,
+    },
+    {
+      label: "Brasil como mercado no BFI",
+      sql: `SELECT
+  ano,
+  titulo_ou_indicador AS indicador,
+  descricao_curta
+FROM brasil_no_mundo_indice
+WHERE dataset_derivado = 'brasil_no_mundo_mercado_bfi'
+ORDER BY ano, indicador`,
     },
   ],
 };

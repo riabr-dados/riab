@@ -1,0 +1,71 @@
+table: brasil_no_mundo_obras_franca_cnc
+description: >
+  Obras, coproducoes e registros com participacao brasileira encontrados em
+  bases francesas do CNC.
+
+source_raw: brasil-no-mundo
+
+columns:
+  - name: pais_fonte
+    type: string
+    description: "Pais da fonte"
+  - name: instituicao
+    type: string
+    description: "Instituicao de origem"
+  - name: dataset_origem
+    type: string
+    description: "Tabela tratada usada como origem"
+  - name: tipo_aparicao
+    type: string
+    description: "Obra brasileira explicita ou coproducao brasileira"
+  - name: nivel_evidencia
+    type: string
+    description: "Nivel de evidencia atribuido ao achado"
+  - name: titulo
+    type: string
+    description: "Titulo registrado na fonte francesa"
+  - name: chave_titulo
+    type: string
+    description: "Titulo normalizado para cruzamentos"
+  - name: ano
+    type: int64
+    description: "Ano do registro, visa ou agrement"
+    nullable: true
+  - name: diretor
+    type: string
+    description: "Direcao conforme fonte"
+    nullable: true
+  - name: produtora
+    type: string
+    description: "Produtora ou produtoras conforme fonte"
+    nullable: true
+  - name: formato
+    type: string
+    description: "Formato da obra"
+    nullable: true
+  - name: genero
+    type: string
+    description: "Genero informado no agrement"
+    nullable: true
+  - name: nacionalidade
+    type: string
+    description: "Nacionalidade ou composicao de coproducao informada"
+  - name: participacao_brasil_pct
+    type: float64
+    description: "Percentual brasileiro extraido da nacionalidade, quando informado"
+    nullable: true
+  - name: decisao_classificacao
+    type: string
+    description: "Decisao/classificacao do visa de exibicao"
+    nullable: true
+  - name: id_origem
+    type: int64
+    description: "Numero de visa ou identificador de origem"
+    nullable: true
+  - name: valor_orcamento_eur
+    type: float64
+    description: "Orcamento/devis em euros quando disponivel"
+    nullable: true
+  - name: observacao
+    type: string
+    description: "Nota metodologica sobre a evidencia"

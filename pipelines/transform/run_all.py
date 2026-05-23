@@ -27,6 +27,7 @@ SCRIPTS = [
     "pipelines/transform/clean_bfi_2.py",
     "pipelines/transform/clean_bfi_3.py",
     "pipelines/transform/clean_bfi_4.py",
+    "pipelines/transform/build_brasil_no_mundo.py",
 ]
 
 

@@ -21,12 +21,21 @@ const SECTIONS = [
     num: "01",
     href: "datasets/",
     label: "Datasets",
-    desc: `Catálogo de ${stats.total_datasets} datasets de fontes oficiais de ${stats.total_paises} países — ANCINE, CNC, BFI, INCAA, ACAU, Lumière, IBGE.`,
+    desc: `Catálogo de ${stats.total_datasets} datasets de fontes oficiais e tabelas derivadas de ${stats.total_paises} países — ANCINE, CNC, BFI, INCAA, ACAU, Lumière, IBGE.`,
     tag: `${stats.total_datasets} datasets · ${stats.total_paises} países`,
     featured: true,
   },
   {
     num: "02",
+    href: "brasil-no-mundo/",
+    label: "Brasil no Mundo",
+    desc: "Camada derivada sobre onde obras, coproducoes e mercados brasileiros aparecem em bases internacionais.",
+    tag: "CNC / Lumiere / BFI / ACAU",
+    featured: false,
+    isNew: true,
+  },
+  {
+    num: "03",
     href: "explorar/",
     label: "Explorar",
     desc: "Consulte qualquer dataset via SQL ou em português natural, direto no navegador — sem instalar nada, sem cadastro.",
@@ -34,7 +43,7 @@ const SECTIONS = [
     featured: false,
   },
   {
-    num: "03",
+    num: "04",
     href: "transformar/",
     label: "Transformar",
     desc: "Metodologia aberta de integração, limpeza e normalização dos dados.",
@@ -42,16 +51,15 @@ const SECTIONS = [
     featured: false,
   },
   {
-    num: "04",
+    num: "05",
     href: "mural/",
     label: "Mural",
     desc: "Análises e trabalhos produzidos com os dados do RIDAB. O debate sobre o audiovisual brasileiro baseado em evidências.",
     tag: "Novo",
     featured: false,
-    isNew: true,
   },
   {
-    num: "05",
+    num: "06",
     href: "consulta/",
     label: "Docs",
     desc: "Guia de uso, schema completo de colunas e acesso programático via Python, R ou DuckDB.",
@@ -59,7 +67,7 @@ const SECTIONS = [
     featured: false,
   },
   {
-    num: "06",
+    num: "07",
     href: "sobre/",
     label: "Sobre",
     desc: "Manifesto, princípios e governança do projeto. Por que o RIDAB existe e o que busca.",
@@ -114,7 +122,7 @@ const base = import.meta.env.BASE_URL;
         <span class="hero-h__l hero-h__l--em">Audiovisual Brasileiro.</span>
       </h1>
       <p class="hero-desc">
-        {stats.total_datasets} datasets de fontes oficiais — ANCINE, CNC, BFI, INCAA, ACAU, Lumière, IBGE.
+        {stats.total_datasets} datasets de fontes oficiais e tabelas derivadas — ANCINE, CNC, BFI, INCAA, ACAU, Lumière, IBGE.
         Consulte, cruze e exporte direto do navegador. Sem instalar nada, sem cadastro, sem custo.
       </p>
     </div>
@@ -165,7 +173,39 @@ const base = import.meta.env.BASE_URL;
   </div>
 </div>
 
-<!-- ── MURAL ──────────────────────────────────────────────────── -->
+<!-- BRASIL NO MUNDO -->
+<section class="home-section bnm-home">
+  <div class="sec-label">Brasil no Mundo</div>
+  <h2 class="sec-title">O Brasil visto por bases internacionais.</h2>
+  <p class="sec-sub">
+    Uma camada derivada separa obras brasileiras, coproducoes, mercado Brasil e mencoes textuais.
+  </p>
+
+  <div class="bnm-home__grid">
+    <a href={`${base}brasil-no-mundo/`} class="bnm-home__lead">
+      <span>717 achados indexados</span>
+      <strong>Uma porta de entrada para a circulacao internacional do audiovisual brasileiro.</strong>
+      <em>Abrir secao -></em>
+    </a>
+    <div class="bnm-home__metric">
+      <span>185</span>
+      <strong>CNC Franca</strong>
+      <p>Obras e coproducoes brasileiras em visas e agrements.</p>
+    </div>
+    <div class="bnm-home__metric">
+      <span>520</span>
+      <strong>Europa</strong>
+      <p>Registros agregados de salas e VOD nas bases Lumiere.</p>
+    </div>
+    <div class="bnm-home__metric">
+      <span>14</span>
+      <strong>BFI</strong>
+      <p>Brasil como mercado, sem confundir com origem de obra.</p>
+    </div>
+  </div>
+</section>
+
+<!-- MURAL -->
 <section class="home-section home-section--alt">
   <div class="sec-label">Mural</div>
   <h2 class="sec-title">Dados em uso.</h2>
@@ -930,6 +970,77 @@ pre.code-block {
 }
 
 /* ─── SECTIONS ───────────────────────────────────────────────────── */
+.bnm-home__grid {
+  display: grid;
+  grid-template-columns: minmax(260px, 1.15fr) repeat(3, minmax(0, .75fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+
+.bnm-home__lead,
+.bnm-home__metric {
+  min-height: 230px;
+  background: var(--surface);
+  padding: 26px;
+}
+
+.bnm-home__lead {
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-decoration: none;
+  transition: background .15s, transform .15s;
+}
+
+.bnm-home__lead:hover {
+  background: var(--surface2);
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+
+.bnm-home__lead span,
+.bnm-home__metric strong {
+  font-family: var(--font-m);
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--br);
+}
+
+.bnm-home__lead strong {
+  display: block;
+  max-width: 620px;
+  font-family: var(--font-d);
+  font-variation-settings: 'opsz' 14,'wdth' 92,'wght' 720;
+  font-size: clamp(24px, 3vw, 38px);
+  line-height: 1.02;
+}
+
+.bnm-home__lead em {
+  font-family: var(--font-m);
+  font-size: 11px;
+  font-style: normal;
+  color: var(--muted);
+}
+
+.bnm-home__metric span {
+  display: block;
+  font-family: var(--font-d);
+  font-variation-settings: 'opsz' 14,'wdth' 90,'wght' 760;
+  font-size: clamp(42px, 5vw, 68px);
+  line-height: 1;
+  color: var(--br);
+  margin-bottom: 18px;
+}
+
+.bnm-home__metric p {
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
 .home-section { padding: 80px 0; border-bottom: 1px solid var(--border); }
 .home-section:last-child { border-bottom: none; }
 .home-section--alt { background: var(--bg2); }
@@ -948,8 +1059,11 @@ pre.code-block {
 @media (max-width: 1024px) {
   .hero-split { grid-template-columns: 1fr; gap: 48px; }
   .hero-right  { position: static; }
+  .bnm-home__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .bnm-home__lead { grid-column: 1 / -1; }
 }
 @media (max-width: 640px) {
   .hero-cta { flex-direction: column; }
+  .bnm-home__grid { grid-template-columns: 1fr; }
 }
 </style>

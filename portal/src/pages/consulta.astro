@@ -2,6 +2,7 @@
 import Base from "../layouts/Base.astro";
 import CodeSnippet from "../components/CodeSnippet.astro";
 
+const base = import.meta.env.BASE_URL;
 const HF_BASE = "hf://datasets/riabr-dados/riab/cleaned";
 
 const EXAMPLES = [
@@ -89,7 +90,7 @@ obras |>
           metodologia de integração, limpeza e normalização dos dados. É uma receita de bolo de quem
           trabalha com esses dados há 12 anos."
         </p>
-        <a href="/riab/sobre/" class="docs-manifesto-link">Leia o manifesto completo →</a>
+        <a href={`${base}sobre/`} class="docs-manifesto-link">Leia o manifesto completo →</a>
       </div>
     </section>
 
@@ -298,7 +299,7 @@ CNPJ ──────────────────── desambiguaçã
         <p class="meta-p">
           Consulte o catálogo para ver todas as tabelas Parquet e seus campos.
         </p>
-        <a class="btn-outline" href="/riab/datasets/">Ver catálogo de datasets</a>
+        <a class="btn-outline" href={`${base}datasets/`}>Ver catálogo de datasets</a>
       </div>
     </section>
 

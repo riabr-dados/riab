@@ -1,0 +1,48 @@
+table: brasil_no_mundo_bilheteria_europa
+description: >
+  Filmes com producao brasileira presentes na base Lumiere de salas europeias,
+  com admissoes acumuladas.
+
+source_raw: brasil-no-mundo
+
+columns:
+  - name: pais_fonte
+    type: string
+    description: "Regiao da fonte"
+  - name: instituicao
+    type: string
+    description: "Instituicao de origem"
+  - name: dataset_origem
+    type: string
+    description: "Tabela tratada original"
+  - name: tipo_aparicao
+    type: string
+    description: "Natureza da aparicao"
+  - name: nivel_evidencia
+    type: string
+    description: "Nivel de evidencia"
+  - name: titulo
+    type: string
+    description: "Titulo original"
+  - name: chave_titulo
+    type: string
+    description: "Titulo normalizado"
+  - name: ano_producao
+    type: int64
+    description: "Ano de producao"
+    nullable: true
+  - name: paises_producao
+    type: string
+    description: "Paises de producao informados pelo Lumiere"
+  - name: diretores
+    type: string
+    description: "Diretores informados"
+    nullable: true
+  - name: admissoes_1996_2026
+    type: int64
+    description: "Admissoes acumuladas no periodo 1996-2026"
+    nullable: true
+  - name: total_eu27_gb_desde_1996
+    type: int64
+    description: "Total acumulado EU27 + Reino Unido desde 1996"
+    nullable: true

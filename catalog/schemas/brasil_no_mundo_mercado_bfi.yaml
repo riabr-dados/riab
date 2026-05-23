@@ -1,0 +1,45 @@
+table: brasil_no_mundo_mercado_bfi
+description: >
+  Indicadores em que o Brasil aparece como mercado ou territorio nos dados do
+  BFI, sem caracterizar obra brasileira.
+
+source_raw: brasil-no-mundo
+
+columns:
+  - name: pais_fonte
+    type: string
+    description: "Pais da fonte"
+  - name: instituicao
+    type: string
+    description: "Instituicao de origem"
+  - name: dataset_origem
+    type: string
+    description: "Tabela tratada original"
+  - name: tabela_origem
+    type: string
+    description: "Titulo da tabela original no anuario BFI"
+  - name: tipo_aparicao
+    type: string
+    description: "Tipo de aparicao do Brasil"
+  - name: nivel_evidencia
+    type: string
+    description: "Nivel de evidencia"
+  - name: indicador
+    type: string
+    description: "Nome normalizado do indicador"
+  - name: ano
+    type: int64
+    description: "Ano do indicador"
+    nullable: true
+  - name: territorio
+    type: string
+    description: "Territorio observado"
+  - name: valor
+    type: float64
+    description: "Valor numerico do indicador"
+  - name: unidade
+    type: string
+    description: "Unidade do valor"
+  - name: observacao
+    type: string
+    description: "Nota de leitura do indicador"

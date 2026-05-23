@@ -1,0 +1,60 @@
+table: brasil_no_mundo_mencoes_outros_paises
+description: >
+  Mencoes textuais a Brasil encontradas em bases internacionais que nao
+  comprovam, sozinhas, origem brasileira da obra.
+
+source_raw: brasil-no-mundo
+
+columns:
+  - name: pais_fonte
+    type: string
+    description: "Pais da fonte"
+  - name: instituicao
+    type: string
+    description: "Instituicao de origem"
+  - name: dataset_origem
+    type: string
+    description: "Tabela tratada original"
+  - name: tipo_aparicao
+    type: string
+    description: "Tipo de aparicao"
+  - name: nivel_evidencia
+    type: string
+    description: "Nivel de evidencia"
+  - name: titulo_ou_texto
+    type: string
+    description: "Texto em que Brasil foi encontrado"
+  - name: ano
+    type: int64
+    description: "Ano do registro"
+    nullable: true
+  - name: campo_encontrado
+    type: string
+    description: "Campo onde a mencao foi encontrada"
+  - name: formato
+    type: string
+    description: "Formato informado pela fonte"
+    nullable: true
+  - name: tipo_narrativo
+    type: string
+    description: "Tipo narrativo informado"
+    nullable: true
+  - name: genero
+    type: string
+    description: "Genero informado"
+    nullable: true
+  - name: tipo_de_produccion
+    type: string
+    description: "Tipo de producao informado pela fonte"
+    nullable: true
+  - name: valor_local
+    type: float64
+    description: "Valor local associado ao apoio, quando houver"
+    nullable: true
+  - name: postulante
+    type: string
+    description: "Postulante informado pela fonte"
+    nullable: true
+  - name: observacao
+    type: string
+    description: "Nota metodologica sobre a evidencia"

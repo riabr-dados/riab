@@ -51,3 +51,13 @@ sources:
     url: https://www.ibge.gov.br/
     data_portal: https://sidra.ibge.gov.br/
     license: dados-abertos-gov-br
+
+  - id: riab
+    name: "RIDAB - Tabelas derivadas"
+    country: BR
+    url: https://riabr-dados.github.io/riab/
+    data_portal: https://huggingface.co/datasets/riabr-dados/riab
+    license: CC-BY-4.0
+    kind: derived
+    notes: >
+      Tabelas derivadas pelo RIDAB a partir de fontes oficiais ja catalogadas.

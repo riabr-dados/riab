@@ -1,0 +1,80 @@
+table: brasil_no_mundo_vod_europa
+description: >
+  Presenca agregada por titulo de obras com producao brasileira em catalogos
+  VOD europeus do Lumiere.
+
+source_raw: brasil-no-mundo
+
+columns:
+  - name: pais_fonte
+    type: string
+    description: "Regiao da fonte"
+  - name: instituicao
+    type: string
+    description: "Instituicao de origem"
+  - name: dataset_origem
+    type: string
+    description: "Tabela tratada original"
+  - name: tipo_aparicao
+    type: string
+    description: "Natureza da aparicao"
+  - name: nivel_evidencia
+    type: string
+    description: "Nivel de evidencia"
+  - name: titulo
+    type: string
+    description: "Titulo original"
+  - name: chave_titulo
+    type: string
+    description: "Titulo normalizado"
+  - name: paises_producao
+    type: string
+    description: "Paises de producao informados"
+  - name: ano_producao
+    type: int64
+    description: "Ano de producao"
+    nullable: true
+  - name: tipo_obra
+    type: string
+    description: "Tipo de obra no Lumiere VOD"
+    nullable: true
+  - name: diretores
+    type: string
+    description: "Diretores informados"
+    nullable: true
+  - name: presencas_catalogo
+    type: int64
+    description: "Numero de presencas em catalogos VOD"
+  - name: paises_catalogo_qtd
+    type: int64
+    description: "Numero de paises europeus com presenca"
+  - name: paises_catalogo
+    type: string
+    description: "Lista de paises dos catalogos"
+  - name: catalogos_qtd
+    type: int64
+    description: "Numero de grupos de catalogo/plataforma"
+  - name: catalogos
+    type: string
+    description: "Lista compacta de catalogos/plataformas"
+    nullable: true
+  - name: modelos_negocio
+    type: string
+    description: "Modelos de negocio encontrados"
+    nullable: true
+  - name: primeira_presenca
+    type: date
+    description: "Primeira data de presenca observada"
+    nullable: true
+  - name: ultima_presenca
+    type: date
+    description: "Ultima data de presenca observada"
+    nullable: true
+  - name: lumiere_ids
+    type: string
+    description: "Identificadores Lumiere associados"
+    nullable: true
+  - name: imdb_ids
+    type: string
+    description: "Identificadores IMDb associados"
+    nullable: true

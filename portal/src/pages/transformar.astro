@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
+const base = import.meta.env.BASE_URL;
 const HF = "https://huggingface.co/datasets/riabr-dados/riab/resolve/main/cleaned";
 ---
 
@@ -20,7 +21,7 @@ const HF = "https://huggingface.co/datasets/riabr-dados/riab/resolve/main/cleane
   </div>
 
   <!-- DOCS LINK -->
-  <a class="tf-doclink" href="/riab/consulta/#metodologia">
+  <a class="tf-doclink" href={`${base}consulta/#metodologia`}>
     <span class="tf-doclink-text">Como as bases são conectadas: normalização de título, joins em cascata e deflação IPCA</span>
     <span class="tf-doclink-arr">Ler documentação →</span>
   </a>

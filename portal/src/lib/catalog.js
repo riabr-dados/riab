@@ -37,7 +37,12 @@ export function getDataset(slug) {
 /** Estatisticas agregadas para o header do portal */
 export function getCatalogStats(datasets) {
   const paises = new Set(datasets.map((ds) => ds.source?.country).filter(Boolean));
-  const fontes = new Set(datasets.map((ds) => ds.source_id).filter(Boolean));
+  const fontes = new Set(
+    datasets
+      .filter((ds) => ds.source?.kind !== "derived")
+      .map((ds) => ds.source_id)
+      .filter(Boolean)
+  );
   return {
     total_datasets: datasets.length,
     total_paises: paises.size,

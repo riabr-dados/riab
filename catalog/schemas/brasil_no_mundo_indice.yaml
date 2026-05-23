@@ -1,0 +1,53 @@
+table: brasil_no_mundo_indice
+description: >
+  Indice unificado da secao Brasil no Mundo. Cada linha resume uma aparicao
+  do Brasil em dados internacionais e aponta para a tabela derivada detalhada.
+
+source_raw: brasil-no-mundo
+
+columns:
+  - name: id_brasil_no_mundo
+    type: string
+    description: "Identificador estavel da linha no indice derivado"
+  - name: pais_fonte
+    type: string
+    description: "Pais ou regiao da fonte que registra a aparicao"
+  - name: instituicao
+    type: string
+    description: "Instituicao de origem dos dados"
+  - name: dataset_derivado
+    type: string
+    description: "Tabela derivada onde o detalhe pode ser encontrado"
+  - name: dataset_origem
+    type: string
+    description: "Tabela tratada original usada para produzir a linha"
+  - name: tipo_aparicao
+    type: string
+    description: "Natureza da aparicao do Brasil nos dados"
+    categories:
+      - obra_brasileira_explicita
+      - coproducao_brasileira
+      - mercado_brasil
+      - mencao_textual
+  - name: nivel_evidencia
+    type: string
+    description: "Forca da evidencia: forte, mercado ou fraco"
+  - name: titulo_ou_indicador
+    type: string
+    description: "Titulo da obra ou nome do indicador"
+  - name: chave_titulo_ou_indicador
+    type: string
+    description: "Chave normalizada para cruzamentos"
+  - name: ano
+    type: int64
+    description: "Ano associado ao achado, quando disponivel"
+    nullable: true
+  - name: descricao_curta
+    type: string
+    description: "Resumo legivel do achado"
+  - name: linhas_relacionadas
+    type: int64
+    description: "Numero de linhas da fonte detalhada relacionadas ao achado"
+  - name: arquivo_derivado
+    type: string
+    description: "Arquivo Parquet derivado com os detalhes"

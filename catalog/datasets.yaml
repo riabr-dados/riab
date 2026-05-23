@@ -297,6 +297,41 @@ datasets:
 
   # ── FRANCA / CNC ───────────────────────────────────────────────────────────
 
+  # -- DERIVADOS / BRASIL NO MUNDO -------------------------------------------
+
+  - slug: brasil-no-mundo
+    title: "Brasil no Mundo"
+    description: >
+      Tabelas derivadas que reúnem aparicoes do audiovisual brasileiro em
+      bases internacionais: obras e coproducoes brasileiras no CNC, circulacao
+      em salas e VoD na Europa, Brasil como mercado no BFI e mencoes pontuais
+      em outros paises. Cada linha explicita o nivel de evidencia.
+    source_id: riab
+    status: ativo
+    coverage: "1957-2026"
+    tags: [brasil-no-mundo, circulacao-internacional, cinema, vod, mercado, derivado]
+    raw:
+      path: pipelines/transform/build_brasil_no_mundo.py
+      format: derived
+      files: 1
+      size_bytes: 164980
+    cleaned:
+      tables:
+        - brasil_no_mundo_indice
+        - brasil_no_mundo_obras_franca_cnc
+        - brasil_no_mundo_bilheteria_europa
+        - brasil_no_mundo_vod_europa
+        - brasil_no_mundo_mercado_bfi
+        - brasil_no_mundo_mencoes_outros_paises
+    related:
+      - lumiere-cinemas-europa
+      - lumiere-vod-europa
+      - cnc-visas-exploitation
+      - cnc-films-agrees
+      - bfi-mercado-cinematografico
+      - bfi-talentos-britanicos-mundo
+      - acau-uruguay-apoios-audiovisual
+
   - slug: cnc-visas-exploitation
     title: "Visas d'Exploitation"
     description: >
