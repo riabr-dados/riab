@@ -32,14 +32,15 @@ for (const ds of datasets) {
 
   for (const t of rawTables) {
     const id = typeof t === "string" ? t : t.name;
-    groupMap[country].tables.push({ id, label: ds.title, desc: shortDesc(ds) });
+    const parquet = typeof t === "string" ? `${t}.parquet` : (t.parquet ?? `${id}.parquet`);
+    groupMap[country].tables.push({ id, parquet: `${HF_BASE}/${parquet}`, label: ds.title, desc: shortDesc(ds) });
   }
 }
 
 const TABLES = COUNTRY_ORDER.filter(c => groupMap[c]).map(c => groupMap[c]);
 
 const parquetMap = Object.fromEntries(
-  TABLES.flatMap(g => g.tables.map(t => [t.id, `${HF_BASE}/${t.id}.parquet`]))
+  TABLES.flatMap(g => g.tables.map(t => [t.id, t.parquet]))
 );
 
 const FEATURED = ["obras", "bilheteria_por_filme_ano", "fomento_fsa", "agentes_economicos"];
@@ -269,6 +270,36 @@ let limitVal     = 100;
 let lastRows = [], lastCols = [];
 let autoRunTimer = null;
 let filterId     = 0;
+const registeredViews = new Set();
+
+function quoteIdent(value) {
+  return `"${String(value).replace(/"/g, '""')}"`;
+}
+
+function quoteText(value) {
+  return String(value).replace(/'/g, "''");
+}
+
+function escapeRegExp(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+async function ensureView(name) {
+  if (registeredViews.has(name)) return;
+  const url = parquetMap[name];
+  if (!url) throw new Error(`Tabela sem parquet no catalogo: ${name}`);
+  statusEl.textContent = `Conectando ${name}…`;
+  await conn.query(`CREATE OR REPLACE VIEW ${quoteIdent(name)} AS SELECT * FROM '${quoteText(url)}'`);
+  registeredViews.add(name);
+}
+
+async function ensureViewsForSQL(sql) {
+  const jobs = Object.keys(parquetMap).filter(name => {
+    const re = new RegExp(`(^|[^A-Za-z0-9_])${escapeRegExp(name)}(?=$|[^A-Za-z0-9_])`, "i");
+    return re.test(sql);
+  });
+  for (const name of jobs) await ensureView(name);
+}
 
 // ── INIT DUCKDB ────────────────────────────────────────────────
 async function initDuckDB() {
@@ -286,11 +317,6 @@ async function initDuckDB() {
     await conn.query("SET s3_region='us-east-1';");
 
     const names = Object.keys(parquetMap);
-    statusEl.textContent = `Registrando ${names.length} tabelas…`;
-    for (const [name, url] of Object.entries(parquetMap)) {
-      await conn.query(`CREATE OR REPLACE VIEW ${name} AS SELECT * FROM '${url}'`);
-    }
-
     dot.className = "sdot sdot--ok";
     statusEl.textContent = `${names.length} tabelas disponíveis`;
     ready = true;
@@ -344,7 +370,8 @@ async function loadTable(name) {
 
   statusEl.textContent = "Lendo colunas…";
   try {
-    const res = await conn.query(`DESCRIBE ${name}`);
+    await ensureView(name);
+    const res = await conn.query(`DESCRIBE ${quoteIdent(name)}`);
     columns = res.toArray().map(r => ({ name: r.column_name, type: r.column_type }));
     renderFields();
     renderColsZone();
@@ -547,30 +574,31 @@ function renderFilters() {
 // ── BUILD SQL ──────────────────────────────────────────────────
 function buildSQL() {
   if (!currentTable) return "";
-  const cols = colsAll || selectedCols.size === 0 ? "*" : [...selectedCols].join(", ");
-  let sql = `SELECT ${cols}\nFROM ${currentTable}`;
+  const cols = colsAll || selectedCols.size === 0 ? "*" : [...selectedCols].map(quoteIdent).join(", ");
+  let sql = `SELECT ${cols}\nFROM ${quoteIdent(currentTable)}`;
 
   const vf = filters.filter(f => f.col && (["null","notnull"].includes(f.op) || f.val !== ""));
   if (vf.length) {
     const conds = vf.map(f => {
       const v = f.val.replace(/'/g, "''");
+      const col = quoteIdent(f.col);
       switch(f.op){
-        case "contains": return `CAST(${f.col} AS VARCHAR) ILIKE '%${v}%'`;
-        case "starts":   return `CAST(${f.col} AS VARCHAR) ILIKE '${v}%'`;
-        case "=":        return `CAST(${f.col} AS VARCHAR) = '${v}'`;
-        case "!=":       return `CAST(${f.col} AS VARCHAR) != '${v}'`;
-        case ">":        return `${f.col} > ${parseFloat(f.val)||0}`;
-        case ">=":       return `${f.col} >= ${parseFloat(f.val)||0}`;
-        case "<":        return `${f.col} < ${parseFloat(f.val)||0}`;
-        case "<=":       return `${f.col} <= ${parseFloat(f.val)||0}`;
-        case "null":     return `${f.col} IS NULL`;
-        case "notnull":  return `${f.col} IS NOT NULL`;
+        case "contains": return `CAST(${col} AS VARCHAR) ILIKE '%${v}%'`;
+        case "starts":   return `CAST(${col} AS VARCHAR) ILIKE '${v}%'`;
+        case "=":        return `CAST(${col} AS VARCHAR) = '${v}'`;
+        case "!=":       return `CAST(${col} AS VARCHAR) != '${v}'`;
+        case ">":        return `${col} > ${parseFloat(f.val)||0}`;
+        case ">=":       return `${col} >= ${parseFloat(f.val)||0}`;
+        case "<":        return `${col} < ${parseFloat(f.val)||0}`;
+        case "<=":       return `${col} <= ${parseFloat(f.val)||0}`;
+        case "null":     return `${col} IS NULL`;
+        case "notnull":  return `${col} IS NOT NULL`;
         default: return null;
       }
     }).filter(Boolean);
     if (conds.length) sql += `\nWHERE ${conds.join("\n  AND ")}`;
   }
-  if (sortField) sql += `\nORDER BY ${sortField} ${sortDir}`;
+  if (sortField) sql += `\nORDER BY ${quoteIdent(sortField)} ${sortDir}`;
   if (limitVal > 0) sql += `\nLIMIT ${limitVal}`;
   return sql;
 }
@@ -594,6 +622,7 @@ async function runQuery(sql) {
   foot.style.display = "none";
   const t0 = performance.now();
   try {
+    await ensureViewsForSQL(sql);
     const res = await conn.query(sql);
     const elapsed = ((performance.now() - t0)/1000).toFixed(2);
     lastCols = res.schema.fields.map(f => f.name);

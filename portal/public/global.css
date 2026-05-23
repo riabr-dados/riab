@@ -102,13 +102,6 @@ a:hover { text-decoration: underline; }
 }
 .nav-links a:hover { color: var(--text); background: var(--bg2); text-decoration: none; }
 
-.nav-explorar {
-  color: var(--br) !important;
-  border: 1px solid rgba(0,122,60,.25);
-  background: var(--green-d) !important;
-}
-.nav-explorar:hover { background: rgba(0,122,60,.12) !important; border-color: var(--br) !important; }
-
 .nav-gh {
   border: 1px solid var(--border2) !important;
   color: var(--muted) !important;
@@ -517,14 +510,6 @@ main:has(.exp-page) { max-width: 100%; padding: 0; }
   transition: all .15s;
 }
 .nav-mobile-links a:hover { color: var(--text); background: var(--bg2); }
-
-.nav-m-featured {
-  color: var(--br) !important;
-  border: 1px solid rgba(0,122,60,.25);
-  background: var(--green-d) !important;
-  margin-bottom: 8px;
-}
-.nav-m-featured:hover { background: rgba(0,122,60,.12) !important; }
 
 .nav-m-gh {
   border: 1px solid var(--border2) !important;
