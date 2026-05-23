@@ -24,14 +24,60 @@ RAW_LOCAL    = "datasets"
 CLEANED_LOCAL = os.path.join("pipelines", "output", "cleaned")
 
 
+def get_hf_token() -> str | None:
+    """Read HF_TOKEN from process env or persisted Windows user env."""
+    token = os.environ.get("HF_TOKEN")
+    if token:
+        return token
+
+    if os.name == "nt":
+        try:
+            import winreg
+
+            with winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Environment") as key:
+                token, _ = winreg.QueryValueEx(key, "HF_TOKEN")
+                if token:
+                    return token
+        except OSError:
+            pass
+
+        try:
+            import subprocess
+
+            result = subprocess.run(
+                [
+                    "powershell",
+                    "-NoProfile",
+                    "-Command",
+                    "[Environment]::GetEnvironmentVariable('HF_TOKEN','User')",
+                ],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            token = result.stdout.strip()
+            return token or None
+        except Exception:
+            return None
+
+    return None
+
+
 def load_catalog():
     with open(CATALOG_PATH, "r", encoding="utf-8") as f:
         return yaml.safe_load(f)["datasets"]
 
 
-def latest_snapshot(slug: str) -> str | None:
+def raw_dataset_dir(ds: dict) -> str:
+    raw = ds.get("raw", {})
+    raw_path = raw.get("path") or f"{ds['slug']}/"
+    raw_path = raw_path.strip("/\\").replace("/", os.sep)
+    return os.path.join(RAW_LOCAL, raw_path)
+
+
+def latest_snapshot(ds: dict) -> str | None:
     """Retorna o caminho do snapshot mais recente de um dataset."""
-    base = os.path.join(RAW_LOCAL, slug, "snapshots")
+    base = os.path.join(raw_dataset_dir(ds), "snapshots")
     if not os.path.isdir(base):
         return None
     snaps = sorted(d for d in os.listdir(base) if os.path.isdir(os.path.join(base, d)))
@@ -44,12 +90,18 @@ def build_operations(datasets: list) -> list:
     # 1. Dados brutos — um arquivo por dataset (snapshot mais recente)
     for ds in datasets:
         slug = ds["slug"]
-        snap_dir = latest_snapshot(slug)
+        snap_dir = latest_snapshot(ds)
         if not snap_dir:
             print(f"  [SKIP raw] {slug} — sem snapshot local")
             continue
-        files = [f for f in glob.glob(os.path.join(snap_dir, "**"), recursive=True)
-                 if os.path.isfile(f)]
+        raw_file = ds.get("raw", {}).get("file")
+        if raw_file:
+            candidates = [os.path.join(snap_dir, raw_file)]
+            candidates.extend(os.path.join(snap_dir, name) for name in ["datapackage.json", "source.txt"])
+            files = [path for path in candidates if os.path.isfile(path)]
+        else:
+            files = [f for f in glob.glob(os.path.join(snap_dir, "**"), recursive=True)
+                     if os.path.isfile(f)]
         for local_path in files:
             rel = os.path.relpath(local_path, snap_dir).replace("\\", "/")
             hf_path = f"raw/{slug}/{rel}"
@@ -69,7 +121,7 @@ def build_operations(datasets: list) -> list:
 
 
 def main():
-    token = os.environ.get("HF_TOKEN")
+    token = get_hf_token()
     if not token:
         print("HF_TOKEN nao definido. Configure a variavel de ambiente.", file=sys.stderr)
         sys.exit(1)

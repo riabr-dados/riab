@@ -315,7 +315,7 @@ datasets:
       files: 1
       size_bytes: 12821667
     cleaned:
-      tables: []
+      tables: [cnc_visas_exploitation]
     related:
       - cnc-films-million-entrees
       - cnc-distribution-salles
@@ -336,7 +336,7 @@ datasets:
       files: 1
       size_bytes: 436623
     cleaned:
-      tables: []
+      tables: [cnc_frequentation_salles]
     related:
       - cnc-parc-cinematographique
       - cnc-distribution-salles
@@ -357,7 +357,7 @@ datasets:
       files: 1
       size_bytes: 2640686
     cleaned:
-      tables: []
+      tables: [cnc_etablissements]
     related:
       - cnc-geographie-cinema
       - cnc-parc-cinematographique
@@ -377,7 +377,7 @@ datasets:
       files: 1
       size_bytes: 109816
     cleaned:
-      tables: []
+      tables: [cnc_films_million_entrees]
     related:
       - cnc-frequentation-salles
       - cnc-visas-exploitation
@@ -398,7 +398,7 @@ datasets:
       files: 1
       size_bytes: 87814
     cleaned:
-      tables: []
+      tables: [cnc_donnees_internationales]
 
   - slug: cnc-films-agrees
     title: "Filmes com Agrement (Producao e Distribuicao)"
@@ -416,7 +416,7 @@ datasets:
       files: 1
       size_bytes: 843119
     cleaned:
-      tables: []
+      tables: [cnc_films_agrees]
     related:
       - cnc-visas-exploitation
 
@@ -435,7 +435,7 @@ datasets:
       files: 1
       size_bytes: 77505
     cleaned:
-      tables: []
+      tables: [cnc_audience_television]
     related:
       - cnc-films-television
 
@@ -454,7 +454,7 @@ datasets:
       files: 1
       size_bytes: 253628
     cleaned:
-      tables: []
+      tables: [cnc_films_television]
     related:
       - cnc-audience-television
 
@@ -473,7 +473,7 @@ datasets:
       files: 1
       size_bytes: 77796
     cleaned:
-      tables: []
+      tables: [cnc_exportacao_programas]
 
   - slug: cnc-geographie-cinema
     title: "Geografia do Cinema Frances"
@@ -490,7 +490,7 @@ datasets:
       files: 4
       size_bytes: 2822075
     cleaned:
-      tables: []
+      tables: [cnc_geographie_commune, cnc_geographie_departement, cnc_geographie_region, cnc_geographie_urbain]
     related:
       - cnc-etablissements
       - cnc-parc-cinematographique
@@ -510,7 +510,7 @@ datasets:
       files: 1
       size_bytes: 65787
     cleaned:
-      tables: []
+      tables: [cnc_public_vod]
     related:
       - cnc-referencias-ativas-vod
       - cnc-consumo-vod
@@ -530,7 +530,7 @@ datasets:
       files: 1
       size_bytes: 77553
     cleaned:
-      tables: []
+      tables: [cnc_referencias_ativas_vod]
     related:
       - cnc-public-vod
 
@@ -549,7 +549,7 @@ datasets:
       files: 1
       size_bytes: 71895
     cleaned:
-      tables: []
+      tables: [cnc_consumo_vod]
     related:
       - cnc-public-vod
 
@@ -568,7 +568,7 @@ datasets:
       files: 1
       size_bytes: 420992
     cleaned:
-      tables: []
+      tables: [cnc_parc_cinematographique]
     related:
       - cnc-etablissements
       - cnc-geographie-cinema
@@ -588,7 +588,7 @@ datasets:
       files: 1
       size_bytes: 78336
     cleaned:
-      tables: []
+      tables: [cnc_financement_television]
 
   - slug: cnc-distribution-salles
     title: "Distribuicao de Filmes em Salas"
@@ -605,7 +605,7 @@ datasets:
       files: 1
       size_bytes: 185531
     cleaned:
-      tables: []
+      tables: [cnc_distribution_salles]
     related:
       - cnc-frequentation-salles
       - cnc-visas-exploitation
@@ -625,7 +625,7 @@ datasets:
       files: 1
       size_bytes: 152164
     cleaned:
-      tables: []
+      tables: [cnc_public_films]
 
   # ── ARGENTINA / INCAA ──────────────────────────────────────────────────────
 
@@ -844,6 +844,8 @@ datasets:
       format: ods
       files: 1
       size_bytes: 60049
+    cleaned:
+      tables: [bfi_audiences]
 
   - slug: bfi-bilheteria-2023
     title: "Bilheteria do Reino Unido 2023"
@@ -860,6 +862,8 @@ datasets:
       format: ods
       files: 1
       size_bytes: 67643
+    cleaned:
+      tables: [bfi_box_office_2023]
 
   - slug: bfi-exibicao-cinematografica
     title: "Exibicao Cinematografica no Reino Unido"
@@ -876,6 +880,8 @@ datasets:
       format: ods
       files: 1
       size_bytes: 49245
+    cleaned:
+      tables: [bfi_exhibition]
 
   - slug: bfi-educacao-cinematografica
     title: "Educacao Cinematografica no Reino Unido"
@@ -892,6 +898,8 @@ datasets:
       format: ods
       files: 1
       size_bytes: 51031
+    cleaned:
+      tables: [bfi_educacao_cinematografica]
 
   - slug: bfi-empresas-industria
     title: "Empresas da Industria Cinematografica Britanica"
@@ -908,6 +916,8 @@ datasets:
       format: ods
       files: 1
       size_bytes: 39042
+    cleaned:
+      tables: [bfi_empresas_industria]
 
   - slug: bfi-emprego-industria
     title: "Emprego na Industria Cinematografica Britanica"
@@ -924,6 +934,8 @@ datasets:
       format: ods
       files: 1
       size_bytes: 43435
+    cleaned:
+      tables: [bfi_emprego_industria]
 
   - slug: bfi-video-digital
     title: "Filmes em Video Digital no Reino Unido"
@@ -940,6 +952,8 @@ datasets:
       format: ods
       files: 1
       size_bytes: 44128
+    cleaned:
+      tables: [bfi_video_digital]
 
   - slug: bfi-video-fisico
     title: "Filmes em Video Fisico no Reino Unido"
@@ -956,6 +970,8 @@ datasets:
       format: ods
       files: 1
       size_bytes: 41904
+    cleaned:
+      tables: [bfi_video_fisico]
 
   - slug: bfi-filmes-televisao
     title: "Filmes na Televisao Britanica"
@@ -972,6 +988,8 @@ datasets:
       format: ods
       files: 1
       size_bytes: 66401
+    cleaned:
+      tables: [bfi_filmes_televisao]
 
   - slug: bfi-investimento-publico
     title: "Investimento Publico no Cinema Britanico"
@@ -988,6 +1006,8 @@ datasets:
       format: ods
       files: 1
       size_bytes: 32975
+    cleaned:
+      tables: [bfi_investimento_publico]
 
   - slug: bfi-certificacao-obras
     title: "Certificacao de Obras Britanicas (Screen Sector)"
@@ -1004,6 +1024,8 @@ datasets:
       format: ods
       files: 1
       size_bytes: 30592
+    cleaned:
+      tables: [bfi_certificacao_obras]
 
   - slug: bfi-top-filmes-2023
     title: "Top Filmes no Reino Unido 2023"
@@ -1020,6 +1042,8 @@ datasets:
       format: ods
       files: 1
       size_bytes: 50762
+    cleaned:
+      tables: [bfi_top_films_2023]
 
   - slug: bfi-economia-do-cinema
     title: "Economia do Cinema Britanico"
@@ -1036,6 +1060,8 @@ datasets:
       format: ods
       files: 1
       size_bytes: 23110
+    cleaned:
+      tables: [bfi_uk_film_economy]
 
   - slug: bfi-mercado-cinematografico
     title: "Mercado Cinematografico do Reino Unido"
@@ -1052,6 +1078,8 @@ datasets:
       format: ods
       files: 1
       size_bytes: 35964
+    cleaned:
+      tables: [bfi_uk_film_market]
 
   - slug: bfi-talentos-britanicos-mundo
     title: "Filmes Britanicos e Talentos no Mundo"
@@ -1068,6 +1096,8 @@ datasets:
       format: ods
       files: 1
       size_bytes: 52629
+    cleaned:
+      tables: [bfi_talentos_mundo]
 
   # ── URUGUAI / ACAU ─────────────────────────────────────────────────────────
 

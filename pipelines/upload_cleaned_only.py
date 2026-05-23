@@ -14,7 +14,46 @@ HF_REPO  = "riab"
 HF_TYPE  = "dataset"
 CLEANED  = os.path.join("pipelines", "output", "cleaned")
 
-token = os.environ.get("HF_TOKEN")
+def get_hf_token() -> str | None:
+    """Read HF_TOKEN from process env or persisted Windows user env."""
+    token = os.environ.get("HF_TOKEN")
+    if token:
+        return token
+
+    if os.name == "nt":
+        try:
+            import winreg
+
+            with winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Environment") as key:
+                token, _ = winreg.QueryValueEx(key, "HF_TOKEN")
+                if token:
+                    return token
+        except OSError:
+            pass
+
+        try:
+            import subprocess
+
+            result = subprocess.run(
+                [
+                    "powershell",
+                    "-NoProfile",
+                    "-Command",
+                    "[Environment]::GetEnvironmentVariable('HF_TOKEN','User')",
+                ],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            token = result.stdout.strip()
+            return token or None
+        except Exception:
+            return None
+
+    return None
+
+
+token = get_hf_token()
 if not token:
     print("Defina HF_TOKEN antes de rodar.", file=sys.stderr)
     sys.exit(1)

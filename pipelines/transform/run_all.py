@@ -18,6 +18,15 @@ SCRIPTS = [
     "pipelines/transform/clean_lumiere.py",
     "pipelines/transform/clean_incaa.py",
     "pipelines/transform/clean_acau.py",
+    "pipelines/transform/clean_cnc_simples.py",
+    "pipelines/transform/clean_cnc_visas.py",
+    "pipelines/transform/clean_cnc_complexos.py",
+    "pipelines/transform/clean_cnc_geographie.py",
+    "pipelines/transform/clean_cnc_xls.py",
+    "pipelines/transform/clean_bfi_1.py",
+    "pipelines/transform/clean_bfi_2.py",
+    "pipelines/transform/clean_bfi_3.py",
+    "pipelines/transform/clean_bfi_4.py",
 ]
 
 
