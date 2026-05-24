@@ -127,7 +127,7 @@ def source_metadata() -> dict[str, object]:
     return metadata
 
 
-def build_sexo_table(source: dict[str, object]) -> pd.DataFrame:
+def build_sexo_table() -> pd.DataFrame:
     rows = []
     for ano, sexo, empregos, total in SEXO_ROWS:
         rows.append(
@@ -136,19 +136,12 @@ def build_sexo_table(source: dict[str, object]) -> pd.DataFrame:
                 "sexo": sexo,
                 "empregos_formais_ativos_31_12": empregos,
                 "total_ano": total,
-                "fonte_tabela": "Tabela 1",
-                "status_serie": "oficial_ancine_reconstruida_pdf_2011_2021",
-                "nota_metodologica": (
-                    "Serie documental transcrita da Tabela 1 do estudo ANCINE "
-                    "Genero e Raca no Setor Audiovisual 2011-2021, secao RAIS."
-                ),
-                **source,
             }
         )
     return pd.DataFrame(rows)
 
 
-def build_raca_table(source: dict[str, object]) -> pd.DataFrame:
+def build_raca_table() -> pd.DataFrame:
     rows = []
     for ano, raca_cor, empregos, total in RACA_ROWS:
         rows.append(
@@ -157,15 +150,6 @@ def build_raca_table(source: dict[str, object]) -> pd.DataFrame:
                 "raca_cor": raca_cor,
                 "empregos_formais_ativos_31_12": empregos,
                 "total_ano": total,
-                "fonte_tabela": "Tabela 2",
-                "status_serie": "oficial_ancine_reconstruida_pdf_2011_2021",
-                "nota_metodologica": (
-                    "Serie documental transcrita da Tabela 2 do estudo ANCINE "
-                    "Genero e Raca no Setor Audiovisual 2011-2021, secao RAIS. "
-                    "O proprio estudo informa que registros sem identificacao de "
-                    "raca ou cor nao entram nas analises subsequentes."
-                ),
-                **source,
             }
         )
     return pd.DataFrame(rows)
@@ -199,9 +183,8 @@ def update_source_table() -> None:
 
 
 def main() -> int:
-    source = source_metadata()
-    sexo = build_sexo_table(source)
-    raca = build_raca_table(source)
+    sexo = build_sexo_table()
+    raca = build_raca_table()
     write_table(sexo, "diversidade_audiovisual_emprego_sexo_ano")
     write_table(raca, "diversidade_audiovisual_emprego_raca_ano")
     update_source_table()

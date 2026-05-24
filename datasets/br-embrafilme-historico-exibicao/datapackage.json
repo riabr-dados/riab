@@ -50,8 +50,8 @@
       "format": "csv",
       "mediatype": "text/csv",
       "encoding": "utf-8",
-      "bytes": 2970330,
-      "hash": "sha256:3e582332dbd29d202e20d55b9b8d9de0511178e946296ba3d91c5be725a08f0c",
+      "bytes": 1200431,
+      "hash": "sha256:d2f388fbbf7cabe973e8ce0b1b773bc13d55d5ffcb090b134180357e9f4a2cf9",
       "schema": "../../catalog/schemas/embrafilme_exibicao_territorio_ano.yaml"
     }
   ],

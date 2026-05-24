@@ -2,7 +2,9 @@
 import Base from "../../layouts/Base.astro";
 import CodeSnippet from "../../components/CodeSnippet.astro";
 import DataExplorer from "../../components/DataExplorer.astro";
-import { getDatasets, getDataset, buildSchemaContext } from "../../lib/catalog.js";
+import { existsSync } from "fs";
+import { resolve } from "path";
+import { getDatasets, getDataset, buildSchemaContext, getTableSchema } from "../../lib/catalog.js";
 import { duckdbSnippet, pandasSnippet, rSnippet, cliSnippet, cleanedUrl } from "../../lib/hf.js";
 
 export async function getStaticPaths() {
@@ -20,8 +22,9 @@ const related = (ds.related ?? [])
   .filter(Boolean);
 
 const tables = (ds.cleaned?.tables ?? []).map((t) => (typeof t === "string" ? t : t.name));
-const primaryTable = tables.find((t) => !t.endsWith("_fontes")) ?? tables[0] ?? null;
-const hasCleanedCsv = ds.slug === "brasil-no-mundo";
+const dataTables = tables.filter((t) => !t.endsWith("_fontes"));
+const documentationTables = tables.filter((t) => t.endsWith("_fontes"));
+const primaryTable = dataTables[0] ?? tables[0] ?? null;
 const rawFolder = (ds.raw?.path ?? `${ds.slug}/`).replace(/^raw\//, "").replace(/\/$/, "");
 
 const COUNTRY_FLAG = { BR: "🇧🇷", FR: "🇫🇷", AR: "🇦🇷", UK: "🇬🇧", UY: "🇺🇾", EU: "🇪🇺" };
@@ -32,6 +35,21 @@ function fmtBytes(b) {
   if (!b) return "";
   if (b < 1048576) return `${Math.round(b / 1024)} KB`;
   return `${(b / 1048576).toFixed(1)} MB`;
+}
+
+function hasCleanedCsv(table) {
+  return existsSync(resolve(`../pipelines/output/cleaned/${table}.csv`));
+}
+
+function resourceLabel(table) {
+  if (table.endsWith("_total_ano")) return "Total anual";
+  if (table.endsWith("_subclasse_ano")) return "Por subclasse CNAE";
+  if (table.endsWith("_atividade_ano")) return "Por atividade CNAE";
+  if (table.endsWith("_servico_ano")) return "Por servico";
+  if (table.includes("_sexo_")) return "Por sexo";
+  if (table.includes("_raca_")) return "Por raca ou cor";
+  if (table.endsWith("_fontes")) return "Fontes e proveniencia";
+  return table.replace(/_/g, " ");
 }
 
 // Queries padrão por tabela
@@ -320,12 +338,34 @@ ORDER BY ano, indicador`,
   ],
 };
 
-const defaultQuery = primaryTable
-  ? (DEFAULT_QUERIES[primaryTable] ?? `SELECT * FROM ${primaryTable} LIMIT 100`)
-  : null;
+const resourceConfigs = dataTables.map((table) => {
+  const schema = getTableSchema(table);
+  return {
+    table,
+    label: resourceLabel(table),
+    description: schema?.description?.trim() ?? table,
+    csvAvailable: hasCleanedCsv(table),
+    defaultQuery: DEFAULT_QUERIES[table] ?? `SELECT * FROM ${table} LIMIT 100`,
+    crossQueries: CROSS_QUERIES[table] ?? [],
+    schemaContext: buildSchemaContext(table),
+  };
+});
 
-const crossQueries = primaryTable ? (CROSS_QUERIES[primaryTable] ?? []) : [];
-const schemaContext = primaryTable ? buildSchemaContext(primaryTable) : "";
+const documentationConfigs = documentationTables.map((table) => ({
+  table,
+  label: resourceLabel(table),
+  description: "Inventario de fontes, PDFs e URLs oficiais usados na reconstrucao.",
+  csvAvailable: hasCleanedCsv(table),
+}));
+
+const primaryResource =
+  resourceConfigs.find((resource) => resource.table === primaryTable) ??
+  resourceConfigs[0] ??
+  null;
+
+const defaultQuery = primaryResource?.defaultQuery ?? null;
+const crossQueries = primaryResource?.crossQueries ?? [];
+const schemaContext = primaryResource?.schemaContext ?? "";
 ---
 
 <Base title={ds.title} description={ds.description}>
@@ -369,17 +409,83 @@ const schemaContext = primaryTable ? buildSchemaContext(primaryTable) : "";
             <span class="ds-meta-val">{ds.raw.files} arquivos</span>
           </div>
         )}
-        {tables.length > 0 && (
+        {(resourceConfigs.length > 0 || documentationConfigs.length > 0) && (
           <div class="ds-meta-item">
-            <span class="ds-meta-label">Tabelas tratadas</span>
+            <span class="ds-meta-label">Recursos</span>
             <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:2px">
-              {tables.map((t) => (
+              {resourceConfigs.map((resource) => (
+                <span class="tag dcard__tag--cleaned" title={resource.table}>{resource.label}</span>
+              ))}
+              {documentationConfigs.map((resource) => (
+                <span class="tag dcard__tag--cleaned" title={resource.table}>{resource.label}</span>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </header>
+
+    {resourceConfigs.length > 0 && (
+      <section class="ds-section">
+        <h2 class="ds-section__title">// Recursos de Dados</h2>
+        <p class="ds-section__desc">
+          Este dataset reune recursos factuais da mesma metodologia ANCINE em diferentes granularidades.
+          Escolha o recurso que quer explorar ou baixar sem precisar escrever SQL.
+        </p>
+        <div class="resource-grid">
+          {resourceConfigs.map((resource) => (
+            <article class="resource-card" data-table={resource.table}>
+              <div class="resource-card__top">
+                <span class="resource-card__label">{resource.label}</span>
+                <code class="resource-card__table">{resource.table}</code>
+              </div>
+              <p class="resource-card__desc">{resource.description}</p>
+              <div class="resource-card__actions">
+                <button class="btn-outline btn-sm js-open-resource" data-table={resource.table}>Explorar</button>
+                <a class="btn-outline btn-sm" href={cleanedUrl(resource.table)} target="_blank" rel="noopener">Parquet</a>
+                {resource.csvAvailable && (
+                  <a
+                    class="btn-outline btn-sm"
+                    href={cleanedUrl(resource.table, "csv")}
+                    target="_blank"
+                    rel="noopener"
+                    data-force-download
+                    download={`${resource.table}.csv`}
+                  >
+                    CSV
+                  </a>
+                )}
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <section class="ds-section">
+      <h2 class="ds-section__title">// Metodologia e Proveniencia</h2>
+      <div class="methodology">
+        <p class="ds-section__desc">{ds.cleaned?.notes ?? ds.description}</p>
+        {documentationConfigs.length > 0 && (
+          <div class="methodology__docs">
+            <div class="methodology__docs-title">Documentacao de fontes</div>
+            <div class="methodology__docs-actions">
+              {documentationConfigs.map((resource) => (
                 <>
-                  <a class="tag dcard__tag--cleaned" href={cleanedUrl(t)} target="_blank"
-                   title={`Baixar ${t}.parquet`}>{t} ↓</a>
-                  {hasCleanedCsv && (
-                    <a class="tag dcard__tag--cleaned" href={cleanedUrl(t, "csv")} target="_blank"
-                       title={`Baixar ${t}.csv`} data-force-download download={`${t}.csv`}>{t} csv</a>
+                  <a class="btn-outline btn-sm" href={cleanedUrl(resource.table)} target="_blank" rel="noopener">
+                    {resource.label} Parquet
+                  </a>
+                  {resource.csvAvailable && (
+                    <a
+                      class="btn-outline btn-sm"
+                      href={cleanedUrl(resource.table, "csv")}
+                      target="_blank"
+                      rel="noopener"
+                      data-force-download
+                      download={`${resource.table}.csv`}
+                    >
+                      {resource.label} CSV
+                    </a>
                   )}
                 </>
               ))}
@@ -387,7 +493,7 @@ const schemaContext = primaryTable ? buildSchemaContext(primaryTable) : "";
           </div>
         )}
       </div>
-    </header>
+    </section>
 
     {/* EXPLORADOR SQL */}
     {primaryTable && (
@@ -402,6 +508,7 @@ const schemaContext = primaryTable ? buildSchemaContext(primaryTable) : "";
           defaultQuery={defaultQuery}
           crossQueries={crossQueries}
           schemaContext={schemaContext}
+          resources={resourceConfigs}
         />
       </section>
     )}
@@ -521,9 +628,107 @@ kbd {
   background: var(--surface2);
   color: var(--muted);
 }
+
+.resource-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.resource-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  background: var(--surface);
+}
+
+.resource-card--active {
+  border-color: var(--br);
+  box-shadow: inset 0 0 0 1px var(--br);
+}
+
+.resource-card__top {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.resource-card__label {
+  font-size: 11px;
+  font-family: var(--font-m);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.resource-card__table {
+  font-size: 10px;
+  color: var(--dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.resource-card__desc {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 0 0 12px;
+}
+
+.resource-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.methodology {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.methodology__docs {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  background: var(--surface);
+}
+
+.methodology__docs-title {
+  font-size: 10px;
+  font-family: var(--font-m);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 10px;
+}
+
+.methodology__docs-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
 </style>
 
 <script>
+  document.querySelectorAll(".js-open-resource").forEach((button) => {
+    button.addEventListener("click", () => {
+      const table = button.dataset.table;
+      if (!table) return;
+      window.dispatchEvent(new CustomEvent("riab:set-table", { detail: { table } }));
+      document.getElementById("explorer")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+
+  window.addEventListener("riab:resource-changed", (event) => {
+    const activeTable = event.detail?.table;
+    document.querySelectorAll(".resource-card").forEach((card) => {
+      card.classList.toggle("resource-card--active", card.dataset.table === activeTable);
+    });
+  });
+
   const tabs = document.querySelectorAll(".stab");
   tabs.forEach((tab) => {
     tab.addEventListener("click", () => {

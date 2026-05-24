@@ -188,7 +188,7 @@ def method_for(cnae: str, year: int) -> str:
     return "tabulacao_especial_ibge_pas_pac"
 
 
-def build_activity_table(source: dict[str, object]) -> pd.DataFrame:
+def build_activity_table() -> pd.DataFrame:
     rows = []
     for activity in ACTIVITIES:
         cnae = activity["cnae_classe"]
@@ -207,14 +207,6 @@ def build_activity_table(source: dict[str, object]) -> pd.DataFrame:
                     "metodo_valor": method_for(cnae, year),
                     "marcador_nota_ancine": marker,
                     "nota_ancine": marker_text(marker),
-                    "fonte_tabela": "Anexo 1",
-                    "status_serie": "oficial_ancine_reconstruida_pdf_2007_2019",
-                    "nota_metodologica": (
-                        "Valor adicionado bruto a precos basicos das empresas com 20 ou mais "
-                        "pessoas ocupadas, segundo atividades CNAE. Serie transcrita do Anexo 1 "
-                        "do estudo ANCINE ano-base 2019."
-                    ),
-                    **source,
                 }
             )
 
@@ -223,7 +215,7 @@ def build_activity_table(source: dict[str, object]) -> pd.DataFrame:
     return df
 
 
-def build_total_table(source: dict[str, object], activity: pd.DataFrame) -> pd.DataFrame:
+def build_total_table(activity: pd.DataFrame) -> pd.DataFrame:
     activity_totals = activity.groupby("ano", as_index=True)[
         "valor_adicionado_brl_milhoes_correntes"
     ].sum()
@@ -247,13 +239,6 @@ def build_total_table(source: dict[str, object], activity: pd.DataFrame) -> pd.D
                 "metodo_valor": "total_ancine_soma_atividades_cnae",
                 "marcador_nota_ancine": marker,
                 "nota_ancine": marker_text(marker),
-                "fonte_tabela": "Anexo 1; Grafico 3",
-                "status_serie": "oficial_ancine_reconstruida_pdf_2007_2019",
-                "nota_metodologica": (
-                    "A ANCINE denomina a serie como Valor Adicionado pelo setor audiovisual. "
-                    "Trata-se de VA bruto a precos basicos, nao PIB a precos de mercado."
-                ),
-                **source,
             }
         )
     return pd.DataFrame(rows)
@@ -282,9 +267,8 @@ def write_table(df: pd.DataFrame, table_name: str) -> None:
 
 
 def main() -> int:
-    source = source_metadata()
-    activity = build_activity_table(source)
-    total = build_total_table(source, activity)
+    activity = build_activity_table()
+    total = build_total_table(activity)
     write_table(activity, "pib_audiovisual_atividade_ano")
     write_table(total, "pib_audiovisual_total_ano")
     return 0

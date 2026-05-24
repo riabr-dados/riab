@@ -58,8 +58,8 @@
       "format": "csv",
       "mediatype": "text/csv",
       "encoding": "utf-8",
-      "bytes": 8115,
-      "hash": "sha256:2a3a0659eb08319883f3cb1555917235a363fe8b7192b93b056f4de755dceeea",
+      "bytes": 1965,
+      "hash": "sha256:727792f013ee4bbdc550f7bc5e160519cd92234bc98bc79c16ca5a852bbe64ba",
       "schema": "../../catalog/schemas/pib_audiovisual_total_ano.yaml"
     },
     {
@@ -68,8 +68,8 @@
       "format": "csv",
       "mediatype": "text/csv",
       "encoding": "utf-8",
-      "bytes": 106608,
-      "hash": "sha256:bf0748a10cf95a9db911f2f7e384217124a736c472411ec7983101baad295384",
+      "bytes": 30700,
+      "hash": "sha256:d01ff7d6c93a848a89846affb4eb8de85ecf184321f9fc0b8bc9bb02b23e2bf2",
       "schema": "../../catalog/schemas/pib_audiovisual_atividade_ano.yaml"
     }
   ],

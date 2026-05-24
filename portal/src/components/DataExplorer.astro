@@ -1,248 +1,325 @@
 ---
 // DataExplorer: editor SQL com DuckDB-WASM, roda no browser
-// Lê Parquets direto do Hugging Face, exporta CSV
-const { table, defaultQuery, crossQueries = [], schemaContext = "" } = Astro.props;
+// Le Parquets direto do Hugging Face, exporta CSV e permite trocar de recurso.
+const {
+  table = null,
+  defaultQuery = null,
+  crossQueries = [],
+  schemaContext = "",
+  resources = [],
+} = Astro.props;
 
 const HF_BASE = "https://huggingface.co/datasets/riabr-dados/riab/resolve/main/cleaned";
-const parquetUrl = `${HF_BASE}/${table}.parquet`;
+const fallbackResource = table
+  ? {
+      table,
+      label: table,
+      description: "",
+      defaultQuery,
+      crossQueries,
+      schemaContext,
+      parquetUrl: `${HF_BASE}/${table}.parquet`,
+    }
+  : null;
+
+const resourceList = (Array.isArray(resources) && resources.length ? resources : [fallbackResource])
+  .filter(Boolean)
+  .map((resource) => ({
+    ...resource,
+    parquetUrl: resource.parquetUrl ?? `${HF_BASE}/${resource.table}.parquet`,
+  }));
+
+const initialResource =
+  resourceList.find((resource) => resource.table === table) ??
+  resourceList[0] ??
+  null;
 ---
 
 <div class="explorer" id="explorer">
+  {resourceList.length > 1 && (
+    <div class="explorer__resources" id="ex-resources">
+      <span class="ex-resources__label">Recurso ativo</span>
+      <div class="ex-resources__list">
+        {resourceList.map((resource) => (
+          <button
+            class={`ex-resource-chip${resource.table === initialResource?.table ? " ex-resource-chip--active" : ""}`}
+            data-table={resource.table}
+            data-label={resource.label}
+            title={resource.description}
+          >
+            {resource.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  )}
 
-  <!-- TOOLBAR -->
   <div class="explorer__toolbar">
     <div class="explorer__status" id="ex-status">
       <span class="ex-dot ex-dot--loading" id="ex-dot"></span>
       <span id="ex-status-text">Carregando DuckDB...</span>
     </div>
     <div class="explorer__actions">
-      <button class="ex-btn" id="btn-run" disabled>▶ Executar</button>
-      <button class="ex-btn ex-btn--outline" id="btn-export" disabled>↓ Exportar CSV</button>
+      <button class="ex-btn" id="btn-run" disabled>Executar</button>
+      <button class="ex-btn ex-btn--outline" id="btn-export" disabled>Exportar CSV</button>
     </div>
   </div>
 
-  <!-- LINGUAGEM NATURAL -->
-  {schemaContext && (
-    <div class="explorer__nl" id="ex-nl">
-      <div class="nl-header">
-        <span class="nl-label">✦ Perguntar em português</span>
-        <button class="nl-toggle" id="nl-toggle" aria-label="expandir">▾</button>
-      </div>
-      <div class="nl-body" id="nl-body" style="display:none">
-        <textarea
-          class="nl-input"
-          id="nl-input"
-          placeholder="Ex: Quais estados produziram mais filmes nos últimos 5 anos?"
-          rows="2"
-          spellcheck="true"
-        ></textarea>
-        <div class="nl-actions">
-          <span class="nl-hint" id="nl-hint"></span>
-          <button class="ex-btn nl-gen-btn" id="btn-gen">✦ Gerar SQL</button>
-        </div>
+  <div class="explorer__nl" id="ex-nl">
+    <div class="nl-header">
+      <span class="nl-label">Perguntar em portugues</span>
+      <button class="nl-toggle" id="nl-toggle" aria-label="expandir">▾</button>
+    </div>
+    <div class="nl-body" id="nl-body" style="display:none">
+      <textarea
+        class="nl-input"
+        id="nl-input"
+        placeholder="Ex: Qual CNAE concentrou mais empregos em 2019?"
+        rows="2"
+        spellcheck="true"
+      ></textarea>
+      <div class="nl-actions">
+        <span class="nl-hint" id="nl-hint"></span>
+        <button class="ex-btn nl-gen-btn" id="btn-gen">Gerar SQL</button>
       </div>
     </div>
-  )}
+  </div>
 
-  <!-- CROSS QUERIES -->
-  {crossQueries.length > 0 && (
-    <div class="explorer__crosses">
-      <span class="ex-crosses-label">Cruzamentos prontos:</span>
-      {crossQueries.map((q, i) => (
-        <button class="cross-chip" data-query={q.sql} data-idx={i}>{q.label}</button>
+  <div class="explorer__crosses" id="ex-crosses" style={initialResource?.crossQueries?.length ? undefined : "display:none"}>
+    <span class="ex-crosses-label">Cruzamentos prontos:</span>
+    <div class="ex-crosses-list" id="ex-crosses-list">
+      {(initialResource?.crossQueries ?? []).map((query, index) => (
+        <button class="cross-chip" data-query={query.sql} data-idx={index}>{query.label}</button>
       ))}
     </div>
-  )}
+  </div>
 
-  <!-- EDITOR -->
   <div class="explorer__editor-wrap">
     <textarea
       class="explorer__editor"
       id="ex-editor"
       spellcheck="false"
       rows="6"
-    >{defaultQuery}</textarea>
+    >{initialResource?.defaultQuery ?? ""}</textarea>
   </div>
 
-  <!-- RESULTADO -->
   <div class="explorer__result" id="ex-result">
     <div class="ex-placeholder">Execute uma query para ver os resultados.</div>
   </div>
 
-  <!-- INFO RODAPÉ -->
   <div class="explorer__foot" id="ex-foot" style="display:none">
     <span id="ex-rowcount"></span>
     <span id="ex-time"></span>
   </div>
-
 </div>
 
-<script define:vars={{ parquetUrl }}>
+<script define:vars={{ resourceList, initialTable: initialResource?.table ?? null }}>
   window.__RIAB_DATA_EXPLORER__ = {
-    parquetUrl,
+    resources: resourceList,
+    initialTable,
   };
 </script>
 
-<!-- DuckDB WASM -->
 <script type="module">
 import * as duckdb from "https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.29.0/+esm";
 
-const PARQUET_URL = window.__RIAB_DATA_EXPLORER__?.parquetUrl;
-const statusDot  = document.getElementById("ex-dot");
+const CFG = window.__RIAB_DATA_EXPLORER__ ?? { resources: [], initialTable: null };
+const resourceMap = new Map((CFG.resources ?? []).map((resource) => [resource.table, resource]));
+let currentResource = resourceMap.get(CFG.initialTable) ?? CFG.resources?.[0] ?? null;
+
+const statusDot = document.getElementById("ex-dot");
 const statusText = document.getElementById("ex-status-text");
-const btnRun     = document.getElementById("btn-run");
-const btnExport  = document.getElementById("btn-export");
-const editor     = document.getElementById("ex-editor");
-const result     = document.getElementById("ex-result");
-const foot       = document.getElementById("ex-foot");
-const rowcount   = document.getElementById("ex-rowcount");
-const timeEl     = document.getElementById("ex-time");
+const btnRun = document.getElementById("btn-run");
+const btnExport = document.getElementById("btn-export");
+const btnGen = document.getElementById("btn-gen");
+const editor = document.getElementById("ex-editor");
+const result = document.getElementById("ex-result");
+const foot = document.getElementById("ex-foot");
+const rowcount = document.getElementById("ex-rowcount");
+const timeEl = document.getElementById("ex-time");
+const crosses = document.getElementById("ex-crosses");
+const crossesList = document.getElementById("ex-crosses-list");
+const resourceButtons = Array.from(document.querySelectorAll(".ex-resource-chip"));
+const nlBody = document.getElementById("nl-body");
+const nlToggle = document.getElementById("nl-toggle");
+const nlInput = document.getElementById("nl-input");
+const nlHint = document.getElementById("nl-hint");
 
-let db, conn, lastRows = [], lastCols = [];
+let db;
+let conn;
+let lastRows = [];
+let lastCols = [];
 
-// ── INICIALIZAR DUCKDB ──────────────────────────────────────
+function parquetUrlFor(table) {
+  return resourceMap.get(table)?.parquetUrl ?? currentResource?.parquetUrl ?? "";
+}
+
+function currentQueryFallback(table) {
+  return `SELECT * FROM ${table} LIMIT 100`;
+}
+
+function currentLabel() {
+  return currentResource?.label ?? currentResource?.table ?? "recurso";
+}
+
+function setStatusReady() {
+  statusDot.className = "ex-dot ex-dot--ok";
+  statusText.textContent = `Pronto - recurso ativo: ${currentLabel()}`;
+}
+
+function renderCrosses() {
+  const queries = currentResource?.crossQueries ?? [];
+  if (!crosses || !crossesList) return;
+  if (!queries.length) {
+    crosses.style.display = "none";
+    crossesList.innerHTML = "";
+    return;
+  }
+  crosses.style.display = "flex";
+  crossesList.innerHTML = queries
+    .map(
+      (query, index) =>
+        `<button class="cross-chip" data-query="${query.sql
+          .replace(/&/g, "&amp;")
+          .replace(/"/g, "&quot;")}" data-idx="${index}">${query.label}</button>`,
+    )
+    .join("");
+  crossesList.querySelectorAll(".cross-chip").forEach((chip) => {
+    chip.addEventListener("click", () => {
+      crossesList.querySelectorAll(".cross-chip").forEach((node) => node.classList.remove("cross-chip--active"));
+      chip.classList.add("cross-chip--active");
+      editor.value = chip.dataset.query;
+      runQuery(editor.value);
+    });
+  });
+}
+
+function syncResourceButtons() {
+  resourceButtons.forEach((button) => {
+    button.classList.toggle("ex-resource-chip--active", button.dataset.table === currentResource?.table);
+  });
+}
+
+function notifyResourceChange() {
+  window.dispatchEvent(
+    new CustomEvent("riab:resource-changed", {
+      detail: currentResource,
+    }),
+  );
+}
+
+function setCurrentResource(table, options = {}) {
+  const resource = resourceMap.get(table);
+  if (!resource) return;
+  const { replaceQuery = true, run = false } = options;
+  currentResource = resource;
+  syncResourceButtons();
+  renderCrosses();
+  if (replaceQuery || !editor.value.trim()) {
+    editor.value = currentResource.defaultQuery ?? currentQueryFallback(currentResource.table);
+  }
+  if (conn) setStatusReady();
+  notifyResourceChange();
+  if (run) runQuery(editor.value);
+}
+
 async function initDuckDB() {
   try {
-    const JSDELIVR_BUNDLES = duckdb.getJsDelivrBundles();
-    const bundle = await duckdb.selectBundle(JSDELIVR_BUNDLES);
-    const worker_url = URL.createObjectURL(
-      new Blob([`importScripts("${bundle.mainWorker}");`], { type: "text/javascript" })
+    const bundles = duckdb.getJsDelivrBundles();
+    const bundle = await duckdb.selectBundle(bundles);
+    const workerUrl = URL.createObjectURL(
+      new Blob([`importScripts("${bundle.mainWorker}");`], { type: "text/javascript" }),
     );
-    const worker = new Worker(worker_url);
+    const worker = new Worker(workerUrl);
     const logger = new duckdb.ConsoleLogger();
     db = new duckdb.AsyncDuckDB(logger, worker);
     await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
     conn = await db.connect();
 
     await conn.query("INSTALL httpfs; LOAD httpfs;");
-    await conn.query(`SET s3_region='us-east-1';`);
+    await conn.query("SET s3_region='us-east-1';");
 
-    statusDot.className  = "ex-dot ex-dot--ok";
-    statusText.textContent = "Pronto — dados carregados do Hugging Face";
-    btnRun.disabled    = false;
+    setStatusReady();
+    btnRun.disabled = false;
     btnExport.disabled = false;
-  } catch (e) {
-    statusDot.className  = "ex-dot ex-dot--err";
-    statusText.textContent = "Erro ao carregar DuckDB: " + e.message;
+    if (btnGen) btnGen.disabled = false;
+  } catch (error) {
+    statusDot.className = "ex-dot ex-dot--err";
+    statusText.textContent = "Erro ao carregar DuckDB: " + error.message;
   }
 }
 
-// ── EXECUTAR QUERY ──────────────────────────────────────────
 async function runQuery(sql) {
+  if (!conn || !currentResource) return;
   result.innerHTML = `<div class="ex-placeholder ex-loading">Executando...</div>`;
   foot.style.display = "none";
   btnRun.disabled = true;
 
   const t0 = performance.now();
   try {
-    // Substitui referências curtas pela URL completa
     const finalSql = sql
-      .replace(/\b(FROM|JOIN)\s+([a-z_][a-z0-9_]*)\b/gi, (_, kw, t) => `${kw} '${PARQUET_URL.replace(/[^/]+\.parquet$/, `${t}.parquet`)}'`)
-      .replace(/\b(FROM|JOIN)\s+'([a-z_][a-z0-9_]*\.parquet)'/gi, (_, kw, f) => `${kw} '${PARQUET_URL.replace(/[^/]+\.parquet$/, f)}'`);
+      .replace(/\b(FROM|JOIN)\s+([a-z_][a-z0-9_]*)\b/gi, (_, keyword, table) => `${keyword} '${parquetUrlFor(table)}'`)
+      .replace(/\b(FROM|JOIN)\s+'([a-z_][a-z0-9_]*\.parquet)'/gi, (_, keyword, file) => {
+        const bare = file.replace(/\.parquet$/i, "");
+        return `${keyword} '${parquetUrlFor(bare)}'`;
+      });
 
-    const res = await conn.query(finalSql);
+    const response = await conn.query(finalSql);
     const elapsed = ((performance.now() - t0) / 1000).toFixed(2);
 
-    lastCols = res.schema.fields.map(f => f.name);
-    lastRows = res.toArray().map(r => lastCols.map(c => r[c]));
+    lastCols = response.schema.fields.map((field) => field.name);
+    lastRows = response.toArray().map((row) => lastCols.map((column) => row[column]));
 
     renderTable(lastCols, lastRows, elapsed);
-  } catch (e) {
-    result.innerHTML = `<div class="ex-error">${e.message}</div>`;
+  } catch (error) {
+    result.innerHTML = `<div class="ex-error">${error.message}</div>`;
   } finally {
     btnRun.disabled = false;
   }
 }
 
-// ── RENDERIZAR TABELA ───────────────────────────────────────
-function renderTable(cols, rows, elapsed) {
+function renderTable(columns, rows, elapsed) {
   if (!rows.length) {
     result.innerHTML = `<div class="ex-placeholder">Nenhum resultado.</div>`;
     return;
   }
 
-  const MAX_DISPLAY = 500;
-  const display = rows.slice(0, MAX_DISPLAY);
+  const maxDisplay = 500;
+  const displayRows = rows.slice(0, maxDisplay);
 
-  const thead = `<thead><tr>${cols.map(c => `<th>${c}</th>`).join("")}</tr></thead>`;
-  const tbody = `<tbody>${display.map(row =>
-    `<tr>${row.map(v => {
-      const s = v == null ? "" : String(v);
-      return `<td title="${s.replace(/"/g, "&quot;")}">${s.length > 60 ? s.slice(0,60)+"…" : s}</td>`;
-    }).join("")}</tr>`
-  ).join("")}</tbody>`;
+  const thead = `<thead><tr>${columns.map((column) => `<th>${column}</th>`).join("")}</tr></thead>`;
+  const tbody = `<tbody>${displayRows
+    .map(
+      (row) =>
+        `<tr>${row
+          .map((value) => {
+            const text = value == null ? "" : String(value);
+            return `<td title="${text.replace(/"/g, "&quot;")}">${text.length > 60 ? `${text.slice(0, 60)}...` : text}</td>`;
+          })
+          .join("")}</tr>`,
+    )
+    .join("")}</tbody>`;
 
   result.innerHTML = `<div class="ex-table-wrap"><table class="ex-table">${thead}${tbody}</table></div>`;
-
-  rowcount.textContent = `${rows.length.toLocaleString("pt-BR")} linhas${rows.length > MAX_DISPLAY ? ` (exibindo ${MAX_DISPLAY})` : ""}`;
+  rowcount.textContent = `${rows.length.toLocaleString("pt-BR")} linhas${rows.length > maxDisplay ? ` (exibindo ${maxDisplay})` : ""}`;
   timeEl.textContent = `${elapsed}s`;
   foot.style.display = "flex";
 }
 
-// ── EXPORT CSV ──────────────────────────────────────────────
 function exportCSV() {
-  if (!lastRows.length) return;
-  const esc = v => {
-    const s = v == null ? "" : String(v);
-    return s.includes(",") || s.includes('"') || s.includes("\n")
-      ? `"${s.replace(/"/g, '""')}"` : s;
+  if (!lastRows.length || !currentResource) return;
+  const escape = (value) => {
+    const text = value == null ? "" : String(value);
+    return text.includes(",") || text.includes('"') || text.includes("\n")
+      ? `"${text.replace(/"/g, '""')}"`
+      : text;
   };
-  const lines = [lastCols.map(esc).join(","), ...lastRows.map(r => r.map(esc).join(","))];
+  const lines = [lastCols.map(escape).join(","), ...lastRows.map((row) => row.map(escape).join(","))];
   const blob = new Blob(["\uFEFF" + lines.join("\n")], { type: "text/csv;charset=utf-8;" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "riab-export.csv";
-  a.click();
-}
-
-// ── EVENTOS ─────────────────────────────────────────────────
-btnRun.addEventListener("click", () => runQuery(editor.value));
-btnExport.addEventListener("click", exportCSV);
-
-editor.addEventListener("keydown", e => {
-  if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
-    e.preventDefault();
-    runQuery(editor.value);
-  }
-});
-
-// Cruzamentos prontos
-document.querySelectorAll(".cross-chip").forEach(chip => {
-  chip.addEventListener("click", () => {
-    document.querySelectorAll(".cross-chip").forEach(c => c.classList.remove("cross-chip--active"));
-    chip.classList.add("cross-chip--active");
-    editor.value = chip.dataset.query;
-    runQuery(editor.value);
-  });
-});
-
-// Tab no editor
-editor.addEventListener("keydown", e => {
-  if (e.key === "Tab") {
-    e.preventDefault();
-    const s = editor.selectionStart, end = editor.selectionEnd;
-    editor.value = editor.value.substring(0, s) + "  " + editor.value.substring(end);
-    editor.selectionStart = editor.selectionEnd = s + 2;
-  }
-});
-
-initDuckDB();
-</script>
-
-<script define:vars={{ schemaContext, table }}>
-// ── LINGUAGEM NATURAL → SQL ──────────────────────────────────
-const nlBody   = document.getElementById("nl-body");
-const nlToggle = document.getElementById("nl-toggle");
-const nlInput  = document.getElementById("nl-input");
-const btnGen   = document.getElementById("btn-gen");
-const nlHint   = document.getElementById("nl-hint");
-
-if (nlToggle) {
-  nlToggle.addEventListener("click", () => {
-    const open = nlBody.style.display !== "none";
-    nlBody.style.display = open ? "none" : "flex";
-    nlToggle.textContent = open ? "▾" : "▴";
-  });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = `${currentResource.table}.csv`;
+  link.click();
 }
 
 const LS_KEY = "riab_anthropic_key";
@@ -251,9 +328,8 @@ function getApiKey() {
   let key = sessionStorage.getItem(LS_KEY);
   if (!key) {
     key = prompt(
-      "Para gerar SQL por linguagem natural, informe sua chave da API Anthropic (anthropic.com).\n" +
-      "A chave sera usada diretamente no seu navegador e fica salva apenas nesta sessao.",
-      ""
+      "Para gerar SQL por linguagem natural, informe sua chave da API Anthropic.\nA chave sera usada diretamente no navegador e salva apenas nesta sessao.",
+      "",
     );
     if (key) sessionStorage.setItem(LS_KEY, key.trim());
   }
@@ -262,7 +338,7 @@ function getApiKey() {
 
 async function generateSQL() {
   const question = nlInput?.value?.trim();
-  if (!question) return;
+  if (!question || !currentResource) return;
 
   const apiKey = getApiKey();
   if (!apiKey) return;
@@ -273,18 +349,18 @@ async function generateSQL() {
   const systemPrompt = `Voce e um assistente especializado em gerar queries SQL para DuckDB.
 O usuario esta explorando dados audiovisuais.
 
-${schemaContext}
+${currentResource.schemaContext ?? ""}
 
 REGRAS OBRIGATORIAS:
-1. Responda APENAS com o SQL — sem explicacoes, sem markdown, sem blocos de codigo
-2. Use os nomes exatos das colunas listados acima (snake_case)
-3. Para referencias a tabela, use sempre o nome curto: ${table}
+1. Responda APENAS com o SQL - sem explicacoes, sem markdown, sem blocos de codigo
+2. Use os nomes exatos das colunas listados acima
+3. Para referencias a tabela, use sempre o nome curto: ${currentResource.table}
 4. Sempre inclua LIMIT 200 a menos que seja uma agregacao total
 5. Para filtros de texto, prefira ILIKE para busca case-insensitive
 6. Nunca use funcoes nao suportadas pelo DuckDB`;
 
   try {
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
         "x-api-key": apiKey,
@@ -300,50 +376,79 @@ REGRAS OBRIGATORIAS:
       }),
     });
 
-    if (res.status === 401) {
+    if (response.status === 401) {
       sessionStorage.removeItem(LS_KEY);
-      nlHint.textContent = "Chave invalida. Clique em Gerar SQL para tentar novamente.";
+      nlHint.textContent = "Chave invalida. Tente novamente.";
       return;
     }
 
-    if (!res.ok) {
-      nlHint.textContent = `Erro ${res.status}. Tente novamente.`;
+    if (!response.ok) {
+      nlHint.textContent = `Erro ${response.status}.`;
       return;
     }
 
-    const data = await res.json();
-    const sql = data.content?.[0]?.text?.trim() ?? "";
-
-    if (sql) {
-      // injeta no editor e executa
-      const editor = document.getElementById("ex-editor");
-      if (editor) {
-        editor.value = sql;
-        editor.dispatchEvent(new Event("input"));
-        document.getElementById("btn-run")?.click();
-      }
-      nlHint.textContent = "SQL gerado ✓";
-    } else {
-      nlHint.textContent = "Nao foi possivel gerar SQL. Reformule a pergunta.";
+    const payload = await response.json();
+    const sql = payload.content?.[0]?.text?.trim() ?? "";
+    if (!sql) {
+      nlHint.textContent = "Nao foi possivel gerar SQL.";
+      return;
     }
-  } catch (e) {
-    nlHint.textContent = "Erro de conexao: " + e.message;
+    editor.value = sql;
+    nlHint.textContent = "SQL gerado.";
+    runQuery(editor.value);
+  } catch (error) {
+    nlHint.textContent = "Erro de conexao: " + error.message;
   } finally {
     btnGen.disabled = false;
   }
 }
 
-if (btnGen) {
-  btnGen.addEventListener("click", generateSQL);
-}
-if (nlInput) {
-  nlInput.addEventListener("keydown", (e) => {
-    if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
-      e.preventDefault();
-      generateSQL();
-    }
+btnRun?.addEventListener("click", () => runQuery(editor.value));
+btnExport?.addEventListener("click", exportCSV);
+btnGen?.addEventListener("click", generateSQL);
+
+editor?.addEventListener("keydown", (event) => {
+  if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
+    event.preventDefault();
+    runQuery(editor.value);
+  }
+  if (event.key === "Tab") {
+    event.preventDefault();
+    const start = editor.selectionStart;
+    const end = editor.selectionEnd;
+    editor.value = editor.value.substring(0, start) + "  " + editor.value.substring(end);
+    editor.selectionStart = editor.selectionEnd = start + 2;
+  }
+});
+
+nlInput?.addEventListener("keydown", (event) => {
+  if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
+    event.preventDefault();
+    generateSQL();
+  }
+});
+
+nlToggle?.addEventListener("click", () => {
+  const open = nlBody.style.display !== "none";
+  nlBody.style.display = open ? "none" : "flex";
+  nlToggle.textContent = open ? "▾" : "▴";
+});
+
+resourceButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    setCurrentResource(button.dataset.table, { replaceQuery: true });
   });
-}
+});
+
+window.addEventListener("riab:set-table", (event) => {
+  const table = event.detail?.table;
+  if (table) setCurrentResource(table, { replaceQuery: true, run: false });
+});
+
+renderCrosses();
+syncResourceButtons();
+notifyResourceChange();
+initDuckDB();
 </script>
 
 <style>
@@ -354,11 +459,58 @@ if (nlInput) {
   margin-bottom: 24px;
 }
 
-/* linguagem natural */
+.explorer__resources {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  flex-wrap: wrap;
+}
+
+.ex-resources__label {
+  font-size: 9px;
+  color: var(--dim);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.ex-resources__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ex-resource-chip {
+  font-family: var(--font-m);
+  font-size: 10px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border2);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all .15s;
+}
+
+.ex-resource-chip:hover {
+  color: var(--text);
+  border-color: var(--br);
+}
+
+.ex-resource-chip--active {
+  color: var(--bg);
+  background: var(--br);
+  border-color: var(--br);
+}
+
 .explorer__nl {
   border-bottom: 1px solid var(--border);
   background: var(--surface);
 }
+
 .nl-header {
   display: flex;
   justify-content: space-between;
@@ -366,12 +518,14 @@ if (nlInput) {
   padding: 8px 14px;
   cursor: pointer;
 }
+
 .nl-label {
   font-size: 10px;
   font-family: var(--font-m);
   color: var(--br);
   letter-spacing: .06em;
 }
+
 .nl-toggle {
   background: none;
   border: none;
@@ -381,11 +535,13 @@ if (nlInput) {
   padding: 0 2px;
   line-height: 1;
 }
+
 .nl-body {
   flex-direction: column;
   gap: 8px;
   padding: 0 14px 12px;
 }
+
 .nl-input {
   width: 100%;
   font-family: var(--font-s, sans-serif);
@@ -400,28 +556,36 @@ if (nlInput) {
   resize: vertical;
   min-height: 52px;
 }
-.nl-input:focus { border-color: var(--br); }
+
+.nl-input:focus {
+  border-color: var(--br);
+}
+
 .nl-actions {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 8px;
 }
+
 .nl-hint {
   font-size: 9px;
   color: var(--dim);
   font-family: var(--font-m);
   flex: 1;
 }
+
 .nl-gen-btn {
   background: transparent;
   color: var(--br);
   border-color: var(--br);
   font-size: 10px;
 }
-.nl-gen-btn:not(:disabled):hover { background: rgba(0,200,100,.1); }
 
-/* toolbar */
+.nl-gen-btn:not(:disabled):hover {
+  background: rgba(0, 200, 100, .1);
+}
+
 .explorer__toolbar {
   display: flex;
   justify-content: space-between;
@@ -432,6 +596,7 @@ if (nlInput) {
   gap: 12px;
   flex-wrap: wrap;
 }
+
 .explorer__status {
   display: flex;
   align-items: center;
@@ -439,17 +604,37 @@ if (nlInput) {
   font-size: 10px;
   color: var(--muted);
 }
+
 .ex-dot {
-  width: 7px; height: 7px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   flex-shrink: 0;
 }
-.ex-dot--loading { background: var(--muted); animation: pulse 1s infinite; }
-.ex-dot--ok      { background: var(--status-ativo); }
-.ex-dot--err     { background: var(--uk); }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
 
-.explorer__actions { display: flex; gap: 6px; }
+.ex-dot--loading {
+  background: var(--muted);
+  animation: pulse 1s infinite;
+}
+
+.ex-dot--ok {
+  background: var(--status-ativo);
+}
+
+.ex-dot--err {
+  background: var(--uk);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .3; }
+}
+
+.explorer__actions {
+  display: flex;
+  gap: 6px;
+}
+
 .ex-btn {
   font-family: var(--font-m);
   font-size: 10px;
@@ -462,16 +647,28 @@ if (nlInput) {
   transition: all .15s;
   letter-spacing: .03em;
 }
-.ex-btn:disabled { opacity: .35; cursor: not-allowed; }
-.ex-btn:not(:disabled):hover { background: #00e589; }
+
+.ex-btn:disabled {
+  opacity: .35;
+  cursor: not-allowed;
+}
+
+.ex-btn:not(:disabled):hover {
+  background: #00e589;
+}
+
 .ex-btn--outline {
   background: transparent;
   color: var(--muted);
   border-color: var(--border2);
 }
-.ex-btn--outline:not(:disabled):hover { color: var(--text); border-color: var(--br); background: transparent; }
 
-/* cruzamentos */
+.ex-btn--outline:not(:disabled):hover {
+  color: var(--text);
+  border-color: var(--br);
+  background: transparent;
+}
+
 .explorer__crosses {
   display: flex;
   align-items: center;
@@ -481,6 +678,7 @@ if (nlInput) {
   background: var(--bg);
   border-bottom: 1px solid var(--border);
 }
+
 .ex-crosses-label {
   font-size: 9px;
   color: var(--dim);
@@ -488,6 +686,13 @@ if (nlInput) {
   text-transform: uppercase;
   white-space: nowrap;
 }
+
+.ex-crosses-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
 .cross-chip {
   font-family: var(--font-m);
   font-size: 9px;
@@ -499,14 +704,23 @@ if (nlInput) {
   cursor: pointer;
   transition: all .15s;
 }
-.cross-chip:hover { color: var(--text); border-color: var(--fr); }
-.cross-chip--active { color: var(--fr); border-color: var(--fr); background: rgba(72,120,232,.08); }
 
-/* editor */
+.cross-chip:hover {
+  color: var(--text);
+  border-color: var(--fr);
+}
+
+.cross-chip--active {
+  color: var(--fr);
+  border-color: var(--fr);
+  background: rgba(72, 120, 232, .08);
+}
+
 .explorer__editor-wrap {
   background: var(--surface2);
   border-bottom: 1px solid var(--border);
 }
+
 .explorer__editor {
   width: 100%;
   font-family: var(--font-m);
@@ -521,22 +735,34 @@ if (nlInput) {
   min-height: 110px;
 }
 
-/* resultado */
 .explorer__result {
   min-height: 120px;
   max-height: 440px;
   overflow: auto;
   background: var(--bg);
 }
-.explorer__result::-webkit-scrollbar { width: 4px; height: 4px; }
-.explorer__result::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+.explorer__result::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.explorer__result::-webkit-scrollbar-thumb {
+  background: var(--border2);
+  border-radius: 2px;
+}
+
 .ex-placeholder {
   padding: 40px 20px;
   text-align: center;
   font-size: 11px;
   color: var(--dim);
 }
-.ex-loading { color: var(--muted); }
+
+.ex-loading {
+  color: var(--muted);
+}
+
 .ex-error {
   padding: 16px 20px;
   font-size: 11px;
@@ -544,12 +770,17 @@ if (nlInput) {
   white-space: pre-wrap;
   font-family: var(--font-m);
 }
-.ex-table-wrap { overflow-x: auto; }
+
+.ex-table-wrap {
+  overflow-x: auto;
+}
+
 .ex-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 11px;
 }
+
 .ex-table th {
   position: sticky;
   top: 0;
@@ -563,8 +794,8 @@ if (nlInput) {
   color: var(--muted);
   border-bottom: 1px solid var(--border2);
   white-space: nowrap;
-  cursor: default;
 }
+
 .ex-table td {
   padding: 6px 12px;
   border-bottom: 1px solid var(--border);
@@ -574,9 +805,11 @@ if (nlInput) {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.ex-table tr:hover td { background: var(--surface); }
 
-/* rodapé */
+.ex-table tr:hover td {
+  background: var(--surface);
+}
+
 .explorer__foot {
   display: flex;
   justify-content: space-between;

@@ -531,10 +531,6 @@ def parse_embrafilme_pdf(row: pd.Series) -> list[dict[str, object]]:
                     "unidade_original": unit,
                     "mes": mes,
                     "mes_nome": mes_nome,
-                    "fonte_url": row["url_arquivo"],
-                    "hash_arquivo": row.get("hash_arquivo"),
-                    "titulo_publicacao": title,
-                    "data_coleta": SNAPSHOT_DATE,
                 }
             )
     return records

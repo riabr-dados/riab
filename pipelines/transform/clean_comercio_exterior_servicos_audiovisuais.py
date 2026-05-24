@@ -177,7 +177,7 @@ def coerce_trade_values(values: list[float], entry_text: str) -> tuple[float, fl
     raise ValueError(f"Linha com padrao numerico inesperado: {entry_text}")
 
 
-def parse_year_block(year: int, block: str, source: dict[str, object]) -> tuple[list[dict[str, object]], dict[str, object]]:
+def parse_year_block(year: int, block: str) -> tuple[list[dict[str, object]], dict[str, object]]:
     lines = [clean_cell(line) for line in block.splitlines()]
     records: list[dict[str, object]] = []
     current_group_parts: list[str] = []
@@ -200,14 +200,6 @@ def parse_year_block(year: int, block: str, source: dict[str, object]) -> tuple[
                 "valor_adquirido_usd_nominal": acquired,
                 "saldo_usd_nominal": saldo,
                 "unidade_original": "USD nominal",
-                "fonte_tabela": "Anexo - Dados Primarios, Total e por Servico",
-                "status_serie": "oficial_ancine_reconstruida_pdf_2014_2019",
-                "nota_metodologica": (
-                    "Totais anuais publicados pela ANCINE/SRG no estudo Comercio Exterior "
-                    "de Servicos Audiovisuais, ano-base 2019, com base em registros "
-                    "SISCOSERV e NBS."
-                ),
-                **source,
             }
             i += 1
             continue
@@ -253,13 +245,6 @@ def parse_year_block(year: int, block: str, source: dict[str, object]) -> tuple[
                 "valor_adquirido_usd_nominal": acquired,
                 "saldo_usd_nominal": saldo,
                 "unidade_original": "USD nominal",
-                "fonte_tabela": "Anexo - Dados Primarios, Total e por Servico",
-                "status_serie": "oficial_ancine_reconstruida_pdf_2014_2019",
-                "nota_metodologica": (
-                    "Serie por servico NBS transcrita do Anexo do estudo ANCINE/SRG "
-                    "Comercio Exterior de Servicos Audiovisuais, ano-base 2019."
-                ),
-                **source,
             }
         )
         current_group_parts = []
@@ -270,7 +255,7 @@ def parse_year_block(year: int, block: str, source: dict[str, object]) -> tuple[
     return records, total_record
 
 
-def build_tables(source: dict[str, object]) -> tuple[pd.DataFrame, pd.DataFrame]:
+def build_tables() -> tuple[pd.DataFrame, pd.DataFrame]:
     path = choose_source_pdf()
     text = "\n".join(
         (page.extract_text() or "")
@@ -282,7 +267,7 @@ def build_tables(source: dict[str, object]) -> tuple[pd.DataFrame, pd.DataFrame]
     for year in sorted(blocks):
         if year < 2014 or year > 2019:
             continue
-        records, total = parse_year_block(year, blocks[year], source)
+        records, total = parse_year_block(year, blocks[year])
         service_rows.extend(records)
         total_rows.append(total)
 
@@ -338,8 +323,7 @@ def update_source_table() -> None:
 
 
 def main() -> int:
-    source = source_metadata()
-    service, total = build_tables(source)
+    service, total = build_tables()
     write_table(service, "comercio_exterior_servicos_audiovisuais_servico_ano")
     write_table(total, "comercio_exterior_servicos_audiovisuais_total_ano")
     update_source_table()

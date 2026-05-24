@@ -63,18 +63,6 @@ columns:
     type: string
     nullable: true
     description: "Nome do mes original"
-  - name: fonte_url
-    type: string
-    description: "URL oficial do PDF"
-  - name: hash_arquivo
-    type: string
-    description: "SHA-256 do arquivo bruto"
-  - name: titulo_publicacao
-    type: string
-    description: "Titulo da publicacao no OCA"
-  - name: data_coleta
-    type: date
-    description: "Data do snapshot RIDAB"
 
 notes:
   - "A renda historica mantem a unidade monetaria nominal informada nos PDFs; nao foi convertida para reais atuais."

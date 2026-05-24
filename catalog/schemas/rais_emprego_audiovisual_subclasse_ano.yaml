@@ -25,25 +25,3 @@ columns:
   - name: empregos_formais_ativos_31_12
     type: int64
     description: "Empregos formais ativos em 31 de dezembro"
-  - name: fonte_tabela
-    type: string
-    description: "Elemento da publicacao de origem"
-  - name: status_serie
-    type: string
-    description: "Status de reconstrucao da serie"
-  - name: nota_metodologica
-    type: string
-    description: "Resumo do escopo metodologico aplicado"
-  - name: fonte_arquivo
-    type: string
-    description: "Arquivo oficial usado como fonte"
-  - name: fonte_url
-    type: string
-    description: "URL oficial do arquivo fonte"
-  - name: fonte_pagina
-    type: string
-    description: "Pagina oficial onde a publicacao foi encontrada"
-  - name: hash_fonte
-    type: string
-    nullable: true
-    description: "SHA-256 do PDF fonte no snapshot bruto"

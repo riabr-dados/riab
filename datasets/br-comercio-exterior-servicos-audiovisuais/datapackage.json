@@ -54,8 +54,8 @@
       "format": "csv",
       "mediatype": "text/csv",
       "encoding": "utf-8",
-      "bytes": 3621,
-      "hash": "sha256:491496eb8a4cd112d2a235899e8b3484a0592ad39f8e675925389e8b633648eb",
+      "bytes": 439,
+      "hash": "sha256:c390c79a834cba827a9f6709da48c4e0b10521687f9dffe8a763f1638672a26d",
       "schema": "../../catalog/schemas/comercio_exterior_servicos_audiovisuais_total_ano.yaml"
     },
     {
@@ -64,8 +64,8 @@
       "format": "csv",
       "mediatype": "text/csv",
       "encoding": "utf-8",
-      "bytes": 217829,
-      "hash": "sha256:6ce0a464bbc93bbfd5019efbb83ea4637b85f76ce7921feafe0731f0f1a42e92",
+      "bytes": 50353,
+      "hash": "sha256:f26521ec6cd9e3ea3a347f05c07681db0962d0f555c0fdeb7b998a707ea2e0df",
       "schema": "../../catalog/schemas/comercio_exterior_servicos_audiovisuais_servico_ano.yaml"
     }
   ],

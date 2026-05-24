@@ -54,8 +54,8 @@
       "format": "csv",
       "mediatype": "text/csv",
       "encoding": "utf-8",
-      "bytes": 4501,
-      "hash": "sha256:fd7e231a7b74600c732e47209ebd7e6584b9baa9956ee4e0d55a1ca3bf519621",
+      "bytes": 159,
+      "hash": "sha256:833da35b0bbdda01f608f80be04c7a74502f1546c8650d7f39c0e9b8ab187c3e",
       "schema": "../../catalog/schemas/rais_emprego_audiovisual_total_ano.yaml"
     },
     {
@@ -64,8 +64,8 @@
       "format": "csv",
       "mediatype": "text/csv",
       "encoding": "utf-8",
-      "bytes": 101262,
-      "hash": "sha256:092fc90d9d4c9bf448a0bda982bc858b4698327215e70293490dd9a4a359eae9",
+      "bytes": 23410,
+      "hash": "sha256:065486ab2220dcda1341d0bd6c746e97b7077119064ffb5daca51cda2170d718",
       "schema": "../../catalog/schemas/rais_emprego_audiovisual_subclasse_ano.yaml"
     }
   ],

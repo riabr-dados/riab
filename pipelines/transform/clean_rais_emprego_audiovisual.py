@@ -174,7 +174,7 @@ def source_metadata() -> dict[str, object]:
     return metadata
 
 
-def build_subclasse_table(source: dict[str, object]) -> pd.DataFrame:
+def build_subclasse_table() -> pd.DataFrame:
     rows = []
     for item in SERIES:
         for year, value in zip(YEARS, item["valores"], strict=True):
@@ -186,14 +186,6 @@ def build_subclasse_table(source: dict[str, object]) -> pd.DataFrame:
                     "classe": item["classe"],
                     "subclasse": item["subclasse"],
                     "empregos_formais_ativos_31_12": value,
-                    "fonte_tabela": "Apendice 2",
-                    "status_serie": "oficial_ancine_reconstruida_pdf_2010_2019",
-                    "nota_metodologica": (
-                        "Serie transcrita do Apendice 2 do estudo ANCINE ano-base 2019. "
-                        "Registra empregos formais ativos em 31/12 por subclasse CNAE, "
-                        "a partir da metodologia ANCINE aplicada sobre a RAIS."
-                    ),
-                    **source,
                 }
             )
     df = pd.DataFrame(rows)
@@ -201,20 +193,13 @@ def build_subclasse_table(source: dict[str, object]) -> pd.DataFrame:
     return df
 
 
-def build_total_table(source: dict[str, object]) -> pd.DataFrame:
+def build_total_table() -> pd.DataFrame:
     rows = []
     for year in YEARS:
         rows.append(
             {
                 "ano": year,
                 "empregos_formais_ativos_31_12": TOTALS[year],
-                "fonte_tabela": "Apendice 2",
-                "status_serie": "oficial_ancine_reconstruida_pdf_2010_2019",
-                "nota_metodologica": (
-                    "Total do setor audiovisual publicado pela ANCINE no Apendice 2 do estudo "
-                    "Emprego no Setor Audiovisual, ano-base 2019."
-                ),
-                **source,
             }
         )
     return pd.DataFrame(rows)
@@ -257,9 +242,8 @@ def update_source_table() -> None:
 
 
 def main() -> int:
-    source = source_metadata()
-    subclasse = build_subclasse_table(source)
-    total = build_total_table(source)
+    subclasse = build_subclasse_table()
+    total = build_total_table()
     write_table(subclasse, "rais_emprego_audiovisual_subclasse_ano")
     write_table(total, "rais_emprego_audiovisual_total_ano")
     update_source_table()

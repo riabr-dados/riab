@@ -54,8 +54,8 @@
       "format": "csv",
       "mediatype": "text/csv",
       "encoding": "utf-8",
-      "bytes": 10389,
-      "hash": "sha256:52b3ce3504a37680ae8c4afe50bc58cddae4d1ec994f5431114a85dd2be425e2",
+      "bytes": 661,
+      "hash": "sha256:3359464c238d2f4e8956f6e27726b7b253613cf6b4a30565e3210da3ac99dd47",
       "schema": "../../catalog/schemas/diversidade_audiovisual_emprego_sexo_ano.yaml"
     },
     {
@@ -64,8 +64,8 @@
       "format": "csv",
       "mediatype": "text/csv",
       "encoding": "utf-8",
-      "bytes": 31634,
-      "hash": "sha256:5e38dd7561c2f6479eb484cac88933e5dfdf0bdcf50699ca7193cbbf02f048e7",
+      "bytes": 1402,
+      "hash": "sha256:a1e3cef185ecfe5be9bf512dfd22ab0c8f2d41b61f8f6ee117358c597e2d1153",
       "schema": "../../catalog/schemas/diversidade_audiovisual_emprego_raca_ano.yaml"
     }
   ],
