@@ -1,0 +1,26 @@
+table: comex_bens_audiovisuais_fontes
+description: "Inventario da fonte MDIC/Comex Stat para futura extracao de bens audiovisuais por NCM."
+source_raw: br-comex-bens-audiovisuais
+columns:
+  - name: dataset_slug
+    type: string
+    description: "Dataset RIDAB ao qual a fonte pertence"
+  - name: titulo
+    type: string
+    description: "Titulo da fonte oficial"
+  - name: ano_referencia
+    type: string
+    nullable: true
+    description: "Periodo coberto pela fonte"
+  - name: url_arquivo
+    type: string
+    description: "URL oficial da fonte"
+  - name: pagina_origem
+    type: string
+    description: "Pagina de origem"
+  - name: status_extracao
+    type: string
+    description: "Status da transformacao factual"
+  - name: observacao_metodologica
+    type: string
+    description: "Nota sobre o escopo desta tabela de fontes"

@@ -52,6 +52,20 @@ sources:
     data_portal: https://sidra.ibge.gov.br/
     license: dados-abertos-gov-br
 
+  - id: mte
+    name: "MTE/PDET - Ministerio do Trabalho e Emprego"
+    country: BR
+    url: https://www.gov.br/trabalho-e-emprego/
+    data_portal: https://pdet.mte.gov.br/microdados-rais-e-caged
+    license: dados-abertos-gov-br
+
+  - id: mdic
+    name: "MDIC - Ministerio do Desenvolvimento, Industria, Comercio e Servicos"
+    country: BR
+    url: https://www.gov.br/mdic/
+    data_portal: https://www.gov.br/mdic/pt-br/assuntos/comercio-exterior/estatisticas
+    license: dados-abertos-gov-br
+
   - id: riab
     name: "RIDAB - Tabelas derivadas"
     country: BR

@@ -1,0 +1,31 @@
+table: rais_emprego_audiovisual_fontes
+description: "Inventario das fontes OCA usadas como referencia para futura agregacao RAIS do audiovisual."
+source_raw: br-rais-emprego-audiovisual
+columns:
+  - name: dataset_slug
+    type: string
+    description: "Dataset RIDAB ao qual a fonte pertence"
+  - name: titulo
+    type: string
+    description: "Titulo da publicacao oficial"
+  - name: ano_referencia
+    type: string
+    nullable: true
+    description: "Ano ou periodo de referencia"
+  - name: url_arquivo
+    type: string
+    description: "URL oficial do arquivo"
+  - name: local_path
+    type: string
+    nullable: true
+    description: "Caminho local do snapshot bruto"
+  - name: hash_arquivo
+    type: string
+    nullable: true
+    description: "SHA-256 do arquivo bruto"
+  - name: status_extracao
+    type: string
+    description: "Status da transformacao factual"
+  - name: observacao_metodologica
+    type: string
+    description: "Nota sobre o escopo desta tabela de fontes"

@@ -162,6 +162,59 @@ datasets:
     related:
       - ancine-fsa-projetos
 
+  - slug: ancine-condecine-arrecadacao
+    title: "CONDECINE - Arrecadacao"
+    description: >
+      Serie consolidada da arrecadacao da CONDECINE publicada pelo OCA/ANCINE.
+      Une a serie anual 2007-2025 e as planilhas mensais disponiveis para 2010-2025,
+      preservando tipo de CONDECINE, arquivo de origem, URL oficial e hash.
+    source_id: ancine
+    status: ativo
+    coverage: "2007-2025"
+    tags: [tributacao, condecine, arrecadacao, oca, brasil, ancine]
+    raw:
+      path: ancine-condecine-arrecadacao/
+      format: csv,xlsx,pdf
+      files: 21
+      size_bytes: 0
+    cleaned:
+      tables:
+        - condecine_arrecadacao
+      notes: >
+        Transformacao gerada a partir dos CSVs oficiais do OCA Dados Financeiros.
+        Valores reais deflacionados permanecem nulos ate a ligacao com deflator
+        metodologico especifico para esta serie.
+    related:
+      - ibge-deflator-ipca
+      - ancine-renuncia-fiscal
+
+  - slug: ancine-fomento-fluxos-financeiros
+    title: "Fomento - Fluxos Financeiros"
+    description: >
+      Tabela longa de fluxos financeiros de fomento extraidos das publicacoes
+      OCA: valores captados, recolhidos, liberados, execucao FSA, editais,
+      programas, premios, Ibermedia e coproducao internacional. Mantem a
+      granularidade original de cada fonte e identifica moeda, arquivo e hash.
+    source_id: ancine
+    status: ativo
+    coverage: "2002-2024"
+    tags: [fomento, fsa, renuncia-fiscal, recursos-publicos, oca, brasil, ancine]
+    raw:
+      path: ancine-fomento-fluxos-financeiros/
+      format: csv,xlsx,pdf
+      files: 57
+      size_bytes: 0
+    cleaned:
+      tables:
+        - fomento_fluxos_financeiros
+      notes: >
+        Parser inicial tabular. Valores em USD, como Ibermedia, ficam em
+        valor_original/moeda_original e nao sao preenchidos como BRL nominal.
+    related:
+      - ancine-fsa-projetos
+      - ancine-renuncia-fiscal
+      - ancine-festivais-fsa
+
   - slug: ancine-agentes-economicos
     title: "Agentes Economicos"
     description: >
@@ -260,6 +313,157 @@ datasets:
     related:
       - ancine-atas-fsa
       - ancine-fsa-projetos
+
+  - slug: br-pib-audiovisual
+    title: "PIB Audiovisual - Fontes OCA"
+    description: >
+      Inventario das publicacoes OCA sobre Valor Adicionado pelo Setor
+      Audiovisual, base para consolidar a serie de PIB/valor adicionado por
+      atividade economica. A tabela atual registra as fontes oficiais baixadas
+      e seus hashes; a tabela factual sera publicada apos extracao tabular
+      verificavel dos estudos e/ou SIDRA/PAS.
+    source_id: ancine
+    status: intermitente
+    coverage: "2013-2019"
+    tags: [pib, valor-adicionado, economia, oca, brasil, ancine, ibge]
+    raw:
+      path: br-pib-audiovisual/
+      format: pdf
+      files: 7
+      size_bytes: 0
+    cleaned:
+      tables:
+        - pib_audiovisual_fontes
+      notes: >
+        Inventario de fontes oficiais. Nao substitui a futura tabela factual
+        pib_audiovisual_atividade_ano.
+    related:
+      - ibge-deflator-ipca
+
+  - slug: br-rais-emprego-audiovisual
+    title: "RAIS Emprego Audiovisual - Fontes OCA"
+    description: >
+      Inventario dos estudos OCA sobre emprego no setor audiovisual usados
+      como referencia metodologica para uma futura base agregada RAIS por
+      CNAE, territorio e perfil ocupacional. Os microdados RAIS nao sao
+      redistribuidos nesta etapa.
+    source_id: ancine
+    status: intermitente
+    coverage: "2015-2017"
+    tags: [emprego, rais, trabalho, cnae, oca, brasil]
+    raw:
+      path: br-rais-emprego-audiovisual/
+      format: pdf
+      files: 3
+      size_bytes: 0
+    cleaned:
+      tables:
+        - rais_emprego_audiovisual_fontes
+      notes: >
+        Inventario de fontes oficiais. A tabela factual agregada depende de
+        ingestao e agregacao dos microdados PDET/MTE.
+    related:
+      - br-pib-audiovisual
+
+  - slug: br-comercio-exterior-servicos-audiovisuais
+    title: "Comercio Exterior de Servicos Audiovisuais - Fontes OCA"
+    description: >
+      Inventario dos estudos OCA/SISCOSERV sobre vendas e aquisicoes
+      internacionais de servicos audiovisuais. Mantem os PDFs oficiais,
+      hashes e anos-base para orientar a futura consolidacao por NBS,
+      pais, UF, fluxo e modo de prestacao.
+    source_id: ancine
+    status: intermitente
+    coverage: "2015-2019"
+    tags: [comercio-exterior, servicos, siscoserv, nbs, oca, brasil]
+    raw:
+      path: br-comercio-exterior-servicos-audiovisuais/
+      format: pdf
+      files: 5
+      size_bytes: 0
+    cleaned:
+      tables:
+        - comercio_exterior_servicos_audiovisuais_fontes
+      notes: >
+        Inventario de fontes oficiais. A tabela factual ainda requer extracao
+        tabular dos estudos e compatibilizacao pos-SISCOSERV.
+    related:
+      - br-comex-bens-audiovisuais
+
+  - slug: br-comex-bens-audiovisuais
+    title: "Comex Bens Audiovisuais - Fonte MDIC"
+    description: >
+      Inventario da fonte MDIC/Comex Stat para futura extracao de bens fisicos
+      ligados ao audiovisual por NCM, fluxo, mes, UF e pais. Separado do
+      dataset de servicos para evitar confundir bens, licenciamento e direitos.
+    source_id: mdic
+    status: intermitente
+    coverage: "1997-2026"
+    tags: [comex, comercio-exterior, bens, ncm, mdic, brasil]
+    raw:
+      path: br-comex-bens-audiovisuais/
+      format: html,csv
+      files: 1
+      size_bytes: 0
+    cleaned:
+      tables:
+        - comex_bens_audiovisuais_fontes
+      notes: >
+        Inventario de fonte bruta. A tabela factual depende de filtro NCM
+        versionado e download/agregacao dos microdados Comex Stat.
+    related:
+      - br-comercio-exterior-servicos-audiovisuais
+
+  - slug: br-embrafilme-historico-exibicao
+    title: "Embrafilme - Historico de Exibicao"
+    description: >
+      Serie historica pre-ANCINE extraida de PDFs tabulares do OCA com dados
+      Embrafilme de espectadores, arrecadacao e lugares oferecidos por ano,
+      mes e recortes territoriais quando disponiveis.
+    source_id: ancine
+    status: ativo
+    coverage: "1982-1987"
+    tags: [cinema, exibicao, embrafilme, historico, publico, renda, brasil, ancine]
+    raw:
+      path: br-embrafilme-historico-exibicao/
+      format: pdf
+      files: 13
+      size_bytes: 0
+    cleaned:
+      tables:
+        - embrafilme_exibicao_territorio_ano
+      notes: >
+        PDF text extraction com parser de tabelas por ano. Unidades originais
+        sao preservadas em unidade_original, e valores em milhares sao
+        convertidos para unidades.
+    related:
+      - ancine-bilheteria-consolidada
+      - ancine-bilheteria-agregada-filme-ano
+
+  - slug: ancine-diversidade-audiovisual
+    title: "Diversidade Audiovisual - Fontes OCA"
+    description: >
+      Inventario das publicacoes OCA sobre genero, raca e diversidade em obras
+      e profissionais do audiovisual. A tabela atual preserva os PDFs oficiais,
+      hashes e anos de referencia; a tabela factual sera publicada apos
+      extracao tabular verificavel.
+    source_id: ancine
+    status: intermitente
+    coverage: "2011-2021"
+    tags: [diversidade, genero, raca, obras, profissionais, oca, brasil, ancine]
+    raw:
+      path: ancine-diversidade-audiovisual/
+      format: pdf
+      files: 4
+      size_bytes: 0
+    cleaned:
+      tables:
+        - diversidade_audiovisual_fontes
+      notes: >
+        Inventario de fontes oficiais. Nao substitui a futura tabela factual
+        diversidade_audiovisual_obras_profissionais.
+    related:
+      - ancine-obras-nao-publicitarias
 
   # ── BRASIL / IBGE ──────────────────────────────────────────────────────────
 

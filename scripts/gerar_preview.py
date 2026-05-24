@@ -202,6 +202,48 @@ def extract_all(base="datasets"):
     else:
         previews["ancine-festivais-fsa"] = no_preview("Parquet/CSV tratado ainda nao encontrado. Rode pipelines/transform/clean_atas_fsa.py.")
 
+    cleaned_csv_previews = {
+        "ancine-condecine-arrecadacao": (
+            "condecine_arrecadacao.csv",
+            "Amostra da tabela condecine_arrecadacao consolidada a partir do OCA Dados Financeiros.",
+        ),
+        "ancine-fomento-fluxos-financeiros": (
+            "fomento_fluxos_financeiros.csv",
+            "Amostra da tabela fomento_fluxos_financeiros; layouts heterogeneos preservam fonte_arquivo e titulo_publicacao.",
+        ),
+        "br-pib-audiovisual": (
+            "pib_audiovisual_fontes.csv",
+            "Inventario de fontes OCA para a futura tabela factual de PIB/valor adicionado audiovisual.",
+        ),
+        "br-rais-emprego-audiovisual": (
+            "rais_emprego_audiovisual_fontes.csv",
+            "Inventario de fontes OCA para a futura agregacao RAIS do audiovisual.",
+        ),
+        "br-comercio-exterior-servicos-audiovisuais": (
+            "comercio_exterior_servicos_audiovisuais_fontes.csv",
+            "Inventario de fontes OCA/SISCOSERV para comercio exterior de servicos audiovisuais.",
+        ),
+        "br-comex-bens-audiovisuais": (
+            "comex_bens_audiovisuais_fontes.csv",
+            "Inventario da fonte MDIC/Comex Stat para futura tabela factual de bens audiovisuais por NCM.",
+        ),
+        "br-embrafilme-historico-exibicao": (
+            "embrafilme_exibicao_territorio_ano.csv",
+            "Amostra da tabela Embrafilme extraida de PDFs tabulares do OCA.",
+        ),
+        "ancine-diversidade-audiovisual": (
+            "diversidade_audiovisual_fontes.csv",
+            "Inventario de fontes OCA para futura tabela factual de diversidade audiovisual.",
+        ),
+    }
+    for slug, (filename, note) in cleaned_csv_previews.items():
+        f = os.path.join("pipelines", "output", "cleaned", filename)
+        if os.path.exists(f):
+            cols, data = read_csv(f, enc="utf-8", delim=",")
+            previews[slug] = dataset_entry(cols, data, note=note, filename=filename)
+        else:
+            previews[slug] = no_preview(f"CSV tratado {filename} ainda nao encontrado. Rode pipelines/transform/clean_oca_complementos.py.")
+
     # lumiere-cinemas-europa
     f = os.path.join(snap("lumiere-cinemas-europa"), "lumiere_search.xlsx")
     cols, data = read_xlsx(f)

@@ -16,6 +16,7 @@ SCRIPTS = [
     "pipelines/transform/clean_renuncia.py",
     "pipelines/transform/clean_deflator.py",
     "pipelines/transform/clean_atas_fsa.py",
+    "pipelines/transform/clean_oca_complementos.py",
     "pipelines/transform/clean_lumiere.py",
     "pipelines/transform/clean_incaa.py",
     "pipelines/transform/clean_acau.py",

@@ -1,0 +1,80 @@
+table: embrafilme_exibicao_territorio_ano
+description: >
+  Serie historica de exibicao pre-ANCINE extraida de PDFs tabulares do OCA
+  com dados Embrafilme de publico, renda e lugares oferecidos.
+
+source_raw: br-embrafilme-historico-exibicao
+source_columns_original: >
+  Tabelas em PDF com cabecalhos por ano e linhas de meses ou territorios.
+
+columns:
+  - name: ano
+    type: int64
+    description: "Ano de referencia"
+  - name: territorio_tipo
+    type: string
+    description: "Tipo de recorte territorial ou temporal da linha"
+  - name: territorio_nome
+    type: string
+    description: "Nome do territorio, Brasil quando a tabela e nacional"
+  - name: uf
+    type: string
+    nullable: true
+    description: "UF quando o recorte permite identificar"
+  - name: regiao
+    type: string
+    nullable: true
+    description: "Regiao quando o recorte permite identificar"
+  - name: origem_filme
+    type: string
+    description: "Origem agregada informada pela fonte"
+  - name: publico
+    type: float64
+    nullable: true
+    description: "Publico convertido para unidades"
+  - name: renda_brl_nominal
+    type: float64
+    nullable: true
+    description: "Renda nominal conforme unidade monetaria historica da fonte"
+  - name: lugares_oferecidos
+    type: float64
+    nullable: true
+    description: "Lugares oferecidos convertidos para unidades"
+  - name: fonte_documento
+    type: string
+    description: "PDF oficial de origem"
+  - name: confiabilidade
+    type: string
+    description: "Classificacao da origem do dado"
+  - name: indicador
+    type: string
+    description: "Indicador preenchido na linha"
+  - name: valor
+    type: float64
+    description: "Valor consolidado do indicador"
+  - name: unidade_original
+    type: string
+    description: "Unidade declarada pela fonte"
+  - name: mes
+    type: int64
+    nullable: true
+    description: "Mes quando a linha e mensal"
+  - name: mes_nome
+    type: string
+    nullable: true
+    description: "Nome do mes original"
+  - name: fonte_url
+    type: string
+    description: "URL oficial do PDF"
+  - name: hash_arquivo
+    type: string
+    description: "SHA-256 do arquivo bruto"
+  - name: titulo_publicacao
+    type: string
+    description: "Titulo da publicacao no OCA"
+  - name: data_coleta
+    type: date
+    description: "Data do snapshot RIDAB"
+
+notes:
+  - "A renda historica mantem a unidade monetaria nominal informada nos PDFs; nao foi convertida para reais atuais."

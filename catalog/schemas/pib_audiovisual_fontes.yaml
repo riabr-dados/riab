@@ -1,0 +1,55 @@
+table: pib_audiovisual_fontes
+description: "Inventario das fontes OCA para o futuro dataset factual de PIB/valor adicionado audiovisual."
+source_raw: br-pib-audiovisual
+columns:
+  - name: dataset_slug
+    type: string
+    description: "Dataset RIDAB ao qual a fonte pertence"
+  - name: secao
+    type: string
+    description: "Secao de origem no OCA ou fonte externa"
+  - name: titulo
+    type: string
+    description: "Titulo da publicacao oficial"
+  - name: formato
+    type: string
+    description: "Formato descrito pela pagina de origem"
+  - name: data_publicacao
+    type: string
+    nullable: true
+    description: "Data de publicacao informada"
+  - name: ano_referencia
+    type: string
+    nullable: true
+    description: "Ano ou periodo de referencia"
+  - name: extensao
+    type: string
+    description: "Extensao do arquivo ou tipo de fonte"
+  - name: url_arquivo
+    type: string
+    description: "URL oficial do arquivo ou pagina"
+  - name: pagina_origem
+    type: string
+    description: "Pagina onde a fonte foi inventariada"
+  - name: local_path
+    type: string
+    nullable: true
+    description: "Caminho local do snapshot bruto, quando baixado"
+  - name: hash_arquivo
+    type: string
+    nullable: true
+    description: "SHA-256 do arquivo bruto, quando baixado"
+  - name: tamanho_bytes
+    type: int64
+    nullable: true
+    description: "Tamanho do arquivo bruto"
+  - name: download_status
+    type: string
+    nullable: true
+    description: "Status do download do snapshot"
+  - name: status_extracao
+    type: string
+    description: "Status da transformacao factual"
+  - name: observacao_metodologica
+    type: string
+    description: "Nota sobre o escopo desta tabela de fontes"

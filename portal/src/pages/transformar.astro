@@ -173,9 +173,17 @@ const TABLE_META = [
   { id: 'diretores_obras',          alias: 'd', label: 'Diretores',         color: '#007a3c' },
   { id: 'produtores_obras',         alias: 'p', label: 'Produtores',        color: '#007a3c' },
   { id: 'fomento_fsa',              alias: 'f', label: 'Fomento FSA',       color: '#c8920a' },
+  { id: 'condecine_arrecadacao',    alias: 'cx', label: 'CONDECINE',        color: '#c8920a' },
+  { id: 'fomento_fluxos_financeiros', alias: 'ff', label: 'Fluxos Fomento', color: '#c8920a' },
   { id: 'fsa_atas_festivais',       alias: 'af', label: 'Festivais FSA',    color: '#c8920a' },
   { id: 'fsa_atas_resultados',      alias: 'ar', label: 'Atas FSA',         color: '#c8920a' },
   { id: 'renuncia_fiscal',          alias: 'r', label: 'Renúncia Fiscal',   color: '#1f3bb8' },
+  { id: 'embrafilme_exibicao_territorio_ano', alias: 'em', label: 'Embrafilme', color: '#007a3c' },
+  { id: 'pib_audiovisual_fontes',   alias: 'pb', label: 'Fontes PIB AV',    color: '#5a6f2b' },
+  { id: 'rais_emprego_audiovisual_fontes', alias: 'rs', label: 'Fontes RAIS AV', color: '#5a6f2b' },
+  { id: 'comercio_exterior_servicos_audiovisuais_fontes', alias: 'sv', label: 'Fontes Serviços', color: '#5a6f2b' },
+  { id: 'comex_bens_audiovisuais_fontes', alias: 'cb', label: 'Fonte Comex Bens', color: '#5a6f2b' },
+  { id: 'diversidade_audiovisual_fontes', alias: 'dv', label: 'Fontes Diversidade', color: '#5a6f2b' },
   { id: 'bilheteria_europa',        alias: 'l', label: 'Bilheteria Europa', color: '#1f3bb8' },
 ];
 
@@ -346,6 +354,96 @@ GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 40`;
     },
   },
   {
+    id: 'condecine-arrecadacao',
+    label: 'Arrecadação CONDECINE',
+    desc: 'Série anual e mensal da CONDECINE consolidada a partir do OCA',
+    tables: [
+      { name: 'condecine-arrecadacao', color: '#c8920a' },
+    ],
+    join: null, icon: 'R$',
+    dims: [
+      { label: 'Ano',             col: 'ano' },
+      { label: 'Mês',             col: 'mes' },
+      { label: 'Tipo CONDECINE',  col: 'recorte_nome' },
+      { label: 'Periodicidade',   col: 'periodicidade' },
+    ],
+    metrics: [
+      { label: 'Valor nominal (R$)', expr: 'SUM(valor_brl_nominal)', alias: 'valor_brl' },
+      { label: 'Registros',          expr: 'COUNT(*)',               alias: 'registros' },
+    ],
+    buildSQL: (dim, metric, search) => {
+      const where = buildWhere([
+        `${dim.col} IS NOT NULL`,
+        search ? `CAST(${dim.col} AS VARCHAR) ILIKE '%${esc(search)}%'` : null,
+      ]);
+      return `SELECT ${dim.col} AS dim, ${metric.expr} AS valor
+FROM condecine_arrecadacao
+${where}
+GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 60`;
+    },
+  },
+  {
+    id: 'fluxos-fomento',
+    label: 'Fluxos de fomento',
+    desc: 'Captacao, recolhimento, liberacao, FSA, editais, premios e coproducao',
+    tables: [
+      { name: 'fluxos-fomento', color: '#c8920a' },
+    ],
+    join: null, icon: '$',
+    dims: [
+      { label: 'Ano',           col: 'ano' },
+      { label: 'Tipo de fluxo', col: 'tipo_fluxo' },
+      { label: 'Mecanismo',     col: 'mecanismo' },
+      { label: 'Moeda',         col: 'moeda_original' },
+      { label: 'Fonte',         col: 'titulo_publicacao' },
+    ],
+    metrics: [
+      { label: 'Valor BRL nominal', expr: 'SUM(valor_brl_nominal)', alias: 'valor_brl' },
+      { label: 'Valor original',    expr: 'SUM(valor_original)',    alias: 'valor_original' },
+      { label: 'Registros',         expr: 'COUNT(*)',               alias: 'registros' },
+    ],
+    buildSQL: (dim, metric, search) => {
+      const where = buildWhere([
+        `${dim.col} IS NOT NULL`,
+        search ? `CAST(${dim.col} AS VARCHAR) ILIKE '%${esc(search)}%'` : null,
+      ]);
+      return `SELECT ${dim.col} AS dim, ${metric.expr} AS valor
+FROM fomento_fluxos_financeiros
+${where}
+GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 60`;
+    },
+  },
+  {
+    id: 'embrafilme-historico',
+    label: 'Histórico Embrafilme',
+    desc: 'Público, renda e lugares oferecidos em PDFs históricos do OCA',
+    tables: [
+      { name: 'embrafilme-historico', color: '#007a3c' },
+    ],
+    join: null, icon: '1980',
+    dims: [
+      { label: 'Ano',       col: 'ano' },
+      { label: 'Indicador', col: 'indicador' },
+      { label: 'Território', col: 'territorio_nome' },
+      { label: 'Tipo território', col: 'territorio_tipo' },
+      { label: 'Documento', col: 'titulo_publicacao' },
+    ],
+    metrics: [
+      { label: 'Valor',     expr: 'SUM(valor)', alias: 'valor' },
+      { label: 'Registros', expr: 'COUNT(*)',   alias: 'registros' },
+    ],
+    buildSQL: (dim, metric, search) => {
+      const where = buildWhere([
+        `${dim.col} IS NOT NULL`,
+        search ? `CAST(${dim.col} AS VARCHAR) ILIKE '%${esc(search)}%'` : null,
+      ]);
+      return `SELECT ${dim.col} AS dim, ${metric.expr} AS valor
+FROM embrafilme_exibicao_territorio_ano
+${where}
+GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 60`;
+    },
+  },
+  {
     id: 'obras-renuncia',
     label: 'Obras + renúncia fiscal',
     desc: 'Obras que captaram via Lei do Audiovisual — ligação por título',
@@ -489,9 +587,17 @@ const viewTable  = document.getElementById('view-table');
       produtores_obras:         `${HF}/produtores_obras.parquet`,
       bilheteria_por_filme_ano: `${HF}/bilheteria_por_filme_ano.parquet`,
       fomento_fsa:              `${HF}/fomento_fsa.parquet`,
+      condecine_arrecadacao:    `${HF}/condecine_arrecadacao.parquet`,
+      fomento_fluxos_financeiros: `${HF}/fomento_fluxos_financeiros.parquet`,
       renuncia_fiscal:          `${HF}/renuncia_fiscal.parquet`,
       fsa_atas_festivais:       `${HF}/fsa_atas_festivais.parquet`,
       fsa_atas_resultados:      `${HF}/fsa_atas_resultados.parquet`,
+      embrafilme_exibicao_territorio_ano: `${HF}/embrafilme_exibicao_territorio_ano.parquet`,
+      pib_audiovisual_fontes:   `${HF}/pib_audiovisual_fontes.parquet`,
+      rais_emprego_audiovisual_fontes: `${HF}/rais_emprego_audiovisual_fontes.parquet`,
+      comercio_exterior_servicos_audiovisuais_fontes: `${HF}/comercio_exterior_servicos_audiovisuais_fontes.parquet`,
+      comex_bens_audiovisuais_fontes: `${HF}/comex_bens_audiovisuais_fontes.parquet`,
+      diversidade_audiovisual_fontes: `${HF}/diversidade_audiovisual_fontes.parquet`,
       bilheteria_europa:        `${HF}/bilheteria_europa.parquet`,
     };
     for (const [name, url] of Object.entries(views)) {

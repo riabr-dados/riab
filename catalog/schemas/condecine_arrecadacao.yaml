@@ -1,0 +1,61 @@
+table: condecine_arrecadacao
+description: >
+  Arrecadacao da CONDECINE consolidada a partir das publicacoes OCA/ANCINE,
+  com serie anual 2007-2025 e arquivos mensais disponiveis para 2010-2025.
+
+source_raw: ancine-condecine-arrecadacao
+source_columns_original: >
+  Planilhas CSV do OCA Dados Financeiros com linhas de tipo de CONDECINE e
+  colunas de ano ou mes.
+
+columns:
+  - name: periodicidade
+    type: string
+    description: "Granularidade da linha: ano ou mes"
+  - name: ano
+    type: int64
+    description: "Ano de referencia"
+  - name: mes
+    type: int64
+    nullable: true
+    description: "Mes de referencia, quando periodicidade = mes"
+  - name: data_inicio_periodo
+    type: date
+    description: "Primeiro dia do periodo de referencia"
+  - name: recorte_tipo
+    type: string
+    description: "Tipo de recorte publicado pela fonte"
+  - name: recorte_nome
+    type: string
+    description: "Linha original da planilha, como Condecine-Remessa ou Condecine-Titulos"
+  - name: moeda
+    type: string
+    description: "Moeda original"
+  - name: valor_nominal
+    type: float64
+    description: "Valor nominal na moeda original"
+  - name: valor_brl_nominal
+    type: float64
+    description: "Valor nominal em BRL"
+  - name: valor_brl_real_base_2024
+    type: float64
+    nullable: true
+    description: "Valor deflacionado para base 2024, quando calculado"
+  - name: fonte_arquivo
+    type: string
+    description: "Arquivo oficial usado na extracao"
+  - name: fonte_url
+    type: string
+    description: "URL oficial do arquivo OCA"
+  - name: hash_arquivo
+    type: string
+    description: "SHA-256 do arquivo bruto"
+  - name: titulo_publicacao
+    type: string
+    description: "Titulo da publicacao no OCA"
+  - name: data_coleta
+    type: date
+    description: "Data do snapshot RIDAB"
+
+notes:
+  - "A coluna real base 2024 fica nula nesta primeira publicacao para evitar deflacao automatica sem decisao metodologica documentada."
