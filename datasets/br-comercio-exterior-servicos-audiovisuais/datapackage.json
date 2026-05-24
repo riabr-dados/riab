@@ -1,0 +1,80 @@
+{
+  "$schema": "https://specs.frictionlessdata.io/schemas/data-package.json",
+  "name": "br-comercio-exterior-servicos-audiovisuais",
+  "title": "Comercio Exterior de Servicos Audiovisuais - Metodologia ANCINE",
+  "description": "Serie factual de vendas, aquisicoes e saldo do comercio exterior brasileiro de servicos audiovisuais, por ano e por servico NBS, reconstruida documentalmente a partir da publicacao oficial ANCINE/OCA e limitada ao periodo oficial hoje disponivel.",
+  "version": "2026.05.23",
+  "created": "2026-05-23T00:00:00Z",
+  "homepage": "https://github.com/SEU-USUARIO/dados-audiovisual-br/tree/main/datasets/br-comercio-exterior-servicos-audiovisuais",
+  "licenses": [
+    {
+      "name": "CC-BY-4.0",
+      "title": "Creative Commons Attribution 4.0 International",
+      "path": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ],
+  "sources": [
+    {
+      "title": "ANCINE/OCA - Comercio Exterior de Servicos Audiovisuais, ano-base 2019",
+      "path": "https://www.gov.br/ancine/pt-br/oca/resolveuid/5c8cf11479a5472abe8adc08c2bbd1b2"
+    },
+    {
+      "title": "ANCINE/OCA - Outras publicacoes",
+      "path": "https://www.gov.br/ancine/pt-br/oca/publicacoes-2/outras-publicacoes"
+    }
+  ],
+  "contributors": [
+    {
+      "title": "dados-audiovisual-br",
+      "role": "publisher",
+      "path": "https://github.com/SEU-USUARIO/dados-audiovisual-br"
+    }
+  ],
+  "status": {
+    "value": "descontinuado",
+    "options": [
+      "ativo",
+      "intermitente",
+      "alterado",
+      "offline",
+      "descontinuado"
+    ],
+    "last_checked": "2026-05-23",
+    "notes": "A serie publicada aqui cobre 2014-2019, limite da publicacao oficial ANCINE/OCA localizada e do encerramento do SISCOSERV. Trata-se de reproducao estruturada da serie publicada, nao de reestimacao independente por microdados."
+  },
+  "collection": {
+    "method": "script",
+    "script": "pipelines/transform/clean_comercio_exterior_servicos_audiovisuais.py",
+    "frequency": "ad-hoc"
+  },
+  "resources": [
+    {
+      "name": "comercio-exterior-servicos-audiovisuais-total-ano",
+      "path": "snapshots/2026-05-23/comercio_exterior_servicos_audiovisuais_total_ano.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 3621,
+      "hash": "sha256:491496eb8a4cd112d2a235899e8b3484a0592ad39f8e675925389e8b633648eb",
+      "schema": "../../catalog/schemas/comercio_exterior_servicos_audiovisuais_total_ano.yaml"
+    },
+    {
+      "name": "comercio-exterior-servicos-audiovisuais-servico-ano",
+      "path": "snapshots/2026-05-23/comercio_exterior_servicos_audiovisuais_servico_ano.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 217829,
+      "hash": "sha256:6ce0a464bbc93bbfd5019efbb83ea4637b85f76ce7921feafe0731f0f1a42e92",
+      "schema": "../../catalog/schemas/comercio_exterior_servicos_audiovisuais_servico_ano.yaml"
+    }
+  ],
+  "snapshots": [
+    {
+      "date": "2026-05-23",
+      "path": "snapshots/2026-05-23/",
+      "source_url": "https://www.gov.br/ancine/pt-br/oca/publicacoes-2/outras-publicacoes",
+      "notes": "Snapshot com PDFs oficiais ANCINE/OCA e tabelas factuais oficiais reconstruidas documentalmente do anexo do estudo ano-base 2019."
+    }
+  ]
+}

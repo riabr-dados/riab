@@ -20,7 +20,7 @@ const related = (ds.related ?? [])
   .filter(Boolean);
 
 const tables = (ds.cleaned?.tables ?? []).map((t) => (typeof t === "string" ? t : t.name));
-const primaryTable = tables[0] ?? null;
+const primaryTable = tables.find((t) => !t.endsWith("_fontes")) ?? tables[0] ?? null;
 const hasCleanedCsv = ds.slug === "brasil-no-mundo";
 const rawFolder = (ds.raw?.path ?? `${ds.slug}/`).replace(/^raw\//, "").replace(/\/$/, "");
 

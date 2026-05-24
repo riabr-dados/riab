@@ -1,0 +1,80 @@
+{
+  "$schema": "https://specs.frictionlessdata.io/schemas/data-package.json",
+  "name": "br-rais-emprego-audiovisual",
+  "title": "Emprego no Setor Audiovisual - Metodologia ANCINE",
+  "description": "Serie factual de empregos formais ativos em 31/12 no setor audiovisual brasileiro, por ano e por subclasse CNAE, reconstruida documentalmente a partir da publicacao oficial ANCINE/OCA e limitada ao periodo oficial hoje disponivel.",
+  "version": "2026.05.23",
+  "created": "2026-05-23T00:00:00Z",
+  "homepage": "https://github.com/SEU-USUARIO/dados-audiovisual-br/tree/main/datasets/br-rais-emprego-audiovisual",
+  "licenses": [
+    {
+      "name": "CC-BY-4.0",
+      "title": "Creative Commons Attribution 4.0 International",
+      "path": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ],
+  "sources": [
+    {
+      "title": "ANCINE/OCA - Emprego no Setor Audiovisual, ano-base 2019",
+      "path": "https://www.gov.br/ancine/pt-br/oca/resolveuid/992a10f5cca0463eb9b61541e9ceaba5"
+    },
+    {
+      "title": "ANCINE/OCA - Outras publicacoes",
+      "path": "https://www.gov.br/ancine/pt-br/oca/publicacoes-2/outras-publicacoes"
+    }
+  ],
+  "contributors": [
+    {
+      "title": "dados-audiovisual-br",
+      "role": "publisher",
+      "path": "https://github.com/SEU-USUARIO/dados-audiovisual-br"
+    }
+  ],
+  "status": {
+    "value": "intermitente",
+    "options": [
+      "ativo",
+      "intermitente",
+      "alterado",
+      "offline",
+      "descontinuado"
+    ],
+    "last_checked": "2026-05-23",
+    "notes": "OCA tem historico de instabilidade. A serie publicada aqui cobre somente 2010-2019, periodo que pode ser reconstruido hoje a partir do Apendice 2 do estudo oficial ANCINE/OCA. Trata-se de reproducao estruturada da serie publicada, nao de reestimacao independente por microdados."
+  },
+  "collection": {
+    "method": "script",
+    "script": "pipelines/transform/clean_rais_emprego_audiovisual.py",
+    "frequency": "ad-hoc"
+  },
+  "resources": [
+    {
+      "name": "rais-emprego-audiovisual-total-ano",
+      "path": "snapshots/2026-05-23/rais_emprego_audiovisual_total_ano.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 4501,
+      "hash": "sha256:fd7e231a7b74600c732e47209ebd7e6584b9baa9956ee4e0d55a1ca3bf519621",
+      "schema": "../../catalog/schemas/rais_emprego_audiovisual_total_ano.yaml"
+    },
+    {
+      "name": "rais-emprego-audiovisual-subclasse-ano",
+      "path": "snapshots/2026-05-23/rais_emprego_audiovisual_subclasse_ano.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 101262,
+      "hash": "sha256:092fc90d9d4c9bf448a0bda982bc858b4698327215e70293490dd9a4a359eae9",
+      "schema": "../../catalog/schemas/rais_emprego_audiovisual_subclasse_ano.yaml"
+    }
+  ],
+  "snapshots": [
+    {
+      "date": "2026-05-23",
+      "path": "snapshots/2026-05-23/",
+      "source_url": "https://www.gov.br/ancine/pt-br/oca/publicacoes-2/outras-publicacoes",
+      "notes": "Snapshot com PDFs oficiais ANCINE/OCA e tabelas factuais oficiais reconstruidas documentalmente do Apendice 2 do estudo ano-base 2019."
+    }
+  ]
+}

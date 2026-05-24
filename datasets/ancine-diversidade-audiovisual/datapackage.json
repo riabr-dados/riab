@@ -1,0 +1,80 @@
+{
+  "$schema": "https://specs.frictionlessdata.io/schemas/data-package.json",
+  "name": "ancine-diversidade-audiovisual",
+  "title": "Diversidade Audiovisual - Tabelas Oficiais ANCINE",
+  "description": "Serie factual parcial de diversidade no setor audiovisual brasileiro, atualmente limitada as tabelas anuais de emprego formal por sexo e por raca ou cor reconstruiveis diretamente do estudo oficial ANCINE/OCA 2011-2021.",
+  "version": "2026.05.23",
+  "created": "2026-05-23T00:00:00Z",
+  "homepage": "https://github.com/SEU-USUARIO/dados-audiovisual-br/tree/main/datasets/ancine-diversidade-audiovisual",
+  "licenses": [
+    {
+      "name": "CC-BY-4.0",
+      "title": "Creative Commons Attribution 4.0 International",
+      "path": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ],
+  "sources": [
+    {
+      "title": "ANCINE/OCA - Estudo Genero e Raca no Setor Audiovisual 2011-2021",
+      "path": "https://www.gov.br/ancine/pt-br/oca/resolveuid/7e062995b4ed488fb68616ad39e3e81e"
+    },
+    {
+      "title": "ANCINE/OCA - Outras publicacoes",
+      "path": "https://www.gov.br/ancine/pt-br/oca/publicacoes-2/outras-publicacoes"
+    }
+  ],
+  "contributors": [
+    {
+      "title": "dados-audiovisual-br",
+      "role": "publisher",
+      "path": "https://github.com/SEU-USUARIO/dados-audiovisual-br"
+    }
+  ],
+  "status": {
+    "value": "intermitente",
+    "options": [
+      "ativo",
+      "intermitente",
+      "alterado",
+      "offline",
+      "descontinuado"
+    ],
+    "last_checked": "2026-05-23",
+    "notes": "O dataset publicado aqui e parcial: inclui somente as tabelas anuais por sexo e por raca ou cor que podem ser reconstruidas diretamente do PDF oficial. O estudo menciona planilha anexa para detalhamentos adicionais, nao inventariada neste snapshot."
+  },
+  "collection": {
+    "method": "script",
+    "script": "pipelines/transform/clean_diversidade_audiovisual.py",
+    "frequency": "ad-hoc"
+  },
+  "resources": [
+    {
+      "name": "diversidade-audiovisual-emprego-sexo-ano",
+      "path": "snapshots/2026-05-23/diversidade_audiovisual_emprego_sexo_ano.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 10389,
+      "hash": "sha256:52b3ce3504a37680ae8c4afe50bc58cddae4d1ec994f5431114a85dd2be425e2",
+      "schema": "../../catalog/schemas/diversidade_audiovisual_emprego_sexo_ano.yaml"
+    },
+    {
+      "name": "diversidade-audiovisual-emprego-raca-ano",
+      "path": "snapshots/2026-05-23/diversidade_audiovisual_emprego_raca_ano.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 31634,
+      "hash": "sha256:5e38dd7561c2f6479eb484cac88933e5dfdf0bdcf50699ca7193cbbf02f048e7",
+      "schema": "../../catalog/schemas/diversidade_audiovisual_emprego_raca_ano.yaml"
+    }
+  ],
+  "snapshots": [
+    {
+      "date": "2026-05-23",
+      "path": "snapshots/2026-05-23/",
+      "source_url": "https://www.gov.br/ancine/pt-br/oca/publicacoes-2/outras-publicacoes",
+      "notes": "Snapshot com PDFs oficiais ANCINE/OCA e tabelas factuais oficiais reconstruidas documentalmente das Tabelas 1 e 2 do estudo 2011-2021."
+    }
+  ]
+}

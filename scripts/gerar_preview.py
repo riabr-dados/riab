@@ -20,7 +20,7 @@ try:
 except ImportError:
     HAS_XLRD = False
 
-SNAP = "snapshots/2026-05-19"
+PREFERRED_SNAPSHOT = "2026-05-23"
 SAMPLE = 200
 
 def fix(v):
@@ -115,13 +115,30 @@ def dataset_entry(cols, data, note=None, filename=None):
 def no_preview(reason):
     return {"cols": [], "rows": [], "total": 0, "sample": 0, "note": reason, "file": None}
 
+
+def latest_snapshot_dir(base, slug):
+    snapshots_root = os.path.join(base, slug, "snapshots")
+    preferred = os.path.join(snapshots_root, PREFERRED_SNAPSHOT)
+    if os.path.isdir(preferred):
+        return preferred
+    if not os.path.isdir(snapshots_root):
+        return preferred
+    candidates = [
+        name for name in os.listdir(snapshots_root)
+        if os.path.isdir(os.path.join(snapshots_root, name))
+    ]
+    dated = sorted(name for name in candidates if name[:4].isdigit())
+    if dated:
+        return os.path.join(snapshots_root, dated[-1])
+    return preferred
+
 # ── EXTRACTION CONFIG ───────────────────────────────────────
 
 def extract_all(base="datasets"):
     previews = {}
 
     def snap(slug):
-        return os.path.join(base, slug, SNAP)
+        return latest_snapshot_dir(base, slug)
 
     # ancine-fsa-projetos
     f = os.path.join(snap("ancine-fsa-projetos"), "projetos-fsa.csv")
@@ -212,16 +229,16 @@ def extract_all(base="datasets"):
             "Amostra da tabela fomento_fluxos_financeiros; layouts heterogeneos preservam fonte_arquivo e titulo_publicacao.",
         ),
         "br-pib-audiovisual": (
-            "pib_audiovisual_fontes.csv",
-            "Inventario de fontes OCA para a futura tabela factual de PIB/valor adicionado audiovisual.",
+            "pib_audiovisual_total_ano.csv",
+            "Amostra da serie oficial reconstruida do PIB do Audiovisual - Metodologia ANCINE (total anual, 2007-2019).",
         ),
         "br-rais-emprego-audiovisual": (
-            "rais_emprego_audiovisual_fontes.csv",
-            "Inventario de fontes OCA para a futura agregacao RAIS do audiovisual.",
+            "rais_emprego_audiovisual_total_ano.csv",
+            "Amostra da serie oficial reconstruida de emprego audiovisual - Metodologia ANCINE (total anual, 2010-2019).",
         ),
         "br-comercio-exterior-servicos-audiovisuais": (
-            "comercio_exterior_servicos_audiovisuais_fontes.csv",
-            "Inventario de fontes OCA/SISCOSERV para comercio exterior de servicos audiovisuais.",
+            "comercio_exterior_servicos_audiovisuais_total_ano.csv",
+            "Amostra da serie oficial reconstruida de comercio exterior de servicos audiovisuais - Metodologia ANCINE (2014-2019).",
         ),
         "br-comex-bens-audiovisuais": (
             "comex_bens_audiovisuais_fontes.csv",
@@ -232,8 +249,8 @@ def extract_all(base="datasets"):
             "Amostra da tabela Embrafilme extraida de PDFs tabulares do OCA.",
         ),
         "ancine-diversidade-audiovisual": (
-            "diversidade_audiovisual_fontes.csv",
-            "Inventario de fontes OCA para futura tabela factual de diversidade audiovisual.",
+            "diversidade_audiovisual_emprego_sexo_ano.csv",
+            "Amostra de tabela oficial reconstruida de diversidade audiovisual por sexo (2011-2021).",
         ),
     }
     for slug, (filename, note) in cleaned_csv_previews.items():

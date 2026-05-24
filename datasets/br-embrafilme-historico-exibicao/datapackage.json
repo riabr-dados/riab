@@ -1,0 +1,66 @@
+{
+  "$schema": "https://specs.frictionlessdata.io/schemas/data-package.json",
+  "name": "br-embrafilme-historico-exibicao",
+  "title": "Embrafilme - Historico de Exibicao",
+  "description": "Serie factual de exibicao cinematografica pre-ANCINE, por ano e recorte territorial ou temporal, reconstruida documentalmente a partir de PDFs historicos oficiais preservados no OCA.",
+  "version": "2026.05.23",
+  "created": "2026-05-23T00:00:00Z",
+  "homepage": "https://github.com/SEU-USUARIO/dados-audiovisual-br/tree/main/datasets/br-embrafilme-historico-exibicao",
+  "licenses": [
+    {
+      "name": "CC-BY-4.0",
+      "title": "Creative Commons Attribution 4.0 International",
+      "path": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ],
+  "sources": [
+    {
+      "title": "ANCINE/OCA - Cinema - arquivos historicos Embrafilme",
+      "path": "https://www.gov.br/ancine/pt-br/oca/cinema"
+    }
+  ],
+  "contributors": [
+    {
+      "title": "dados-audiovisual-br",
+      "role": "publisher",
+      "path": "https://github.com/SEU-USUARIO/dados-audiovisual-br"
+    }
+  ],
+  "status": {
+    "value": "intermitente",
+    "options": [
+      "ativo",
+      "intermitente",
+      "alterado",
+      "offline",
+      "descontinuado"
+    ],
+    "last_checked": "2026-05-23",
+    "notes": "Acervo historico oficial do OCA com cobertura irregular. A tabela publicada aqui e uma reproducao estruturada dos PDFs historicos preservados, sem reestimacao independente."
+  },
+  "collection": {
+    "method": "script",
+    "script": "pipelines/transform/clean_oca_complementos.py",
+    "frequency": "ad-hoc"
+  },
+  "resources": [
+    {
+      "name": "embrafilme-exibicao-territorio-ano",
+      "path": "snapshots/2026-05-23/embrafilme_exibicao_territorio_ano.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2970330,
+      "hash": "sha256:3e582332dbd29d202e20d55b9b8d9de0511178e946296ba3d91c5be725a08f0c",
+      "schema": "../../catalog/schemas/embrafilme_exibicao_territorio_ano.yaml"
+    }
+  ],
+  "snapshots": [
+    {
+      "date": "2026-05-23",
+      "path": "snapshots/2026-05-23/",
+      "source_url": "https://www.gov.br/ancine/pt-br/oca/cinema",
+      "notes": "Snapshot com PDFs oficiais historicos Embrafilme e tabela factual estruturada a partir da extracao textual dos documentos."
+    }
+  ]
+}

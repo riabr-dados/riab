@@ -335,9 +335,9 @@ datasets:
       size_bytes: 0
     cleaned:
       tables:
-        - pib_audiovisual_fontes
         - pib_audiovisual_total_ano
         - pib_audiovisual_atividade_ano
+        - pib_audiovisual_fontes
       notes: >
         A tabela factual exata cobre 2007-2019, limite da publicacao mais
         recente localizada no OCA. O dataset publicado inclui somente a serie
@@ -349,15 +349,16 @@ datasets:
       - ibge-deflator-ipca
 
   - slug: br-rais-emprego-audiovisual
-    title: "RAIS Emprego Audiovisual - Fontes OCA"
+    title: "Emprego no Setor Audiovisual - Metodologia ANCINE"
     description: >
-      Inventario dos estudos OCA sobre emprego no setor audiovisual usados
-      como referencia metodologica para uma futura base agregada RAIS por
-      CNAE, territorio e perfil ocupacional. Os microdados RAIS nao sao
-      redistribuidos nesta etapa.
+      Serie factual de empregos formais ativos em 31/12 no setor audiovisual,
+      reconstruida a partir do Apendice 2 do estudo ANCINE/OCA Emprego no
+      Setor Audiovisual, ano-base 2019. O dataset e uma reconstrucao
+      documental da serie publicada pela ANCINE, nao uma reestimacao
+      independente por microdados da RAIS.
     source_id: ancine
     status: intermitente
-    coverage: "2015-2017"
+    coverage: "2010-2019"
     tags: [emprego, rais, trabalho, cnae, oca, brasil]
     raw:
       path: br-rais-emprego-audiovisual/
@@ -366,23 +367,28 @@ datasets:
       size_bytes: 0
     cleaned:
       tables:
+        - rais_emprego_audiovisual_total_ano
+        - rais_emprego_audiovisual_subclasse_ano
         - rais_emprego_audiovisual_fontes
       notes: >
-        Inventario de fontes oficiais. A tabela factual agregada depende de
-        ingestao e agregacao dos microdados PDET/MTE.
+        A tabela factual exata cobre 2010-2019, limite do Apendice 2 da
+        publicacao mais recente localizada no OCA. O dataset publicado inclui
+        somente a serie oficial que hoje pode ser reconstruida com base
+        documental ANCINE/OCA, sem redistribuir microdados RAIS.
     related:
       - br-pib-audiovisual
 
   - slug: br-comercio-exterior-servicos-audiovisuais
-    title: "Comercio Exterior de Servicos Audiovisuais - Fontes OCA"
+    title: "Comercio Exterior de Servicos Audiovisuais - Metodologia ANCINE"
     description: >
-      Inventario dos estudos OCA/SISCOSERV sobre vendas e aquisicoes
-      internacionais de servicos audiovisuais. Mantem os PDFs oficiais,
-      hashes e anos-base para orientar a futura consolidacao por NBS,
-      pais, UF, fluxo e modo de prestacao.
+      Serie factual de vendas, aquisicoes e saldo do comercio exterior
+      brasileiro de servicos audiovisuais, reconstruida a partir do anexo do
+      estudo ANCINE/OCA Comercio Exterior de Servicos Audiovisuais, ano-base
+      2019. O dataset e uma reconstrucao documental da serie publicada pela
+      ANCINE, nao uma reestimacao independente por microdados do SISCOSERV.
     source_id: ancine
-    status: intermitente
-    coverage: "2015-2019"
+    status: descontinuado
+    coverage: "2014-2019"
     tags: [comercio-exterior, servicos, siscoserv, nbs, oca, brasil]
     raw:
       path: br-comercio-exterior-servicos-audiovisuais/
@@ -391,10 +397,15 @@ datasets:
       size_bytes: 0
     cleaned:
       tables:
+        - comercio_exterior_servicos_audiovisuais_total_ano
+        - comercio_exterior_servicos_audiovisuais_servico_ano
         - comercio_exterior_servicos_audiovisuais_fontes
       notes: >
-        Inventario de fontes oficiais. A tabela factual ainda requer extracao
-        tabular dos estudos e compatibilizacao pos-SISCOSERV.
+        A tabela factual exata cobre 2014-2019, limite do estudo oficial mais
+        recente localizado no OCA e tambem do encerramento do SISCOSERV. O
+        dataset publicado inclui somente a serie oficial que hoje pode ser
+        reconstruida com base documental ANCINE/OCA, sem extensoes para anos
+        posteriores.
     related:
       - br-comex-bens-audiovisuais
 
@@ -417,17 +428,20 @@ datasets:
       tables:
         - comex_bens_audiovisuais_fontes
       notes: >
-        Inventario de fonte bruta. A tabela factual depende de filtro NCM
-        versionado e download/agregacao dos microdados Comex Stat.
+        Inventario de fonte bruta. Ainda nao ha tabela factual oficial
+        publicada aqui porque ela depende de uma cesta NCM versionada e do
+        download/agregacao dos microdados Comex Stat.
     related:
       - br-comercio-exterior-servicos-audiovisuais
 
   - slug: br-embrafilme-historico-exibicao
     title: "Embrafilme - Historico de Exibicao"
     description: >
-      Serie historica pre-ANCINE extraida de PDFs tabulares do OCA com dados
-      Embrafilme de espectadores, arrecadacao e lugares oferecidos por ano,
-      mes e recortes territoriais quando disponiveis.
+      Serie factual pre-ANCINE reconstruida a partir de PDFs tabulares do OCA
+      com dados Embrafilme de espectadores, arrecadacao e lugares oferecidos
+      por ano, mes e recortes territoriais quando disponiveis. O dataset e uma
+      reconstrucao documental das tabelas publicadas, nao uma reestimacao
+      independente da exibicao historica brasileira.
     source_id: ancine
     status: ativo
     coverage: "1982-1987"
@@ -443,18 +457,19 @@ datasets:
       notes: >
         PDF text extraction com parser de tabelas por ano. Unidades originais
         sao preservadas em unidade_original, e valores em milhares sao
-        convertidos para unidades.
+        convertidos para unidades. A renda historica permanece na unidade
+        monetaria nominal declarada pelos PDFs.
     related:
       - ancine-bilheteria-consolidada
       - ancine-bilheteria-agregada-filme-ano
 
   - slug: ancine-diversidade-audiovisual
-    title: "Diversidade Audiovisual - Fontes OCA"
+    title: "Diversidade Audiovisual - Tabelas Oficiais ANCINE"
     description: >
-      Inventario das publicacoes OCA sobre genero, raca e diversidade em obras
-      e profissionais do audiovisual. A tabela atual preserva os PDFs oficiais,
-      hashes e anos de referencia; a tabela factual sera publicada apos
-      extracao tabular verificavel.
+      Serie factual parcial de diversidade no setor audiovisual brasileiro,
+      atualmente limitada as tabelas anuais de emprego formal por sexo e por
+      raca ou cor que podem ser reconstruidas diretamente do estudo ANCINE/OCA
+      Genero e Raca no Setor Audiovisual 2011-2021.
     source_id: ancine
     status: intermitente
     coverage: "2011-2021"
@@ -466,10 +481,16 @@ datasets:
       size_bytes: 0
     cleaned:
       tables:
+        - diversidade_audiovisual_emprego_sexo_ano
+        - diversidade_audiovisual_emprego_raca_ano
         - diversidade_audiovisual_fontes
       notes: >
-        Inventario de fontes oficiais. Nao substitui a futura tabela factual
-        diversidade_audiovisual_obras_profissionais.
+        O dataset publicado aqui e parcial: inclui somente as tabelas anuais
+        por sexo e por raca ou cor que podem ser reconstruidas diretamente do
+        PDF oficial. O estudo menciona planilha anexa para detalhamentos
+        adicionais, nao inventariada neste snapshot. Os totais anuais desta
+        publicacao nao devem ser confundidos com br-rais-emprego-audiovisual,
+        porque o recorte metodologico desta secao e proprio.
     related:
       - ancine-obras-nao-publicitarias
 

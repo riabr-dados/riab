@@ -1,0 +1,46 @@
+table: comercio_exterior_servicos_audiovisuais_total_ano
+description: >
+  Serie anual total de vendas, aquisicoes e saldo do comercio exterior de
+  servicos audiovisuais do Brasil, reconstruida a partir do anexo do estudo
+  ANCINE/SRG Comercio Exterior de Servicos Audiovisuais, ano-base 2019.
+
+source_raw: br-comercio-exterior-servicos-audiovisuais
+
+columns:
+  - name: ano
+    type: int64
+    description: "Ano de referencia"
+  - name: valor_vendido_usd_nominal
+    type: float64
+    description: "Valor vendido em USD nominais"
+  - name: valor_adquirido_usd_nominal
+    type: float64
+    description: "Valor adquirido em USD nominais"
+  - name: saldo_usd_nominal
+    type: float64
+    description: "Saldo comercial em USD nominais"
+  - name: unidade_original
+    type: string
+    description: "Unidade declarada pela fonte"
+  - name: fonte_tabela
+    type: string
+    description: "Elemento da publicacao de origem"
+  - name: status_serie
+    type: string
+    description: "Status de reconstrucao da serie"
+  - name: nota_metodologica
+    type: string
+    description: "Resumo do escopo metodologico aplicado"
+  - name: fonte_arquivo
+    type: string
+    description: "Arquivo oficial usado como fonte"
+  - name: fonte_url
+    type: string
+    description: "URL oficial do arquivo fonte"
+  - name: fonte_pagina
+    type: string
+    description: "Pagina oficial onde a publicacao foi encontrada"
+  - name: hash_fonte
+    type: string
+    nullable: true
+    description: "SHA-256 do PDF fonte no snapshot bruto"
