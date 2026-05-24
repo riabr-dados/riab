@@ -315,16 +315,18 @@ datasets:
       - ancine-fsa-projetos
 
   - slug: br-pib-audiovisual
-    title: "PIB Audiovisual - Fontes OCA"
+    title: "PIB do Audiovisual - Metodologia ANCINE"
     description: >
-      Inventario das publicacoes OCA sobre Valor Adicionado pelo Setor
-      Audiovisual, base para consolidar a serie de PIB/valor adicionado por
-      atividade economica. A tabela atual registra as fontes oficiais baixadas
-      e seus hashes; a tabela factual sera publicada apos extracao tabular
-      verificavel dos estudos e/ou SIDRA/PAS.
+      Serie factual de valor adicionado bruto do setor audiovisual, reconstruida
+      a partir da metodologia e do Anexo 1 do estudo ANCINE/OCA Valor Adicionado
+      pelo Setor Audiovisual, ano-base 2019. A serie segue o recorte de empresas
+      com 20 ou mais pessoas ocupadas, por classes CNAE 2.0, usando tabulacao
+      especial IBGE/PAS/PAC e estimativas ANCINE para TV por assinatura por cabo
+      de 2015 em diante. O dataset e uma reconstrucao documental da serie
+      publicada pela ANCINE, nao uma reestimacao independente por microdados.
     source_id: ancine
     status: intermitente
-    coverage: "2013-2019"
+    coverage: "2007-2019"
     tags: [pib, valor-adicionado, economia, oca, brasil, ancine, ibge]
     raw:
       path: br-pib-audiovisual/
@@ -334,9 +336,15 @@ datasets:
     cleaned:
       tables:
         - pib_audiovisual_fontes
+        - pib_audiovisual_total_ano
+        - pib_audiovisual_atividade_ano
       notes: >
-        Inventario de fontes oficiais. Nao substitui a futura tabela factual
-        pib_audiovisual_atividade_ano.
+        A tabela factual exata cobre 2007-2019, limite da publicacao mais
+        recente localizada no OCA. O dataset publicado inclui somente a serie
+        oficial que hoje pode ser reconstruida com base documental ANCINE/OCA,
+        sem extensoes proxy para anos posteriores. Pequenas diferencas entre a
+        soma das atividades e o total anual podem ocorrer por arredondamento
+        das linhas publicadas no Anexo 1.
     related:
       - ibge-deflator-ipca
 

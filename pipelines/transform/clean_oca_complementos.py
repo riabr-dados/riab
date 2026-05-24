@@ -596,11 +596,19 @@ def build_source_table(inventory: pd.DataFrame, dataset_slug: str) -> pd.DataFra
         if col not in out.columns:
             out[col] = None
     out = out[cols].drop_duplicates()
-    out["status_extracao"] = "inventariado_pendente_transformacao_factual"
-    out["observacao_metodologica"] = (
-        "Inventario oficial de fontes complementares. "
-        "A tabela factual sera publicada somente apos extracao tabular verificavel."
-    )
+    if dataset_slug == "br_pib_audiovisual":
+        out["status_extracao"] = "extracao_factual_publicada"
+        out["observacao_metodologica"] = (
+            "Inventario oficial das fontes. As tabelas factuais "
+            "pib_audiovisual_total_ano e pib_audiovisual_atividade_ano sao "
+            "geradas por pipelines/transform/clean_pib_audiovisual.py."
+        )
+    else:
+        out["status_extracao"] = "inventariado_pendente_transformacao_factual"
+        out["observacao_metodologica"] = (
+            "Inventario oficial de fontes complementares. "
+            "A tabela factual sera publicada somente apos extracao tabular verificavel."
+        )
     return out.reset_index(drop=True)
 
 

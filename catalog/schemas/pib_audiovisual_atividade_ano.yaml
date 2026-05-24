@@ -1,0 +1,66 @@
+table: pib_audiovisual_atividade_ano
+description: >
+  Serie anual de valor adicionado bruto do setor audiovisual por atividade
+  economica CNAE 2.0, reconstruida a partir do Anexo 1 do estudo ANCINE/OCA
+  Valor Adicionado pelo Setor Audiovisual, ano-base 2019.
+
+source_raw: br-pib-audiovisual
+
+columns:
+  - name: ano
+    type: int64
+    description: "Ano de referencia"
+  - name: cnae_classe
+    type: string
+    description: "Classe CNAE 2.0 usada pela metodologia ANCINE"
+  - name: atividade
+    type: string
+    description: "Descricao da atividade economica"
+  - name: segmento_ancine
+    type: string
+    description: "Agrupamento analitico adotado nesta base"
+  - name: valor_adicionado_brl_milhoes_correntes
+    type: float64
+    description: "Valor adicionado bruto em milhoes de reais correntes"
+  - name: valor_adicionado_brl_correntes
+    type: int64
+    description: "Valor adicionado bruto em reais correntes"
+  - name: unidade_original
+    type: string
+    description: "Unidade publicada no estudo"
+  - name: incluido_no_total_publicado
+    type: bool
+    description: "Indica se a linha soma ao total publicado no Anexo 1"
+  - name: metodo_valor
+    type: string
+    description: "Metodo do valor: tabulacao especial IBGE/PAS/PAC ou estimativa ANCINE"
+  - name: marcador_nota_ancine
+    type: string
+    nullable: true
+    description: "Marcador de rodape do estudo ANCINE (*, ** ou ***)"
+  - name: nota_ancine
+    type: string
+    nullable: true
+    description: "Texto interpretativo do marcador de rodape"
+  - name: fonte_tabela
+    type: string
+    description: "Elemento da publicacao de origem"
+  - name: status_serie
+    type: string
+    description: "Status de reconstrucao da serie"
+  - name: nota_metodologica
+    type: string
+    description: "Resumo do escopo metodologico aplicado"
+  - name: fonte_arquivo
+    type: string
+    description: "Arquivo oficial usado como fonte"
+  - name: fonte_url
+    type: string
+    description: "URL oficial do arquivo fonte"
+  - name: fonte_pagina
+    type: string
+    description: "Pagina oficial onde a publicacao foi encontrada"
+  - name: hash_fonte
+    type: string
+    nullable: true
+    description: "SHA-256 do PDF fonte no snapshot bruto"

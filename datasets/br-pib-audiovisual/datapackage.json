@@ -1,0 +1,84 @@
+{
+  "$schema": "https://specs.frictionlessdata.io/schemas/data-package.json",
+  "name": "br-pib-audiovisual",
+  "title": "PIB do Audiovisual - Metodologia ANCINE",
+  "description": "Serie factual de valor adicionado bruto do setor audiovisual brasileiro por ano e por atividade CNAE, reconstruida documentalmente a partir da publicacao oficial ANCINE/OCA e limitada ao periodo oficial hoje disponivel.",
+  "version": "2026.05.23",
+  "created": "2026-05-23T00:00:00Z",
+  "homepage": "https://github.com/SEU-USUARIO/dados-audiovisual-br/tree/main/datasets/br-pib-audiovisual",
+  "licenses": [
+    {
+      "name": "CC-BY-4.0",
+      "title": "Creative Commons Attribution 4.0 International",
+      "path": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ],
+  "sources": [
+    {
+      "title": "ANCINE/OCA - Valor Adicionado pelo Setor Audiovisual, ano-base 2019",
+      "path": "https://www.gov.br/ancine/pt-br/oca/resolveuid/bd4f7d2608e541608e151c168da6d823"
+    },
+    {
+      "title": "ANCINE/OCA - Outras publicacoes",
+      "path": "https://www.gov.br/ancine/pt-br/oca/publicacoes-2/outras-publicacoes"
+    },
+    {
+      "title": "IBGE - Pesquisa Anual de Servicos e Pesquisa Anual de Comercio",
+      "path": "https://www.ibge.gov.br/estatisticas/economicas/servicos.html"
+    }
+  ],
+  "contributors": [
+    {
+      "title": "dados-audiovisual-br",
+      "role": "publisher",
+      "path": "https://github.com/SEU-USUARIO/dados-audiovisual-br"
+    }
+  ],
+  "status": {
+    "value": "intermitente",
+    "options": [
+      "ativo",
+      "intermitente",
+      "alterado",
+      "offline",
+      "descontinuado"
+    ],
+    "last_checked": "2026-05-23",
+    "notes": "OCA tem historico de instabilidade. A serie publicada aqui cobre somente o periodo que pode ser reconstruido hoje a partir da publicacao oficial ANCINE/OCA. Trata-se de reproducao estruturada da serie publicada, nao de reestimacao independente."
+  },
+  "collection": {
+    "method": "script",
+    "script": "pipelines/transform/clean_pib_audiovisual.py",
+    "frequency": "ad-hoc"
+  },
+  "resources": [
+    {
+      "name": "pib-audiovisual-total-ano",
+      "path": "snapshots/2026-05-23/pib_audiovisual_total_ano.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 8115,
+      "hash": "sha256:2a3a0659eb08319883f3cb1555917235a363fe8b7192b93b056f4de755dceeea",
+      "schema": "../../catalog/schemas/pib_audiovisual_total_ano.yaml"
+    },
+    {
+      "name": "pib-audiovisual-atividade-ano",
+      "path": "snapshots/2026-05-23/pib_audiovisual_atividade_ano.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 106608,
+      "hash": "sha256:bf0748a10cf95a9db911f2f7e384217124a736c472411ec7983101baad295384",
+      "schema": "../../catalog/schemas/pib_audiovisual_atividade_ano.yaml"
+    }
+  ],
+  "snapshots": [
+    {
+      "date": "2026-05-23",
+      "path": "snapshots/2026-05-23/",
+      "source_url": "https://www.gov.br/ancine/pt-br/oca/publicacoes-2/outras-publicacoes",
+      "notes": "Snapshot com PDFs oficiais ANCINE/OCA e tabelas factuais oficiais reconstruidas documentalmente do Anexo 1 do estudo ano-base 2019."
+    }
+  ]
+}
