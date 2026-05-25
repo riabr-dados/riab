@@ -1,0 +1,88 @@
+table: bfi_investimento_publico
+description: >
+  Recursos publicos destinados ao cinema britanico por BFI, Screen Scotland, Creative Wales e parceiros.
+
+source_raw: bfi-investimento-publico
+
+columns:
+  - name: arquivo
+    type: string
+    description: ""
+  - name: sheet
+    type: string
+    description: ""
+  - name: titulo_tabela
+    type: string
+    description: ""
+  - name: source
+    type: string
+    description: ""
+  - name: 2020_21_million
+    type: string
+    description: ""
+  - name: 2020_21
+    type: string
+    description: ""
+  - name: 2021_22_million
+    type: string
+    description: ""
+  - name: 2021_22
+    type: string
+    description: ""
+  - name: 2022_23_million
+    type: string
+    description: ""
+  - name: 2022_23
+    type: string
+    description: ""
+  - name: agency_organisation
+    type: string
+    description: ""
+  - name: million
+    type: string
+    description: ""
+  - name: coluna
+    type: string
+    description: ""
+  - name: activities
+    type: string
+    description: ""
+  - name: uk_nation
+    type: string
+    description: ""
+  - name: total_dedicated_investment_million
+    type: string
+    description: ""
+  - name: population_million
+    type: string
+    description: ""
+  - name: per_capita
+    type: string
+    description: ""
+  - name: programme
+    type: string
+    description: ""
+  - name: number_of_awards
+    type: string
+    description: ""
+  - name: total_value_million
+    type: string
+    description: ""
+  - name: project
+    type: string
+    description: ""
+  - name: total_value_of_awards
+    type: string
+    description: ""
+  - name: public_funder
+    type: string
+    description: ""
+  - name: number_of_films
+    type: string
+    description: ""
+  - name: estimated_budget_million
+    type: string
+    description: ""
+  - name: selected_titles
+    type: string
+    description: ""

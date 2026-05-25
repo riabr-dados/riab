@@ -1,0 +1,109 @@
+table: bfi_talentos_mundo
+description: >
+  Desempenho internacional de filmes britanicos e presenca de talentos do Reino Unido em producoes internacionais.
+
+source_raw: bfi-talentos-britanicos-mundo
+
+columns:
+  - name: arquivo
+    type: string
+    description: ""
+  - name: sheet
+    type: string
+    description: ""
+  - name: titulo_tabela
+    type: string
+    description: ""
+  - name: year
+    type: string
+    description: ""
+  - name: global_box_office_billion
+    type: string
+    description: ""
+  - name: worldwide_box_office_us_billion
+    type: string
+    description: ""
+  - name: uk_films_worldwide_box_office_us_billion
+    type: string
+    description: ""
+  - name: uk_qualifying_share
+    type: string
+    description: ""
+  - name: uk_independent_films_share
+    type: string
+    description: ""
+  - name: other_uk_qualifying_films_share
+    type: string
+    description: ""
+  - name: rank
+    type: string
+    description: ""
+  - name: title
+    type: string
+    description: ""
+  - name: country_of_origin
+    type: string
+    description: ""
+  - name: worldwide_box_office_us_million
+    type: string
+    description: ""
+  - name: territory_count
+    type: string
+    description: ""
+  - name: total_uk_qualifying_films_share
+    type: string
+    description: ""
+  - name: north_america_box_office_us_million
+    type: string
+    description: ""
+  - name: territory
+    type: string
+    description: ""
+  - name: box_office_for_uk_qualifying_films_us_million
+    type: string
+    description: ""
+  - name: uk_qualifying_films_share
+    type: string
+    description: ""
+  - name: top_uk_independent_film
+    type: string
+    description: ""
+  - name: box_office_us_million
+    type: string
+    description: ""
+  - name: uk_talent_source_material
+    type: string
+    description: ""
+  - name: gross_box_office_us_million
+    type: string
+    description: ""
+  - name: uk_source_material
+    type: string
+    description: ""
+  - name: director
+    type: string
+    description: ""
+  - name: film
+    type: string
+    description: ""
+  - name: release_year
+    type: string
+    description: ""
+  - name: total_gross_box_office_us_million
+    type: string
+    description: ""
+  - name: number_of_uk_award_winners
+    type: string
+    description: ""
+  - name: uk_share
+    type: string
+    description: ""
+  - name: award_ceremony_festival
+    type: string
+    description: ""
+  - name: award
+    type: string
+    description: ""
+  - name: recipient
+    type: string
+    description: ""

@@ -1,0 +1,58 @@
+table: cnc_consumo_vod
+description: >
+  Consumo de VoD por domicilios franceses: frequencia, generos preferidos, plataformas utilizadas e comparacoes com outras janelas de exibicao.
+
+source_raw: cnc-consumo-vod
+
+columns:
+  - name: unnamed_0
+    type: string
+    description: ""
+  - name: 2010
+    type: string
+    description: ""
+  - name: 2011
+    type: string
+    description: ""
+  - name: 2012
+    type: number
+    description: ""
+  - name: 2013
+    type: number
+    description: ""
+  - name: 2014
+    type: number
+    description: ""
+  - name: 2015
+    type: number
+    description: ""
+  - name: 2016
+    type: number
+    description: ""
+  - name: 2017
+    type: number
+    description: ""
+  - name: 2018
+    type: int64
+    description: ""
+  - name: 2019
+    type: int64
+    description: ""
+  - name: 2020
+    type: number
+    description: ""
+  - name: 2021
+    type: int64
+    description: ""
+  - name: 2022
+    type: number
+    description: ""
+  - name: 2023
+    type: number
+    description: ""
+  - name: 2024
+    type: number
+    description: ""
+  - name: 2025
+    type: int64
+    description: ""

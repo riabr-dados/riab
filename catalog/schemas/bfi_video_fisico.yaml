@@ -1,0 +1,37 @@
+table: bfi_video_fisico
+description: >
+  Mercado britanico de DVD e Blu-ray: vendas, alugueis e receita por tipo de suporte e origem do filme.
+
+source_raw: bfi-video-fisico
+
+columns:
+  - name: arquivo
+    type: string
+    description: ""
+  - name: sheet
+    type: string
+    description: ""
+  - name: titulo_tabela
+    type: string
+    description: ""
+  - name: genre
+    type: string
+    description: ""
+  - name: share_of_sales
+    type: string
+    description: ""
+  - name: rank
+    type: string
+    description: ""
+  - name: title
+    type: string
+    description: ""
+  - name: country_of_origin
+    type: string
+    description: ""
+  - name: release_year
+    type: string
+    description: ""
+  - name: distributor
+    type: string
+    description: ""

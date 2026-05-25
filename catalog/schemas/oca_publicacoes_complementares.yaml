@@ -1,0 +1,55 @@
+table: oca_publicacoes_complementares
+description: >
+  Inventario transversal de publicacoes do Observatorio do Cinema e do
+  Audiovisual (OCA/ANCINE) com URL, formato, ano de referencia, status de
+  download e hash. Funciona como tabela de proveniencia que liga os datasets
+  do RIDAB aos arquivos oficiais OCA.
+
+source_raw: oca-publicacoes-complementares
+
+columns:
+  - name: dataset_slug
+    type: string
+    description: "Identificador do dataset alvo no qual o arquivo sera consumido"
+  - name: secao
+    type: string
+    description: "Secao do OCA de onde o arquivo foi catalogado"
+  - name: titulo
+    type: string
+    description: "Titulo do arquivo conforme publicado pela ANCINE"
+  - name: formato
+    type: string
+    description: "Formato declarado pela ANCINE (Tabela, Grafico, Tabela e Grafico, etc.)"
+  - name: data_publicacao
+    type: string
+    description: "Data de publicacao informada pela ANCINE"
+  - name: ano_referencia
+    type: string
+    description: "Ano ou intervalo de anos coberto pelo arquivo"
+  - name: extensao
+    type: string
+    description: "Extensao real do arquivo (csv, xlsx, pdf, etc.)"
+  - name: url_arquivo
+    type: string
+    description: "URL direta para download do arquivo no servidor da ANCINE"
+  - name: pagina_origem
+    type: string
+    description: "URL da pagina do OCA que lista o arquivo"
+  - name: data_coleta
+    type: date
+    description: "Data em que o inventario coletou o registro"
+  - name: prioridade_extracao
+    type: int64
+    description: "Prioridade interna para reprocessamento (1 = mais alta)"
+  - name: local_path
+    type: string
+    description: "Caminho relativo do arquivo salvo no repositorio quando ja baixado"
+  - name: hash_arquivo
+    type: string
+    description: "Hash SHA-256 do arquivo baixado"
+  - name: tamanho_bytes
+    type: number
+    description: "Tamanho do arquivo baixado em bytes"
+  - name: download_status
+    type: string
+    description: "Status do download (ok, falhou, pendente)"

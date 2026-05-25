@@ -1,0 +1,37 @@
+table: bfi_audiences
+description: >
+  Audiencias cinematograficas no Reino Unido desagregadas por tipo de filme, origem e canal de distribuicao.
+
+source_raw: bfi-publicos-cinema
+
+columns:
+  - name: arquivo
+    type: string
+    description: ""
+  - name: sheet
+    type: string
+    description: ""
+  - name: titulo_tabela
+    type: string
+    description: ""
+  - name: categoria
+    type: string
+    description: ""
+  - name: cinemagoers_age_7_14
+    type: string
+    description: ""
+  - name: cinemagoers_age_15_24
+    type: string
+    description: ""
+  - name: cinemagoers_age_25_44
+    type: string
+    description: ""
+  - name: cinemagoers_age_35
+    type: string
+    description: ""
+  - name: cinemagoers_all_7
+    type: string
+    description: ""
+  - name: uk_population_7
+    type: string
+    description: ""

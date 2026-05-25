@@ -10,10 +10,6 @@ CLEANED = ROOT / "pipelines" / "output" / "cleaned"
 DATASET_DIR = ROOT / "datasets" / "br-pib-audiovisual"
 SNAPSHOT_DATE = "2026-05-23"
 SNAPSHOT = DATASET_DIR / "snapshots" / SNAPSHOT_DATE
-SOURCE_FILE = "valor-adicionado-pelo-setor-audiovisual-2019.pdf"
-SOURCE_TABLE = CLEANED / "pib_audiovisual_fontes.csv"
-SOURCE_URL_FALLBACK = "https://www.gov.br/ancine/pt-br/oca/resolveuid/bd4f7d2608e541608e151c168da6d823"
-SOURCE_PAGE_FALLBACK = "https://www.gov.br/ancine/pt-br/oca/publicacoes-2/outras-publicacoes"
 UNIT = "R$ 1.000.000 correntes"
 
 YEARS = list(range(2007, 2020))
@@ -124,35 +120,6 @@ ACTIVITIES = [
         "valores": [207.9, 326.6, 442.2, 65.2, 647.3, 833.4, 856.8, 1052.5, 1196.9, 1511.7, 3576.6, 5568.1, 6433.1],
     },
 ]
-
-
-def source_metadata() -> dict[str, object]:
-    metadata: dict[str, object] = {
-        "fonte_arquivo": SOURCE_FILE,
-        "fonte_url": SOURCE_URL_FALLBACK,
-        "fonte_pagina": SOURCE_PAGE_FALLBACK,
-        "hash_fonte": None,
-    }
-    if not SOURCE_TABLE.exists():
-        return metadata
-
-    fontes = pd.read_csv(SOURCE_TABLE)
-    mask = fontes.get("titulo", pd.Series(dtype=str)).astype(str).str.contains(
-        "Valor Adicionado pelo Setor Audiovisual 2019",
-        case=False,
-        na=False,
-    )
-    if not mask.any():
-        return metadata
-
-    row = fontes.loc[mask].iloc[0]
-    metadata["fonte_url"] = row.get("url_arquivo") or SOURCE_URL_FALLBACK
-    metadata["fonte_pagina"] = row.get("pagina_origem") or SOURCE_PAGE_FALLBACK
-    metadata["hash_fonte"] = row.get("hash_arquivo") if pd.notna(row.get("hash_arquivo")) else None
-    local_path = row.get("local_path")
-    if pd.notna(local_path):
-        metadata["fonte_arquivo"] = Path(str(local_path)).name
-    return metadata
 
 
 def marker_for(cnae: str, year: int) -> str | None:

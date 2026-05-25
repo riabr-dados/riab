@@ -1,0 +1,376 @@
+table: cnc_geographie_commune
+description: >
+  Equipamento e frequentacao de salas de cinema na Franca desagregados por regiao, departamento, commune e unidade urbana.
+
+source_raw: cnc-geographie-cinema
+
+columns:
+  - name: sheet
+    type: string
+    description: ""
+  - name: communes_equipees
+    type: string
+    description: ""
+  - name: 1996
+    type: number
+    description: ""
+  - name: 1997
+    type: number
+    description: ""
+  - name: 1998
+    type: number
+    description: ""
+  - name: 1999
+    type: number
+    description: ""
+  - name: 2000
+    type: number
+    description: ""
+  - name: 2001
+    type: number
+    description: ""
+  - name: 2002
+    type: number
+    description: ""
+  - name: 2003
+    type: number
+    description: ""
+  - name: 2004
+    type: number
+    description: ""
+  - name: 2005
+    type: number
+    description: ""
+  - name: 2006
+    type: number
+    description: ""
+  - name: 2007
+    type: number
+    description: ""
+  - name: 2008
+    type: number
+    description: ""
+  - name: 2009
+    type: number
+    description: ""
+  - name: 2010
+    type: number
+    description: ""
+  - name: 2011
+    type: number
+    description: ""
+  - name: 2012
+    type: number
+    description: ""
+  - name: 2013
+    type: number
+    description: ""
+  - name: 2014
+    type: number
+    description: ""
+  - name: 2015
+    type: number
+    description: ""
+  - name: 2016
+    type: number
+    description: ""
+  - name: 2017
+    type: number
+    description: ""
+  - name: 2018
+    type: number
+    description: ""
+  - name: 2019
+    type: number
+    description: ""
+  - name: 2020
+    type: number
+    description: ""
+  - name: 2021
+    type: number
+    description: ""
+  - name: 2022
+    type: number
+    description: ""
+  - name: 2023
+    type: number
+    description: ""
+  - name: 2024
+    type: number
+    description: ""
+  - name: unnamed_0
+    type: string
+    description: ""
+  - name: unnamed_1
+    type: string
+    description: ""
+  - name: 1992
+    type: number
+    description: ""
+  - name: 1993
+    type: number
+    description: ""
+  - name: 1994
+    type: number
+    description: ""
+  - name: 1995
+    type: number
+    description: ""
+  - name: 1960
+    type: number
+    description: ""
+  - name: 1961
+    type: number
+    description: ""
+  - name: 1962
+    type: number
+    description: ""
+  - name: 1963
+    type: number
+    description: ""
+  - name: 1964
+    type: number
+    description: ""
+  - name: 1965
+    type: number
+    description: ""
+  - name: 1966
+    type: number
+    description: ""
+  - name: 1967
+    type: number
+    description: ""
+  - name: 1968
+    type: number
+    description: ""
+  - name: 1969
+    type: number
+    description: ""
+  - name: 1970
+    type: number
+    description: ""
+  - name: 1971
+    type: number
+    description: ""
+  - name: 1972
+    type: number
+    description: ""
+  - name: 1973
+    type: number
+    description: ""
+  - name: 1974
+    type: number
+    description: ""
+  - name: 1975
+    type: number
+    description: ""
+  - name: 1976
+    type: number
+    description: ""
+  - name: 1977
+    type: number
+    description: ""
+  - name: 1978
+    type: number
+    description: ""
+  - name: 1979
+    type: number
+    description: ""
+  - name: 1980
+    type: number
+    description: ""
+  - name: 1981
+    type: number
+    description: ""
+  - name: 1982
+    type: number
+    description: ""
+  - name: 1983
+    type: number
+    description: ""
+  - name: 1984
+    type: number
+    description: ""
+  - name: 1985
+    type: number
+    description: ""
+  - name: 1986
+    type: number
+    description: ""
+  - name: 1987
+    type: number
+    description: ""
+  - name: 1988
+    type: number
+    description: ""
+  - name: 1989
+    type: number
+    description: ""
+  - name: 1990
+    type: number
+    description: ""
+  - name: 1991
+    type: number
+    description: ""
+  - name: recensement_retenu
+    type: string
+    description: ""
+  - name: 1962_1
+    type: number
+    description: ""
+  - name: 1962_2
+    type: number
+    description: ""
+  - name: 1962_3
+    type: number
+    description: ""
+  - name: 1962_4
+    type: number
+    description: ""
+  - name: 1962_5
+    type: number
+    description: ""
+  - name: 1968_1
+    type: number
+    description: ""
+  - name: 1968_2
+    type: number
+    description: ""
+  - name: 1968_3
+    type: number
+    description: ""
+  - name: 1968_4
+    type: number
+    description: ""
+  - name: 1975_1
+    type: number
+    description: ""
+  - name: 1975_2
+    type: number
+    description: ""
+  - name: 1975_3
+    type: number
+    description: ""
+  - name: 1975_4
+    type: number
+    description: ""
+  - name: 1975_5
+    type: number
+    description: ""
+  - name: 1975_6
+    type: number
+    description: ""
+  - name: 1982_1
+    type: number
+    description: ""
+  - name: 1982_2
+    type: number
+    description: ""
+  - name: 1982_3
+    type: number
+    description: ""
+  - name: 1982_4
+    type: number
+    description: ""
+  - name: 1982_5
+    type: number
+    description: ""
+  - name: 1982_6
+    type: number
+    description: ""
+  - name: 1982_7
+    type: number
+    description: ""
+  - name: 1990_1
+    type: number
+    description: ""
+  - name: 1990_2
+    type: number
+    description: ""
+  - name: 1990_3
+    type: number
+    description: ""
+  - name: 1990_4
+    type: number
+    description: ""
+  - name: 1990_5
+    type: number
+    description: ""
+  - name: 1990_6
+    type: number
+    description: ""
+  - name: 1990_7
+    type: number
+    description: ""
+  - name: 1990_8
+    type: number
+    description: ""
+  - name: 1999_1
+    type: number
+    description: ""
+  - name: 1999_2
+    type: number
+    description: ""
+  - name: 1999_3
+    type: number
+    description: ""
+  - name: 1999_4
+    type: number
+    description: ""
+  - name: 1999_5
+    type: number
+    description: ""
+  - name: 1999_6
+    type: number
+    description: ""
+  - name: 1999_7
+    type: number
+    description: ""
+  - name: 2009_1
+    type: number
+    description: ""
+  - name: 2009_2
+    type: number
+    description: ""
+  - name: 2015_1
+    type: number
+    description: ""
+  - name: 2015_2
+    type: number
+    description: ""
+  - name: 2015_3
+    type: number
+    description: ""
+  - name: 2015_4
+    type: number
+    description: ""
+  - name: 2015_5
+    type: number
+    description: ""
+  - name: 2015_6
+    type: number
+    description: ""
+  - name: 2015_7
+    type: number
+    description: ""
+  - name: 2015_8
+    type: number
+    description: ""
+  - name: 2015_9
+    type: number
+    description: ""
+  - name: 2015_10
+    type: number
+    description: ""
+  - name: 2015_11
+    type: number
+    description: ""
+  - name: 2018_1
+    type: number
+    description: ""
+  - name: 2020_1
+    type: number
+    description: ""
+  - name: 2020_2
+    type: number
+    description: ""

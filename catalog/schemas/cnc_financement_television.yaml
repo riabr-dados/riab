@@ -1,0 +1,58 @@
+table: cnc_financement_television
+description: >
+  Aporte das emissoras de televisao a producao audiovisual francesa, por canal, genero de obra e modalidade de investimento.
+
+source_raw: cnc-financement-television
+
+columns:
+  - name: sheet
+    type: string
+    description: ""
+  - name: unnamed_0
+    type: string
+    description: ""
+  - name: 2008
+    type: number
+    description: ""
+  - name: 2009
+    type: number
+    description: ""
+  - name: 2010
+    type: number
+    description: ""
+  - name: 2011
+    type: number
+    description: ""
+  - name: 2012
+    type: number
+    description: ""
+  - name: 2013
+    type: number
+    description: ""
+  - name: 2014
+    type: number
+    description: ""
+  - name: 2015
+    type: number
+    description: ""
+  - name: 2016
+    type: number
+    description: ""
+  - name: 2017
+    type: number
+    description: ""
+  - name: 2018
+    type: number
+    description: ""
+  - name: 2019
+    type: number
+    description: ""
+  - name: 2020
+    type: number
+    description: ""
+  - name: 2021
+    type: number
+    description: ""
+  - name: m
+    type: number
+    description: ""

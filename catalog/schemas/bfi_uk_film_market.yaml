@@ -1,0 +1,55 @@
+table: bfi_uk_film_market
+description: >
+  Visao geral do mercado cinematografico britanico: participacao por origem, tendencias e comparacoes internacionais.
+
+source_raw: bfi-mercado-cinematografico
+
+columns:
+  - name: arquivo
+    type: string
+    description: ""
+  - name: sheet
+    type: string
+    description: ""
+  - name: titulo_tabela
+    type: string
+    description: ""
+  - name: categoria
+    type: string
+    description: ""
+  - name: 2022_total_gross_value_million
+    type: string
+    description: ""
+  - name: 2022_attributable_to_uk_qualifying_films_million
+    type: string
+    description: ""
+  - name: 2022_uk_qualifying_film_as_of_total_gross
+    type: string
+    description: ""
+  - name: 2023_total_gross_value_million
+    type: string
+    description: ""
+  - name: 2023_attributable_to_uk_qualifying_films_million
+    type: string
+    description: ""
+  - name: 2023_uk_qualifying_film_as_of_total_gross
+    type: string
+    description: ""
+  - name: country
+    type: string
+    description: ""
+  - name: us_million
+    type: string
+    description: ""
+  - name: market_share
+    type: string
+    description: ""
+  - name: us_million_2028
+    type: string
+    description: ""
+  - name: market_share_2028
+    type: string
+    description: ""
+  - name: predicted_growth_2023_2028
+    type: string
+    description: ""

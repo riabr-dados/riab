@@ -54,19 +54,32 @@ def digits(value: object) -> str:
     return re.sub(r"\D", "", str(value))
 
 
-def seven_zip() -> Path | None:
-    return next((path for path in SEVEN_ZIP_CANDIDATES if path.exists()), None)
+def seven_zip() -> Path:
+    exe = next((path for path in SEVEN_ZIP_CANDIDATES if path.exists()), None)
+    if exe is None:
+        raise RuntimeError(
+            "7-Zip nao encontrado. Instale o 7-Zip (https://www.7-zip.org) "
+            "ou adicione o caminho do executavel em SEVEN_ZIP_CANDIDATES."
+        )
+    return exe
 
 
 def archive_member(archive: Path) -> str:
+    exe = seven_zip()
     result = subprocess.run(
-        ["tar", "-tf", str(archive)],
+        [str(exe), "l", "-slt", str(archive)],
         cwd=ROOT,
         check=True,
         capture_output=True,
         text=True,
     )
-    names = [line.strip() for line in result.stdout.splitlines() if line.strip()]
+    names = [
+        line.split("=", 1)[1].strip()
+        for line in result.stdout.splitlines()
+        if line.startswith("Path =")
+    ]
+    # 7z l inclui o proprio arquivo .7z como primeiro Path; descartar.
+    names = [name for name in names if name and not name.lower().endswith(".7z")]
     if len(names) != 1:
         raise RuntimeError(f"Arquivo inesperado em {archive.name}: {names}")
     return names[0]
@@ -74,11 +87,37 @@ def archive_member(archive: Path) -> str:
 
 def open_archive_stream(archive: Path, member: str) -> subprocess.Popen:
     exe = seven_zip()
-    if exe:
-        command = [str(exe), "e", "-so", str(archive), member]
-    else:
-        command = ["tar", "-xOf", str(archive), member]
+    command = [str(exe), "e", "-so", str(archive), member]
     return subprocess.Popen(command, cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+
+
+ACTIVE_COL_CANDIDATES = ("Vínculo Ativo 31/12", "Vinculo Ativo 31/12", "VINCULOATIVO3112")
+CNAE_COL_CANDIDATES = ("CNAE 2.0 Subclasse", "CNAE 2.0 Subclass", "CNAE2.0Subclasse", "CNAE20Subclasse")
+
+
+def _normalize_header(value: str) -> str:
+    cleaned = value.strip().strip('"').strip()
+    return re.sub(r"\s+", " ", cleaned)
+
+
+def resolve_columns(header_line: bytes) -> tuple[int, int, list[str]]:
+    raw = header_line.decode("latin1").rstrip("\r\n")
+    columns = [_normalize_header(part) for part in raw.split(";")]
+    normalized = {col.casefold(): idx for idx, col in enumerate(columns)}
+    active_idx = next(
+        (normalized[candidate.casefold()] for candidate in ACTIVE_COL_CANDIDATES if candidate.casefold() in normalized),
+        None,
+    )
+    cnae_idx = next(
+        (normalized[candidate.casefold()] for candidate in CNAE_COL_CANDIDATES if candidate.casefold() in normalized),
+        None,
+    )
+    if active_idx is None or cnae_idx is None:
+        raise RuntimeError(
+            "Nao foi possivel localizar as colunas de Vinculo Ativo 31/12 e CNAE 2.0 Subclasse no header da RAIS. "
+            f"Header lido: {columns[:50]}"
+        )
+    return active_idx, cnae_idx, columns
 
 
 def aggregate_archive(archive: Path) -> tuple[int, int, dict[str, int]]:
@@ -89,20 +128,25 @@ def aggregate_archive(archive: Path) -> tuple[int, int, dict[str, int]]:
     proc = open_archive_stream(archive, member)
     assert proc.stdout is not None
     try:
+        header_line = proc.stdout.readline()
+        if not header_line:
+            raise RuntimeError(f"Arquivo {archive.name} vazio ou ilegivel")
+        active_idx, cnae_idx, _ = resolve_columns(header_line)
         chunks = pd.read_csv(
             proc.stdout,
             sep=";",
-            usecols=[11, 36],
+            header=None,
+            usecols=[active_idx, cnae_idx],
+            names=["__active__", "__cnae__"],
             dtype=str,
             chunksize=1_000_000,
             encoding="latin1",
         )
         for chunk in chunks:
             total_rows += len(chunk)
-            active_col, cnae_col = chunk.columns
-            active = chunk[chunk[active_col].str.strip().eq("1")]
+            active = chunk[chunk["__active__"].str.strip().eq("1")]
             active_rows += len(active)
-            value_counts = active[cnae_col].str.strip().value_counts()
+            value_counts = active["__cnae__"].str.strip().value_counts()
             for raw in SUBCLASSES:
                 counts[raw] += int(value_counts.get(raw, 0))
     finally:

@@ -1,0 +1,19 @@
+table: cnc_parc_cinematographique
+description: >
+  Numero de salas, telas, capacidade e grau de digitalizacao na Franca, serie historica.
+
+source_raw: cnc-parc-cinematographique
+
+columns:
+  - name: ecrans_autorises
+    type: string
+    description: ""
+  - name: ecrans
+    type: string
+    description: ""
+  - name: fauteuils
+    type: string
+    description: ""
+  - name: etablissements
+    type: string
+    description: ""

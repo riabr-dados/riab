@@ -314,6 +314,35 @@ datasets:
       - ancine-atas-fsa
       - ancine-fsa-projetos
 
+  - slug: oca-publicacoes-complementares
+    title: "OCA - Inventario de Publicacoes Complementares"
+    description: >
+      Inventario transversal das publicacoes oficiais do Observatorio do
+      Cinema e do Audiovisual (OCA/ANCINE) com URL, formato, ano de
+      referencia, status de download e hash, usado como ponto de partida para
+      reprocessamentos. Nao publica dados factuais por si, e a tabela de
+      proveniencia que liga os datasets do RIDAB aos arquivos oficiais OCA.
+    source_id: ancine
+    status: ativo
+    coverage: "2007-2026"
+    tags: [oca, ancine, inventario, proveniencia, metadata]
+    raw:
+      path: oca-publicacoes-complementares/
+      format: csv
+      files: 1
+      size_bytes: 0
+    cleaned:
+      tables:
+        - oca_publicacoes_complementares
+      notes: >
+        Inventario gerado por pipelines/extract/oca_inventory.py a partir das
+        secoes do OCA. Cada linha representa um arquivo publicado pela ANCINE.
+    related:
+      - br-pib-audiovisual
+      - br-rais-emprego-audiovisual
+      - br-comercio-exterior-servicos-audiovisuais
+      - ancine-diversidade-audiovisual
+
   - slug: br-pib-audiovisual
     title: "PIB do Audiovisual - Metodologia ANCINE"
     description: >

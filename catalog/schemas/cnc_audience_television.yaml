@@ -1,0 +1,37 @@
+table: cnc_audience_television
+description: >
+  Dados de audiencia de filmes e programas na televisao francesa, por canal, horario e perfil de audiencia.
+
+source_raw: cnc-audience-television
+
+columns:
+  - name: unnamed_0
+    type: string
+    description: ""
+  - name: 4_ans_et_plus
+    type: string
+    description: ""
+  - name: femmes_responsables_des_achats_15_49_ans
+    type: string
+    description: ""
+  - name: foyer
+    type: string
+    description: ""
+  - name: unnamed_4
+    type: string
+    description: ""
+  - name: unnamed_5
+    type: string
+    description: ""
+  - name: unnamed_6
+    type: string
+    description: ""
+  - name: unnamed_7
+    type: string
+    description: ""
+  - name: unnamed_8
+    type: string
+    description: ""
+  - name: unnamed_9
+    type: string
+    description: ""

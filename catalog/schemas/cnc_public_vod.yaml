@@ -1,0 +1,16 @@
+table: cnc_public_vod
+description: >
+  Perfil sociodemografico do publico de plataformas de video por demanda (VoD) na Franca.
+
+source_raw: cnc-public-vod
+
+columns:
+  - name: unnamed_0
+    type: string
+    description: ""
+  - name: 2024
+    type: number
+    description: ""
+  - name: 2025
+    type: number
+    description: ""

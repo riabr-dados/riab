@@ -1,0 +1,67 @@
+table: cnc_geographie_urbain
+description: >
+  Equipamento e frequentacao de salas de cinema na Franca desagregados por regiao, departamento, commune e unidade urbana.
+
+source_raw: cnc-geographie-cinema
+
+columns:
+  - name: sheet
+    type: string
+    description: ""
+  - name: unites_urbaines_equipees
+    type: string
+    description: ""
+  - name: 2010
+    type: number
+    description: ""
+  - name: 2011
+    type: number
+    description: ""
+  - name: 2012
+    type: number
+    description: ""
+  - name: 2013
+    type: number
+    description: ""
+  - name: 2014
+    type: number
+    description: ""
+  - name: 2015
+    type: number
+    description: ""
+  - name: 2016
+    type: number
+    description: ""
+  - name: 2017
+    type: number
+    description: ""
+  - name: 2018
+    type: number
+    description: ""
+  - name: 2019
+    type: number
+    description: ""
+  - name: 2020
+    type: number
+    description: ""
+  - name: 2021
+    type: number
+    description: ""
+  - name: 2022
+    type: number
+    description: ""
+  - name: 2023
+    type: number
+    description: ""
+  - name: 2024
+    type: number
+    description: ""
+  - name: unnamed_0
+    type: string
+    description: ""
+  - name: unnamed_1
+    type: string
+    description: ""
+  - name: 2009
+    type: number
+    description: ""

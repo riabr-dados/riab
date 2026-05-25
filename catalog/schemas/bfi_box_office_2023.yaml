@@ -1,0 +1,49 @@
+table: bfi_box_office_2023
+description: >
+  Resultados de bilheteria do mercado cinematografico britanico em 2023: admissoes, receita e top filmes por origem.
+
+source_raw: bfi-bilheteria-2023
+
+columns:
+  - name: arquivo
+    type: string
+    description: ""
+  - name: sheet
+    type: string
+    description: ""
+  - name: titulo_tabela
+    type: string
+    description: ""
+  - name: territory
+    type: string
+    description: ""
+  - name: 2019_0
+    type: number
+    description: ""
+  - name: 2020_0
+    type: number
+    description: ""
+  - name: 2021_0
+    type: number
+    description: ""
+  - name: 2022_0
+    type: number
+    description: ""
+  - name: 2023_0
+    type: number
+    description: ""
+  - name: change_on_2022
+    type: string
+    description: ""
+  - name: change_on_2019
+    type: string
+    description: ""
+  - name: coluna_9
+    type: string
+    description: ""
+  - name: coluna_10
+    type: string
+    description: ""
+  - name: month
+    type: string
+    description: ""

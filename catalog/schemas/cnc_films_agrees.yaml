@@ -1,0 +1,64 @@
+table: cnc_films_agrees
+description: >
+  Filmes aprovados para apoio a producao e distribuicao pelo CNC via sistema de agrement.
+
+source_raw: cnc-films-agrees
+
+columns:
+  - name: ano
+    type: int64
+    description: ""
+  - name: sheet
+    type: string
+    description: ""
+  - name: visa
+    type: int64
+    description: ""
+  - name: titre
+    type: string
+    description: ""
+  - name: realisateur
+    type: string
+    description: ""
+  - name: producteurs
+    type: string
+    description: ""
+  - name: devis
+    type: number
+    description: ""
+  - name: genre
+    type: string
+    description: ""
+  - name: eof
+    type: string
+    description: ""
+  - name: rang
+    type: string
+    description: ""
+  - name: bonus_parite
+    type: string
+    description: ""
+  - name: asr
+    type: string
+    description: ""
+  - name: payant
+    type: string
+    description: ""
+  - name: clair
+    type: string
+    description: ""
+  - name: sofica
+    type: string
+    description: ""
+  - name: credit_d_impot
+    type: string
+    description: ""
+  - name: aide_regionale
+    type: string
+    description: ""
+  - name: nationalite
+    type: string
+    description: ""
+  - name: payante
+    type: string
+    description: ""

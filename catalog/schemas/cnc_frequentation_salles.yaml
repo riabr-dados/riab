@@ -1,0 +1,22 @@
+table: cnc_frequentation_salles
+description: >
+  Entradas, sessoes e receita em salas de cinema francesas, serie historica longa.
+
+source_raw: cnc-frequentation-salles
+
+columns:
+  - name: unnamed_0
+    type: number
+    description: ""
+  - name: unnamed_1
+    type: string
+    description: ""
+  - name: entrees_millions
+    type: string
+    description: ""
+  - name: recette_hors_tsa_m_courants
+    type: string
+    description: ""
+  - name: recette_moyenne_par_entree
+    type: string
+    description: ""

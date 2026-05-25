@@ -1,0 +1,91 @@
+table: cnc_donnees_internationales
+description: >
+  Indicadores comparativos do mercado audiovisual em multiplos paises: bilheteria, numero de salas, admissoes per capita, quota de mercado nacional, producao de filmes.
+
+source_raw: cnc-donnees-internationales
+
+columns:
+  - name: pays
+    type: string
+    description: ""
+  - name: unnamed_0
+    type: string
+    description: ""
+  - name: longs_metrages_produits2_3
+    type: string
+    description: ""
+  - name: ecrans2
+    type: string
+    description: ""
+  - name: entrees2_millions
+    type: number
+    description: ""
+  - name: indice_de_frequentation2
+    type: number
+    description: ""
+  - name: part_du_film_europeen_4_5
+    type: string
+    description: ""
+  - name: part_du_film_americain_5
+    type: string
+    description: ""
+  - name: 2005
+    type: string
+    description: ""
+  - name: 2006
+    type: string
+    description: ""
+  - name: 2007
+    type: string
+    description: ""
+  - name: 2008
+    type: string
+    description: ""
+  - name: 2009
+    type: string
+    description: ""
+  - name: 2010
+    type: string
+    description: ""
+  - name: 2011
+    type: string
+    description: ""
+  - name: 2012
+    type: string
+    description: ""
+  - name: 2013
+    type: string
+    description: ""
+  - name: 2014
+    type: string
+    description: ""
+  - name: 2015
+    type: string
+    description: ""
+  - name: 2016
+    type: string
+    description: ""
+  - name: 2017
+    type: string
+    description: ""
+  - name: 2018
+    type: string
+    description: ""
+  - name: 2019
+    type: string
+    description: ""
+  - name: 2020
+    type: number
+    description: ""
+  - name: 2021
+    type: string
+    description: ""
+  - name: 2022
+    type: string
+    description: ""
+  - name: 2023
+    type: string
+    description: ""
+  - name: 2024
+    type: string
+    description: ""

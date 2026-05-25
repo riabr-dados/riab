@@ -1,0 +1,55 @@
+table: cnc_etablissements
+description: >
+  Cadastro e caracterizacao dos cinemas ativos na Franca, com informacoes sobre capacidade, tipo (multiplex, arte e ensaio, itinerante), municipio e historico de operacao.
+
+source_raw: cnc-etablissements
+
+columns:
+  - name: ano
+    type: int64
+    description: ""
+  - name: sheet
+    type: string
+    description: ""
+  - name: nautoc
+    type: number
+    description: ""
+  - name: nometab
+    type: string
+    description: ""
+  - name: ecrans
+    type: int64
+    description: ""
+  - name: fauteuils
+    type: number
+    description: ""
+  - name: depcom
+    type: string
+    description: ""
+  - name: commune
+    type: string
+    description: ""
+  - name: genre
+    type: string
+    description: ""
+  - name: ae
+    type: string
+    description: ""
+  - name: 3d
+    type: string
+    description: ""
+  - name: nauto
+    type: number
+    description: ""
+  - name: nom_etablissement
+    type: string
+    description: ""
+  - name: code_commune
+    type: string
+    description: ""
+  - name: art_et_essai
+    type: string
+    description: ""
+  - name: ecrans_3d
+    type: string
+    description: ""

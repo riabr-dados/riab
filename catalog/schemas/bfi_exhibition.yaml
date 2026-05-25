@@ -1,0 +1,100 @@
+table: bfi_exhibition
+description: >
+  Dados sobre salas de cinema, sessoes e admissoes no mercado britanico de exibicao, incluindo multiplex e circuito independente.
+
+source_raw: bfi-exibicao-cinematografica
+
+columns:
+  - name: arquivo
+    type: string
+    description: ""
+  - name: sheet
+    type: string
+    description: ""
+  - name: titulo_tabela
+    type: string
+    description: ""
+  - name: isba_tv_region
+    type: string
+    description: ""
+  - name: screens_per_100_000_people
+    type: string
+    description: ""
+  - name: screens
+    type: string
+    description: ""
+  - name: of_total_screens
+    type: string
+    description: ""
+  - name: sites
+    type: string
+    description: ""
+  - name: population_million
+    type: string
+    description: ""
+  - name: admissions_million
+    type: string
+    description: ""
+  - name: admissions_per_screen
+    type: string
+    description: ""
+  - name: admissions_per_head_of_population
+    type: string
+    description: ""
+  - name: average_ticket_price
+    type: string
+    description: ""
+  - name: nation_region
+    type: string
+    description: ""
+  - name: average_number_of_screens_per_site
+    type: string
+    description: ""
+  - name: multiplex
+    type: string
+    description: ""
+  - name: of_multiplex
+    type: string
+    description: ""
+  - name: traditional_and_mixed_use
+    type: string
+    description: ""
+  - name: total_screens
+    type: string
+    description: ""
+  - name: exhibitor
+    type: string
+    description: ""
+  - name: type_of_event
+    type: string
+    description: ""
+  - name: number_of_events
+    type: string
+    description: ""
+  - name: of_events
+    type: string
+    description: ""
+  - name: gross_box_office_million
+    type: string
+    description: ""
+  - name: of_gross_box_office
+    type: string
+    description: ""
+  - name: rank
+    type: string
+    description: ""
+  - name: title
+    type: string
+    description: ""
+  - name: type
+    type: string
+    description: ""
+  - name: country_of_origin
+    type: string
+    description: ""
+  - name: distributor
+    type: string
+    description: ""
+  - name: number_of_sites_on_release
+    type: string
+    description: ""

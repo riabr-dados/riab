@@ -1,0 +1,118 @@
+table: bfi_empresas_industria
+description: >
+  Cadastro e perfil das empresas do setor cinematografico britanico: producao, distribuicao, exibicao e servicos.
+
+source_raw: bfi-empresas-industria
+
+columns:
+  - name: arquivo
+    type: string
+    description: ""
+  - name: sheet
+    type: string
+    description: ""
+  - name: titulo_tabela
+    type: string
+    description: ""
+  - name: sub_sector
+    type: string
+    description: ""
+  - name: 2019_0
+    type: number
+    description: ""
+  - name: 2020_0
+    type: number
+    description: ""
+  - name: 2021_0
+    type: number
+    description: ""
+  - name: 2022_0
+    type: number
+    description: ""
+  - name: 2023_0
+    type: number
+    description: ""
+  - name: growth_2019_2023
+    type: string
+    description: ""
+  - name: turnover_size_band_million
+    type: string
+    description: ""
+  - name: number
+    type: string
+    description: ""
+  - name: coluna
+    type: string
+    description: ""
+  - name: turnover_million
+    type: string
+    description: ""
+  - name: coluna_2
+    type: string
+    description: ""
+  - name: categoria
+    type: string
+    description: ""
+  - name: film_production_number
+    type: string
+    description: ""
+  - name: film_production
+    type: string
+    description: ""
+  - name: video_production_number
+    type: string
+    description: ""
+  - name: video_production
+    type: string
+    description: ""
+  - name: post_production_number
+    type: string
+    description: ""
+  - name: post_production
+    type: string
+    description: ""
+  - name: film_distribution_number
+    type: string
+    description: ""
+  - name: film_distribution
+    type: string
+    description: ""
+  - name: video_distribution_number
+    type: string
+    description: ""
+  - name: video_distribution
+    type: string
+    description: ""
+  - name: film_exhibition_number
+    type: string
+    description: ""
+  - name: film_exhibition
+    type: string
+    description: ""
+  - name: total_uk_film_number
+    type: string
+    description: ""
+  - name: total_uk_film
+    type: string
+    description: ""
+  - name: film_production_turnover_million
+    type: string
+    description: ""
+  - name: video_production_turnover_million
+    type: string
+    description: ""
+  - name: post_production_turnover_million
+    type: string
+    description: ""
+  - name: film_distribution_turnover_million
+    type: string
+    description: ""
+  - name: video_distribution_turnover_million
+    type: string
+    description: ""
+  - name: film_exhibition_turnover_million
+    type: string
+    description: ""
+  - name: total_uk_film_turnover_million
+    type: string
+    description: ""

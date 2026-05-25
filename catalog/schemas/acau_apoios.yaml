@@ -1,0 +1,79 @@
+table: acau_apoios
+description: >
+  Projetos apoiados e reembolsos da ACAU (Agencia del Cine y el Audiovisual del Uruguay) entre 2013 e 2024.
+
+source_raw: acau-uruguay-apoios-audiovisual
+
+columns:
+  - name: id_titulo
+    type: string
+    description: ""
+  - name: titulo
+    type: string
+    description: ""
+  - name: instrumento
+    type: string
+    description: ""
+  - name: ano_instrumento
+    type: string
+    description: ""
+  - name: tipo_de_proyecto
+    type: string
+    description: ""
+  - name: fondo
+    type: string
+    description: ""
+  - name: formato
+    type: string
+    description: ""
+  - name: tipo_narrativo
+    type: string
+    description: ""
+  - name: genero
+    type: string
+    description: ""
+  - name: destino_del_fondo
+    type: string
+    description: ""
+  - name: categoria_festival
+    type: string
+    description: ""
+  - name: estado_del_proyecto
+    type: string
+    description: ""
+  - name: modalidad
+    type: string
+    description: ""
+  - name: tipo_de_produccion
+    type: string
+    description: ""
+  - name: monto_adjudicado_corriente
+    type: number
+    description: ""
+  - name: monto_adjudicado_constante
+    type: number
+    description: ""
+  - name: monto_ejecutado_corriente
+    type: number
+    description: ""
+  - name: estado
+    type: string
+    description: ""
+  - name: rut
+    type: int64
+    description: ""
+  - name: postulante
+    type: string
+    description: ""
+  - name: empresa_nombre_fantasia
+    type: string
+    description: ""
+  - name: razon_social
+    type: string
+    description: ""
+  - name: responsable_legal
+    type: string
+    description: ""
+  - name: fecha_de_resolucion
+    type: datetime
+    description: ""

@@ -1,0 +1,64 @@
+table: bfi_video_digital
+description: >
+  Mercado britanico de video digital (VoD, streaming, download): receita, titulos disponíveis e habitos de consumo.
+
+source_raw: bfi-video-digital
+
+columns:
+  - name: arquivo
+    type: string
+    description: ""
+  - name: sheet
+    type: string
+    description: ""
+  - name: titulo_tabela
+    type: string
+    description: ""
+  - name: rank
+    type: string
+    description: ""
+  - name: title
+    type: string
+    description: ""
+  - name: county_of_origin
+    type: string
+    description: ""
+  - name: svod_platform
+    type: string
+    description: ""
+  - name: year_of_release
+    type: string
+    description: ""
+  - name: total_audience_million
+    type: string
+    description: ""
+  - name: country_of_origin
+    type: string
+    description: ""
+  - name: year_of_release_2
+    type: string
+    description: ""
+  - name: number_of_top_films
+    type: string
+    description: ""
+  - name: of_top_films
+    type: string
+    description: ""
+  - name: of_top_film_viewing
+    type: string
+    description: ""
+  - name: period_of_release
+    type: string
+    description: ""
+  - name: netflix_films_276
+    type: string
+    description: ""
+  - name: amazon_prime_video_films_41
+    type: string
+    description: ""
+  - name: disney_films_177
+    type: string
+    description: ""
+  - name: total_films_500
+    type: string
+    description: ""

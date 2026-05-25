@@ -1,0 +1,61 @@
+table: bfi_certificacao_obras
+description: >
+  Filmes e obras certificadas como britanicos pelo BFI, habilitando acesso a incentivos fiscais e cotas de conteudo.
+
+source_raw: bfi-certificacao-obras
+
+columns:
+  - name: arquivo
+    type: string
+    description: ""
+  - name: sheet
+    type: string
+    description: ""
+  - name: titulo_tabela
+    type: string
+    description: ""
+  - name: year
+    type: string
+    description: ""
+  - name: cultural_test
+    type: string
+    description: ""
+  - name: co_production
+    type: string
+    description: ""
+  - name: budget_band
+    type: string
+    description: ""
+  - name: number_of_films
+    type: string
+    description: ""
+  - name: of_all_films
+    type: string
+    description: ""
+  - name: aggregate_budget_million
+    type: string
+    description: ""
+  - name: of_total_aggregate_budget
+    type: string
+    description: ""
+  - name: median_budget_per_minute
+    type: string
+    description: ""
+  - name: categoria
+    type: string
+    description: ""
+  - name: 2019_0
+    type: number
+    description: ""
+  - name: 2020_0
+    type: number
+    description: ""
+  - name: 2021_0
+    type: number
+    description: ""
+  - name: 2022_0
+    type: number
+    description: ""
+  - name: 2023_0
+    type: number
+    description: ""

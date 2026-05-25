@@ -1,0 +1,67 @@
+table: bfi_emprego_industria
+description: >
+  Postos de trabalho e perfil de emprego na industria cinematografica do Reino Unido, por funcao e segmento.
+
+source_raw: bfi-emprego-industria
+
+columns:
+  - name: arquivo
+    type: string
+    description: ""
+  - name: sheet
+    type: string
+    description: ""
+  - name: titulo_tabela
+    type: string
+    description: ""
+  - name: year
+    type: string
+    description: ""
+  - name: film_and_video_production
+    type: string
+    description: ""
+  - name: film_and_video_distribution
+    type: string
+    description: ""
+  - name: film_exhibition
+    type: string
+    description: ""
+  - name: total
+    type: string
+    description: ""
+  - name: total_in_employment
+    type: string
+    description: ""
+  - name: self_employed
+    type: string
+    description: ""
+  - name: self_employed_as_of_total
+    type: string
+    description: ""
+  - name: sector
+    type: string
+    description: ""
+  - name: total_uk_employment
+    type: string
+    description: ""
+  - name: london_and_south_east_employment
+    type: string
+    description: ""
+  - name: london_and_south_east_as_of_uk_total
+    type: string
+    description: ""
+  - name: workplace_size_band
+    type: string
+    description: ""
+  - name: number_of_workplaces_in_band
+    type: string
+    description: ""
+  - name: of_total_workplaces
+    type: string
+    description: ""
+  - name: number_of_employees_in_band
+    type: string
+    description: ""
+  - name: of_total_employees
+    type: string
+    description: ""

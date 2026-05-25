@@ -1,0 +1,52 @@
+table: bfi_educacao_cinematografica
+description: >
+  Dados sobre iniciativas, programas e alcance da educacao cinematografica no Reino Unido.
+
+source_raw: bfi-educacao-cinematografica
+
+columns:
+  - name: arquivo
+    type: string
+    description: ""
+  - name: sheet
+    type: string
+    description: ""
+  - name: titulo_tabela
+    type: string
+    description: ""
+  - name: nation_region
+    type: string
+    description: ""
+  - name: 2021_22_film_clubs
+    type: string
+    description: ""
+  - name: 2021_22
+    type: string
+    description: ""
+  - name: 2022_23_film_clubs
+    type: string
+    description: ""
+  - name: 2022_23
+    type: string
+    description: ""
+  - name: 2023_24_film_clubs
+    type: string
+    description: ""
+  - name: 2023_24
+    type: string
+    description: ""
+  - name: 2019_20
+    type: string
+    description: ""
+  - name: 2020_21
+    type: string
+    description: ""
+  - name: categoria
+    type: string
+    description: ""
+  - name: bfi_southbank_and_festivals_education_event_admissions
+    type: string
+    description: ""
+  - name: bfi_reuben_library_visits
+    type: string
+    description: ""

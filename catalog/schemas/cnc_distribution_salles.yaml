@@ -1,0 +1,58 @@
+table: cnc_distribution_salles
+description: >
+  Filmes distribuidos em salas de cinema na Franca: distribuidoras, numero de copias, admissoes por distribuidora e quota de mercado.
+
+source_raw: cnc-distribution-salles
+
+columns:
+  - name: nombre_de_films_d_initiative_francaise_agrees_selon_l_annee_de_sortie_en_salles
+    type: string
+    description: ""
+  - name: unnamed_1
+    type: number
+    description: ""
+  - name: unnamed_2
+    type: number
+    description: ""
+  - name: unnamed_3
+    type: number
+    description: ""
+  - name: unnamed_4
+    type: number
+    description: ""
+  - name: unnamed_5
+    type: number
+    description: ""
+  - name: unnamed_6
+    type: number
+    description: ""
+  - name: unnamed_7
+    type: number
+    description: ""
+  - name: unnamed_8
+    type: number
+    description: ""
+  - name: unnamed_9
+    type: number
+    description: ""
+  - name: unnamed_10
+    type: number
+    description: ""
+  - name: unnamed_11
+    type: number
+    description: ""
+  - name: unnamed_12
+    type: number
+    description: ""
+  - name: unnamed_13
+    type: number
+    description: ""
+  - name: unnamed_14
+    type: number
+    description: ""
+  - name: unnamed_15
+    type: number
+    description: ""
+  - name: unnamed_16
+    type: number
+    description: ""

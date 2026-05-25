@@ -1,0 +1,37 @@
+table: bfi_top_films_2023
+description: >
+  Ranking dos filmes com maior bilheteria no mercado britanico em 2023, com admissoes, receita e origem de producao.
+
+source_raw: bfi-top-filmes-2023
+
+columns:
+  - name: arquivo
+    type: string
+    description: ""
+  - name: sheet
+    type: string
+    description: ""
+  - name: titulo_tabela
+    type: string
+    description: ""
+  - name: rank
+    type: string
+    description: ""
+  - name: title
+    type: string
+    description: ""
+  - name: country_of_origin
+    type: string
+    description: ""
+  - name: box_office_gross_million
+    type: string
+    description: ""
+  - name: widest_point_of_release_sites
+    type: string
+    description: ""
+  - name: opening_weekend_gross_million
+    type: string
+    description: ""
+  - name: distributor
+    type: string
+    description: ""

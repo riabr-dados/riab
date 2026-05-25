@@ -1,0 +1,178 @@
+table: cnc_films_television
+description: >
+  Titulos e passagens de filmes em canais da televisao francesa, com numero de transmissoes e audiencia media.
+
+source_raw: cnc-films-television
+
+columns:
+  - name: sheet
+    type: string
+    description: ""
+  - name: nombre_de_films_diffuses_a_la_television
+    type: string
+    description: ""
+  - name: unnamed_1
+    type: string
+    description: ""
+  - name: unnamed_2
+    type: string
+    description: ""
+  - name: unnamed_3
+    type: string
+    description: ""
+  - name: unnamed_4
+    type: string
+    description: ""
+  - name: unnamed_5
+    type: string
+    description: ""
+  - name: unnamed_6
+    type: string
+    description: ""
+  - name: unnamed_7
+    type: string
+    description: ""
+  - name: unnamed_8
+    type: string
+    description: ""
+  - name: unnamed_9
+    type: string
+    description: ""
+  - name: unnamed_10
+    type: string
+    description: ""
+  - name: unnamed_11
+    type: string
+    description: ""
+  - name: unnamed_12
+    type: string
+    description: ""
+  - name: unnamed_13
+    type: string
+    description: ""
+  - name: unnamed_14
+    type: string
+    description: ""
+  - name: unnamed_15
+    type: string
+    description: ""
+  - name: unnamed_16
+    type: string
+    description: ""
+  - name: unnamed_17
+    type: string
+    description: ""
+  - name: unnamed_18
+    type: string
+    description: ""
+  - name: unnamed_19
+    type: string
+    description: ""
+  - name: unnamed_20
+    type: string
+    description: ""
+  - name: unnamed_21
+    type: string
+    description: ""
+  - name: unnamed_22
+    type: string
+    description: ""
+  - name: unnamed_23
+    type: string
+    description: ""
+  - name: unnamed_24
+    type: string
+    description: ""
+  - name: unnamed_25
+    type: string
+    description: ""
+  - name: unnamed_26
+    type: string
+    description: ""
+  - name: unnamed_27
+    type: string
+    description: ""
+  - name: unnamed_28
+    type: string
+    description: ""
+  - name: unnamed_29
+    type: string
+    description: ""
+  - name: unnamed_30
+    type: string
+    description: ""
+  - name: unnamed_31
+    type: string
+    description: ""
+  - name: unnamed_32
+    type: string
+    description: ""
+  - name: unnamed_33
+    type: string
+    description: ""
+  - name: unnamed_34
+    type: string
+    description: ""
+  - name: unnamed_35
+    type: string
+    description: ""
+  - name: unnamed_36
+    type: string
+    description: ""
+  - name: nombre_de_diffusions_des_films_a_la_television
+    type: string
+    description: ""
+  - name: nombre_de_films_inedits_diffuses_a_la_television
+    type: string
+    description: ""
+  - name: nombre_de_diffusions_des_films_a_la_television_en_premiere_partie_de_soiree
+    type: string
+    description: ""
+  - name: nombre_de_diffusions_de_films_inedits_a_la_television_en_premiere_partie_de_soiree
+    type: string
+    description: ""
+  - name: lcp_an
+    type: string
+    description: ""
+  - name: nd
+    type: string
+    description: ""
+  - name: nd_1
+    type: string
+    description: ""
+  - name: nd_2
+    type: string
+    description: ""
+  - name: 4
+    type: string
+    description: ""
+  - name: 7
+    type: string
+    description: ""
+  - name: 1
+    type: string
+    description: ""
+  - name: 32
+    type: string
+    description: ""
+  - name: 35
+    type: string
+    description: ""
+  - name: 42
+    type: string
+    description: ""
+  - name: 45
+    type: string
+    description: ""
+  - name: 43
+    type: number
+    description: ""
+  - name: 4_444444444444445
+    type: string
+    description: ""
+  - name: 4_777777777777778
+    type: string
+    description: ""
+  - name: 1_0023310023310024
+    type: number
+    description: ""

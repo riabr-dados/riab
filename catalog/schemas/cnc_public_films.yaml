@@ -1,0 +1,40 @@
+table: cnc_public_films
+description: >
+  Perfil sociodemografico do publico de cinema na Franca: faixa etaria, genero, frequencia de ida ao cinema e preferencias de genero de filme.
+
+source_raw: cnc-public-films
+
+columns:
+  - name: public_des_films_francais
+    type: string
+    description: ""
+  - name: unnamed_1
+    type: number
+    description: ""
+  - name: unnamed_2
+    type: number
+    description: ""
+  - name: unnamed_3
+    type: number
+    description: ""
+  - name: unnamed_4
+    type: number
+    description: ""
+  - name: unnamed_5
+    type: number
+    description: ""
+  - name: unnamed_6
+    type: number
+    description: ""
+  - name: unnamed_7
+    type: number
+    description: ""
+  - name: unnamed_8
+    type: number
+    description: ""
+  - name: unnamed_9
+    type: number
+    description: ""
+  - name: unnamed_10
+    type: number
+    description: ""

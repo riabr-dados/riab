@@ -1,0 +1,109 @@
+table: bfi_filmes_televisao
+description: >
+  Exibicao de filmes em canais de televisao britanicos: numero de transmissoes, audiencia e origem dos filmes.
+
+source_raw: bfi-filmes-televisao
+
+columns:
+  - name: arquivo
+    type: string
+    description: ""
+  - name: sheet
+    type: string
+    description: ""
+  - name: titulo_tabela
+    type: string
+    description: ""
+  - name: broadcaster
+    type: string
+    description: ""
+  - name: number_of_films_broadcast
+    type: string
+    description: ""
+  - name: number_of_uk_qualifying_films_broadcast
+    type: string
+    description: ""
+  - name: uk_qualifying_films_as_of_total_films_broadcast
+    type: string
+    description: ""
+  - name: number_of_recent_uk_qualifying_films_broadcast
+    type: string
+    description: ""
+  - name: recent_uk_qualifying_films_as_of_total_films_broadcast
+    type: string
+    description: ""
+  - name: rank
+    type: string
+    description: ""
+  - name: film
+    type: string
+    description: ""
+  - name: channel
+    type: string
+    description: ""
+  - name: country
+    type: string
+    description: ""
+  - name: release_year
+    type: string
+    description: ""
+  - name: audience_million
+    type: string
+    description: ""
+  - name: country_of_origin
+    type: string
+    description: ""
+  - name: number_of_distinct_film_titles
+    type: string
+    description: ""
+  - name: number_of_film_transmissions
+    type: string
+    description: ""
+  - name: average_audience_000
+    type: string
+    description: ""
+  - name: top_film
+    type: string
+    description: ""
+  - name: audience_for_top_film_000
+    type: string
+    description: ""
+  - name: audience_000
+    type: string
+    description: ""
+  - name: tv_category
+    type: string
+    description: ""
+  - name: 2014_0
+    type: number
+    description: ""
+  - name: 2015_0
+    type: number
+    description: ""
+  - name: 2016_0
+    type: number
+    description: ""
+  - name: 2017_0
+    type: number
+    description: ""
+  - name: 2018_0
+    type: number
+    description: ""
+  - name: 2019_0
+    type: number
+    description: ""
+  - name: 2020_0
+    type: number
+    description: ""
+  - name: 2021_0
+    type: number
+    description: ""
+  - name: 2022_0
+    type: number
+    description: ""
+  - name: 2023_0
+    type: number
+    description: ""
+  - name: 2014
+    type: string
+    description: ""

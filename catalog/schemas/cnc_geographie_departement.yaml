@@ -1,0 +1,289 @@
+table: cnc_geographie_departement
+description: >
+  Equipamento e frequentacao de salas de cinema na Franca desagregados por regiao, departamento, commune e unidade urbana.
+
+source_raw: cnc-geographie-cinema
+
+columns:
+  - name: sheet
+    type: string
+    description: ""
+  - name: unnamed_0
+    type: string
+    description: ""
+  - name: unnamed_1
+    type: string
+    description: ""
+  - name: unnamed_2
+    type: number
+    description: ""
+  - name: unnamed_3
+    type: number
+    description: ""
+  - name: unnamed_4
+    type: number
+    description: ""
+  - name: unnamed_5
+    type: number
+    description: ""
+  - name: unnamed_6
+    type: number
+    description: ""
+  - name: unnamed_7
+    type: number
+    description: ""
+  - name: unnamed_8
+    type: number
+    description: ""
+  - name: unnamed_9
+    type: number
+    description: ""
+  - name: unnamed_10
+    type: number
+    description: ""
+  - name: unnamed_11
+    type: number
+    description: ""
+  - name: unnamed_12
+    type: number
+    description: ""
+  - name: unnamed_13
+    type: number
+    description: ""
+  - name: unnamed_14
+    type: number
+    description: ""
+  - name: unnamed_15
+    type: number
+    description: ""
+  - name: unnamed_16
+    type: number
+    description: ""
+  - name: unnamed_17
+    type: number
+    description: ""
+  - name: unnamed_18
+    type: number
+    description: ""
+  - name: unnamed_19
+    type: number
+    description: ""
+  - name: unnamed_20
+    type: number
+    description: ""
+  - name: unnamed_21
+    type: number
+    description: ""
+  - name: unnamed_22
+    type: number
+    description: ""
+  - name: unnamed_23
+    type: number
+    description: ""
+  - name: unnamed_24
+    type: number
+    description: ""
+  - name: unnamed_25
+    type: number
+    description: ""
+  - name: unnamed_26
+    type: number
+    description: ""
+  - name: unnamed_27
+    type: number
+    description: ""
+  - name: unnamed_28
+    type: number
+    description: ""
+  - name: unnamed_29
+    type: number
+    description: ""
+  - name: unnamed_30
+    type: number
+    description: ""
+  - name: unnamed_31
+    type: number
+    description: ""
+  - name: unnamed_32
+    type: number
+    description: ""
+  - name: unnamed_33
+    type: number
+    description: ""
+  - name: 1966
+    type: number
+    description: ""
+  - name: 1967
+    type: number
+    description: ""
+  - name: 1968
+    type: number
+    description: ""
+  - name: 1969
+    type: number
+    description: ""
+  - name: 1970
+    type: number
+    description: ""
+  - name: 1971
+    type: number
+    description: ""
+  - name: 1972
+    type: number
+    description: ""
+  - name: 1973
+    type: number
+    description: ""
+  - name: 1974
+    type: number
+    description: ""
+  - name: 1975
+    type: number
+    description: ""
+  - name: 1976
+    type: number
+    description: ""
+  - name: 1977
+    type: number
+    description: ""
+  - name: 1978
+    type: number
+    description: ""
+  - name: 1979
+    type: number
+    description: ""
+  - name: 1980
+    type: number
+    description: ""
+  - name: 1981
+    type: number
+    description: ""
+  - name: 1982
+    type: number
+    description: ""
+  - name: 1983
+    type: number
+    description: ""
+  - name: 1984
+    type: number
+    description: ""
+  - name: 1985
+    type: number
+    description: ""
+  - name: 1986
+    type: number
+    description: ""
+  - name: 1987
+    type: number
+    description: ""
+  - name: 1988
+    type: number
+    description: ""
+  - name: 1989
+    type: number
+    description: ""
+  - name: 1990
+    type: number
+    description: ""
+  - name: 1991
+    type: number
+    description: ""
+  - name: 1992
+    type: number
+    description: ""
+  - name: 1993
+    type: number
+    description: ""
+  - name: 1994
+    type: number
+    description: ""
+  - name: 1995
+    type: number
+    description: ""
+  - name: 1996
+    type: number
+    description: ""
+  - name: 1997
+    type: number
+    description: ""
+  - name: 1998
+    type: number
+    description: ""
+  - name: 1999
+    type: number
+    description: ""
+  - name: 2000
+    type: number
+    description: ""
+  - name: 2001
+    type: number
+    description: ""
+  - name: 2002
+    type: number
+    description: ""
+  - name: 2003
+    type: number
+    description: ""
+  - name: 2004
+    type: number
+    description: ""
+  - name: 2005
+    type: number
+    description: ""
+  - name: 2006
+    type: number
+    description: ""
+  - name: 2007
+    type: number
+    description: ""
+  - name: 2008
+    type: number
+    description: ""
+  - name: 2009
+    type: number
+    description: ""
+  - name: 2010
+    type: number
+    description: ""
+  - name: 2011
+    type: number
+    description: ""
+  - name: 2012
+    type: number
+    description: ""
+  - name: 2013
+    type: number
+    description: ""
+  - name: 2014
+    type: number
+    description: ""
+  - name: 2015
+    type: number
+    description: ""
+  - name: 2016
+    type: number
+    description: ""
+  - name: 2017
+    type: number
+    description: ""
+  - name: 2018
+    type: number
+    description: ""
+  - name: 2019
+    type: number
+    description: ""
+  - name: 2020
+    type: number
+    description: ""
+  - name: 2021
+    type: number
+    description: ""
+  - name: 2022
+    type: number
+    description: ""
+  - name: 2023
+    type: number
+    description: ""
+  - name: 2024
+    type: number
+    description: ""

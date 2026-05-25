@@ -1,0 +1,28 @@
+table: cnc_films_million_entrees
+description: >
+  Todos os filmes que ultrapassaram 1 milhao de espectadores na Franca, com total de admissoes, distribuidora e data de estreia.
+
+source_raw: cnc-films-million-entrees
+
+columns:
+  - name: rang
+    type: number
+    description: ""
+  - name: titre
+    type: string
+    description: ""
+  - name: nationalite
+    type: string
+    description: ""
+  - name: sortie
+    type: datetime
+    description: ""
+  - name: entrees_millions
+    type: int64
+    description: ""
+  - name: ano
+    type: int64
+    description: ""
+  - name: unnamed_0
+    type: number
+    description: ""
