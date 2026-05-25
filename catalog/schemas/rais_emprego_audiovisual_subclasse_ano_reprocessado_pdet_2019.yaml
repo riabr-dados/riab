@@ -1,0 +1,41 @@
+table: rais_emprego_audiovisual_subclasse_ano_reprocessado_pdet_2019
+description: >
+  Reprocessamento teste da metodologia observavel ANCINE/OCA sobre os
+  microdados publicos RAIS/PDET vigentes para 2019.
+
+source_raw: br-rais-emprego-audiovisual
+
+columns:
+  - name: ano
+    type: int64
+    description: "Ano de referencia"
+  - name: cnae_raw
+    type: string
+    description: "Subclasse CNAE 2.0 sem pontuacao, como aparece na RAIS"
+  - name: cnae_classe
+    type: string
+    description: "Classe CNAE 2.0 agregadora"
+  - name: cnae_subclasse
+    type: string
+    description: "Subclasse CNAE 2.0 no formato publicado"
+  - name: classe
+    type: string
+    description: "Descricao da classe CNAE"
+  - name: subclasse
+    type: string
+    description: "Descricao da subclasse CNAE"
+  - name: empregos_formais_ativos_31_12
+    type: int64
+    description: "Empregos formais ativos em 31 de dezembro"
+  - name: camada_metodologica
+    type: string
+    description: "Identifica a camada reprocessado_fonte_primaria"
+  - name: fonte_primaria
+    type: string
+    description: "Fonte primaria externa utilizada"
+  - name: fonte_url
+    type: string
+    description: "URL base dos microdados RAIS/PDET utilizados"
+  - name: metodo_reprocessamento
+    type: string
+    description: "Resumo do filtro aplicado aos microdados"

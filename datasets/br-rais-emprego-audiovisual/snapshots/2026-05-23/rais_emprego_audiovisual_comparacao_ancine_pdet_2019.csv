@@ -1,0 +1,17 @@
+cnae_raw,cnae_classe,cnae_subclasse,classe,subclasse,valor_publicado_ancine,valor_reprocessado_pdet,diferenca_reprocessado_menos_publicado,diferenca_percentual_sobre_publicado,camada_publicada,camada_reprocessada
+5911101,59.11-1,59.11-1/01,"Atividades de producao cinematografica, de videos e de programas de televisao",Estudios cinematograficos,706,706,0,0.0,publicado_ancine,reprocessado_fonte_primaria
+5911102,59.11-1,59.11-1/02,"Atividades de producao cinematografica, de videos e de programas de televisao",Producao de filmes para publicidade,2229,2214,-15,-0.6729,publicado_ancine,reprocessado_fonte_primaria
+5911199,59.11-1,59.11-1/99,"Atividades de producao cinematografica, de videos e de programas de televisao","Atividades de producao cinematografica, de videos e de programas de televisao nao especificadas anteriormente",7013,6937,-76,-1.0837,publicado_ancine,reprocessado_fonte_primaria
+5912001,59.12-0,59.12-0/01,"Atividades de pos-producao cinematografica, de videos e de programas de televisao",Servicos de dublagem,142,142,0,0.0,publicado_ancine,reprocessado_fonte_primaria
+5912002,59.12-0,59.12-0/02,"Atividades de pos-producao cinematografica, de videos e de programas de televisao",Servicos de mixagem sonora em producao audiovisual,179,177,-2,-1.1173,publicado_ancine,reprocessado_fonte_primaria
+5912099,59.12-0,59.12-0/99,"Atividades de pos-producao cinematografica, de videos e de programas de televisao","Atividades de pos-producao cinematografica, de videos e de programas de televisao nao especificadas anteriormente",845,843,-2,-0.2367,publicado_ancine,reprocessado_fonte_primaria
+5913800,59.13-8,59.13-8/00,"Distribuicao cinematografica, de video e de programas de televisao","Distribuicao cinematografica, de video e de programas de televisao",1362,1355,-7,-0.514,publicado_ancine,reprocessado_fonte_primaria
+5914600,59.14-6,59.14-6/00,Atividades de exibicao cinematografica,Atividades de exibicao cinematografica,15587,15153,-434,-2.7844,publicado_ancine,reprocessado_fonte_primaria
+6021700,60.21-7,60.21-7/00,Atividades de televisao aberta,Atividades de televisao aberta,50132,49052,-1080,-2.1543,publicado_ancine,reprocessado_fonte_primaria
+6022501,60.22-5,60.22-5/01,Programadoras e atividades relacionadas a televisao por assinatura,Programadoras,1098,1095,-3,-0.2732,publicado_ancine,reprocessado_fonte_primaria
+6022502,60.22-5,60.22-5/02,Programadoras e atividades relacionadas a televisao por assinatura,"Atividades relacionadas a televisao por assinatura, exceto programadoras",554,548,-6,-1.083,publicado_ancine,reprocessado_fonte_primaria
+6141800,61.41-8,61.41-8/00,Operadoras de televisao por assinatura por cabo,Operadoras de televisao por assinatura por cabo,3503,3496,-7,-0.1998,publicado_ancine,reprocessado_fonte_primaria
+6142600,61.42-6,61.42-6/00,Operadoras de televisao por assinatura por micro-ondas,Operadoras de televisao por assinatura por micro-ondas,20,20,0,0.0,publicado_ancine,reprocessado_fonte_primaria
+6143400,61.43-4,61.43-4/00,Operadoras de televisao por assinatura por satelite,Operadoras de televisao por assinatura por satelite,372,372,0,0.0,publicado_ancine,reprocessado_fonte_primaria
+7722500,77.22-5,77.22-5/00,"Aluguel de fitas de video, DVDs e similares","Aluguel de fitas de video, DVDs e similares",2347,2198,-149,-6.3485,publicado_ancine,reprocessado_fonte_primaria
+4762800,47.62-8,47.62-8/00,"Comercio varejista de discos, CDs, DVDs e fitas","Comercio varejista de discos, CDs, DVDs e fitas",1964,1922,-42,-2.1385,publicado_ancine,reprocessado_fonte_primaria

@@ -1,0 +1,235 @@
+from __future__ import annotations
+
+import argparse
+import re
+import subprocess
+from pathlib import Path
+
+import pandas as pd
+
+
+ROOT = Path(__file__).resolve().parents[2]
+DEFAULT_ARCHIVE_DIR = ROOT / "analysis" / "rais_repro_test"
+DEFAULT_OUTPUT_DIR = ROOT / "datasets" / "br-rais-emprego-audiovisual" / "snapshots" / "2026-05-23"
+CLEANED = ROOT / "pipelines" / "output" / "cleaned"
+DEFAULT_YEAR = 2019
+SEVEN_ZIP_CANDIDATES = [
+    Path(r"C:\Program Files\7-Zip\7z.exe"),
+    Path(r"C:\Program Files\NVIDIA Corporation\NVIDIA App\7z.exe"),
+    Path(r"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\Extensions\Xamarin.VisualStudio\7-Zip\7z.exe"),
+]
+
+ARCHIVES = [
+    "RAIS_VINC_PUB_NORTE.7z",
+    "RAIS_VINC_PUB_CENTRO_OESTE.7z",
+    "RAIS_VINC_PUB_NORDESTE.7z",
+    "RAIS_VINC_PUB_SUL.7z",
+    "RAIS_VINC_PUB_MG_ES_RJ.7z",
+    "RAIS_VINC_PUB_SP.7z",
+]
+
+SUBCLASSES = {
+    "5911101": ("59.11-1", "59.11-1/01", "Atividades de producao cinematografica, de videos e de programas de televisao", "Estudios cinematograficos"),
+    "5911102": ("59.11-1", "59.11-1/02", "Atividades de producao cinematografica, de videos e de programas de televisao", "Producao de filmes para publicidade"),
+    "5911199": ("59.11-1", "59.11-1/99", "Atividades de producao cinematografica, de videos e de programas de televisao", "Atividades de producao cinematografica, de videos e de programas de televisao nao especificadas anteriormente"),
+    "5912001": ("59.12-0", "59.12-0/01", "Atividades de pos-producao cinematografica, de videos e de programas de televisao", "Servicos de dublagem"),
+    "5912002": ("59.12-0", "59.12-0/02", "Atividades de pos-producao cinematografica, de videos e de programas de televisao", "Servicos de mixagem sonora em producao audiovisual"),
+    "5912099": ("59.12-0", "59.12-0/99", "Atividades de pos-producao cinematografica, de videos e de programas de televisao", "Atividades de pos-producao cinematografica, de videos e de programas de televisao nao especificadas anteriormente"),
+    "5913800": ("59.13-8", "59.13-8/00", "Distribuicao cinematografica, de video e de programas de televisao", "Distribuicao cinematografica, de video e de programas de televisao"),
+    "5914600": ("59.14-6", "59.14-6/00", "Atividades de exibicao cinematografica", "Atividades de exibicao cinematografica"),
+    "6021700": ("60.21-7", "60.21-7/00", "Atividades de televisao aberta", "Atividades de televisao aberta"),
+    "6022501": ("60.22-5", "60.22-5/01", "Programadoras e atividades relacionadas a televisao por assinatura", "Programadoras"),
+    "6022502": ("60.22-5", "60.22-5/02", "Programadoras e atividades relacionadas a televisao por assinatura", "Atividades relacionadas a televisao por assinatura, exceto programadoras"),
+    "6141800": ("61.41-8", "61.41-8/00", "Operadoras de televisao por assinatura por cabo", "Operadoras de televisao por assinatura por cabo"),
+    "6142600": ("61.42-6", "61.42-6/00", "Operadoras de televisao por assinatura por micro-ondas", "Operadoras de televisao por assinatura por micro-ondas"),
+    "6143400": ("61.43-4", "61.43-4/00", "Operadoras de televisao por assinatura por satelite", "Operadoras de televisao por assinatura por satelite"),
+    "7722500": ("77.22-5", "77.22-5/00", "Aluguel de fitas de video, DVDs e similares", "Aluguel de fitas de video, DVDs e similares"),
+    "4762800": ("47.62-8", "47.62-8/00", "Comercio varejista de discos, CDs, DVDs e fitas", "Comercio varejista de discos, CDs, DVDs e fitas"),
+}
+
+PDET_FTP_BASE = "ftp://ftp.mtps.gov.br/pdet/microdados/RAIS"
+
+
+def digits(value: object) -> str:
+    return re.sub(r"\D", "", str(value))
+
+
+def seven_zip() -> Path | None:
+    return next((path for path in SEVEN_ZIP_CANDIDATES if path.exists()), None)
+
+
+def archive_member(archive: Path) -> str:
+    result = subprocess.run(
+        ["tar", "-tf", str(archive)],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    names = [line.strip() for line in result.stdout.splitlines() if line.strip()]
+    if len(names) != 1:
+        raise RuntimeError(f"Arquivo inesperado em {archive.name}: {names}")
+    return names[0]
+
+
+def open_archive_stream(archive: Path, member: str) -> subprocess.Popen:
+    exe = seven_zip()
+    if exe:
+        command = [str(exe), "e", "-so", str(archive), member]
+    else:
+        command = ["tar", "-xOf", str(archive), member]
+    return subprocess.Popen(command, cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+
+
+def aggregate_archive(archive: Path) -> tuple[int, int, dict[str, int]]:
+    counts = {raw: 0 for raw in SUBCLASSES}
+    total_rows = 0
+    active_rows = 0
+    member = archive_member(archive)
+    proc = open_archive_stream(archive, member)
+    assert proc.stdout is not None
+    try:
+        chunks = pd.read_csv(
+            proc.stdout,
+            sep=";",
+            usecols=[11, 36],
+            dtype=str,
+            chunksize=1_000_000,
+            encoding="latin1",
+        )
+        for chunk in chunks:
+            total_rows += len(chunk)
+            active_col, cnae_col = chunk.columns
+            active = chunk[chunk[active_col].str.strip().eq("1")]
+            active_rows += len(active)
+            value_counts = active[cnae_col].str.strip().value_counts()
+            for raw in SUBCLASSES:
+                counts[raw] += int(value_counts.get(raw, 0))
+    finally:
+        proc.stdout.close()
+    return_code = proc.wait()
+    if return_code not in {0, -1}:
+        raise RuntimeError(f"Falha ao descompactar {archive.name}: codigo {return_code}")
+    return total_rows, active_rows, counts
+
+
+def load_published(year: int) -> pd.DataFrame:
+    current = pd.read_csv(
+        DEFAULT_OUTPUT_DIR / "rais_emprego_audiovisual_subclasse_ano.csv",
+    )
+    current = current[current["ano"].eq(year)].copy()
+    current["cnae_raw"] = current["cnae_subclasse"].map(digits)
+    return current[
+        [
+            "cnae_raw",
+            "cnae_classe",
+            "cnae_subclasse",
+            "classe",
+            "subclasse",
+            "empregos_formais_ativos_31_12",
+        ]
+    ].rename(columns={"empregos_formais_ativos_31_12": "valor_publicado_ancine"})
+
+
+def build_reprocessed(year: int, national: dict[str, int]) -> pd.DataFrame:
+    rows = []
+    for raw, count in national.items():
+        cnae_classe, cnae_subclasse, classe, subclasse = SUBCLASSES[raw]
+        rows.append(
+            {
+                "ano": year,
+                "cnae_raw": raw,
+                "cnae_classe": cnae_classe,
+                "cnae_subclasse": cnae_subclasse,
+                "classe": classe,
+                "subclasse": subclasse,
+                "empregos_formais_ativos_31_12": count,
+                "camada_metodologica": "reprocessado_fonte_primaria",
+                "fonte_primaria": "MTE/PDET microdados RAIS vinculos publicos",
+                "fonte_url": f"{PDET_FTP_BASE}/{year}/",
+                "metodo_reprocessamento": "vinculo_ativo_31_12_por_subclasse_cnae_ancine",
+            }
+        )
+    return pd.DataFrame(rows)
+
+
+def write_outputs(df: pd.DataFrame, comparison: pd.DataFrame, regional: pd.DataFrame, year: int, output_dir: Path) -> None:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    CLEANED.mkdir(parents=True, exist_ok=True)
+    tables = {
+        f"rais_emprego_audiovisual_subclasse_ano_reprocessado_pdet_{year}": df,
+        f"rais_emprego_audiovisual_comparacao_ancine_pdet_{year}": comparison,
+        f"rais_emprego_audiovisual_reprocessamento_regioes_pdet_{year}": regional,
+    }
+    for name, table in tables.items():
+        table.to_csv(output_dir / f"{name}.csv", index=False, encoding="utf-8")
+        table.to_csv(CLEANED / f"{name}.csv", index=False, encoding="utf-8")
+        table.to_parquet(CLEANED / f"{name}.parquet", index=False)
+        print(f"[OK] {name}: {len(table):,} linhas")
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Reprocessa emprego audiovisual a partir de microdados RAIS/PDET.",
+    )
+    parser.add_argument("--year", type=int, default=DEFAULT_YEAR)
+    parser.add_argument("--archive-dir", type=Path, default=DEFAULT_ARCHIVE_DIR)
+    parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
+    return parser.parse_args()
+
+
+def main() -> int:
+    args = parse_args()
+    national = {raw: 0 for raw in SUBCLASSES}
+    regional_rows = []
+    for archive_name in ARCHIVES:
+        archive = args.archive_dir / archive_name
+        if not archive.exists():
+            raise FileNotFoundError(f"Arquivo RAIS nao encontrado: {archive}")
+        rows, active_rows, counts = aggregate_archive(archive)
+        region = archive_name.removeprefix("RAIS_VINC_PUB_").removesuffix(".7z")
+        regional_rows.append(
+            {
+                "ano": args.year,
+                "arquivo_regional": archive_name,
+                "recorte_regional": region,
+                "linhas_brutas": rows,
+                "vinculos_ativos_31_12": active_rows,
+                "empregos_audiovisual_ativos_31_12": sum(counts.values()),
+                "fonte_url": f"{PDET_FTP_BASE}/{args.year}/{archive_name}",
+            }
+        )
+        for raw, count in counts.items():
+            national[raw] += count
+        print(f"[OK] {region}: audiovisual={sum(counts.values()):,} linhas={rows:,}")
+
+    reprocessed = build_reprocessed(args.year, national)
+    published = load_published(args.year)
+    comparison = published.merge(
+        reprocessed[["cnae_raw", "cnae_subclasse", "empregos_formais_ativos_31_12"]],
+        on=["cnae_raw", "cnae_subclasse"],
+        how="left",
+    ).rename(columns={"empregos_formais_ativos_31_12": "valor_reprocessado_pdet"})
+    comparison["diferenca_reprocessado_menos_publicado"] = (
+        comparison["valor_reprocessado_pdet"] - comparison["valor_publicado_ancine"]
+    )
+    comparison["diferenca_percentual_sobre_publicado"] = (
+        comparison["diferenca_reprocessado_menos_publicado"]
+        / comparison["valor_publicado_ancine"]
+        * 100
+    ).round(4)
+    comparison["camada_publicada"] = "publicado_ancine"
+    comparison["camada_reprocessada"] = "reprocessado_fonte_primaria"
+    regional = pd.DataFrame(regional_rows)
+    write_outputs(reprocessed, comparison, regional, args.year, args.output_dir)
+    print(
+        "[RESUMO] "
+        f"publicado={comparison['valor_publicado_ancine'].sum():,} "
+        f"reprocessado={comparison['valor_reprocessado_pdet'].sum():,} "
+        f"dif={comparison['diferenca_reprocessado_menos_publicado'].sum():,}"
+    )
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

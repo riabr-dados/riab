@@ -1,0 +1,41 @@
+table: rais_emprego_audiovisual_comparacao_ancine_pdet_2019
+description: >
+  Comparacao entre a serie publicada pela ANCINE/OCA e o reprocessamento dos
+  microdados RAIS/PDET vigentes para 2019.
+
+source_raw: br-rais-emprego-audiovisual
+
+columns:
+  - name: cnae_raw
+    type: string
+    description: "Subclasse CNAE 2.0 sem pontuacao"
+  - name: cnae_classe
+    type: string
+    description: "Classe CNAE 2.0 agregadora"
+  - name: cnae_subclasse
+    type: string
+    description: "Subclasse CNAE 2.0"
+  - name: classe
+    type: string
+    description: "Descricao da classe CNAE"
+  - name: subclasse
+    type: string
+    description: "Descricao da subclasse CNAE"
+  - name: valor_publicado_ancine
+    type: int64
+    description: "Valor publicado no estudo ANCINE/OCA"
+  - name: valor_reprocessado_pdet
+    type: int64
+    description: "Valor recalculado a partir da RAIS/PDET vigente"
+  - name: diferenca_reprocessado_menos_publicado
+    type: int64
+    description: "Diferenca absoluta entre reprocessado e publicado"
+  - name: diferenca_percentual_sobre_publicado
+    type: number
+    description: "Diferenca percentual em relacao ao valor publicado"
+  - name: camada_publicada
+    type: string
+    description: "Identifica a camada publicado_ancine"
+  - name: camada_reprocessada
+    type: string
+    description: "Identifica a camada reprocessado_fonte_primaria"

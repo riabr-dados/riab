@@ -1,0 +1,29 @@
+table: rais_emprego_audiovisual_reprocessamento_regioes_pdet_2019
+description: >
+  Resumo de processamento dos arquivos regionais RAIS/PDET usados no
+  reprocessamento de emprego audiovisual de 2019.
+
+source_raw: br-rais-emprego-audiovisual
+
+columns:
+  - name: ano
+    type: int64
+    description: "Ano de referencia"
+  - name: arquivo_regional
+    type: string
+    description: "Arquivo regional de microdados RAIS/PDET"
+  - name: recorte_regional
+    type: string
+    description: "Recorte regional do arquivo"
+  - name: linhas_brutas
+    type: int64
+    description: "Numero de linhas lidas no arquivo bruto"
+  - name: vinculos_ativos_31_12
+    type: int64
+    description: "Vinculos ativos em 31 de dezembro no arquivo bruto"
+  - name: empregos_audiovisual_ativos_31_12
+    type: int64
+    description: "Vinculos ativos nos CNAEs audiovisuais da metodologia ANCINE"
+  - name: fonte_url
+    type: string
+    description: "URL do arquivo regional no FTP PDET"

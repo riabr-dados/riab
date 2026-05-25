@@ -15,3 +15,10 @@ portal/dist/
 
 # Pipelines output (local apenas — vai pro HF, nao pro Git)
 pipelines/output/
+
+# Caches locais de reproducao com microdados brutos
+analysis/rais_repro_test/*.7z
+analysis/rais_repro_test/*.txt
+analysis/rais_repro_test/*.csv
+analysis/rais_repro_test/reproduce_rais_2019.py
+analysis/rais_repro_test/legado/

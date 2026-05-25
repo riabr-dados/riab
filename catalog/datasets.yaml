@@ -323,7 +323,8 @@ datasets:
       com 20 ou mais pessoas ocupadas, por classes CNAE 2.0, usando tabulacao
       especial IBGE/PAS/PAC e estimativas ANCINE para TV por assinatura por cabo
       de 2015 em diante. O dataset e uma reconstrucao documental da serie
-      publicada pela ANCINE, nao uma reestimacao independente por microdados.
+      publicada pela ANCINE. A reproducao por fonte primaria externa depende de
+      acesso a tabulacoes IBGE/PAS/PAC equivalentes as usadas pela ANCINE.
     source_id: ancine
     status: intermitente
     coverage: "2007-2019"
@@ -345,17 +346,29 @@ datasets:
         sem extensoes proxy para anos posteriores. Pequenas diferencas entre a
         soma das atividades e o total anual podem ocorrer por arredondamento
         das linhas publicadas no Anexo 1.
+    methodology_layers:
+      published_layer:
+        name: publicado_ancine
+        status: implementado
+        source: "ANCINE/OCA - Valor Adicionado pelo Setor Audiovisual"
+      primary_reprocessing:
+        name: reprocessado_fonte_primaria
+        status: planejado_dependente_de_tabulacao
+        source: "IBGE PAS/PAC, tabulacao por CNAE e porte; ANATEL para estimativas de TV paga por cabo"
+        notes: >
+          O estudo usa tabulacao especial IBGE para empresas com 20 ou mais
+          pessoas ocupadas e estimativas ANCINE para 61.41-8 de 2015 em diante.
+          Reprocessar exige reproduzir essas tabulacoes ou obter microdados com
+          variaveis compativeis.
     related:
       - ibge-deflator-ipca
 
   - slug: br-rais-emprego-audiovisual
     title: "Emprego no Setor Audiovisual - Metodologia ANCINE"
     description: >
-      Serie factual de empregos formais ativos em 31/12 no setor audiovisual,
-      reconstruida a partir do Apendice 2 do estudo ANCINE/OCA Emprego no
-      Setor Audiovisual, ano-base 2019. O dataset e uma reconstrucao
-      documental da serie publicada pela ANCINE, nao uma reestimacao
-      independente por microdados da RAIS.
+      Serie factual de empregos formais ativos em 31/12 no setor audiovisual.
+      Mantem a camada publicada pela ANCINE/OCA e inclui reprocessamento dos
+      microdados RAIS/PDET vigentes quando a fonte primaria estiver disponivel.
     source_id: ancine
     status: intermitente
     coverage: "2010-2019"
@@ -370,11 +383,30 @@ datasets:
         - rais_emprego_audiovisual_total_ano
         - rais_emprego_audiovisual_subclasse_ano
         - rais_emprego_audiovisual_fontes
+        - rais_emprego_audiovisual_subclasse_ano_reprocessado_pdet_2019
+        - rais_emprego_audiovisual_comparacao_ancine_pdet_2019
+        - rais_emprego_audiovisual_reprocessamento_regioes_pdet_2019
       notes: >
         A tabela factual exata cobre 2010-2019, limite do Apendice 2 da
-        publicacao mais recente localizada no OCA. O dataset publicado inclui
-        somente a serie oficial que hoje pode ser reconstruida com base
-        documental ANCINE/OCA, sem redistribuir microdados RAIS.
+        publicacao mais recente localizada no OCA. O reprocessamento PDET 2019
+        aplica o recorte observavel da metodologia ANCINE aos microdados RAIS
+        vigentes: vinculos ativos em 31/12 nas subclasses CNAE audiovisuais.
+    methodology_layers:
+      published_layer:
+        name: publicado_ancine
+        status: implementado
+        source: "ANCINE/OCA - Emprego no Setor Audiovisual"
+        coverage: "2010-2019"
+      primary_reprocessing:
+        name: reprocessado_fonte_primaria
+        status: implementado_parcial
+        source: "MTE/PDET microdados RAIS"
+        coverage: "2019"
+        script: "pipelines/transform/reprocess_rais_emprego_audiovisual.py"
+        notes: >
+          O teste 2019 recalculou 86.230 vinculos contra 88.053 publicados
+          pela ANCINE (-2,1%). A diferenca e documentada como divergencia entre
+          a RAIS/PDET vigente e a extracao usada no estudo.
     related:
       - br-pib-audiovisual
 
@@ -385,7 +417,8 @@ datasets:
       brasileiro de servicos audiovisuais, reconstruida a partir do anexo do
       estudo ANCINE/OCA Comercio Exterior de Servicos Audiovisuais, ano-base
       2019. O dataset e uma reconstrucao documental da serie publicada pela
-      ANCINE, nao uma reestimacao independente por microdados do SISCOSERV.
+      ANCINE. O reprocessamento por fonte primaria depende de localizar os
+      dados oficiais SISCOSERV/NBS equivalentes ao anexo publicado.
     source_id: ancine
     status: descontinuado
     coverage: "2014-2019"
@@ -406,6 +439,20 @@ datasets:
         dataset publicado inclui somente a serie oficial que hoje pode ser
         reconstruida com base documental ANCINE/OCA, sem extensoes para anos
         posteriores.
+    methodology_layers:
+      published_layer:
+        name: publicado_ancine
+        status: implementado
+        source: "ANCINE/OCA - Comercio Exterior de Servicos Audiovisuais"
+        coverage: "2014-2019"
+      primary_reprocessing:
+        name: reprocessado_fonte_primaria
+        status: planejado_dependente_de_fonte_siscoserv
+        source: "MDIC/SISCOSERV, codigos NBS do estudo"
+        notes: >
+          Como o SISCOSERV foi encerrado, a reproducao depende de arquivos
+          historicos oficiais por NBS/ano que permitam aplicar o mesmo recorte
+          de servicos audiovisuais.
     related:
       - br-comex-bens-audiovisuais
 
@@ -491,6 +538,20 @@ datasets:
         adicionais, nao inventariada neste snapshot. Os totais anuais desta
         publicacao nao devem ser confundidos com br-rais-emprego-audiovisual,
         porque o recorte metodologico desta secao e proprio.
+    methodology_layers:
+      published_layer:
+        name: publicado_ancine
+        status: implementado_parcial
+        source: "ANCINE/OCA - Genero e Raca no Setor Audiovisual"
+        coverage: "2011-2021"
+      primary_reprocessing:
+        name: reprocessado_fonte_primaria
+        status: planejado
+        source: "MTE/PDET microdados RAIS"
+        notes: >
+          Tecnicamente reprocessavel por RAIS, mas requer documentar o recorte
+          proprio usado no estudo de diversidade antes de gerar uma camada
+          comparavel.
     related:
       - ancine-obras-nao-publicitarias
 

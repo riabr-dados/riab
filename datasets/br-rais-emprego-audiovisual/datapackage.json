@@ -2,7 +2,7 @@
   "$schema": "https://specs.frictionlessdata.io/schemas/data-package.json",
   "name": "br-rais-emprego-audiovisual",
   "title": "Emprego no Setor Audiovisual - Metodologia ANCINE",
-  "description": "Serie factual de empregos formais ativos em 31/12 no setor audiovisual brasileiro, por ano e por subclasse CNAE, reconstruida documentalmente a partir da publicacao oficial ANCINE/OCA e limitada ao periodo oficial hoje disponivel.",
+  "description": "Serie factual de empregos formais ativos em 31/12 no setor audiovisual brasileiro, por ano e por subclasse CNAE. Mantem a camada publicada pela ANCINE/OCA e inclui camada reprocessada dos microdados RAIS/PDET vigentes quando tecnicamente reproduzivel.",
   "version": "2026.05.23",
   "created": "2026-05-23T00:00:00Z",
   "homepage": "https://github.com/SEU-USUARIO/dados-audiovisual-br/tree/main/datasets/br-rais-emprego-audiovisual",
@@ -21,6 +21,10 @@
     {
       "title": "ANCINE/OCA - Outras publicacoes",
       "path": "https://www.gov.br/ancine/pt-br/oca/publicacoes-2/outras-publicacoes"
+    },
+    {
+      "title": "MTE/PDET - Microdados RAIS 2019",
+      "path": "ftp://ftp.mtps.gov.br/pdet/microdados/RAIS/2019/"
     }
   ],
   "contributors": [
@@ -40,11 +44,11 @@
       "descontinuado"
     ],
     "last_checked": "2026-05-23",
-    "notes": "OCA tem historico de instabilidade. A serie publicada aqui cobre somente 2010-2019, periodo que pode ser reconstruido hoje a partir do Apendice 2 do estudo oficial ANCINE/OCA. Trata-se de reproducao estruturada da serie publicada, nao de reestimacao independente por microdados."
+    "notes": "OCA tem historico de instabilidade. A serie publicada aqui cobre 2010-2019 e preserva os valores do Apendice 2 do estudo oficial ANCINE/OCA. A camada PDET 2019 reprocessa os microdados RAIS vigentes com o recorte observavel da metodologia ANCINE e documenta a divergencia em relacao ao estudo."
   },
   "collection": {
     "method": "script",
-    "script": "pipelines/transform/clean_rais_emprego_audiovisual.py",
+    "script": "pipelines/transform/clean_rais_emprego_audiovisual.py; pipelines/transform/reprocess_rais_emprego_audiovisual.py",
     "frequency": "ad-hoc"
   },
   "resources": [
@@ -67,6 +71,36 @@
       "bytes": 23410,
       "hash": "sha256:065486ab2220dcda1341d0bd6c746e97b7077119064ffb5daca51cda2170d718",
       "schema": "../../catalog/schemas/rais_emprego_audiovisual_subclasse_ano.yaml"
+    },
+    {
+      "name": "rais-emprego-audiovisual-subclasse-ano-reprocessado-pdet-2019",
+      "path": "snapshots/2026-05-23/rais_emprego_audiovisual_subclasse_ano_reprocessado_pdet_2019.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 5271,
+      "hash": "sha256:5c8fdf89097f04a35eb46c7ac6a32b9d49db976c0e80220a7e8df49c8e1819b2",
+      "schema": "../../catalog/schemas/rais_emprego_audiovisual_subclasse_ano_reprocessado_pdet_2019.yaml"
+    },
+    {
+      "name": "rais-emprego-audiovisual-comparacao-ancine-pdet-2019",
+      "path": "snapshots/2026-05-23/rais_emprego_audiovisual_comparacao_ancine_pdet_2019.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 3551,
+      "hash": "sha256:c1b9867114a985275fa536c4ec814608ee802a8eb63f931f2be8cb1286a0e58c",
+      "schema": "../../catalog/schemas/rais_emprego_audiovisual_comparacao_ancine_pdet_2019.yaml"
+    },
+    {
+      "name": "rais-emprego-audiovisual-reprocessamento-regioes-pdet-2019",
+      "path": "snapshots/2026-05-23/rais_emprego_audiovisual_reprocessamento_regioes_pdet_2019.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 913,
+      "hash": "sha256:c249fdc80111dfba6f7bf4feab75d97c94109516d0c762dfc5db1eec3f050725",
+      "schema": "../../catalog/schemas/rais_emprego_audiovisual_reprocessamento_regioes_pdet_2019.yaml"
     }
   ],
   "snapshots": [
@@ -74,7 +108,7 @@
       "date": "2026-05-23",
       "path": "snapshots/2026-05-23/",
       "source_url": "https://www.gov.br/ancine/pt-br/oca/publicacoes-2/outras-publicacoes",
-      "notes": "Snapshot com PDFs oficiais ANCINE/OCA e tabelas factuais oficiais reconstruidas documentalmente do Apendice 2 do estudo ano-base 2019."
+      "notes": "Snapshot com PDFs oficiais ANCINE/OCA, tabelas factuais publicadas no Apendice 2 do estudo ano-base 2019 e teste de reprocessamento dos microdados RAIS/PDET vigentes para 2019."
     }
   ]
 }
