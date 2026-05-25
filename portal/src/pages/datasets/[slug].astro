@@ -42,6 +42,9 @@ function hasCleanedCsv(table) {
 }
 
 function resourceLabel(table) {
+  if (/_reprocessamento_regioes_pdet_\d{4}$/.test(table)) return "Arquivos regionais RAIS/PDET";
+  if (/_comparacao_ancine_pdet_\d{4}$/.test(table)) return "Comparacao ANCINE x PDET";
+  if (/_reprocessado_pdet_\d{4}$/.test(table)) return "Reprocessamento RAIS/PDET";
   if (table.endsWith("_total_ano")) return "Total anual";
   if (table.endsWith("_subclasse_ano")) return "Por subclasse CNAE";
   if (table.endsWith("_atividade_ano")) return "Por atividade CNAE";
@@ -50,6 +53,46 @@ function resourceLabel(table) {
   if (table.includes("_raca_")) return "Por raca ou cor";
   if (table.endsWith("_fontes")) return "Fontes e proveniencia";
   return table.replace(/_/g, " ");
+}
+
+const STATUS_LABEL = {
+  implementado: { label: "implementado", tone: "ok" },
+  implementado_parcial: { label: "implementado parcial", tone: "warn" },
+  planejado: { label: "planejado", tone: "plan" },
+  planejado_dependente_de_tabulacao: { label: "planejado · depende de tabulacao", tone: "plan" },
+  planejado_dependente_de_fonte: { label: "planejado · depende de fonte", tone: "plan" },
+  planejado_dependente_de_fonte_siscoserv: { label: "planejado · SISCOSERV encerrado", tone: "plan" },
+};
+
+function methodologyLayerCards(layers) {
+  if (!layers) return [];
+  const order = ["published_layer", "primary_reprocessing"];
+  const titleMap = {
+    published_layer: "Camada publicada",
+    primary_reprocessing: "Camada reprocessada por fonte primaria",
+  };
+  const subtitleMap = {
+    published_layer: "Reproducao estruturada do que a ANCINE/OCA publicou.",
+    primary_reprocessing: "Recalculo a partir da fonte primaria externa, mantendo o recorte da metodologia ANCINE.",
+  };
+  return order
+    .filter((key) => layers[key])
+    .map((key) => {
+      const layer = layers[key];
+      const statusInfo = STATUS_LABEL[layer.status] ?? { label: layer.status, tone: "plan" };
+      return {
+        kind: key,
+        title: titleMap[key],
+        subtitle: subtitleMap[key],
+        name: layer.name,
+        source: layer.source,
+        coverage: layer.coverage,
+        script: layer.script,
+        notes: layer.notes?.trim(),
+        statusLabel: statusInfo.label,
+        statusTone: statusInfo.tone,
+      };
+    });
 }
 
 // Queries padrão por tabela
@@ -363,6 +406,8 @@ const primaryResource =
   resourceConfigs[0] ??
   null;
 
+const methodologyLayers = methodologyLayerCards(ds.methodology_layers);
+
 const defaultQuery = primaryResource?.defaultQuery ?? null;
 const crossQueries = primaryResource?.crossQueries ?? [];
 const schemaContext = primaryResource?.schemaContext ?? "";
@@ -466,6 +511,50 @@ const schemaContext = primaryResource?.schemaContext ?? "";
       <h2 class="ds-section__title">// Metodologia e Proveniencia</h2>
       <div class="methodology">
         <p class="ds-section__desc">{ds.cleaned?.notes ?? ds.description}</p>
+        {methodologyLayers.length > 0 && (
+          <div class="method-layers">
+            {methodologyLayers.map((layer) => (
+              <article class={`method-layer method-layer--${layer.kind}`}>
+                <header class="method-layer__head">
+                  <div class="method-layer__titles">
+                    <h3 class="method-layer__title">{layer.title}</h3>
+                    {layer.name && <code class="method-layer__name">{layer.name}</code>}
+                  </div>
+                  <span class={`method-layer__status method-layer__status--${layer.statusTone}`}>{layer.statusLabel}</span>
+                </header>
+                <p class="method-layer__subtitle">{layer.subtitle}</p>
+                <dl class="method-layer__meta">
+                  {layer.source && (
+                    <>
+                      <dt>Fonte</dt>
+                      <dd>{layer.source}</dd>
+                    </>
+                  )}
+                  {layer.coverage && (
+                    <>
+                      <dt>Cobertura</dt>
+                      <dd>{layer.coverage}</dd>
+                    </>
+                  )}
+                  {layer.script && (
+                    <>
+                      <dt>Script</dt>
+                      <dd>
+                        <a
+                          href={`https://github.com/riabr-dados/riab/blob/main/${layer.script}`}
+                          target="_blank"
+                          rel="noopener"
+                          class="method-layer__script"
+                        >{layer.script}</a>
+                      </dd>
+                    </>
+                  )}
+                </dl>
+                {layer.notes && <p class="method-layer__notes">{layer.notes}</p>}
+              </article>
+            ))}
+          </div>
+        )}
         {documentationConfigs.length > 0 && (
           <div class="methodology__docs">
             <div class="methodology__docs-title">Documentacao de fontes</div>
@@ -709,6 +798,112 @@ kbd {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+.method-layers {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 12px;
+}
+
+.method-layer {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.method-layer--primary_reprocessing {
+  border-left: 3px solid var(--accent, #4a8);
+}
+
+.method-layer--published_layer {
+  border-left: 3px solid var(--dim, #888);
+}
+
+.method-layer__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.method-layer__titles {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.method-layer__title {
+  font-size: 14px;
+  font-family: var(--font-m);
+  margin: 0;
+  letter-spacing: .01em;
+}
+
+.method-layer__name {
+  font-size: 11px;
+  color: var(--dim);
+  font-family: var(--font-m);
+}
+
+.method-layer__status {
+  font-size: 10px;
+  font-family: var(--font-m);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  white-space: nowrap;
+}
+
+.method-layer__status--ok { color: #2a8; }
+.method-layer__status--warn { color: #c93; }
+.method-layer__status--plan { color: var(--dim); }
+
+.method-layer__subtitle {
+  font-size: 12px;
+  color: var(--dim);
+  margin: 0;
+}
+
+.method-layer__meta {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 4px 12px;
+  font-size: 12px;
+  margin: 0;
+}
+
+.method-layer__meta dt {
+  font-family: var(--font-m);
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--dim);
+  align-self: center;
+}
+
+.method-layer__meta dd {
+  margin: 0;
+}
+
+.method-layer__script {
+  font-family: var(--font-m);
+  font-size: 11px;
+  word-break: break-all;
+}
+
+.method-layer__notes {
+  font-size: 12px;
+  color: var(--dim);
+  margin: 0;
+  line-height: 1.5;
 }
 </style>
 
