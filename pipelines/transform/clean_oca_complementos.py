@@ -73,7 +73,11 @@ def clean_cell(value: object) -> str:
     if pd.isna(value):
         return ""
     text = str(value).replace("\xa0", " ").strip()
-    return re.sub(r"\s+", " ", text)
+    text = re.sub(r"\s+", " ", text)
+    # Some OCA CSVs wrap values in explicit double-quotes (e.g. "2017", "Valor")
+    if len(text) >= 2 and text[0] == '"' and text[-1] == '"':
+        text = text[1:-1].strip()
+    return text
 
 
 def parse_brl(value: object) -> float | None:
@@ -127,9 +131,16 @@ def find_month_header(df: pd.DataFrame) -> int | None:
 
 
 def find_detail_header(df: pd.DataFrame) -> int | None:
-    candidates = ("salic", "cnpj", "proponente", "projeto", "investidor", "ano de")
+    candidates = (
+        "salic", "cnpj", "proponente", "projeto", "investidor", "ano de",
+        "edital", "empresa", "distribuidora", "programadora", "produtora",
+        "obra", "festival",
+    )
     for idx, row in df.iterrows():
         values = [strip_accents_light(clean_cell(v).lower()) for v in row]
+        non_empty = sum(1 for v in values if v)
+        if non_empty < 2:
+            continue
         score = sum(any(c in v for c in candidates) for v in values)
         if score >= 2:
             return int(idx)
@@ -141,14 +152,19 @@ def numeric_columns(columns: list[str]) -> list[str]:
         "valor",
         "total",
         "lei ",
+        "lei_",
         "art.",
         "art ",
+        "art_",
         "mp ",
         "fsa",
         "rouanet",
         "reais",
         "premio",
         "prêmio",
+        "investiment",
+        "apoio",
+        "renda",
     )
     out = []
     for col in columns:
@@ -419,9 +435,32 @@ def build_condecine(df_inventory: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(records)
 
 
-def choose_fomento_sources(df_inventory: pd.DataFrame) -> pd.DataFrame:
+SLUGS_FLUX = [
+    "ancine_fomento_fluxos_financeiros",
+    "ancine_condecine_recolhimento",
+    "ancine_ibermedia_projetos",
+    "ancine_coproducao_internacional_projetos",
+    "ancine_apoio_festivais_internacionais",
+    "ancine_premio_adicional_renda",
+    "ancine_filmes_lancados_captacao",
+    "ancine_captacao_por_projeto_investidor",
+]
+
+TABLE_NAMES_FLUX = {
+    "ancine_fomento_fluxos_financeiros":        "fomento_fluxos_financeiros",
+    "ancine_condecine_recolhimento":            "condecine_recolhimento",
+    "ancine_ibermedia_projetos":                "ibermedia_projetos",
+    "ancine_coproducao_internacional_projetos": "coproducao_internacional_projetos",
+    "ancine_apoio_festivais_internacionais":    "apoio_festivais_internacionais",
+    "ancine_premio_adicional_renda":            "premio_adicional_renda",
+    "ancine_filmes_lancados_captacao":          "filmes_lancados_captacao",
+    "ancine_captacao_por_projeto_investidor":   "captacao_por_projeto_investidor",
+}
+
+
+def choose_sources_for_slug(df_inventory: pd.DataFrame, slug: str) -> pd.DataFrame:
     rows = df_inventory[
-        (df_inventory["dataset_slug"] == "ancine_fomento_fluxos_financeiros")
+        (df_inventory["dataset_slug"] == slug)
         & (df_inventory["local_path"].notna())
         & (df_inventory["extensao"].isin(["csv", "xlsx"]))
     ].copy()
@@ -430,14 +469,18 @@ def choose_fomento_sources(df_inventory: pd.DataFrame) -> pd.DataFrame:
     return rows
 
 
-def build_fomento_fluxos(df_inventory: pd.DataFrame) -> pd.DataFrame:
+def build_flux_for_slug(df_inventory: pd.DataFrame, slug: str) -> pd.DataFrame:
     records: list[dict[str, object]] = []
-    for _, row in choose_fomento_sources(df_inventory).iterrows():
+    for _, row in choose_sources_for_slug(df_inventory, slug).iterrows():
         try:
             records.extend(parse_flux_file(row))
         except Exception as exc:  # noqa: BLE001
             print(f"[WARN] Falha ao parsear {row['titulo']}: {exc}", file=sys.stderr)
     return pd.DataFrame(records)
+
+
+def build_fomento_fluxos(df_inventory: pd.DataFrame) -> pd.DataFrame:
+    return build_flux_for_slug(df_inventory, "ancine_fomento_fluxos_financeiros")
 
 
 def pdf_text(path: Path) -> str:
@@ -612,7 +655,7 @@ def main() -> int:
     inventory = build_inventory()
     slugs_to_download = [
         "ancine_condecine_arrecadacao",
-        "ancine_fomento_fluxos_financeiros",
+        *SLUGS_FLUX,
         "br_pib_audiovisual",
         "br_rais_emprego_audiovisual",
         "br_comercio_exterior_servicos_audiovisuais",
@@ -624,7 +667,8 @@ def main() -> int:
     write_inventory(inventory)
 
     write_clean(build_condecine(inventory), "condecine_arrecadacao")
-    write_clean(build_fomento_fluxos(inventory), "fomento_fluxos_financeiros")
+    for slug, table_name in TABLE_NAMES_FLUX.items():
+        write_clean(build_flux_for_slug(inventory, slug), table_name)
     write_clean(build_embrafilme(inventory), "embrafilme_exibicao_territorio_ano")
     for dataset_slug, table_name in SOURCE_TABLES.items():
         write_clean(build_source_table(inventory, dataset_slug), table_name)

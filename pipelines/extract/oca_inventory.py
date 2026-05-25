@@ -56,10 +56,26 @@ COMEX_BENS_SOURCE = {
 
 
 DATASET_PATTERNS = [
+    # CONDECINE totais (mensal/anual) — pattern simples "condecine" no titulo
     ("ancine_condecine_arrecadacao", r"condecine"),
+    # CONDECINE recolhimento por artigo de lei e por empresa contribuinte
+    ("ancine_condecine_recolhimento", r"recolhidos?"),
+    # Ibermedia (projetos em USD)
+    ("ancine_ibermedia_projetos", r"ibermedia"),
+    # Coproducao internacional bilateral
+    ("ancine_coproducao_internacional_projetos", r"coprodu[cç][aã]o internacional"),
+    # Apoio a festivais internacionais
+    ("ancine_apoio_festivais_internacionais", r"apoio a participa[cç][aã]o"),
+    # Premio Adicional de Renda
+    ("ancine_premio_adicional_renda", r"pr[eê]mio adicional de renda"),
+    # Filmes lancados com valores captados (serie historica por filme)
+    ("ancine_filmes_lancados_captacao", r"filmes? brasileiros? lan[cç]ados?"),
+    # Captacao por projeto e por investidor (microdados)
+    ("ancine_captacao_por_projeto_investidor", r"captados? por projeto|aportados? por"),
+    # Fomento fluxos financeiros (apenas agregados: execucao FSA, liberados, totais por mecanismo/edital)
     (
         "ancine_fomento_fluxos_financeiros",
-        r"captados?|aportados?|recolhidos?|execu[cç][aã]o fundo|liberados?|editais|programas|pr[eê]mios|ibermedia|coprodu[cç][aã]o|pr[eê]mio adicional de renda|apoio a participa[cç][aã]o",
+        r"execu[cç][aã]o.*fundo|liberados?.*mecanismo|totais?.*captados?.*mecanismo|totais?.*editais",
     ),
     ("br_pib_audiovisual", r"valor adicionado pelo setor audiovisual"),
     ("br_rais_emprego_audiovisual", r"emprego no setor audiovisual"),

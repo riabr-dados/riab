@@ -1,0 +1,84 @@
+table: condecine_recolhimento
+description: >
+  recolhido por artigo de lei (Art. 3, 3A Lei 8685 e Art. 39 MP 2228) e por empresa contribuinte (distribuidoras, programadoras, video domestico).
+
+source_raw: ancine-condecine-recolhimento
+source_columns_original: >
+  CSV/XLSX publicados no OCA Recursos Publicos/Dados Financeiros,
+  processados por pipelines/transform/clean_oca_complementos.py.
+
+columns:
+  - name: ano
+    type: int64
+    nullable: true
+    description: "Ano de referencia da linha, quando extraido"
+  - name: periodo
+    type: string
+    nullable: true
+    description: "Periodo textual da fonte"
+  - name: tipo_fluxo
+    type: string
+    description: "Fluxo normalizado: captado, recolhido, liberado, execucao_fsa, ibermedia etc."
+  - name: mecanismo
+    type: string
+    nullable: true
+    description: "Mecanismo ou coluna financeira original"
+  - name: programa
+    type: string
+    nullable: true
+    description: "Programa, edital ou categoria quando informado"
+  - name: edital
+    type: string
+    nullable: true
+    description: "Edital/chamada quando informado"
+  - name: salic
+    type: string
+    nullable: true
+    description: "Codigo SALIC quando presente"
+  - name: titulo_projeto
+    type: string
+    nullable: true
+    description: "Titulo do projeto ou obra"
+  - name: cnpj_proponente
+    type: string
+    nullable: true
+    description: "CNPJ do proponente normalizado somente com digitos"
+  - name: cnpj_investidor_ou_contribuinte
+    type: string
+    nullable: true
+    description: "CNPJ do investidor, incentivador ou contribuinte quando presente"
+  - name: moeda_original
+    type: string
+    description: "Moeda do valor original, BRL ou USD"
+  - name: valor_original
+    type: float64
+    description: "Valor numerico na moeda original"
+  - name: valor_brl_nominal
+    type: float64
+    nullable: true
+    description: "Valor nominal em BRL; nulo para linhas originalmente em USD"
+  - name: valor_brl_real_base_2024
+    type: float64
+    nullable: true
+    description: "Valor deflacionado para base 2024, quando calculado"
+  - name: nivel_agregacao
+    type: string
+    description: "Nivel da linha: linha_original ou agregado_ano"
+  - name: fonte_arquivo
+    type: string
+    description: "Arquivo oficial usado na extracao"
+  - name: hash_arquivo
+    type: string
+    description: "SHA-256 do arquivo bruto"
+  - name: fonte_url
+    type: string
+    description: "URL oficial do arquivo OCA"
+  - name: titulo_publicacao
+    type: string
+    description: "Titulo da publicacao no OCA"
+  - name: data_coleta
+    type: date
+    description: "Data do snapshot RIDAB"
+
+notes:
+  - "Linhas em USD preservam valor_original e moeda_original; nao sao convertidas para BRL sem tabela cambial explicita."

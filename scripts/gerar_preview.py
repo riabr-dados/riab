@@ -224,9 +224,37 @@ def extract_all(base="datasets"):
             "condecine_arrecadacao.csv",
             "Amostra da tabela condecine_arrecadacao consolidada a partir do OCA Dados Financeiros.",
         ),
+        "ancine-condecine-recolhimento": (
+            "condecine_recolhimento.csv",
+            "Amostra da tabela condecine_recolhimento por artigo de lei e por empresa contribuinte (2002-2017).",
+        ),
         "ancine-fomento-fluxos-financeiros": (
             "fomento_fluxos_financeiros.csv",
-            "Amostra da tabela fomento_fluxos_financeiros; layouts heterogeneos preservam fonte_arquivo e titulo_publicacao.",
+            "Amostra da tabela fomento_fluxos_financeiros; series historicas agregadas (execucao FSA, liberados, captados, editais).",
+        ),
+        "ancine-ibermedia-projetos": (
+            "ibermedia_projetos.csv",
+            "Amostra dos projetos aprovados pelo programa Ibermedia com valores em USD (2004-2019).",
+        ),
+        "ancine-coproducao-internacional-projetos": (
+            "coproducao_internacional_projetos.csv",
+            "Amostra dos projetos de coproducao internacional bilateral aprovados pela ANCINE (2005-2016).",
+        ),
+        "ancine-apoio-festivais-internacionais": (
+            "apoio_festivais_internacionais.csv",
+            "Amostra do programa de apoio a participacao brasileira em festivais internacionais (2010-2019).",
+        ),
+        "ancine-premio-adicional-renda": (
+            "premio_adicional_renda.csv",
+            "Amostra da tabela Premio Adicional de Renda (PAR) para producao e distribuicao (2005-2013).",
+        ),
+        "ancine-filmes-lancados-captacao": (
+            "filmes_lancados_captacao.csv",
+            "Amostra dos filmes brasileiros lancados com valores captados por mecanismo de fomento (1995-2022).",
+        ),
+        "ancine-captacao-por-projeto-investidor": (
+            "captacao_por_projeto_investidor.csv",
+            "Amostra da captacao de recursos por projeto e por investidor/incentivador (2002-2020).",
         ),
         "br-pib-audiovisual": (
             "pib_audiovisual_total_ano.csv",

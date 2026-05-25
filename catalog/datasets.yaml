@@ -165,9 +165,11 @@ datasets:
   - slug: ancine-condecine-arrecadacao
     title: "CONDECINE - Arrecadacao"
     description: >
-      Serie consolidada da arrecadacao da CONDECINE publicada pelo OCA/ANCINE.
+      Serie consolidada da arrecadacao total da CONDECINE publicada pelo OCA/ANCINE.
       Une a serie anual 2007-2025 e as planilhas mensais disponiveis para 2010-2025,
       preservando tipo de CONDECINE, arquivo de origem, URL oficial e hash.
+      Para recolhimento detalhado por artigo de lei e por empresa contribuinte,
+      ver ancine-condecine-recolhimento.
     source_id: ancine
     status: ativo
     coverage: "2007-2025"
@@ -187,33 +189,227 @@ datasets:
     related:
       - ibge-deflator-ipca
       - ancine-renuncia-fiscal
+      - ancine-condecine-recolhimento
+
+  - slug: ancine-condecine-recolhimento
+    title: "CONDECINE - Recolhimento por Mecanismo e Contribuinte"
+    description: >
+      Valores recolhidos de CONDECINE desagregados por artigo de lei (Art. 3 e
+      Art. 3A da Lei 8.685/93 e Art. 39 da MP 2.228-1/01) e por empresa
+      contribuinte (distribuidoras, programadoras e empresas de video domestico).
+      Complementa a serie de arrecadacao total (ancine-condecine-arrecadacao)
+      com granularidade por mecanismo e por CNPJ contribuinte. Publicado pelo
+      OCA/ANCINE. Cobertura historica 2002-2017, sem atualizacao posterior.
+    source_id: ancine
+    status: intermitente
+    coverage: "2002-2017"
+    tags: [tributacao, condecine, recolhimento, contribuinte, oca, brasil, ancine]
+    raw:
+      path: ancine-condecine-recolhimento/
+      format: csv,xlsx,pdf
+      files: 21
+      size_bytes: 0
+    cleaned:
+      tables:
+        - condecine_recolhimento
+      notes: >
+        Processado pelo mesmo parser de fluxos financeiros (clean_oca_complementos.py).
+        Agrega arquivos por artigo de lei (wide-year) e por empresa contribuinte
+        (detail). tipo_fluxo = recolhido.
+    related:
+      - ancine-condecine-arrecadacao
+      - ibge-deflator-ipca
 
   - slug: ancine-fomento-fluxos-financeiros
-    title: "Fomento - Fluxos Financeiros"
+    title: "Fomento - Series Historicas Agregadas (OCA)"
     description: >
-      Tabela longa de fluxos financeiros de fomento extraidos das publicacoes
-      OCA: valores captados, recolhidos, liberados, execucao FSA, editais,
-      programas, premios, Ibermedia e coproducao internacional. Mantem a
-      granularidade original de cada fonte e identifica moeda, arquivo e hash.
+      Series historicas agregadas de fomento audiovisual publicadas pelo OCA/ANCINE:
+      execucao orcamentaria do FSA, valores liberados por mecanismo de incentivo,
+      totais captados por mecanismo (2006-2024) e totais de editais, programas e
+      premios (2003-2020). Unico nivel de agregacao — sem granularidade por projeto
+      ou empresa. Para microdados por projeto ver ancine-fsa-projetos,
+      ancine-renuncia-fiscal, ancine-ibermedia-projetos e datasets relacionados.
     source_id: ancine
-    status: ativo
-    coverage: "2002-2024"
-    tags: [fomento, fsa, renuncia-fiscal, recursos-publicos, oca, brasil, ancine]
+    status: intermitente
+    coverage: "2003-2024"
+    tags: [fomento, fsa, agregados, series-historicas, oca, brasil, ancine]
     raw:
       path: ancine-fomento-fluxos-financeiros/
       format: csv,xlsx,pdf
-      files: 57
+      files: 10
       size_bytes: 0
     cleaned:
       tables:
         - fomento_fluxos_financeiros
       notes: >
-        Parser inicial tabular. Valores em USD, como Ibermedia, ficam em
-        valor_original/moeda_original e nao sao preenchidos como BRL nominal.
+        Contem apenas agregados anuais/totais. Datasets de microdados extraidos
+        deste conjunto foram movidos para datasets proprios em mai/2026.
     related:
       - ancine-fsa-projetos
       - ancine-renuncia-fiscal
+      - ancine-condecine-recolhimento
+      - ancine-ibermedia-projetos
+      - ancine-captacao-por-projeto-investidor
+
+  - slug: ancine-ibermedia-projetos
+    title: "Ibermedia - Projetos Contemplados"
+    description: >
+      Listagem de projetos audiovisuais brasileiros contemplados no programa
+      Ibermedia, com valores em USD. Contem titulo do projeto, pais coprodutor,
+      modalidade e valor aprovado. Publicado pelo OCA/ANCINE.
+    source_id: ancine
+    status: intermitente
+    coverage: "2004-2019"
+    tags: [fomento, ibermedia, coproducao, internacional, usd, oca, brasil, ancine]
+    raw:
+      path: ancine-ibermedia-projetos/
+      format: csv,xlsx,pdf
+      files: 3
+      size_bytes: 0
+    cleaned:
+      tables:
+        - ibermedia_projetos
+      notes: >
+        Processado por clean_oca_complementos.py. tipo_fluxo = ibermedia.
+        Valores preservados em USD (moeda_original = USD; valor_brl_nominal = null).
+    related:
+      - ancine-coproducao-internacional-projetos
+      - ancine-fomento-fluxos-financeiros
+
+  - slug: ancine-coproducao-internacional-projetos
+    title: "Coproducao Internacional - Projetos Contemplados"
+    description: >
+      Projetos audiovisuais brasileiros selecionados em editais de coproducao
+      internacional (acordos bilaterais), com pais parceiro e valores aprovados.
+      Publicado pelo OCA/ANCINE.
+    source_id: ancine
+    status: intermitente
+    coverage: "2005-2016"
+    tags: [fomento, coproducao, internacional, bilateral, oca, brasil, ancine]
+    raw:
+      path: ancine-coproducao-internacional-projetos/
+      format: csv,xlsx,pdf
+      files: 3
+      size_bytes: 0
+    cleaned:
+      tables:
+        - coproducao_internacional_projetos
+      notes: >
+        Processado por clean_oca_complementos.py. tipo_fluxo = coproducao_internacional.
+    related:
+      - ancine-ibermedia-projetos
+      - ancine-fomento-fluxos-financeiros
+
+  - slug: ancine-apoio-festivais-internacionais
+    title: "Apoio a Festivais Internacionais - Contemplados"
+    description: >
+      Filmes brasileiros contemplados no Programa de Apoio a Participacao de
+      Filmes Brasileiros em Festivais Internacionais da ANCINE, com valores
+      recebidos por titulo e evento. Diferente do ancine-festivais-fsa, que
+      registra participacoes usadas para pontuacao de desempenho no FSA.
+      Publicado pelo OCA/ANCINE.
+    source_id: ancine
+    status: intermitente
+    coverage: "2010-2019"
+    tags: [fomento, festivais, internacional, premios, oca, brasil, ancine]
+    raw:
+      path: ancine-apoio-festivais-internacionais/
+      format: csv,xlsx,pdf
+      files: 3
+      size_bytes: 0
+    cleaned:
+      tables:
+        - apoio_festivais_internacionais
+      notes: >
+        Processado por clean_oca_complementos.py. tipo_fluxo = apoio_festivais.
+    related:
       - ancine-festivais-fsa
+      - ancine-fomento-fluxos-financeiros
+
+  - slug: ancine-premio-adicional-renda
+    title: "Premio Adicional de Renda (PAR)"
+    description: >
+      Projetos selecionados no Premio Adicional de Renda (PAR), mecanismo da
+      ANCINE que premiava producoes e distribuidoras por desempenho de bilheteria.
+      Inclui listagens separadas para producao e distribuicao com valores investidos.
+      Publicado pelo OCA/ANCINE.
+    source_id: ancine
+    status: descontinuado
+    coverage: "2005-2013"
+    tags: [fomento, par, premio, bilheteria, producao, distribuicao, brasil, ancine]
+    raw:
+      path: ancine-premio-adicional-renda/
+      format: xlsx,pdf
+      files: 4
+      size_bytes: 0
+    cleaned:
+      tables:
+        - premio_adicional_renda
+      notes: >
+        Processado por clean_oca_complementos.py. tipo_fluxo = edital_programa_premio.
+        Fonte apenas em XLSX (sem CSV); parser usa read_excel.
+    related:
+      - ancine-fsa-projetos
+      - ancine-bilheteria-consolidada
+
+  - slug: ancine-filmes-lancados-captacao
+    title: "Filmes Lancados com Valores Captados (serie historica)"
+    description: >
+      Serie historica de filmes brasileiros lancados comercialmente com os
+      respectivos valores captados via mecanismos de incentivo fiscal. Une
+      estreia comercial e captacao efetiva — diferente de ancine-renuncia-fiscal
+      (que lista projetos habilitados, nao necessariamente lancados) e de
+      ancine-captacao-por-projeto-investidor (todos os projetos captadores,
+      incluindo nao lancados). Publicado pelo OCA/ANCINE.
+    source_id: ancine
+    status: intermitente
+    coverage: "1995-2022"
+    tags: [fomento, captacao, filmes, lancamento, serie-historica, oca, brasil, ancine]
+    raw:
+      path: ancine-filmes-lancados-captacao/
+      format: csv,xlsx,pdf
+      files: 3
+      size_bytes: 0
+    cleaned:
+      tables:
+        - filmes_lancados_captacao
+      notes: >
+        Processado por clean_oca_complementos.py. tipo_fluxo = captado.
+        nivel_agregacao = linha_original (um filme por linha).
+    related:
+      - ancine-renuncia-fiscal
+      - ancine-captacao-por-projeto-investidor
+      - ancine-bilheteria-consolidada
+
+  - slug: ancine-captacao-por-projeto-investidor
+    title: "Captacao por Projeto Incentivado e por Investidor"
+    description: >
+      Valores captados por projeto via incentivo fiscal (Art. 1, 3 e 3A da Lei
+      do Audiovisual e Lei Rouanet audiovisual), de 2002 a julho de 2020, e
+      cruzamento projeto x investidor de 2007 a 2019. Inclui tambem valores
+      aportados por incentivador/investidor agregados por lei. Complementa
+      ancine-renuncia-fiscal (habilitados) com os valores efetivamente captados
+      e a identidade dos investidores. Publicado pelo OCA/ANCINE.
+    source_id: ancine
+    status: intermitente
+    coverage: "2002-2020"
+    tags: [fomento, captacao, incentivo-fiscal, investidor, lei-audiovisual, oca, brasil, ancine]
+    raw:
+      path: ancine-captacao-por-projeto-investidor/
+      format: csv,xlsx,pdf
+      files: 6
+      size_bytes: 0
+    cleaned:
+      tables:
+        - captacao_por_projeto_investidor
+      notes: >
+        Processado por clean_oca_complementos.py. Consolida tres arquivos OCA:
+        captados por projeto (2002-2020), projeto x investidor (2007-2019) e
+        aportados por incentivador (2007-2019). tipo_fluxo = captado ou aportado.
+    related:
+      - ancine-renuncia-fiscal
+      - ancine-filmes-lancados-captacao
+      - ancine-fomento-fluxos-financeiros
 
   - slug: ancine-agentes-economicos
     title: "Agentes Economicos"
