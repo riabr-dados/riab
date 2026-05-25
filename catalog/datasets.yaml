@@ -326,7 +326,7 @@ datasets:
       publicada pela ANCINE. A reproducao por fonte primaria externa depende de
       acesso a tabulacoes IBGE/PAS/PAC equivalentes as usadas pela ANCINE.
     source_id: ancine
-    status: intermitente
+    status: ativo
     coverage: "2007-2019"
     tags: [pib, valor-adicionado, economia, oca, brasil, ancine, ibge]
     raw:
@@ -370,7 +370,7 @@ datasets:
       Mantem a camada publicada pela ANCINE/OCA e inclui reprocessamento dos
       microdados RAIS/PDET vigentes quando a fonte primaria estiver disponivel.
     source_id: ancine
-    status: intermitente
+    status: ativo
     coverage: "2010-2019"
     tags: [emprego, rais, trabalho, cnae, oca, brasil]
     raw:
@@ -518,7 +518,7 @@ datasets:
       raca ou cor que podem ser reconstruidas diretamente do estudo ANCINE/OCA
       Genero e Raca no Setor Audiovisual 2011-2021.
     source_id: ancine
-    status: intermitente
+    status: ativo
     coverage: "2011-2021"
     tags: [diversidade, genero, raca, obras, profissionais, oca, brasil, ancine]
     raw:

@@ -11,9 +11,6 @@ DATASET_DIR = ROOT / "datasets" / "ancine-diversidade-audiovisual"
 SNAPSHOT_DATE = "2026-05-23"
 SNAPSHOT = DATASET_DIR / "snapshots" / SNAPSHOT_DATE
 SOURCE_TABLE = CLEANED / "diversidade_audiovisual_fontes.csv"
-SOURCE_FILE = "estudo-genero-e-raca-no-setor-audiovisual-2011-2021.pdf"
-SOURCE_URL_FALLBACK = "https://www.gov.br/ancine/pt-br/oca/resolveuid/7e062995b4ed488fb68616ad39e3e81e"
-SOURCE_PAGE_FALLBACK = "https://www.gov.br/ancine/pt-br/oca/publicacoes-2/outras-publicacoes"
 
 SEXO_ROWS = [
     (2011, "feminino", 45262, 113298),
@@ -99,34 +96,6 @@ RACA_ROWS = [
 ]
 
 
-def source_metadata() -> dict[str, object]:
-    metadata: dict[str, object] = {
-        "fonte_arquivo": SOURCE_FILE,
-        "fonte_url": SOURCE_URL_FALLBACK,
-        "fonte_pagina": SOURCE_PAGE_FALLBACK,
-        "hash_fonte": None,
-    }
-    if not SOURCE_TABLE.exists():
-        return metadata
-
-    fontes = pd.read_csv(SOURCE_TABLE)
-    mask = fontes.get("titulo", pd.Series(dtype=str)).astype(str).str.contains(
-        "Estudo G",
-        case=False,
-        na=False,
-    )
-    if not mask.any():
-        return metadata
-    row = fontes.loc[mask].iloc[0]
-    metadata["fonte_url"] = row.get("url_arquivo") or SOURCE_URL_FALLBACK
-    metadata["fonte_pagina"] = row.get("pagina_origem") or SOURCE_PAGE_FALLBACK
-    metadata["hash_fonte"] = row.get("hash_arquivo") if pd.notna(row.get("hash_arquivo")) else None
-    local_path = row.get("local_path")
-    if pd.notna(local_path):
-        metadata["fonte_arquivo"] = Path(str(local_path)).name
-    return metadata
-
-
 def build_sexo_table() -> pd.DataFrame:
     rows = []
     for ano, sexo, empregos, total in SEXO_ROWS:
@@ -143,6 +112,8 @@ def build_sexo_table() -> pd.DataFrame:
 
 def build_raca_table() -> pd.DataFrame:
     rows = []
+    declared_by_year: dict[int, int] = {}
+    total_by_year: dict[int, int] = {}
     for ano, raca_cor, empregos, total in RACA_ROWS:
         rows.append(
             {
@@ -152,7 +123,50 @@ def build_raca_table() -> pd.DataFrame:
                 "total_ano": total,
             }
         )
-    return pd.DataFrame(rows)
+        declared_by_year[ano] = declared_by_year.get(ano, 0) + empregos
+        total_by_year[ano] = total
+    # Reside na fonte ANCINE como diferenca entre o total do setor e a soma das
+    # categorias declaradas (estudo nao publica a linha "nao declarada"
+    # explicitamente, mas o total inclui esses vinculos).
+    for ano, total in total_by_year.items():
+        residuo = total - declared_by_year[ano]
+        if residuo <= 0:
+            continue
+        rows.append(
+            {
+                "ano": ano,
+                "raca_cor": "nao_declarada",
+                "empregos_formais_ativos_31_12": residuo,
+                "total_ano": total,
+            }
+        )
+    df = pd.DataFrame(rows)
+    validate_raca_totals(df)
+    return df.sort_values(["ano", "raca_cor"]).reset_index(drop=True)
+
+
+def validate_raca_totals(df: pd.DataFrame) -> None:
+    grouped = df.groupby("ano").agg(
+        emp_sum=("empregos_formais_ativos_31_12", "sum"),
+        total=("total_ano", "first"),
+    )
+    diff = (grouped["emp_sum"] - grouped["total"]).abs()
+    if diff.max() > 0:
+        raise ValueError(
+            f"Soma das categorias de raca diverge do total_ano: {diff[diff > 0].to_dict()}"
+        )
+
+
+def validate_sexo_totals(df: pd.DataFrame) -> None:
+    grouped = df.groupby("ano").agg(
+        emp_sum=("empregos_formais_ativos_31_12", "sum"),
+        total=("total_ano", "first"),
+    )
+    diff = (grouped["emp_sum"] - grouped["total"]).abs()
+    if diff.max() > 0:
+        raise ValueError(
+            f"Soma das categorias de sexo diverge do total_ano: {diff[diff > 0].to_dict()}"
+        )
 
 
 def write_table(df: pd.DataFrame, table_name: str) -> None:
@@ -184,6 +198,7 @@ def update_source_table() -> None:
 
 def main() -> int:
     sexo = build_sexo_table()
+    validate_sexo_totals(sexo)
     raca = build_raca_table()
     write_table(sexo, "diversidade_audiovisual_emprego_sexo_ano")
     write_table(raca, "diversidade_audiovisual_emprego_raca_ano")

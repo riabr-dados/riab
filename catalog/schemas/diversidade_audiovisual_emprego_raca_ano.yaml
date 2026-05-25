@@ -12,10 +12,16 @@ columns:
     description: "Ano de referencia"
   - name: raca_cor
     type: string
-    description: "Categoria de raca ou cor publicada na tabela"
+    description: >
+      Categoria de raca ou cor publicada (amarela, branca, indigena, parda,
+      preta) ou nao_declarada, calculada como total_ano menos a soma das
+      categorias publicadas. O estudo ANCINE 2011-2021 nao publica essa linha
+      explicitamente, mas o total do setor inclui esses vinculos.
   - name: empregos_formais_ativos_31_12
     type: int64
     description: "Empregos formais ativos em 31 de dezembro"
   - name: total_ano
     type: int64
-    description: "Total anual da tabela publicada"
+    description: >
+      Total anual de empregos no setor audiovisual conforme estudo ANCINE.
+      Equivale a soma das categorias declaradas mais a linha nao_declarada.
