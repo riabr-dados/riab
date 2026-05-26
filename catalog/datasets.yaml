@@ -1,6 +1,5 @@
 datasets:
-
-  # ── BRASIL / ANCINE ────────────────────────────────────────────────────────
+  # ── BRASIL / ANCINE ────────────────────────────────────────────────────────
 
   - slug: ancine-obras-nao-publicitarias
     title: "Obras Nao Publicitarias"
@@ -28,7 +27,7 @@ datasets:
 
     categoria:
       - producao_obras
-    procedencia: limpeza_leve
+    procedencia: pda
   - slug: ancine-diretores-obras
     title: "Diretores de Obras"
     description: >
@@ -54,7 +53,7 @@ datasets:
 
     categoria:
       - producao_obras
-    procedencia: limpeza_leve
+    procedencia: pda
   - slug: ancine-produtores-obras
     title: "Produtores de Obras"
     description: >
@@ -80,7 +79,7 @@ datasets:
 
     categoria:
       - producao_obras
-    procedencia: limpeza_leve
+    procedencia: pda
   - slug: ancine-bilheteria-consolidada
     title: "Bilheteria Consolidada"
     description: >
@@ -105,7 +104,7 @@ datasets:
 
     categoria:
       - bilheteria
-    procedencia: pda_intacto
+    procedencia: sadis
   - slug: ancine-bilheteria-agregada-filme-ano
     title: "Bilheteria Agregada Filme x Ano"
     description: >
@@ -130,7 +129,7 @@ datasets:
 
     categoria:
       - bilheteria
-    procedencia: pda_intacto
+    procedencia: oca
   - slug: ancine-fsa-projetos
     title: "Projetos FSA"
     description: >
@@ -157,7 +156,7 @@ datasets:
 
     categoria:
       - fomento
-    procedencia: limpeza_leve
+    procedencia: fsa
   - slug: ancine-renuncia-fiscal
     title: "Renuncia Fiscal"
     description: >
@@ -182,7 +181,7 @@ datasets:
 
     categoria:
       - fomento
-    procedencia: limpeza_leve
+    procedencia: pda
   - slug: ancine-condecine-arrecadacao
     title: "CONDECINE - Arrecadacao"
     description: >
@@ -214,7 +213,7 @@ datasets:
 
     categoria:
       - fomento
-    procedencia: limpeza_leve
+    procedencia: oca
   - slug: ancine-condecine-recolhimento
     title: "CONDECINE - Recolhimento por Mecanismo e Contribuinte"
     description: >
@@ -246,7 +245,7 @@ datasets:
 
     categoria:
       - fomento
-    procedencia: limpeza_leve
+    procedencia: oca
   - slug: ancine-fomento-fluxos-financeiros
     title: "Fomento - Series Historicas Agregadas (OCA)"
     description: >
@@ -280,7 +279,7 @@ datasets:
 
     categoria:
       - fomento
-    procedencia: derivado
+    procedencia: oca
   - slug: ancine-ibermedia-projetos
     title: "Ibermedia - Projetos Contemplados"
     description: >
@@ -309,7 +308,7 @@ datasets:
     categoria:
       - fomento
       - internacional
-    procedencia: limpeza_leve
+    procedencia: oca
   - slug: ancine-coproducao-internacional-projetos
     title: "Coproducao Internacional - Projetos Contemplados"
     description: >
@@ -337,7 +336,7 @@ datasets:
     categoria:
       - fomento
       - internacional
-    procedencia: limpeza_leve
+    procedencia: pda
   - slug: ancine-apoio-festivais-internacionais
     title: "Apoio a Festivais Internacionais - Contemplados"
     description: >
@@ -367,7 +366,7 @@ datasets:
     categoria:
       - fomento
       - internacional
-    procedencia: limpeza_leve
+    procedencia: oca
   - slug: ancine-premio-adicional-renda
     title: "Premio Adicional de Renda (PAR)"
     description: >
@@ -396,7 +395,7 @@ datasets:
 
     categoria:
       - fomento
-    procedencia: limpeza_leve
+    procedencia: oca
   - slug: ancine-filmes-lancados-captacao
     title: "Filmes Lancados com Valores Captados (serie historica)"
     description: >
@@ -429,7 +428,7 @@ datasets:
     categoria:
       - producao_obras
       - fomento
-    procedencia: limpeza_leve
+    procedencia: oca
   - slug: ancine-captacao-por-projeto-investidor
     title: "Captacao por Projeto Incentivado e por Investidor"
     description: >
@@ -462,7 +461,7 @@ datasets:
 
     categoria:
       - fomento
-    procedencia: limpeza_leve
+    procedencia: pda
   - slug: ancine-agentes-economicos
     title: "Agentes Economicos"
     description: >
@@ -487,7 +486,7 @@ datasets:
 
     categoria:
       - emprego_economia
-    procedencia: limpeza_leve
+    procedencia: pda
   - slug: ancine-preco-medio-ingresso
     title: "Preco Medio do Ingresso"
     description: >
@@ -513,7 +512,7 @@ datasets:
 
     categoria:
       - bilheteria
-    procedencia: pda_intacto
+    procedencia: oca
   - slug: ancine-atas-fsa
     title: "Atas Oficiais FSA"
     description: >
@@ -543,7 +542,7 @@ datasets:
     categoria:
       - fomento
       - fontes_metadados
-    procedencia: derivado
+    procedencia: fsa
   - slug: ancine-festivais-fsa
     title: "Participacao Brasileira em Festivais - FSA"
     description: >
@@ -574,7 +573,7 @@ datasets:
 
     categoria:
       - fomento
-    procedencia: derivado
+    procedencia: fsa
   - slug: oca-publicacoes-complementares
     title: "OCA - Inventario de Publicacoes Complementares"
     description: >
@@ -606,7 +605,7 @@ datasets:
 
     categoria:
       - fontes_metadados
-    procedencia: pda_intacto
+    procedencia: oca
   - slug: br-pib-audiovisual
     title: "PIB do Audiovisual - Metodologia ANCINE"
     description: >
@@ -658,7 +657,7 @@ datasets:
 
     categoria:
       - emprego_economia
-    procedencia: derivado
+    procedencia: oca
   - slug: br-rais-emprego-audiovisual
     title: "Emprego no Setor Audiovisual - Metodologia ANCINE"
     description: >
@@ -708,7 +707,7 @@ datasets:
 
     categoria:
       - emprego_economia
-    procedencia: derivado
+    procedencia: oca
   - slug: br-comercio-exterior-servicos-audiovisuais
     title: "Comercio Exterior de Servicos Audiovisuais - Metodologia ANCINE"
     description: >
@@ -757,7 +756,7 @@ datasets:
 
     categoria:
       - emprego_economia
-    procedencia: derivado
+    procedencia: oca
   - slug: br-comex-bens-audiovisuais
     title: "Comex Bens Audiovisuais - Fonte MDIC"
     description: >
@@ -785,7 +784,7 @@ datasets:
 
     categoria:
       - emprego_economia
-    procedencia: limpeza_leve
+    procedencia: mdic
   - slug: br-embrafilme-historico-exibicao
     title: "Embrafilme - Historico de Exibicao"
     description: >
@@ -819,7 +818,7 @@ datasets:
     categoria:
       - bilheteria
       - salas_exibicao
-    procedencia: derivado
+    procedencia: embrafilme
   - slug: ibge-seculoxx-cinema
     title: "IBGE Seculo XX - Cinema (1971-1985)"
     description: >
@@ -853,7 +852,7 @@ datasets:
     categoria:
       - bilheteria
       - salas_exibicao
-    procedencia: derivado
+    procedencia: ibge
   - slug: br-bilheteria-historica-complementar
     title: "Bilheteria - Serie Historica Complementar"
     description: >
@@ -892,7 +891,7 @@ datasets:
 
     categoria:
       - bilheteria
-    procedencia: derivado
+    procedencia: composto
   - slug: ancine-diversidade-audiovisual
     title: "Diversidade Audiovisual - Tabelas Oficiais ANCINE"
     description: >
@@ -938,11 +937,11 @@ datasets:
     related:
       - ancine-obras-nao-publicitarias
 
-  # ── BRASIL / IBGE ──────────────────────────────────────────────────────────
+  # ── BRASIL / IBGE ──────────────────────────────────────────────────────────
 
     categoria:
       - diversidade
-    procedencia: derivado
+    procedencia: oca
   - slug: ibge-deflator-ipca
     title: "Deflator IPCA"
     description: >
@@ -966,11 +965,11 @@ datasets:
       - ancine-preco-medio-ingresso
       - ancine-bilheteria-consolidada
 
-  # ── BRASIL / LUMIERE ───────────────────────────────────────────────────────
+  # ── BRASIL / LUMIERE ───────────────────────────────────────────────────────
 
     categoria:
       - emprego_economia
-    procedencia: pda_intacto
+    procedencia: ibge
   - slug: lumiere-cinemas-europa
     title: "Filmes Brasileiros em Salas Europeias"
     description: >
@@ -995,7 +994,7 @@ datasets:
     categoria:
       - bilheteria
       - internacional
-    procedencia: limpeza_leve
+    procedencia: lumiere
   - slug: lumiere-vod-europa
     title: "Filmes Brasileiros em VoD Europeu"
     description: >
@@ -1016,14 +1015,14 @@ datasets:
     related:
       - lumiere-cinemas-europa
 
-  # ── FRANCA / CNC ───────────────────────────────────────────────────────────
+  # ── FRANCA / CNC ───────────────────────────────────────────────────────────
 
-  # -- DERIVADOS / BRASIL NO MUNDO -------------------------------------------
+  # -- DERIVADOS / BRASIL NO MUNDO -------------------------------------------
 
     categoria:
       - vod_streaming
       - internacional
-    procedencia: limpeza_leve
+    procedencia: lumiere
   - slug: brasil-no-mundo
     title: "Brasil no Mundo"
     description: >
@@ -1059,7 +1058,7 @@ datasets:
 
     categoria:
       - internacional
-    procedencia: derivado
+    procedencia: composto
   - slug: cnc-visas-exploitation
     title: "Visas d'Exploitation"
     description: >
@@ -1085,7 +1084,7 @@ datasets:
 
     categoria:
       - producao_obras
-    procedencia: pda_intacto
+    procedencia: cnc
   - slug: cnc-frequentation-salles
     title: "Frequentacao de Salas"
     description: >
@@ -1109,7 +1108,7 @@ datasets:
 
     categoria:
       - bilheteria
-    procedencia: pda_intacto
+    procedencia: cnc
   - slug: cnc-etablissements
     title: "Estabelecimentos Cinematograficos"
     description: >
@@ -1133,7 +1132,7 @@ datasets:
 
     categoria:
       - salas_exibicao
-    procedencia: pda_intacto
+    procedencia: cnc
   - slug: cnc-films-million-entrees
     title: "Filmes com Mais de 1 Milhao de Entradas"
     description: >
@@ -1156,7 +1155,7 @@ datasets:
 
     categoria:
       - bilheteria
-    procedencia: pda_intacto
+    procedencia: cnc
   - slug: cnc-donnees-internationales
     title: "Dados Internacionais do Cinema"
     description: >
@@ -1176,7 +1175,7 @@ datasets:
       tables: [cnc_donnees_internationales]
     categoria:
       - internacional
-    procedencia: pda_intacto
+    procedencia: cnc
 
   - slug: cnc-films-agrees
     title: "Filmes com Agrement (Producao e Distribuicao)"
@@ -1200,7 +1199,7 @@ datasets:
 
     categoria:
       - producao_obras
-    procedencia: pda_intacto
+    procedencia: cnc
   - slug: cnc-audience-television
     title: "Audiencia de Filmes na Televisao"
     description: >
@@ -1222,7 +1221,7 @@ datasets:
 
     categoria:
       - tv_audiencia
-    procedencia: pda_intacto
+    procedencia: cnc
   - slug: cnc-films-television
     title: "Filmes na Televisao Francesa"
     description: >
@@ -1244,7 +1243,7 @@ datasets:
 
     categoria:
       - tv_audiencia
-    procedencia: pda_intacto
+    procedencia: cnc
   - slug: cnc-exportacao-programas-audiovisuais
     title: "Exportacao de Programas Audiovisuais"
     description: >
@@ -1264,7 +1263,7 @@ datasets:
     categoria:
       - emprego_economia
       - internacional
-    procedencia: pda_intacto
+    procedencia: cnc
 
   - slug: cnc-geographie-cinema
     title: "Geografia do Cinema Frances"
@@ -1288,7 +1287,7 @@ datasets:
 
     categoria:
       - salas_exibicao
-    procedencia: pda_intacto
+    procedencia: cnc
   - slug: cnc-public-vod
     title: "Publico de VoD na Franca"
     description: >
@@ -1311,7 +1310,7 @@ datasets:
 
     categoria:
       - vod_streaming
-    procedencia: pda_intacto
+    procedencia: cnc
   - slug: cnc-referencias-ativas-vod
     title: "Referencias Ativas em VoD"
     description: >
@@ -1333,7 +1332,7 @@ datasets:
 
     categoria:
       - vod_streaming
-    procedencia: pda_intacto
+    procedencia: cnc
   - slug: cnc-consumo-vod
     title: "Consumo Domestico de VoD"
     description: >
@@ -1355,7 +1354,7 @@ datasets:
 
     categoria:
       - vod_streaming
-    procedencia: pda_intacto
+    procedencia: cnc
   - slug: cnc-parc-cinematographique
     title: "Parque Cinematografico Frances"
     description: >
@@ -1378,7 +1377,7 @@ datasets:
 
     categoria:
       - salas_exibicao
-    procedencia: pda_intacto
+    procedencia: cnc
   - slug: cnc-financement-television
     title: "Financiamento da Televisao Francesa"
     description: >
@@ -1397,7 +1396,7 @@ datasets:
       tables: [cnc_financement_television]
     categoria:
       - tv_audiencia
-    procedencia: pda_intacto
+    procedencia: cnc
 
   - slug: cnc-distribution-salles
     title: "Distribuicao de Filmes em Salas"
@@ -1421,7 +1420,7 @@ datasets:
 
     categoria:
       - distribuicao
-    procedencia: pda_intacto
+    procedencia: cnc
   - slug: cnc-public-films
     title: "Perfil do Publico de Cinema"
     description: >
@@ -1440,9 +1439,9 @@ datasets:
       tables: [cnc_public_films]
     categoria:
       - bilheteria
-    procedencia: pda_intacto
+    procedencia: cnc
 
-  # ── ARGENTINA / INCAA ──────────────────────────────────────────────────────
+  # ── ARGENTINA / INCAA ──────────────────────────────────────────────────────
 
   - slug: incaa-espectadores-origem
     title: "Espectadores de Cinema por Origem do Filme"
@@ -1468,7 +1467,7 @@ datasets:
 
     categoria:
       - bilheteria
-    procedencia: limpeza_leve
+    procedencia: incaa
   - slug: incaa-receita-origem
     title: "Receita Cinematografica por Origem do Filme"
     description: >
@@ -1493,7 +1492,7 @@ datasets:
 
     categoria:
       - bilheteria
-    procedencia: limpeza_leve
+    procedencia: incaa
   - slug: incaa-estreias-origem
     title: "Estreias Cinematograficas por Origem do Filme"
     description: >
@@ -1518,7 +1517,7 @@ datasets:
 
     categoria:
       - producao_obras
-    procedencia: limpeza_leve
+    procedencia: incaa
   - slug: incaa-espectadores-provincias
     title: "Espectadores de Cinema por Provincias Argentinas"
     description: >
@@ -1544,7 +1543,7 @@ datasets:
     categoria:
       - bilheteria
       - salas_exibicao
-    procedencia: limpeza_leve
+    procedencia: incaa
   - slug: incaa-receita-provincias
     title: "Receita de Cinema por Provincias Argentinas"
     description: >
@@ -1569,7 +1568,7 @@ datasets:
 
     categoria:
       - bilheteria
-    procedencia: limpeza_leve
+    procedencia: incaa
   - slug: incaa-participacao-distribuidoras
     title: "Participacao das Distribuidoras no Mercado Argentino"
     description: >
@@ -1594,7 +1593,7 @@ datasets:
 
     categoria:
       - distribuicao
-    procedencia: limpeza_leve
+    procedencia: incaa
   - slug: incaa-empregos-longa-metragem
     title: "Empregos em Longa-Metragem Nacional Argentina"
     description: >
@@ -1619,7 +1618,7 @@ datasets:
 
     categoria:
       - emprego_economia
-    procedencia: limpeza_leve
+    procedencia: incaa
   - slug: incaa-acessos-tv-assinatura
     title: "Acessos a Servicos de TV por Assinatura na Argentina"
     description: >
@@ -1644,7 +1643,7 @@ datasets:
 
     categoria:
       - tv_audiencia
-    procedencia: limpeza_leve
+    procedencia: incaa
   - slug: incaa-receitas-tv-assinatura
     title: "Receitas de Servicos de TV por Assinatura na Argentina"
     description: >
@@ -1667,11 +1666,11 @@ datasets:
         - name: incaa_receitas_tv_assinatura
           parquet: incaa_receitas_tv_assinatura.parquet
 
-  # ── REINO UNIDO / BFI ──────────────────────────────────────────────────────
+  # ── REINO UNIDO / BFI ──────────────────────────────────────────────────────
 
     categoria:
       - tv_audiencia
-    procedencia: limpeza_leve
+    procedencia: incaa
   - slug: bfi-publicos-cinema
     title: "Publicos do Cinema Britanico"
     description: >
@@ -1691,7 +1690,7 @@ datasets:
       tables: [bfi_audiences]
     categoria:
       - bilheteria
-    procedencia: derivado
+    procedencia: bfi
 
   - slug: bfi-bilheteria-2023
     title: "Bilheteria do Reino Unido 2023"
@@ -1712,7 +1711,7 @@ datasets:
       tables: [bfi_box_office_2023]
     categoria:
       - bilheteria
-    procedencia: derivado
+    procedencia: bfi
 
   - slug: bfi-exibicao-cinematografica
     title: "Exibicao Cinematografica no Reino Unido"
@@ -1733,7 +1732,7 @@ datasets:
       tables: [bfi_exhibition]
     categoria:
       - salas_exibicao
-    procedencia: derivado
+    procedencia: bfi
 
   - slug: bfi-educacao-cinematografica
     title: "Educacao Cinematografica no Reino Unido"
@@ -1754,7 +1753,7 @@ datasets:
       tables: [bfi_educacao_cinematografica]
     categoria:
       - fontes_metadados
-    procedencia: derivado
+    procedencia: bfi
 
   - slug: bfi-empresas-industria
     title: "Empresas da Industria Cinematografica Britanica"
@@ -1775,7 +1774,7 @@ datasets:
       tables: [bfi_empresas_industria]
     categoria:
       - emprego_economia
-    procedencia: derivado
+    procedencia: bfi
 
   - slug: bfi-emprego-industria
     title: "Emprego na Industria Cinematografica Britanica"
@@ -1796,7 +1795,7 @@ datasets:
       tables: [bfi_emprego_industria]
     categoria:
       - emprego_economia
-    procedencia: derivado
+    procedencia: bfi
 
   - slug: bfi-video-digital
     title: "Filmes em Video Digital no Reino Unido"
@@ -1817,7 +1816,7 @@ datasets:
       tables: [bfi_video_digital]
     categoria:
       - vod_streaming
-    procedencia: derivado
+    procedencia: bfi
 
   - slug: bfi-video-fisico
     title: "Filmes em Video Fisico no Reino Unido"
@@ -1838,7 +1837,7 @@ datasets:
       tables: [bfi_video_fisico]
     categoria:
       - vod_streaming
-    procedencia: derivado
+    procedencia: bfi
 
   - slug: bfi-filmes-televisao
     title: "Filmes na Televisao Britanica"
@@ -1859,7 +1858,7 @@ datasets:
       tables: [bfi_filmes_televisao]
     categoria:
       - tv_audiencia
-    procedencia: derivado
+    procedencia: bfi
 
   - slug: bfi-investimento-publico
     title: "Investimento Publico no Cinema Britanico"
@@ -1880,7 +1879,7 @@ datasets:
       tables: [bfi_investimento_publico]
     categoria:
       - fomento
-    procedencia: derivado
+    procedencia: bfi
 
   - slug: bfi-certificacao-obras
     title: "Certificacao de Obras Britanicas (Screen Sector)"
@@ -1901,7 +1900,7 @@ datasets:
       tables: [bfi_certificacao_obras]
     categoria:
       - producao_obras
-    procedencia: derivado
+    procedencia: bfi
 
   - slug: bfi-top-filmes-2023
     title: "Top Filmes no Reino Unido 2023"
@@ -1922,7 +1921,7 @@ datasets:
       tables: [bfi_top_films_2023]
     categoria:
       - bilheteria
-    procedencia: derivado
+    procedencia: bfi
 
   - slug: bfi-economia-do-cinema
     title: "Economia do Cinema Britanico"
@@ -1943,7 +1942,7 @@ datasets:
       tables: [bfi_uk_film_economy]
     categoria:
       - emprego_economia
-    procedencia: derivado
+    procedencia: bfi
 
   - slug: bfi-mercado-cinematografico
     title: "Mercado Cinematografico do Reino Unido"
@@ -1965,7 +1964,7 @@ datasets:
     categoria:
       - bilheteria
       - distribuicao
-    procedencia: derivado
+    procedencia: bfi
 
   - slug: bfi-talentos-britanicos-mundo
     title: "Filmes Britanicos e Talentos no Mundo"
@@ -1986,9 +1985,9 @@ datasets:
       tables: [bfi_talentos_mundo]
     categoria:
       - internacional
-    procedencia: derivado
+    procedencia: bfi
 
-  # ── URUGUAI / ACAU ─────────────────────────────────────────────────────────
+  # ── URUGUAI / ACAU ─────────────────────────────────────────────────────────
 
   - slug: acau-uruguay-apoios-audiovisual
     title: "Apoios Audiovisuais do Uruguai"
@@ -2011,4 +2010,4 @@ datasets:
       tables: [acau_apoios]
     categoria:
       - fomento
-    procedencia: limpeza_leve
+    procedencia: acau

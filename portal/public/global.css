@@ -313,20 +313,72 @@ main:has(.exp-page) { max-width: 100%; padding: 0; }
   border-radius: 2px;
   text-transform: uppercase;
 }
-.dcard__proc--pda_intacto {
-  background: rgba(0,122,60,.12);
-  color: #006a35;
-  border: 1px solid rgba(0,122,60,.35);
+/* Badge de fonte no card — destaque pra PDA, demais discretos */
+.dcard__proc--pda {
+  background: rgba(0,106,53,.15);
+  color: #00532a;
+  border: 1px solid rgba(0,106,53,.45);
+  font-weight: 700;
 }
-.dcard__proc--limpeza_leve {
-  background: rgba(176,125,10,.12);
+.dcard__proc--oca {
+  background: rgba(26,94,168,.10);
+  color: #1a5ea8;
+  border: 1px solid rgba(26,94,168,.30);
+}
+.dcard__proc--sadis {
+  background: rgba(208,69,69,.10);
+  color: #a83535;
+  border: 1px solid rgba(208,69,69,.30);
+}
+.dcard__proc--fsa {
+  background: rgba(176,125,10,.10);
   color: #8a5e08;
-  border: 1px solid rgba(176,125,10,.35);
+  border: 1px solid rgba(176,125,10,.30);
 }
-.dcard__proc--derivado {
-  background: rgba(127,76,212,.12);
-  color: #6940b8;
-  border: 1px solid rgba(127,76,212,.35);
+.dcard__proc--embrafilme {
+  background: rgba(139,69,19,.10);
+  color: #6b3510;
+  border: 1px solid rgba(139,69,19,.30);
+}
+.dcard__proc--ibge {
+  background: rgba(42,122,58,.10);
+  color: #1f5d2c;
+  border: 1px solid rgba(42,122,58,.30);
+}
+.dcard__proc--mdic {
+  background: rgba(74,74,74,.08);
+  color: #4a4a4a;
+  border: 1px solid rgba(74,74,74,.30);
+}
+.dcard__proc--composto {
+  background: rgba(105,64,184,.12);
+  color: #553391;
+  border: 1px solid rgba(105,64,184,.35);
+}
+.dcard__proc--cnc {
+  background: rgba(0,51,153,.10);
+  color: #002b80;
+  border: 1px solid rgba(0,51,153,.30);
+}
+.dcard__proc--bfi {
+  background: rgba(200,16,46,.10);
+  color: #9a0c23;
+  border: 1px solid rgba(200,16,46,.30);
+}
+.dcard__proc--incaa {
+  background: rgba(117,170,219,.15);
+  color: #2d6aa0;
+  border: 1px solid rgba(117,170,219,.40);
+}
+.dcard__proc--acau {
+  background: rgba(91,146,229,.12);
+  color: #3070bd;
+  border: 1px solid rgba(91,146,229,.35);
+}
+.dcard__proc--lumiere {
+  background: rgba(0,51,153,.10);
+  color: #002b80;
+  border: 1px solid rgba(0,51,153,.30);
 }
 
 /* ── Filterbar na pagina /datasets/ ─────────────────────────────── */
@@ -417,40 +469,79 @@ button.fchip,
   background: rgba(255,255,255,.18);
   color: rgba(255,255,255,.95);
 }
-/* Procedência tem cores próprias quando ativada */
-.fchip--pda_intacto.is-active {
-  background: #006a35;
-  border-color: #006a35;
-  color: #fff;
-}
-.fchip--limpeza_leve.is-active {
-  background: #b07d0a;
-  border-color: #b07d0a;
-  color: #fff;
-}
-.fchip--derivado.is-active {
-  background: #6940b8;
-  border-color: #6940b8;
-  color: #fff;
-}
-/* Dot indicator de cor pra procedencia (visivel mesmo nao-ativa) */
-.fchip--pda_intacto::before,
-.fchip--limpeza_leve::before,
-.fchip--derivado::before {
+/* Cores por FONTE (procedência = origem real do dado) */
+.fchip--pda { --src: #006a35; }            /* Plano de Dados Abertos — destaque verde */
+.fchip--oca { --src: #1a5ea8; }            /* OCA / ANCINE */
+.fchip--sadis { --src: #d04545; }          /* SADIS */
+.fchip--fsa { --src: #b07d0a; }            /* FSA */
+.fchip--embrafilme { --src: #8b4513; }     /* Embrafilme histórico */
+.fchip--ibge { --src: #2a7a3a; }           /* IBGE */
+.fchip--mdic { --src: #4a4a4a; }           /* MDIC */
+.fchip--composto { --src: #6940b8; }       /* Multi-fonte */
+.fchip--cnc { --src: #003399; }            /* CNC — azul França */
+.fchip--bfi { --src: #c8102e; }            /* BFI — vermelho UK */
+.fchip--incaa { --src: #75aadb; }          /* INCAA — azul Argentina */
+.fchip--acau { --src: #5b92e5; }           /* ACAU — azul Uruguai */
+.fchip--lumiere { --src: #003399; }        /* Lumiere — azul EU */
+
+.fchip--pda::before,
+.fchip--oca::before,
+.fchip--sadis::before,
+.fchip--fsa::before,
+.fchip--embrafilme::before,
+.fchip--ibge::before,
+.fchip--mdic::before,
+.fchip--composto::before,
+.fchip--cnc::before,
+.fchip--bfi::before,
+.fchip--incaa::before,
+.fchip--acau::before,
+.fchip--lumiere::before {
   content: '';
   display: inline-block;
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  margin-right: -2px;
+  margin-right: -1px;
+  background: var(--src);
 }
-.fchip--pda_intacto::before { background: #006a35; }
-.fchip--limpeza_leve::before { background: #b07d0a; }
-.fchip--derivado::before { background: #6940b8; }
-.fchip--pda_intacto.is-active::before,
-.fchip--limpeza_leve.is-active::before,
-.fchip--derivado.is-active::before {
-  background: rgba(255,255,255,.85);
+
+.fchip--pda.is-active,
+.fchip--oca.is-active,
+.fchip--sadis.is-active,
+.fchip--fsa.is-active,
+.fchip--embrafilme.is-active,
+.fchip--ibge.is-active,
+.fchip--mdic.is-active,
+.fchip--composto.is-active,
+.fchip--cnc.is-active,
+.fchip--bfi.is-active,
+.fchip--incaa.is-active,
+.fchip--acau.is-active,
+.fchip--lumiere.is-active {
+  background: var(--src);
+  border-color: var(--src);
+  color: #fff;
+}
+.fchip--pda.is-active::before,
+.fchip--oca.is-active::before,
+.fchip--sadis.is-active::before,
+.fchip--fsa.is-active::before,
+.fchip--embrafilme.is-active::before,
+.fchip--ibge.is-active::before,
+.fchip--mdic.is-active::before,
+.fchip--composto.is-active::before,
+.fchip--cnc.is-active::before,
+.fchip--bfi.is-active::before,
+.fchip--incaa.is-active::before,
+.fchip--acau.is-active::before,
+.fchip--lumiere.is-active::before {
+  background: rgba(255,255,255,.95);
+}
+
+/* PDA tem destaque visual extra (badge mais grosso) */
+.fchip--pda {
+  font-weight: 600;
 }
 
 .filterbar__empty {

@@ -42,9 +42,19 @@ const CATEGORIA_LABEL = {
   fontes_metadados: "Fontes & Metadados",
 };
 const PROCEDENCIA_LABEL = {
-  pda_intacto: "PDA intacto",
-  limpeza_leve: "Limpeza leve",
-  derivado: "Derivado",
+  pda: "Plano de Dados Abertos",
+  oca: "OCA / ANCINE",
+  sadis: "SADIS / ANCINE",
+  fsa: "FSA / ANCINE",
+  embrafilme: "Embrafilme",
+  ibge: "IBGE",
+  mdic: "Comex Stat / MDIC",
+  composto: "Composto",
+  cnc: "CNC",
+  bfi: "BFI",
+  incaa: "INCAA",
+  acau: "ACAU",
+  lumiere: "Lumiere",
 };
 
 const catCounts = {};
@@ -55,7 +65,9 @@ for (const ds of datasets) {
   if (ds.procedencia) procCounts[ds.procedencia] = (procCounts[ds.procedencia] ?? 0) + 1;
 }
 const categoriasOrdenadas = Object.keys(CATEGORIA_LABEL).filter((k) => catCounts[k]);
-const procedenciasOrdenadas = ["pda_intacto", "limpeza_leve", "derivado"].filter((k) => procCounts[k]);
+// Ordem: PDA primeiro (destaque), depois fontes BR, depois composto, depois internacionais.
+const PROC_ORDER = ["pda", "oca", "sadis", "fsa", "embrafilme", "ibge", "mdic", "composto", "cnc", "bfi", "incaa", "acau", "lumiere"];
+const procedenciasOrdenadas = PROC_ORDER.filter((k) => procCounts[k]);
 ---
 
 <Base title="Datasets" description="Catalogo completo de datasets do RIDAB.">
@@ -79,7 +91,7 @@ const procedenciasOrdenadas = ["pda_intacto", "limpeza_leve", "derivado"].filter
       </div>
 
       <div class="filterbar__row">
-        <span class="filterbar__label">Procedência</span>
+        <span class="filterbar__label">Fonte</span>
         <div class="filterbar__chips">
           <button class="fchip is-active" data-filter="proc" data-value="__all__" type="button">
             Todas

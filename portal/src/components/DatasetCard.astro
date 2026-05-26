@@ -25,10 +25,21 @@ const CATEGORIA_LABEL = {
   fontes_metadados: "Fontes & Metadados",
 };
 
+// Procedência = FONTE REAL do dataset.
 const PROCEDENCIA_LABEL = {
-  pda_intacto: "PDA intacto",
-  limpeza_leve: "Limpeza leve",
-  derivado: "Derivado",
+  pda: "Plano de Dados Abertos",
+  oca: "OCA / ANCINE",
+  sadis: "SADIS / ANCINE",
+  fsa: "FSA / ANCINE",
+  embrafilme: "Embrafilme",
+  ibge: "IBGE",
+  mdic: "Comex Stat / MDIC",
+  composto: "Composto (multi-fonte)",
+  cnc: "CNC",
+  bfi: "BFI",
+  incaa: "INCAA",
+  acau: "ACAU",
+  lumiere: "Lumiere",
 };
 
 const country = ds.source?.country ?? "";
@@ -46,8 +57,8 @@ const formats = [ds.raw?.format?.toUpperCase()].filter(Boolean).join(", ");
 const tables = ds.cleaned?.tables ?? [];
 const categorias = Array.isArray(ds.categoria) ? ds.categoria : (ds.categoria ? [ds.categoria] : []);
 const procedencia = ds.procedencia ?? null;
+const procedenciaLabel = procedencia ? PROCEDENCIA_LABEL[procedencia] ?? procedencia : null;
 
-// Atributos data-* para filtro JS
 const dataCats = categorias.join(" ");
 ---
 
@@ -68,8 +79,8 @@ const dataCats = categorias.join(" ");
   {(categorias.length > 0 || procedencia) && (
     <div class="dcard__chips">
       {procedencia && (
-        <span class={`dcard__proc dcard__proc--${procedencia}`} title={PROCEDENCIA_LABEL[procedencia]}>
-          {PROCEDENCIA_LABEL[procedencia]}
+        <span class={`dcard__proc dcard__proc--${procedencia}`} title={procedenciaLabel}>
+          {procedenciaLabel}
         </span>
       )}
       {categorias.map((c) => (
