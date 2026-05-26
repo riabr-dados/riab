@@ -329,73 +329,143 @@ main:has(.exp-page) { max-width: 100%; padding: 0; }
   border: 1px solid rgba(127,76,212,.35);
 }
 
-/* Filterbar na pagina /datasets/ */
+/* ── Filterbar na pagina /datasets/ ─────────────────────────────── */
 .filterbar {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  margin: 24px 0 40px;
-  padding: 18px 20px;
+  margin: 32px 0 48px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--r);
+  overflow: hidden;
 }
 .filterbar__row {
-  display: grid;
-  grid-template-columns: 130px 1fr;
-  gap: 16px;
-  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 18px 24px;
+}
+.filterbar__row + .filterbar__row {
+  border-top: 1px solid var(--border);
 }
 .filterbar__label {
   font-family: var(--font-m);
   font-size: 10px;
-  letter-spacing: .08em;
+  letter-spacing: .12em;
   text-transform: uppercase;
   color: var(--muted);
+  flex: 0 0 140px;
+  padding-top: 8px;
+  white-space: nowrap;
 }
 .filterbar__chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 8px;
+  flex: 1 1 auto;
+  min-width: 0;
 }
+
+/* Reset completo dos <button> + estilo dos chips */
+button.fchip,
 .fchip {
+  appearance: none;
+  -webkit-appearance: none;
   font-family: var(--font-m);
   font-size: 11px;
-  letter-spacing: .03em;
-  padding: 5px 11px;
-  border-radius: 4px;
-  background: var(--surface2);
+  font-weight: 500;
+  letter-spacing: .02em;
+  line-height: 1;
+  padding: 7px 13px 7px 14px;
+  border-radius: 100px;
+  background: transparent;
   color: var(--text);
-  border: 1px solid var(--border2);
+  border: 1px solid var(--border);
   cursor: pointer;
-  transition: background .12s, border-color .12s, color .12s;
+  transition: background .12s ease, border-color .12s ease, color .12s ease, box-shadow .12s ease;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 7px;
+  outline: none;
+  margin: 0;
 }
-.fchip:hover { background: rgba(0,0,0,.04); }
+.fchip:hover {
+  background: var(--surface2);
+  border-color: var(--text);
+}
+.fchip:focus-visible {
+  box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--text);
+}
 .fchip.is-active {
   background: var(--text);
   color: var(--surface);
   border-color: var(--text);
 }
 .fchip__count {
-  font-size: 9px;
-  opacity: .7;
+  font-size: 10px;
   font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 100px;
+  background: rgba(0,0,0,.06);
+  color: var(--dim);
+  min-width: 16px;
+  text-align: center;
+  line-height: 1.2;
 }
-.fchip.is-active .fchip__count { opacity: .85; }
-.fchip--pda_intacto.is-active { background: #006a35; border-color: #006a35; color: #fff; }
-.fchip--limpeza_leve.is-active { background: #8a5e08; border-color: #8a5e08; color: #fff; }
-.fchip--derivado.is-active { background: #6940b8; border-color: #6940b8; color: #fff; }
+.fchip.is-active .fchip__count {
+  background: rgba(255,255,255,.18);
+  color: rgba(255,255,255,.95);
+}
+/* Procedência tem cores próprias quando ativada */
+.fchip--pda_intacto.is-active {
+  background: #006a35;
+  border-color: #006a35;
+  color: #fff;
+}
+.fchip--limpeza_leve.is-active {
+  background: #b07d0a;
+  border-color: #b07d0a;
+  color: #fff;
+}
+.fchip--derivado.is-active {
+  background: #6940b8;
+  border-color: #6940b8;
+  color: #fff;
+}
+/* Dot indicator de cor pra procedencia (visivel mesmo nao-ativa) */
+.fchip--pda_intacto::before,
+.fchip--limpeza_leve::before,
+.fchip--derivado::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-right: -2px;
+}
+.fchip--pda_intacto::before { background: #006a35; }
+.fchip--limpeza_leve::before { background: #b07d0a; }
+.fchip--derivado::before { background: #6940b8; }
+.fchip--pda_intacto.is-active::before,
+.fchip--limpeza_leve.is-active::before,
+.fchip--derivado.is-active::before {
+  background: rgba(255,255,255,.85);
+}
+
 .filterbar__empty {
   text-align: center;
   padding: 60px 20px;
   color: var(--muted);
   font-size: 13px;
 }
-@media (max-width: 640px) {
-  .filterbar__row { grid-template-columns: 1fr; gap: 6px; }
+@media (max-width: 720px) {
+  .filterbar__row {
+    flex-direction: column;
+    gap: 8px;
+    padding: 14px 16px;
+  }
+  .filterbar__label { padding-top: 0; flex: none; }
 }
 
 /* catalog grid */
