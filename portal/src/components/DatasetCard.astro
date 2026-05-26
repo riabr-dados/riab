@@ -11,6 +11,26 @@ const COUNTRY_LABEL = {
   EU: "Europa",
 };
 
+const CATEGORIA_LABEL = {
+  bilheteria: "Bilheteria",
+  salas_exibicao: "Salas & Exibição",
+  producao_obras: "Produção & Obras",
+  fomento: "Fomento",
+  emprego_economia: "Emprego & Economia",
+  distribuicao: "Distribuição",
+  vod_streaming: "VoD & Streaming",
+  tv_audiencia: "TV & Audiência",
+  diversidade: "Diversidade",
+  internacional: "Internacional",
+  fontes_metadados: "Fontes & Metadados",
+};
+
+const PROCEDENCIA_LABEL = {
+  pda_intacto: "PDA intacto",
+  limpeza_leve: "Limpeza leve",
+  derivado: "Derivado",
+};
+
 const country = ds.source?.country ?? "";
 const countryLabel = COUNTRY_LABEL[country] ?? country;
 
@@ -24,15 +44,40 @@ function fmtBytes(b) {
 const totalBytes = ds.raw?.size_bytes ?? 0;
 const formats = [ds.raw?.format?.toUpperCase()].filter(Boolean).join(", ");
 const tables = ds.cleaned?.tables ?? [];
+const categorias = Array.isArray(ds.categoria) ? ds.categoria : (ds.categoria ? [ds.categoria] : []);
+const procedencia = ds.procedencia ?? null;
+
+// Atributos data-* para filtro JS
+const dataCats = categorias.join(" ");
 ---
 
-<a class={`dcard dcard--${country}`} href={`${base}datasets/${ds.slug}/`}>
+<a
+  class={`dcard dcard--${country}`}
+  href={`${base}datasets/${ds.slug}/`}
+  data-country={country}
+  data-procedencia={procedencia ?? ""}
+  data-categorias={dataCats}
+>
   <div class="dcard__top">
     <span class="dcard__inst">{ds.source?.name?.split(" - ")[0] ?? ds.source_id}</span>
     <span class={`dcard__status dcard__status--${ds.status}`}>{ds.status}</span>
   </div>
   <div class="dcard__title">{ds.title}</div>
   <div class="dcard__desc">{ds.description}</div>
+
+  {(categorias.length > 0 || procedencia) && (
+    <div class="dcard__chips">
+      {procedencia && (
+        <span class={`dcard__proc dcard__proc--${procedencia}`} title={PROCEDENCIA_LABEL[procedencia]}>
+          {PROCEDENCIA_LABEL[procedencia]}
+        </span>
+      )}
+      {categorias.map((c) => (
+        <span class="dcard__cat">{CATEGORIA_LABEL[c] ?? c}</span>
+      ))}
+    </div>
+  )}
+
   <div class="dcard__meta">
     <span class="dcard__tag dcard__tag--country">{countryLabel}</span>
     {formats && <span class="dcard__tag">{formats}</span>}

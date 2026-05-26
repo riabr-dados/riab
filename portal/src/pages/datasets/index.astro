@@ -26,20 +26,162 @@ const groups = Object.entries(byCountry).map(([code, g]) => ({
   label: LABEL[code] ?? code,
   datasets: g.datasets,
 }));
+
+// Contagem por categoria e procedência para os chips de filtro
+const CATEGORIA_LABEL = {
+  bilheteria: "Bilheteria",
+  salas_exibicao: "Salas & Exibição",
+  producao_obras: "Produção & Obras",
+  fomento: "Fomento",
+  emprego_economia: "Emprego & Economia",
+  distribuicao: "Distribuição",
+  vod_streaming: "VoD & Streaming",
+  tv_audiencia: "TV & Audiência",
+  diversidade: "Diversidade",
+  internacional: "Internacional",
+  fontes_metadados: "Fontes & Metadados",
+};
+const PROCEDENCIA_LABEL = {
+  pda_intacto: "PDA intacto",
+  limpeza_leve: "Limpeza leve",
+  derivado: "Derivado",
+};
+
+const catCounts = {};
+const procCounts = {};
+for (const ds of datasets) {
+  const cats = Array.isArray(ds.categoria) ? ds.categoria : ds.categoria ? [ds.categoria] : [];
+  for (const c of cats) catCounts[c] = (catCounts[c] ?? 0) + 1;
+  if (ds.procedencia) procCounts[ds.procedencia] = (procCounts[ds.procedencia] ?? 0) + 1;
+}
+const categoriasOrdenadas = Object.keys(CATEGORIA_LABEL).filter((k) => catCounts[k]);
+const procedenciasOrdenadas = ["pda_intacto", "limpeza_leve", "derivado"].filter((k) => procCounts[k]);
 ---
 
 <Base title="Datasets" description="Catalogo completo de datasets do RIDAB.">
   <div class="page-inner">
     <h1 class="page-title">Catalogo de Datasets</h1>
-    <p class="page-sub">{datasets.length} datasets de {groups.length} paises</p>
+    <p class="page-sub" id="ds-count-line">{datasets.length} datasets de {groups.length} paises</p>
+
+    <div class="filterbar">
+      <div class="filterbar__row">
+        <span class="filterbar__label">Tipo de dado</span>
+        <div class="filterbar__chips">
+          <button class="fchip is-active" data-filter="cat" data-value="__all__" type="button">
+            Todos <span class="fchip__count">{datasets.length}</span>
+          </button>
+          {categoriasOrdenadas.map((k) => (
+            <button class="fchip" data-filter="cat" data-value={k} type="button">
+              {CATEGORIA_LABEL[k]} <span class="fchip__count">{catCounts[k]}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div class="filterbar__row">
+        <span class="filterbar__label">Procedência</span>
+        <div class="filterbar__chips">
+          <button class="fchip is-active" data-filter="proc" data-value="__all__" type="button">
+            Todas
+          </button>
+          {procedenciasOrdenadas.map((k) => (
+            <button class={`fchip fchip--${k}`} data-filter="proc" data-value={k} type="button">
+              {PROCEDENCIA_LABEL[k]} <span class="fchip__count">{procCounts[k]}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div class="filterbar__row">
+        <span class="filterbar__label">País</span>
+        <div class="filterbar__chips">
+          <button class="fchip is-active" data-filter="country" data-value="__all__" type="button">
+            Todos
+          </button>
+          {groups.map((g) => (
+            <button class="fchip" data-filter="country" data-value={g.code} type="button">
+              {g.label} <span class="fchip__count">{g.datasets.length}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
 
     {groups.map((group) => (
-      <section class="group-section">
-        <h2 class="group-title">{group.label} <span class="group-count">{group.datasets.length}</span></h2>
+      <section class="group-section" data-group={group.code}>
+        <h2 class="group-title">
+          {group.label} <span class="group-count">{group.datasets.length}</span>
+        </h2>
         <div class="catalog__grid">
           {group.datasets.map((ds) => <DatasetCard ds={ds} />)}
         </div>
       </section>
     ))}
+
+    <p class="filterbar__empty" id="filter-empty" hidden>
+      Nenhum dataset corresponde aos filtros selecionados.
+    </p>
   </div>
+
+  <script is:inline>
+    (function () {
+      const state = { cat: "__all__", proc: "__all__", country: "__all__" };
+      const chips = document.querySelectorAll(".fchip");
+      const cards = document.querySelectorAll(".dcard");
+      const sections = document.querySelectorAll(".group-section");
+      const empty = document.getElementById("filter-empty");
+      const countLine = document.getElementById("ds-count-line");
+      const totalDatasets = cards.length;
+
+      function apply() {
+        let visibleTotal = 0;
+        const sectionCounts = {};
+
+        cards.forEach((card) => {
+          const cats = (card.dataset.categorias || "").split(/\s+/).filter(Boolean);
+          const proc = card.dataset.procedencia || "";
+          const country = card.dataset.country || "";
+
+          const catOk = state.cat === "__all__" || cats.includes(state.cat);
+          const procOk = state.proc === "__all__" || proc === state.proc;
+          const countryOk = state.country === "__all__" || country === state.country;
+
+          const show = catOk && procOk && countryOk;
+          card.style.display = show ? "" : "none";
+          if (show) {
+            visibleTotal += 1;
+            sectionCounts[country] = (sectionCounts[country] || 0) + 1;
+          }
+        });
+
+        sections.forEach((sec) => {
+          const code = sec.dataset.group;
+          const count = sectionCounts[code] || 0;
+          sec.style.display = count > 0 ? "" : "none";
+          const badge = sec.querySelector(".group-count");
+          if (badge) badge.textContent = String(count);
+        });
+
+        empty.hidden = visibleTotal > 0;
+        if (countLine) {
+          countLine.textContent =
+            visibleTotal === totalDatasets
+              ? `${totalDatasets} datasets de ${sections.length} paises`
+              : `${visibleTotal} de ${totalDatasets} datasets visiveis`;
+        }
+      }
+
+      chips.forEach((chip) => {
+        chip.addEventListener("click", () => {
+          const f = chip.dataset.filter;
+          const v = chip.dataset.value;
+          state[f] = v;
+          document.querySelectorAll(`.fchip[data-filter="${f}"]`).forEach((c) => {
+            c.classList.toggle("is-active", c.dataset.value === v);
+          });
+          apply();
+        });
+      });
+    })();
+  </script>
 </Base>
