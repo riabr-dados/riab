@@ -17,6 +17,8 @@ SCRIPTS = [
     "pipelines/transform/clean_deflator.py",
     "pipelines/transform/clean_atas_fsa.py",
     "pipelines/transform/clean_oca_complementos.py",
+    "pipelines/transform/clean_ibge_seculoxx_cinema.py",
+    "pipelines/transform/clean_bilheteria_historica_complementar.py",
     "pipelines/transform/clean_pib_audiovisual.py",
     "pipelines/transform/clean_rais_emprego_audiovisual.py",
     "pipelines/transform/clean_comercio_exterior_servicos_audiovisuais.py",

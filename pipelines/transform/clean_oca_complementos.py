@@ -497,6 +497,85 @@ def embrafilme_metric(title: str) -> tuple[str, str, int]:
     return "publico", "mil_espectadores", 1000
 
 
+FAIXA_HABITANTES_LABELS = {
+    "ACIMA DE 2 MILHOES": "Acima de 2 milhões",
+    "DE 600 MIL A 2 MILHOES": "De 600 mil a 2 milhões",
+    "DE 200 MIL A 600 MIL": "De 200 mil a 600 mil",
+    "DE 100 MIL A 200 MIL": "De 100 mil a 200 mil",
+    "DE 50 MIL A 200 MIL": "De 50 mil a 200 mil",
+    "DE 50 MIL A 100 MIL": "De 50 mil a 100 mil",
+    "MENOS DE 50 MIL": "Menos de 50 mil",
+    "MENOS DE 50 MI": "Menos de 50 mil",
+    "TOTAL": "Brasil (total municípios)",
+}
+
+
+def parse_faixa_habitantes_pdf(row: pd.Series) -> list[dict[str, object]]:
+    """Parse o PDF Embrafilme 'arrecadacao por faixa de habitantes' (1 ano/pág, 6 col)."""
+    path = ROOT / str(row["local_path"])
+    reader = PdfReader(BytesIO(path.read_bytes()))
+    records: list[dict[str, object]] = []
+    for page in reader.pages:
+        text = page.extract_text() or ""
+        # Captura "ANO DE 1983" ou "PERIODO: JANEIRO - ABRIL / 87"
+        ano: int | None = None
+        m_ano = re.search(r"ANO\s+DE\s+(19\d{2}|20\d{2})", text, re.IGNORECASE)
+        if m_ano:
+            ano = int(m_ano.group(1))
+        else:
+            m_per = re.search(r"PER\W*ODO[:\s]*.*?/\s*(\d{2,4})", text, re.IGNORECASE)
+            if m_per:
+                yr = int(m_per.group(1))
+                ano = 1900 + yr if yr < 100 else yr
+        if ano is None:
+            continue
+
+        for raw_line in text.splitlines():
+            line = strip_accents_light(clean_cell(raw_line)).upper()
+            if not line:
+                continue
+            matched_label = None
+            for key in FAIXA_HABITANTES_LABELS:
+                if line.startswith(key):
+                    matched_label = key
+                    break
+            if matched_label is None:
+                continue
+            tail = line[len(matched_label):].strip()
+            tokens = tail.split()
+            # esperamos pelo menos: cinemas_cadastrados cinemas_arrec arrec %arrec espectadores %esp
+            nums = [parse_brl(tok) for tok in tokens]
+            nums = [n for n in nums if n is not None]
+            if len(nums) < 5:
+                continue
+            cinemas_cadastrados = int(nums[0]) if nums[0] is not None else None
+            cinemas_com_arrec = int(nums[1]) if len(nums) > 1 else None
+            arrecadacao = nums[2] if len(nums) > 2 else None
+            espectadores = nums[4] if len(nums) > 4 else None
+
+            base = {
+                "ano": ano,
+                "territorio_tipo": "faixa_habitantes",
+                "territorio_nome": FAIXA_HABITANTES_LABELS[matched_label],
+                "uf": None,
+                "regiao": None,
+                "origem_filme": "nacionais_e_estrangeiros",
+                "fonte_documento": path.name,
+                "confiabilidade": "oficial_compilado",
+                "mes": None,
+                "mes_nome": None,
+            }
+            if arrecadacao is not None:
+                records.append({**base, "indicador": "renda_brl_nominal", "valor": arrecadacao, "unidade_original": "CRUZADO"})
+            if espectadores is not None:
+                records.append({**base, "indicador": "publico", "valor": float(espectadores), "unidade_original": "espectadores"})
+            if cinemas_cadastrados is not None:
+                records.append({**base, "indicador": "cinemas_cadastrados", "valor": float(cinemas_cadastrados), "unidade_original": "cinemas"})
+            if cinemas_com_arrec is not None:
+                records.append({**base, "indicador": "cinemas_com_arrecadacao", "valor": float(cinemas_com_arrec), "unidade_original": "cinemas"})
+    return records
+
+
 def infer_territory(title: str, label: str) -> tuple[str, str, str | None, str | None, int | None, str | None]:
     title_norm = strip_accents_light(title.lower())
     label_norm = strip_accents_light(label.upper())
@@ -519,63 +598,154 @@ def infer_territory(title: str, label: str) -> tuple[str, str, str | None, str |
     return "brasil", "Brasil", None, None, None, None
 
 
+def parse_page_header(page_text: str, fallback_title: str) -> tuple[str, str, str, int, str | None]:
+    """
+    Extrai do texto de UMA página:
+      - indicador (renda_brl_nominal | publico | lugares_oferecidos)
+      - unidade_original (CRUZADO | OTN | espectadores | mil_espectadores | mil_lugares | lugares)
+      - origem_filme (nacionais_e_estrangeiros | nacionais | estrangeiros)
+      - multiplier
+      - escopo territorial inferido do título da página (brasil | capitais | interior | None)
+
+    O título da página tem prioridade para definir o INDICADOR (LUGARES OFERECIDOS,
+    ESPECTADORES, ARRECADACAO) porque alguns PDFs têm legenda de unidade incorreta
+    (ex.: lugares-uf diz "EM 1.000 ESPECTADORES" mas o conteúdo é lugares).
+    A linha de unidade é usada apenas para refinar CRUZADO vs OTN vs base 1000.
+    """
+    # Junta linhas vizinhas truncadas pelo PDF (ex.: "ESTRANGEIRO\nS")
+    raw_lines = [clean_cell(l) for l in page_text.splitlines()]
+    raw_lines = [l for l in raw_lines if l]
+    glued: list[str] = []
+    skip = False
+    for i, l in enumerate(raw_lines):
+        if skip:
+            skip = False
+            continue
+        if i + 1 < len(raw_lines) and raw_lines[i + 1].strip() in {"S", "R", "O"} and len(l) > 10:
+            glued.append(l + raw_lines[i + 1])
+            skip = True
+        else:
+            glued.append(l)
+    lines = [strip_accents_light(l).upper() for l in glued]
+
+    # 1) Indicador pelo título da página (prioridade)
+    indicator, unit, mult = embrafilme_metric(fallback_title)
+    title_line = next((l for l in lines if "FILMES" in l and (
+        "ARRECADAC" in l or "ESPECTADOR" in l or "LUGARES OFERECIDOS" in l)), None)
+    if title_line:
+        if "LUGARES OFERECIDOS" in title_line:
+            indicator = "lugares_oferecidos"
+        elif "ARRECADAC" in title_line:
+            indicator = "renda_brl_nominal"
+        elif "ESPECTADOR" in title_line:
+            indicator = "publico"
+
+    # 2) Unidade pela linha de hint "EM ..."
+    for line in lines:
+        if "EM CRUZADOS" in line or line.endswith("EM CRUZADOS"):
+            unit, mult = "CRUZADO", 1
+            break
+        if "EM OTN" in line or "OTN'S" in line or "EM OTNS" in line:
+            unit, mult = "OTN", 1
+            break
+        if "1.000 ESPECTADORES" in line or "1000 ESPECTADORES" in line:
+            # Hint de unidade base 1000; só aceita se indicador combinar
+            if indicator == "publico":
+                unit, mult = "mil_espectadores", 1000
+            elif indicator == "lugares_oferecidos":
+                unit, mult = "mil_lugares", 1000  # PDF tem hint errado, mas conteúdo é lugares
+            break
+        if "1.000 LUGARES" in line or "1000 LUGARES" in line:
+            unit, mult = "mil_lugares", 1000
+            break
+
+    # 3) Origem + escopo do título
+    origem = "nacionais_e_estrangeiros"
+    escopo_territorial: str | None = None
+    if title_line:
+        if "NACIONAIS E ESTRANGEIRO" in title_line:
+            origem = "nacionais_e_estrangeiros"
+        elif "NACIONAIS" in title_line and "ESTRANGEIR" not in title_line:
+            origem = "nacionais"
+        elif "ESTRANGEIR" in title_line and "NACIONAIS" not in title_line:
+            origem = "estrangeiros"
+        if "NAS CAPITAIS" in title_line or "PRINCIPAIS CAPITAIS" in title_line:
+            escopo_territorial = "capitais"
+        elif "NO INTERIOR" in title_line:
+            escopo_territorial = "interior"
+        elif "NO BRASIL" in title_line:
+            escopo_territorial = "brasil"
+
+    return indicator, unit, origem, mult, escopo_territorial
+
+
 def parse_embrafilme_pdf(row: pd.Series) -> list[dict[str, object]]:
     title = str(row["titulo"])
     path = ROOT / str(row["local_path"])
-    indicator, unit, multiplier = embrafilme_metric(title)
-    text = pdf_text(path)
+    reader = PdfReader(BytesIO(path.read_bytes()))
     records: list[dict[str, object]] = []
 
-    current_years: list[int] = []
-    for raw_line in text.splitlines():
-        line = clean_cell(raw_line)
-        if not line:
-            continue
-        years = [int(v) for v in re.findall(r"\b(19[7-9]\d|20\d{2})\b", line)]
-        if len(years) >= 2 and not re.search(r"\d+[,.]\d+", line):
-            current_years = years
-            continue
-        if not current_years:
-            continue
-        if line.lower().startswith(("fonte", "espectadores", "arrecad", "lugares", "em ")):
-            continue
+    for page in reader.pages:
+        page_text = page.extract_text() or ""
+        indicator, unit, origem, multiplier, scope_override = parse_page_header(page_text, title)
 
-        parts = line.split()
-        value_positions = [i for i, part in enumerate(parts) if parse_brl(part) is not None]
-        if not value_positions:
-            continue
-        first_value = value_positions[0]
-        label = " ".join(parts[:first_value]).strip()
-        if not label:
-            continue
-        values = [parse_brl(part) for part in parts[first_value:]]
-        values = [v for v in values if v is not None]
-        if not values:
-            continue
+        current_years: list[int] = []
+        for raw_line in page_text.splitlines():
+            line = clean_cell(raw_line)
+            if not line:
+                continue
+            years = [int(v) for v in re.findall(r"\b(19[7-9]\d|20\d{2})\b", line)]
+            if len(years) >= 2 and not re.search(r"\d+[,.]\d+", line):
+                current_years = years
+                continue
+            if not current_years:
+                continue
+            if line.lower().startswith(("fonte", "espectadores", "arrecad", "lugares", "em ")):
+                continue
 
-        territorio_tipo, territorio_nome, uf, regiao, mes, mes_nome = infer_territory(title, label)
-        for ano, value in zip(current_years, values):
-            metric_value = value * multiplier
-            records.append(
-                {
-                    "ano": ano,
-                    "territorio_tipo": territorio_tipo,
-                    "territorio_nome": territorio_nome,
-                    "uf": uf,
-                    "regiao": regiao,
-                    "origem_filme": "nacionais_e_estrangeiros",
-                    "publico": metric_value if indicator == "publico" else None,
-                    "renda_brl_nominal": metric_value if indicator == "renda_brl_nominal" else None,
-                    "lugares_oferecidos": metric_value if indicator == "lugares_oferecidos" else None,
-                    "fonte_documento": path.name,
-                    "confiabilidade": "oficial_compilado",
-                    "indicador": indicator,
-                    "valor": metric_value,
-                    "unidade_original": unit,
-                    "mes": mes,
-                    "mes_nome": mes_nome,
-                }
-            )
+            parts = line.split()
+            value_positions = [i for i, part in enumerate(parts) if parse_brl(part) is not None]
+            if not value_positions:
+                continue
+            first_value = value_positions[0]
+            label = " ".join(parts[:first_value]).strip()
+            if not label:
+                continue
+            values = [parse_brl(part) for part in parts[first_value:]]
+            values = [v for v in values if v is not None]
+            if not values:
+                continue
+
+            territorio_tipo, territorio_nome, uf, regiao, mes, mes_nome = infer_territory(title, label)
+            # Sobrepõe escopo se a página declarou capitais/interior/brasil específico
+            # e o territorio resolvido caiu no default "brasil" (catch-all do infer_territory).
+            if scope_override and territorio_tipo == "brasil" and mes is None:
+                territorio_tipo = scope_override
+                territorio_nome = {
+                    "brasil": "Brasil",
+                    "capitais": "Capitais",
+                    "interior": "Interior",
+                }[scope_override]
+
+            for ano, value in zip(current_years, values):
+                metric_value = value * multiplier
+                records.append(
+                    {
+                        "ano": ano,
+                        "territorio_tipo": territorio_tipo,
+                        "territorio_nome": territorio_nome,
+                        "uf": uf,
+                        "regiao": regiao,
+                        "origem_filme": origem,
+                        "fonte_documento": path.name,
+                        "confiabilidade": "oficial_compilado",
+                        "indicador": indicator,
+                        "valor": metric_value,
+                        "unidade_original": unit,
+                        "mes": mes,
+                        "mes_nome": mes_nome,
+                    }
+                )
     return records
 
 
@@ -587,8 +757,13 @@ def build_embrafilme(df_inventory: pd.DataFrame) -> pd.DataFrame:
     ]
     records: list[dict[str, object]] = []
     for _, row in rows.iterrows():
+        title_norm = strip_accents_light(str(row["titulo"]).lower())
+        is_faixa = "faixa de habitantes" in title_norm
         try:
-            records.extend(parse_embrafilme_pdf(row))
+            if is_faixa:
+                records.extend(parse_faixa_habitantes_pdf(row))
+            else:
+                records.extend(parse_embrafilme_pdf(row))
         except Exception as exc:  # noqa: BLE001
             print(f"[WARN] Falha ao parsear Embrafilme {row['titulo']}: {exc}", file=sys.stderr)
     return pd.DataFrame(records)

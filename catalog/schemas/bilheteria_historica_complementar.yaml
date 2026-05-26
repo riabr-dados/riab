@@ -1,0 +1,53 @@
+table: bilheteria_historica_complementar
+description: >
+  Serie historica complementar de bilheteria/exibicao brasileira, agregando
+  fontes nao cobertas pelas tabelas oficiais ja publicadas
+  (bilheteria_brasileira_consolidada / SADIS e bilheteria_por_filme_ano / OCA).
+  Inclui: Embrafilme 1971-1987 (publico, renda, lugares, cinemas) e OCA
+  Listagem de Filmes Brasileiros Lancados 1995-2024 (publico+renda agregados
+  por ano de lancamento).
+
+source_raw:
+  - br-embrafilme-historico-exibicao
+  - ancine-filmes-lancados-captacao
+
+columns:
+  - name: ano
+    type: int64
+    description: "Ano de referencia"
+  - name: origem_filme
+    type: string
+    description: "Origem do(s) filme(s) agregados: brasileiros | estrangeiros | nacionais_e_estrangeiros"
+  - name: territorio_tipo
+    type: string
+    description: "Recorte: brasil | regiao | uf | capitais | interior | municipio_ou_faixa | faixa_habitantes"
+  - name: territorio_nome
+    type: string
+    description: "Nome do territorio do recorte"
+  - name: uf
+    type: string
+    nullable: true
+    description: "UF quando o recorte permite"
+  - name: indicador
+    type: string
+    description: "publico | renda_brl_nominal | lugares_oferecidos | cinemas_cadastrados | cinemas_com_arrecadacao | filmes_lancados"
+  - name: valor
+    type: float64
+    description: "Valor numerico na unidade indicada"
+  - name: unidade_original
+    type: string
+    description: "Unidade: espectadores | BRL | CRUZADO | mil_espectadores | mil_lugares | cinemas | filmes"
+  - name: fonte
+    type: string
+    description: "Nome curto da fonte"
+  - name: fonte_documento
+    type: string
+    description: "Arquivo concreto de origem"
+  - name: confiabilidade
+    type: string
+    description: "oficial_compilado | oficial_secundario | terceiro_nao_oficial"
+
+notes:
+  - "NAO substitui as duas series oficiais (SADIS/consolidada e OCA por_filme_ano)."
+  - "Series historicas: Embrafilme em CRUZADO (nominal); OCA 1995-2024 em BRL nominal acumulado por filme."
+  - "Cobertura externa pendente: IBGE Seculo XX (1937-1988, ~164 tabelas), IBGE MUNIC (1999+), Cinemateca Brasileira Filmografia (1897+). Ver FONTES.md."

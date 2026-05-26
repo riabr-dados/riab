@@ -1,0 +1,43 @@
+table: ibge_seculoxx_cinema
+description: >
+  Censos do IBGE sobre cinemas brasileiros publicados nos Anuarios Estatisticos
+  e digitalizados no portal Estatisticas do Seculo XX. Cobertura inicial
+  1971-1985 por UF, com sessoes, entradas vendidas (publico), lotacao,
+  filmes exibidos e numero de cinemas.
+
+source_raw: ibge-seculoxx-cinema
+
+columns:
+  - name: ano
+    type: int64
+    description: "Ano de referencia dos dados"
+  - name: territorio_tipo
+    type: string
+    description: "brasil | uf"
+  - name: territorio_nome
+    type: string
+    description: "Nome do territorio"
+  - name: uf
+    type: string
+    nullable: true
+    description: "Sigla UF quando aplicavel"
+  - name: indicador
+    type: string
+    description: "publico | sessoes_cinematograficas | cinemas_informantes | lugares_oferecidos | filmes_longa_metragem | filmes_longa_nacionais | filmes_longa_estrangeiros | filmes_curta_metragem | filmes_curta_nacionais | filmes_curta_estrangeiros | publico_inteiras | publico_meias"
+  - name: valor
+    type: float64
+    description: "Valor do indicador"
+  - name: unidade_original
+    type: string
+    description: "espectadores | sessoes | cinemas | lugares | filmes"
+  - name: fonte_documento
+    type: string
+    description: "Arquivo .xls original do IBGE"
+  - name: origem_filme
+    type: string
+    description: "Sempre nacionais_e_estrangeiros (IBGE nao desagrega publico por origem; ha indicadores separados de filmes nacionais vs estrangeiros)"
+
+notes:
+  - "Em 1980 o IBGE separa entradas em inteiras e meias; publico = soma das duas."
+  - "Em 1971 e 1974 apenas cinemas 35mm/70mm sao cobertos por esta extracao (PDF tambem tem cine-teatros, ainda nao parseados)."
+  - "Estado de Guanabara (GB) aparece em 1971; em 1974 ja se chama Rio de Janeiro."

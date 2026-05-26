@@ -1,11 +1,14 @@
 table: embrafilme_exibicao_territorio_ano
 description: >
   Serie historica de exibicao pre-ANCINE extraida de PDFs tabulares do OCA
-  com dados Embrafilme de publico, renda e lugares oferecidos.
+  com dados Embrafilme. Formato longo: cada linha e (ano, territorio, indicador, valor).
+  Indicadores cobertos: publico, renda_brl_nominal, lugares_oferecidos,
+  cinemas_cadastrados, cinemas_com_arrecadacao.
 
 source_raw: br-embrafilme-historico-exibicao
 source_columns_original: >
-  Tabelas em PDF com cabecalhos por ano e linhas de meses ou territorios.
+  Tabelas em PDF com cabecalhos por ano e linhas de meses, territorios ou
+  faixas de habitantes.
 
 columns:
   - name: ano
@@ -13,10 +16,10 @@ columns:
     description: "Ano de referencia"
   - name: territorio_tipo
     type: string
-    description: "Tipo de recorte territorial ou temporal da linha"
+    description: "Tipo de recorte (brasil, regiao, uf, capitais, interior, municipio_ou_faixa, faixa_habitantes)"
   - name: territorio_nome
     type: string
-    description: "Nome do territorio, Brasil quando a tabela e nacional"
+    description: "Nome do territorio, 'Brasil' quando nacional"
   - name: uf
     type: string
     nullable: true
@@ -27,19 +30,7 @@ columns:
     description: "Regiao quando o recorte permite identificar"
   - name: origem_filme
     type: string
-    description: "Origem agregada informada pela fonte"
-  - name: publico
-    type: float64
-    nullable: true
-    description: "Publico convertido para unidades"
-  - name: renda_brl_nominal
-    type: float64
-    nullable: true
-    description: "Renda nominal conforme unidade monetaria historica da fonte"
-  - name: lugares_oferecidos
-    type: float64
-    nullable: true
-    description: "Lugares oferecidos convertidos para unidades"
+    description: "Origem agregada informada pela fonte (nacionais_e_estrangeiros)"
   - name: fonte_documento
     type: string
     description: "PDF oficial de origem"
@@ -48,17 +39,17 @@ columns:
     description: "Classificacao da origem do dado"
   - name: indicador
     type: string
-    description: "Indicador preenchido na linha"
+    description: "Indicador da linha: publico | renda_brl_nominal | lugares_oferecidos | cinemas_cadastrados | cinemas_com_arrecadacao"
   - name: valor
     type: float64
-    description: "Valor consolidado do indicador"
+    description: "Valor numerico do indicador na unidade indicada por unidade_original"
   - name: unidade_original
     type: string
-    description: "Unidade declarada pela fonte"
+    description: "Unidade declarada/inferida pela fonte (CRUZADO, espectadores, mil_espectadores, mil_lugares, cinemas)"
   - name: mes
     type: int64
     nullable: true
-    description: "Mes quando a linha e mensal"
+    description: "Mes (1-12) quando a linha e mensal"
   - name: mes_nome
     type: string
     nullable: true
@@ -66,3 +57,5 @@ columns:
 
 notes:
   - "A renda historica mantem a unidade monetaria nominal informada nos PDFs; nao foi convertida para reais atuais."
+  - "Formato longo: para reconstruir wide, pivote por (ano, territorio_tipo, territorio_nome, mes) com indicador como coluna."
+  - "O PDF 'arrecadacao por faixa de habitantes' adiciona linhas com territorio_tipo='faixa_habitantes' e os indicadores cinemas_cadastrados e cinemas_com_arrecadacao."

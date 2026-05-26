@@ -19,8 +19,10 @@ Tabela de saúde das fontes públicas espelhadas neste repositório. Atualizada 
 | Agentes econômicos regulares | https://dados.gov.br | ANCINE | 2026-05-19 | ativo | |
 | Diretores de obras não publicitárias | https://dados.gov.br | ANCINE / SAV | 2026-05-19 | ativo | |
 | Produtores de obras não publicitárias | https://dados.gov.br | ANCINE / SAV | 2026-05-19 | ativo | |
-| Bilheteria consolidada | https://www.ancine.gov.br | ANCINE / SADIS | 2026-05-19 | ativo | |
-| Bilheteria agregada por filme/ano | https://oca.ancine.gov.br | ANCINE / OCA | 2026-05-19 | intermitente | OCA tem histórico de quedas. **Principal motivador deste projeto.** |
+| Bilheteria consolidada | https://www.ancine.gov.br | ANCINE / SADIS | 2026-05-19 | ativo | Top filmes BR 2009→presente, com `Fonte` por linha (Anuário 2009-2013, SADIS 2014+) |
+| Bilheteria agregada por filme/ano | https://oca.ancine.gov.br | ANCINE / OCA | 2026-05-19 | intermitente | 2014→presente, todos países (SCB/SADIS publicado no OCA). OCA tem histórico de quedas. **Principal motivador deste projeto.** |
+| Listagem de Filmes Brasileiros Lançados 1995-2024 | https://www.gov.br/ancine/pt-br/oca | ANCINE / OCA | 2026-05-23 | ativo | Série longa **só filmes BR**, com público e renda acumulados por filme. Agregada na `bilheteria_historica_complementar`. |
+| Embrafilme (histórico exibição 1971-1987) | https://www.gov.br/ancine/pt-br/oca | ANCINE / OCA (Embrafilme) | 2026-05-23 | ativo | 13 PDFs com público, renda em cruzados e lugares oferecidos por UF/região/faixa de habitantes. |
 | Preço médio do ingresso | https://oca.ancine.gov.br | ANCINE / OCA | 2026-05-19 | intermitente | Série histórica |
 | Atas oficiais FSA (PDFs) | https://fsa.ancine.gov.br | ANCINE / FSA | 2026-05-19 | ativo | PRODAV 07/2014, 07/2015, 07/2017, Desempenho Artístico 2018, 2024 |
 
@@ -36,6 +38,9 @@ Tabela de saúde das fontes públicas espelhadas neste repositório. Atualizada 
 | Dataset | URL viva | Órgão | Última verificação | Status | Notas |
 |---|---|---|---|---|---|
 | Deflator IPCA (base 2024) | https://www.ibge.gov.br/estatisticas/economicas/precos-e-custos/9256-indice-nacional-de-precos-ao-consumidor-amplo.html | IBGE | 2026-05-19 | ativo | Série mensal |
+| IBGE Século XX — cinema (1937-1988) | https://seculoxx.ibge.gov.br/populacionais-sociais-politicas-e-culturais/busca-por-palavra-chave/cultura/629-cinema.html | IBGE | 2026-05-26 | ativo (parcial) | ~164 tabelas .xls totais; 6 já extraídas (1971, 1974, 1980, 1984, 1985) cobrindo cinemas, sessões, entradas vendidas, filmes exibidos por UF. Integrada a `bilheteria_historica_complementar`. Restantes pendentes. |
+| IBGE MUNIC — salas de cinema por município (1999+) | https://www.ibge.gov.br/estatisticas/sociais/educacao/10586-pesquisa-de-informacoes-basicas-municipais.html | IBGE | 2026-05-26 | identificado | Cobertura municipal anual sobre presença de salas. **Pendente de extração.** |
+| Cinemateca Brasileira — Filmografia (1897+) | https://bases.cinemateca.org.br/ | Cinemateca Brasileira / MinC | 2026-05-26 | identificado | ~56 mil títulos, longa/média/curta. Cobre lacunas pré-1995. Acesso por consulta web; sem download em lote oficial — **pendente de viabilidade técnica**. |
 
 ## CNC — Centre national du cinéma et de l'image animée (França)
 

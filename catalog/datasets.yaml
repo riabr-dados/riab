@@ -734,6 +734,73 @@ datasets:
     related:
       - ancine-bilheteria-consolidada
       - ancine-bilheteria-agregada-filme-ano
+      - br-bilheteria-historica-complementar
+
+  - slug: ibge-seculoxx-cinema
+    title: "IBGE Seculo XX - Cinema (1971-1985)"
+    description: >
+      Censos do IBGE sobre cinemas brasileiros publicados nos Anuarios
+      Estatisticos e digitalizados no portal Estatisticas do Seculo XX.
+      Cobertura inicial 1971, 1974, 1980, 1984, 1985 por UF, com sessoes,
+      entradas vendidas (publico), lotacao, filmes exibidos e numero de
+      cinemas. Portal IBGE tem ~164 tabelas sobre cinema 1937-1988; esta
+      extracao cobre 6 arquivos com indicadores compativeis com a tabela
+      complementar de bilheteria.
+    source_id: ibge
+    status: ativo
+    coverage: "1971-1985"
+    tags: [cinema, salas, exibicao, publico, ibge, historico, brasil]
+    raw:
+      path: ibge-seculoxx-cinema/
+      format: xls
+      files: 6
+      size_bytes: 152064
+    cleaned:
+      tables:
+        - ibge_seculoxx_cinema
+      notes: >
+        Layouts variam por ano de publicacao (1974/1976/1983/1986/1987_88).
+        Em 1980 o IBGE separa entradas em inteiras + meias; somadas em
+        indicador 'publico'. Estado de Guanabara aparece em 1971.
+    related:
+      - br-bilheteria-historica-complementar
+      - br-embrafilme-historico-exibicao
+
+  - slug: br-bilheteria-historica-complementar
+    title: "Bilheteria - Serie Historica Complementar"
+    description: >
+      Serie historica complementar de bilheteria/exibicao brasileira que
+      agrega fontes nao cobertas pelas duas series oficiais ja publicadas
+      (bilheteria_brasileira_consolidada / SADIS e bilheteria_por_filme_ano /
+      OCA). Esta serie NAO substitui nem corrige as oficiais; existe para
+      cobrir lacunas anteriores a 2009/2014. Versao atual inclui Embrafilme
+      1971-1987 e a Listagem OCA de Filmes Brasileiros Lancados 1995-2024
+      (agregada por ano). Fontes externas (IBGE Seculo XX 1937-1988, IBGE
+      MUNIC 1999+, Cinemateca Brasileira) estao mapeadas em FONTES.md e
+      podem ser incorporadas em proximas iteracoes.
+    source_id: ancine
+    status: ativo
+    coverage: "1971-2024"
+    tags: [cinema, bilheteria, historico, complementar, embrafilme, oca, brasil]
+    raw:
+      path: br-embrafilme-historico-exibicao/, ancine-filmes-lancados-captacao/, ibge-seculoxx-cinema/
+      format: derivado
+      files: 0
+      size_bytes: 0
+    cleaned:
+      tables:
+        - bilheteria_historica_complementar
+      notes: >
+        Tabela derivada (long format) — combina parquets ja limpos de outras
+        fontes. Cada linha tem fonte explicita e classe de confiabilidade
+        para permitir filtros e desempate em analises. Permite cross-validation
+        em 1984-1985 (Embrafilme vs IBGE).
+    related:
+      - br-embrafilme-historico-exibicao
+      - ancine-filmes-lancados-captacao
+      - ibge-seculoxx-cinema
+      - ancine-bilheteria-consolidada
+      - ancine-bilheteria-agregada-filme-ano
 
   - slug: ancine-diversidade-audiovisual
     title: "Diversidade Audiovisual - Tabelas Oficiais ANCINE"
