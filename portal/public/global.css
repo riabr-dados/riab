@@ -313,32 +313,12 @@ main:has(.exp-page) { max-width: 100%; padding: 0; }
   border-radius: 2px;
   text-transform: uppercase;
 }
-/* Badge de fonte no card — destaque pra PDA, demais discretos */
+/* Badge de fonte no card — destaque pra PDA (umbrella ANCINE), demais discretos */
 .dcard__proc--pda {
   background: rgba(0,106,53,.15);
   color: #00532a;
   border: 1px solid rgba(0,106,53,.45);
   font-weight: 700;
-}
-.dcard__proc--oca {
-  background: rgba(26,94,168,.10);
-  color: #1a5ea8;
-  border: 1px solid rgba(26,94,168,.30);
-}
-.dcard__proc--sadis {
-  background: rgba(208,69,69,.10);
-  color: #a83535;
-  border: 1px solid rgba(208,69,69,.30);
-}
-.dcard__proc--fsa {
-  background: rgba(176,125,10,.10);
-  color: #8a5e08;
-  border: 1px solid rgba(176,125,10,.30);
-}
-.dcard__proc--embrafilme {
-  background: rgba(139,69,19,.10);
-  color: #6b3510;
-  border: 1px solid rgba(139,69,19,.30);
 }
 .dcard__proc--ibge {
   background: rgba(42,122,58,.10);
@@ -379,6 +359,15 @@ main:has(.exp-page) { max-width: 100%; padding: 0; }
   background: rgba(0,51,153,.10);
   color: #002b80;
   border: 1px solid rgba(0,51,153,.30);
+}
+
+/* Sub-fonte aparece dentro do badge principal — discreto */
+.dcard__proc-sub {
+  display: inline;
+  font-weight: 500;
+  opacity: .72;
+  margin-left: 3px;
+  letter-spacing: .04em;
 }
 
 /* ── Filterbar na pagina /datasets/ ─────────────────────────────── */
@@ -469,12 +458,8 @@ button.fchip,
   background: rgba(255,255,255,.18);
   color: rgba(255,255,255,.95);
 }
-/* Cores por FONTE (procedência = origem real do dado) */
+/* Cores por FONTE — PDA é umbrella ANCINE; demais são fontes independentes */
 .fchip--pda { --src: #006a35; }            /* Plano de Dados Abertos — destaque verde */
-.fchip--oca { --src: #1a5ea8; }            /* OCA / ANCINE */
-.fchip--sadis { --src: #d04545; }          /* SADIS */
-.fchip--fsa { --src: #b07d0a; }            /* FSA */
-.fchip--embrafilme { --src: #8b4513; }     /* Embrafilme histórico */
 .fchip--ibge { --src: #2a7a3a; }           /* IBGE */
 .fchip--mdic { --src: #4a4a4a; }           /* MDIC */
 .fchip--composto { --src: #6940b8; }       /* Multi-fonte */
@@ -485,10 +470,6 @@ button.fchip,
 .fchip--lumiere { --src: #003399; }        /* Lumiere — azul EU */
 
 .fchip--pda::before,
-.fchip--oca::before,
-.fchip--sadis::before,
-.fchip--fsa::before,
-.fchip--embrafilme::before,
 .fchip--ibge::before,
 .fchip--mdic::before,
 .fchip--composto::before,
@@ -507,10 +488,6 @@ button.fchip,
 }
 
 .fchip--pda.is-active,
-.fchip--oca.is-active,
-.fchip--sadis.is-active,
-.fchip--fsa.is-active,
-.fchip--embrafilme.is-active,
 .fchip--ibge.is-active,
 .fchip--mdic.is-active,
 .fchip--composto.is-active,
@@ -524,10 +501,6 @@ button.fchip,
   color: #fff;
 }
 .fchip--pda.is-active::before,
-.fchip--oca.is-active::before,
-.fchip--sadis.is-active::before,
-.fchip--fsa.is-active::before,
-.fchip--embrafilme.is-active::before,
 .fchip--ibge.is-active::before,
 .fchip--mdic.is-active::before,
 .fchip--composto.is-active::before,
@@ -539,7 +512,7 @@ button.fchip,
   background: rgba(255,255,255,.95);
 }
 
-/* PDA tem destaque visual extra (badge mais grosso) */
+/* PDA tem destaque visual extra */
 .fchip--pda {
   font-weight: 600;
 }
