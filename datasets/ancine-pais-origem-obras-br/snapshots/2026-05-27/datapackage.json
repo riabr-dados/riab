@@ -1,0 +1,65 @@
+{
+  "$schema": "https://specs.frictionlessdata.io/schemas/data-package.json",
+  "name": "ancine-pais-origem-obras-br",
+  "title": "País de Origem das Obras Não Publicitárias Brasileiras",
+  "description": "Vinculação de cada obra brasileira ao(s) país(es) de origem declarado(s) (coproduções internacionais reconhecidas).\n",
+  "version": "2026.05.27",
+  "created": "2026-05-27T00:00:00Z",
+  "homepage": "https://github.com/riabr-dados/riab/tree/main/datasets/ancine-pais-origem-obras-br",
+  "licenses": [
+    {
+      "name": "CC-BY-4.0",
+      "title": "Creative Commons Attribution 4.0 International",
+      "path": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ],
+  "sources": [
+    {
+      "title": "ANCINE — dados.gov.br",
+      "path": "https://dados.gov.br/dados/conjuntos-dados/pais-de-origem-das-obras-nao-publicitarias-brasileiras"
+    }
+  ],
+  "contributors": [
+    {
+      "title": "dados-audiovisual-br",
+      "role": "publisher",
+      "path": "https://github.com/riabr-dados/riab"
+    }
+  ],
+  "status": {
+    "value": "ativo",
+    "options": [
+      "ativo",
+      "intermitente",
+      "alterado",
+      "offline",
+      "descontinuado"
+    ],
+    "last_checked": "2026-05-27",
+    "notes": ""
+  },
+  "collection": {
+    "method": "manual",
+    "script": null,
+    "frequency": "ad-hoc"
+  },
+  "resources": [
+    {
+      "name": "paises-de-origem-das-obras-nao-publicitarias-brasileiras",
+      "path": "snapshots/2026-05-27/paises-de-origem-das-obras-nao-publicitarias-brasileiras.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2582559,
+      "hash": "sha256:86bba04fd27c53d13be2ddd6f11e1894bb61e5a128fb7e36b59a5a94afae2445"
+    }
+  ],
+  "snapshots": [
+    {
+      "date": "2026-05-27",
+      "path": "snapshots/2026-05-27/",
+      "source_url": "https://dados.gov.br/dados/conjuntos-dados/pais-de-origem-das-obras-nao-publicitarias-brasileiras",
+      "notes": "Snapshot inicial coletado em 2026-05-27 via dados.gov.br."
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+Dataset: Produtores de Obras Não Publicitárias Estrangeiras (ROE)
+Fonte oficial: ANCINE -- dados.gov.br
+URL: https://dados.gov.br/dados/conjuntos-dados/produtores-de-obras-nao-publicitarias-estrangeiras-roe
+Data do snapshot: 2026-05-27
+Status na data: ativo
+Coleta: manual, download via dados.gov.br
+Arquivos:
+  - produtores-de-obras-nao-publicitarias-estrangeiras (5662791 bytes, sha256:eab921c1589ecb0889db6461c430178eee564c06b7cfe54738de6fe9b440bb49)

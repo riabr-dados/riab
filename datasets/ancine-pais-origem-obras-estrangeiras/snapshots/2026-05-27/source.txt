@@ -1,0 +1,8 @@
+Dataset: País de Origem de Obras Estrangeiras (ROE)
+Fonte oficial: ANCINE -- dados.gov.br
+URL: https://dados.gov.br/dados/conjuntos-dados/pais-de-origem-de-obras-nao-publicitarias-estrangeiras-roe
+Data do snapshot: 2026-05-27
+Status na data: ativo
+Coleta: manual, download via dados.gov.br
+Arquivos:
+  - paises-de-origem-das-obras-nao-publicitarias-estrangeiras (3832443 bytes, sha256:d5a26d129c85f0d9bda5b402da0b32fd37dc99be6b3b9720fc0c02d5f6049ac1)

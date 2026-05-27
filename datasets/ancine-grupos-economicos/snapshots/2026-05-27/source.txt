@@ -1,0 +1,8 @@
+Dataset: Relação de Grupos Econômicos
+Fonte oficial: ANCINE -- dados.gov.br
+URL: https://dados.gov.br/dados/conjuntos-dados/relacao-de-grupos-economicos
+Data do snapshot: 2026-05-27
+Status na data: ativo
+Coleta: manual, download via dados.gov.br
+Arquivos:
+  - relacao-grupos-economicos (1079092 bytes, sha256:71ffb9b20ca36e5b53551421298f7c3bb62ef277e1569d4ba2fee63de32b1f2d)

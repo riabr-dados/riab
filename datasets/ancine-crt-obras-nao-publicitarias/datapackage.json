@@ -1,0 +1,281 @@
+{
+  "$schema": "https://specs.frictionlessdata.io/schemas/data-package.json",
+  "name": "ancine-crt-obras-nao-publicitarias",
+  "title": "CRT — Obras Não Publicitárias Registradas",
+  "description": "Certificados de Registro de Título (CRT) emitidos para obras não publicitárias. Documento que autoriza a comercialização da obra.\n",
+  "version": "2026.05.27",
+  "created": "2026-05-27T00:00:00Z",
+  "homepage": "https://github.com/riabr-dados/riab/tree/main/datasets/ancine-crt-obras-nao-publicitarias",
+  "licenses": [
+    {
+      "name": "CC-BY-4.0",
+      "title": "Creative Commons Attribution 4.0 International",
+      "path": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ],
+  "sources": [
+    {
+      "title": "ANCINE — dados.gov.br",
+      "path": "https://dados.gov.br/dados/conjuntos-dados/crt-obras-nao-publicitarias-registradas"
+    }
+  ],
+  "contributors": [
+    {
+      "title": "dados-audiovisual-br",
+      "role": "publisher",
+      "path": "https://github.com/riabr-dados/riab"
+    }
+  ],
+  "status": {
+    "value": "ativo",
+    "options": [
+      "ativo",
+      "intermitente",
+      "alterado",
+      "offline",
+      "descontinuado"
+    ],
+    "last_checked": "2026-05-27",
+    "notes": ""
+  },
+  "collection": {
+    "method": "manual",
+    "script": null,
+    "frequency": "ad-hoc"
+  },
+  "resources": [
+    {
+      "name": "crt-obras-nao-publicitarias-2002",
+      "path": "snapshots/2026-05-27/crt-obras-nao-publicitarias-2002.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 149978,
+      "hash": "sha256:f864b8ec5213d9985c3a0240b37d2fd6334dd56eea39e5e8e7100fbf136f6481"
+    },
+    {
+      "name": "crt-obras-nao-publicitarias-2003",
+      "path": "snapshots/2026-05-27/crt-obras-nao-publicitarias-2003.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 918560,
+      "hash": "sha256:94f589996d88f0c4ed4bef6e377fc023ff708cad9d32bfb883b7d2431d4dd3d7"
+    },
+    {
+      "name": "crt-obras-nao-publicitarias-2004",
+      "path": "snapshots/2026-05-27/crt-obras-nao-publicitarias-2004.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1199195,
+      "hash": "sha256:cd765d93a1e3b59843b702bc6d0c9a3c19c3da4603dfa519b9db756e89641619"
+    },
+    {
+      "name": "crt-obras-nao-publicitarias-2005",
+      "path": "snapshots/2026-05-27/crt-obras-nao-publicitarias-2005.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2335654,
+      "hash": "sha256:9c3b47e9871d46567a66973f4a7e57a997b81d7966dfe9838a0c3442aa5d6683"
+    },
+    {
+      "name": "crt-obras-nao-publicitarias-2006",
+      "path": "snapshots/2026-05-27/crt-obras-nao-publicitarias-2006.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2007522,
+      "hash": "sha256:fecd645bf5d2750fc5ee1f48a1685dbda7ed4d88cfdf5c3efa4a21e8ea24aacd"
+    },
+    {
+      "name": "crt-obras-nao-publicitarias-2007",
+      "path": "snapshots/2026-05-27/crt-obras-nao-publicitarias-2007.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2005531,
+      "hash": "sha256:ef82ac948d50f500038696d89f2f547820558dc2aff1730da938288933c3c785"
+    },
+    {
+      "name": "crt-obras-nao-publicitarias-2008",
+      "path": "snapshots/2026-05-27/crt-obras-nao-publicitarias-2008.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2647422,
+      "hash": "sha256:4ef2faee7a1d5227e078c70870490e813eb4fa90fb20fd87ea4357f51c12cf7f"
+    },
+    {
+      "name": "crt-obras-nao-publicitarias-2009",
+      "path": "snapshots/2026-05-27/crt-obras-nao-publicitarias-2009.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2271664,
+      "hash": "sha256:eaa2b522375c2e050b11fbda0a091c37fb318c58080d2efffe7e68fea42300bf"
+    },
+    {
+      "name": "crt-obras-nao-publicitarias-2010",
+      "path": "snapshots/2026-05-27/crt-obras-nao-publicitarias-2010.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2773593,
+      "hash": "sha256:3d338fba21ea4dcf68ad9afc28dee3eabc11e74aa139f4aa812add4935ba5bda"
+    },
+    {
+      "name": "crt-obras-nao-publicitarias-2011",
+      "path": "snapshots/2026-05-27/crt-obras-nao-publicitarias-2011.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2278119,
+      "hash": "sha256:efcca0dd0e656c6380f6f82dcd0e64441d864c9c479c3696b8bcb5b227d1980f"
+    },
+    {
+      "name": "crt-obras-nao-publicitarias-2012",
+      "path": "snapshots/2026-05-27/crt-obras-nao-publicitarias-2012.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2247009,
+      "hash": "sha256:ca63b4bc54868af60ec79d92fbf64c828469f85414cdb2b24679aeedb914ff04"
+    },
+    {
+      "name": "crt-obras-nao-publicitarias-2013",
+      "path": "snapshots/2026-05-27/crt-obras-nao-publicitarias-2013.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 4596982,
+      "hash": "sha256:03bf8166700412ac287627d6fd3392924fd04f390d77e699b8f9824062860b9b"
+    },
+    {
+      "name": "crt-obras-nao-publicitarias-2014",
+      "path": "snapshots/2026-05-27/crt-obras-nao-publicitarias-2014.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 4892503,
+      "hash": "sha256:e95b1b02da793d1f071407cf6cc6faff6e39ffd4e992c96c16aea5b6b5f5a757"
+    },
+    {
+      "name": "crt-obras-nao-publicitarias-2015",
+      "path": "snapshots/2026-05-27/crt-obras-nao-publicitarias-2015.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 5235535,
+      "hash": "sha256:3300728f1b500dd50fa55a8f2a0984ca67cce2b2755dbbde05b64e168cb64945"
+    },
+    {
+      "name": "crt-obras-nao-publicitarias-2016",
+      "path": "snapshots/2026-05-27/crt-obras-nao-publicitarias-2016.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 3280799,
+      "hash": "sha256:5ab5e179f1d93af415ef338c46bec31cf8675947f88955b4a00dd119c89d717e"
+    },
+    {
+      "name": "crt-obras-nao-publicitarias-2017",
+      "path": "snapshots/2026-05-27/crt-obras-nao-publicitarias-2017.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 3055075,
+      "hash": "sha256:39c40b18b9195e334d445807120490a896fc0d94abff91855623dc31e7611602"
+    },
+    {
+      "name": "crt-obras-nao-publicitarias-2018",
+      "path": "snapshots/2026-05-27/crt-obras-nao-publicitarias-2018.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 3164652,
+      "hash": "sha256:eb7bb48b6eaab0651e9cd7b21749613047a18cca3785092f9cfce87355d56a99"
+    },
+    {
+      "name": "crt-obras-nao-publicitarias-2019",
+      "path": "snapshots/2026-05-27/crt-obras-nao-publicitarias-2019.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 3023741,
+      "hash": "sha256:99d2200308eb5d18638a1cd31fa5d7b17f28dcae06dec794a527038d3c087002"
+    },
+    {
+      "name": "crt-obras-nao-publicitarias-2020",
+      "path": "snapshots/2026-05-27/crt-obras-nao-publicitarias-2020.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2931832,
+      "hash": "sha256:9a3c6806726ea0c4eddb489394f07ca98958e28ad46c9b29ddcdcad200c8a74b"
+    },
+    {
+      "name": "crt-obras-nao-publicitarias-2021",
+      "path": "snapshots/2026-05-27/crt-obras-nao-publicitarias-2021.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2969039,
+      "hash": "sha256:f36b56b76c641196de29715359341fd99c358de81e4fde38c7bb8519517c7256"
+    },
+    {
+      "name": "crt-obras-nao-publicitarias-2022",
+      "path": "snapshots/2026-05-27/crt-obras-nao-publicitarias-2022.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2522646,
+      "hash": "sha256:943efe3f8becbb5082e8d7f9477fa829ae35634f009af8351d906869655f1645"
+    },
+    {
+      "name": "crt-obras-nao-publicitarias-2023",
+      "path": "snapshots/2026-05-27/crt-obras-nao-publicitarias-2023.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2632985,
+      "hash": "sha256:c03f237abcab2d01f2cc5d296e5ba930b0601fe88052f6e27ff30a9528cd69d2"
+    },
+    {
+      "name": "crt-obras-nao-publicitarias-2024",
+      "path": "snapshots/2026-05-27/crt-obras-nao-publicitarias-2024.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2374276,
+      "hash": "sha256:ddaf2364b0e7b494b71f5b2caf34cb396beaf02c38ba1ee21b5dd586383b6dfc"
+    },
+    {
+      "name": "crt-obras-nao-publicitarias-2025",
+      "path": "snapshots/2026-05-27/crt-obras-nao-publicitarias-2025.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2187096,
+      "hash": "sha256:fdc8a747a72e6fbf6d7bde263780e48252b3c30f9d543804dfdfd0e19e52e67e"
+    },
+    {
+      "name": "crt-obras-nao-publicitarias-2026",
+      "path": "snapshots/2026-05-27/crt-obras-nao-publicitarias-2026.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 605332,
+      "hash": "sha256:8f8af4e07f0485e7262e8646675b022bd78146718ff7982b4cd9bbaf8e76315a"
+    }
+  ],
+  "snapshots": [
+    {
+      "date": "2026-05-27",
+      "path": "snapshots/2026-05-27/",
+      "source_url": "https://dados.gov.br/dados/conjuntos-dados/crt-obras-nao-publicitarias-registradas",
+      "notes": "Snapshot inicial coletado em 2026-05-27 via dados.gov.br."
+    }
+  ]
+}

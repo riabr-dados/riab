@@ -2050,7 +2050,7 @@ datasets:
     description: |
       Detalhamento das atividades econômicas (CNAE) exercidas pelos agentes regulares registrados na ANCINE. Complementa o cadastro de agentes econômicos.
     source_id: ancine
-    status: pendente_coleta
+    status: ativo
     coverage: —
     tags:
       - brasil
@@ -2061,9 +2061,9 @@ datasets:
       - agentes
     raw:
       path: ancine-atividades-economicas-agentes/
-      format: csv_pendente
-      files: 0
-      size_bytes: 0
+      format: csv
+      files: 1
+      size_bytes: 19266691
       url_origem: https://dados.gov.br/dados/conjuntos-dados/atividades-economicas-dos-agentes-regulares-registrados-na-ancine
     cleaned:
       tables: []
@@ -2078,7 +2078,7 @@ datasets:
     description: |
       Listagem oficial das produtoras audiovisuais brasileiras classificadas como independentes nos termos da Medida Provisória 2.228-1/2001.
     source_id: ancine
-    status: pendente_coleta
+    status: ativo
     coverage: —
     tags:
       - brasil
@@ -2088,9 +2088,9 @@ datasets:
       - independentes
     raw:
       path: ancine-produtoras-independentes/
-      format: csv_pendente
-      files: 0
-      size_bytes: 0
+      format: csv
+      files: 1
+      size_bytes: 888790
       url_origem: https://dados.gov.br/dados/conjuntos-dados/produtoras-independentes-regulares-registradas-na-ancine
     cleaned:
       tables: []
@@ -2106,7 +2106,7 @@ datasets:
     description: |
       Canais de televisão de prestadores credenciados como Programadoras junto à ANCINE, ativos no momento da coleta.
     source_id: ancine
-    status: pendente_coleta
+    status: ativo
     coverage: —
     tags:
       - brasil
@@ -2117,9 +2117,9 @@ datasets:
       - tv
     raw:
       path: ancine-canais-programadoras/
-      format: csv_pendente
-      files: 0
-      size_bytes: 0
+      format: csv
+      files: 1
+      size_bytes: 89840
       url_origem: https://dados.gov.br/dados/conjuntos-dados/canais-de-programacao-de-programadoras-ativos-credenciados-na-ancine
     cleaned:
       tables: []
@@ -2134,7 +2134,7 @@ datasets:
     description: |
       Canais de TV de distribuição obrigatória (must-carry) ativos credenciados na ANCINE.
     source_id: ancine
-    status: pendente_coleta
+    status: ativo
     coverage: —
     tags:
       - brasil
@@ -2145,9 +2145,9 @@ datasets:
       - must_carry
     raw:
       path: ancine-canais-distribuicao-obrigatoria/
-      format: csv_pendente
-      files: 0
-      size_bytes: 0
+      format: csv
+      files: 1
+      size_bytes: 15449
       url_origem: https://dados.gov.br/dados/conjuntos-dados/canais-de-programacao-de-distribuicao-obrigatoria-ativos-credenciados-na-ancine
     cleaned:
       tables: []
@@ -2162,7 +2162,7 @@ datasets:
     description: |
       Cadastro oficial das salas de cinema e dos complexos exibidores registrados na ANCINE — uma sala por linha, com vinculação ao complexo e ao exibidor.
     source_id: ancine
-    status: pendente_coleta
+    status: ativo
     coverage: —
     tags:
       - brasil
@@ -2174,9 +2174,9 @@ datasets:
       - cinema
     raw:
       path: ancine-salas-exibicao-complexos/
-      format: csv_pendente
-      files: 0
-      size_bytes: 0
+      format: csv
+      files: 1
+      size_bytes: 2228579
       url_origem: https://dados.gov.br/dados/conjuntos-dados/salas-de-exibicao-e-complexos-registrados-na-ancine
     cleaned:
       tables: []
@@ -2191,7 +2191,7 @@ datasets:
     description: |
       Obras não publicitárias brasileiras que tiveram fomento indireto aprovado pela ANCINE via leis federais de incentivo fiscal (Lei do Audiovisual e Lei Rouanet).
     source_id: ancine
-    status: pendente_coleta
+    status: ativo
     coverage: —
     tags:
       - brasil
@@ -2201,9 +2201,9 @@ datasets:
       - lei_audiovisual
     raw:
       path: ancine-obras-fomento-indireto/
-      format: csv_pendente
-      files: 0
-      size_bytes: 0
+      format: csv
+      files: 1
+      size_bytes: 137073
       url_origem: https://dados.gov.br/dados/conjuntos-dados/obras-nao-publicitarias-brasileiras-com-fomento-indireto-aprovado-na-ancine-leis-de-incentivo-federa
     cleaned:
       tables: []
@@ -2247,7 +2247,7 @@ datasets:
     description: |
       Vinculação de cada obra brasileira ao(s) país(es) de origem declarado(s) (coproduções internacionais reconhecidas).
     source_id: ancine
-    status: pendente_coleta
+    status: ativo
     coverage: —
     tags:
       - brasil
@@ -2257,9 +2257,9 @@ datasets:
       - origem
     raw:
       path: ancine-pais-origem-obras-br/
-      format: csv_pendente
-      files: 0
-      size_bytes: 0
+      format: csv
+      files: 1
+      size_bytes: 2582559
       url_origem: https://dados.gov.br/dados/conjuntos-dados/pais-de-origem-das-obras-nao-publicitarias-brasileiras
     cleaned:
       tables: []
@@ -2275,7 +2275,7 @@ datasets:
     description: |
       Registro de Obras Estrangeiras (ROE) emitidos pela ANCINE — todas as obras audiovisuais não publicitárias estrangeiras com circulação registrada no Brasil.
     source_id: ancine
-    status: pendente_coleta
+    status: ativo
     coverage: —
     tags:
       - brasil
@@ -2285,9 +2285,9 @@ datasets:
       - obras_estrangeiras
     raw:
       path: ancine-obras-estrangeiras-roe/
-      format: csv_pendente
-      files: 0
-      size_bytes: 0
+      format: csv
+      files: 13
+      size_bytes: 7158948
       url_origem: https://dados.gov.br/dados/conjuntos-dados/obras-nao-publicitarias-estrangeiras-relacao-de-todos-os-roes-emitidos-excluindo-se-a-categoria-de-r
     cleaned:
       tables: []
@@ -2303,7 +2303,7 @@ datasets:
     description: |
       Vínculos diretor-obra para obras estrangeiras com ROE emitido pela ANCINE.
     source_id: ancine
-    status: pendente_coleta
+    status: ativo
     coverage: —
     tags:
       - brasil
@@ -2314,9 +2314,9 @@ datasets:
       - obras_estrangeiras
     raw:
       path: ancine-diretores-obras-estrangeiras/
-      format: csv_pendente
-      files: 0
-      size_bytes: 0
+      format: csv
+      files: 1
+      size_bytes: 4043431
       url_origem: https://dados.gov.br/dados/conjuntos-dados/diretores-de-obras-nao-publicitarias-estrangeiras-roe
     cleaned:
       tables: []
@@ -2332,7 +2332,7 @@ datasets:
     description: |
       Vínculos produtor-obra para obras estrangeiras com ROE emitido pela ANCINE.
     source_id: ancine
-    status: pendente_coleta
+    status: ativo
     coverage: —
     tags:
       - brasil
@@ -2342,9 +2342,9 @@ datasets:
       - roe
     raw:
       path: ancine-produtores-obras-estrangeiras/
-      format: csv_pendente
-      files: 0
-      size_bytes: 0
+      format: csv
+      files: 1
+      size_bytes: 5662791
       url_origem: https://dados.gov.br/dados/conjuntos-dados/produtores-de-obras-nao-publicitarias-estrangeiras-roe
     cleaned:
       tables: []
@@ -2360,7 +2360,7 @@ datasets:
     description: |
       País de origem declarado das obras estrangeiras com ROE.
     source_id: ancine
-    status: pendente_coleta
+    status: ativo
     coverage: —
     tags:
       - brasil
@@ -2370,9 +2370,9 @@ datasets:
       - obras_estrangeiras
     raw:
       path: ancine-pais-origem-obras-estrangeiras/
-      format: csv_pendente
-      files: 0
-      size_bytes: 0
+      format: csv
+      files: 1
+      size_bytes: 3832443
       url_origem: https://dados.gov.br/dados/conjuntos-dados/pais-de-origem-de-obras-nao-publicitarias-estrangeiras-roe
     cleaned:
       tables: []
@@ -2388,7 +2388,7 @@ datasets:
     description: |
       Relatório diário de bilheteria por obra conforme reportado pelas distribuidoras ao SADIS/ANCINE. Granularidade muito maior que a bilheteria agregada anual.
     source_id: ancine
-    status: pendente_coleta
+    status: ativo
     coverage: —
     tags:
       - brasil
@@ -2399,9 +2399,9 @@ datasets:
       - distribuidoras
     raw:
       path: ancine-bilheteria-diaria-distribuidoras/
-      format: csv_pendente
-      files: 0
-      size_bytes: 0
+      format: csv
+      files: 149
+      size_bytes: 4818537050
       url_origem: https://dados.gov.br/dados/conjuntos-dados/relatorio-de-bilheteria-diaria-de-obras-informadas-pelas-distribuidoras
     cleaned:
       tables: []
@@ -2417,7 +2417,7 @@ datasets:
     description: |
       Grupos econômicos identificados pela ANCINE no setor audiovisual brasileiro — agregação de agentes vinculados por controle societário.
     source_id: ancine
-    status: pendente_coleta
+    status: ativo
     coverage: —
     tags:
       - brasil
@@ -2427,9 +2427,9 @@ datasets:
       - concentracao
     raw:
       path: ancine-grupos-economicos/
-      format: csv_pendente
-      files: 0
-      size_bytes: 0
+      format: csv
+      files: 1
+      size_bytes: 1079092
       url_origem: https://dados.gov.br/dados/conjuntos-dados/relacao-de-grupos-economicos
     cleaned:
       tables: []
@@ -2444,7 +2444,7 @@ datasets:
     description: |
       Certificados de Registro de Título (CRT) emitidos para obras não publicitárias. Documento que autoriza a comercialização da obra.
     source_id: ancine
-    status: pendente_coleta
+    status: ativo
     coverage: —
     tags:
       - brasil
@@ -2455,9 +2455,9 @@ datasets:
       - registro_titulo
     raw:
       path: ancine-crt-obras-nao-publicitarias/
-      format: csv_pendente
-      files: 0
-      size_bytes: 0
+      format: csv
+      files: 25
+      size_bytes: 64306740
       url_origem: https://dados.gov.br/dados/conjuntos-dados/crt-obras-nao-publicitarias-registradas
     cleaned:
       tables: []
@@ -2472,7 +2472,7 @@ datasets:
     description: |
       Certificados de Registro de Título (CRT) emitidos para obras publicitárias (filmes publicitários, comerciais).
     source_id: ancine
-    status: pendente_coleta
+    status: ativo
     coverage: —
     tags:
       - brasil
@@ -2483,9 +2483,9 @@ datasets:
       - publicitarias
     raw:
       path: ancine-crt-obras-publicitarias/
-      format: csv_pendente
-      files: 0
-      size_bytes: 0
+      format: csv
+      files: 160
+      size_bytes: 305751183
       url_origem: https://dados.gov.br/dados/conjuntos-dados/crt-obras-publicitarias-registradas
     cleaned:
       tables: []
@@ -2500,7 +2500,7 @@ datasets:
     description: |
       Relatório diário de bilheteria por obra conforme reportado pelas exibidoras (salas de cinema) ao SADIS/ANCINE.
     source_id: ancine
-    status: pendente_coleta
+    status: ativo
     coverage: —
     tags:
       - brasil
@@ -2511,9 +2511,9 @@ datasets:
       - exibidoras
     raw:
       path: ancine-bilheteria-diaria-exibidoras/
-      format: csv_pendente
-      files: 0
-      size_bytes: 0
+      format: csv
+      files: 635
+      size_bytes: 8417868063
       url_origem: https://dados.gov.br/dados/conjuntos-dados/relatorio-de-bilheteria-diaria-de-obras-informadas-pelas-exibidoras
     cleaned:
       tables: []
@@ -2529,7 +2529,7 @@ datasets:
     description: |
       Versão PDA do dataset de projetos FSA contratados. Pode haver sobreposição com ancine-fsa-projetos (mesma informação publicada também no portal FSA).
     source_id: ancine
-    status: pendente_coleta
+    status: ativo
     coverage: —
     tags:
       - brasil
@@ -2540,9 +2540,9 @@ datasets:
       - contratado
     raw:
       path: ancine-fsa-investimento-contratados/
-      format: csv_pendente
-      files: 0
-      size_bytes: 0
+      format: csv
+      files: 1
+      size_bytes: 1123962
       url_origem: https://dados.gov.br/dados/conjuntos-dados/projetos--de-investimento-contratados-no-ambito-do-fsa
     cleaned:
       tables: []
@@ -2557,7 +2557,7 @@ datasets:
     description: |
       Processos de projetos audiovisuais fomentados que estão em fase de prestação de contas perante a ANCINE.
     source_id: ancine
-    status: pendente_coleta
+    status: ativo
     coverage: —
     tags:
       - brasil
@@ -2567,9 +2567,9 @@ datasets:
       - fomento
     raw:
       path: ancine-prestacao-contas-processos/
-      format: csv_pendente
-      files: 0
-      size_bytes: 0
+      format: csv
+      files: 1
+      size_bytes: 1188040
       url_origem: https://dados.gov.br/dados/conjuntos-dados/relacao-de-processos-em-fase-de-prestacao-de-contas
     cleaned:
       tables: []
@@ -2584,7 +2584,7 @@ datasets:
     description: |
       Produções audiovisuais estrangeiras filmadas em território brasileiro — útil para estatísticas de service-shoot e atratividade do país como locação.
     source_id: ancine
-    status: pendente_coleta
+    status: ativo
     coverage: —
     tags:
       - brasil
@@ -2595,9 +2595,9 @@ datasets:
       - estrangeiras
     raw:
       path: ancine-filmagem-estrangeira/
-      format: csv_pendente
-      files: 0
-      size_bytes: 0
+      format: csv
+      files: 1
+      size_bytes: 289904
       url_origem: https://dados.gov.br/dados/conjuntos-dados/filmagem-estrangeira-relacao-de-producao-de-obras-audiovisuais-estrangeiras-em-territorio-nacional
     cleaned:
       tables: []
@@ -2613,7 +2613,7 @@ datasets:
     description: |
       Série temporal anual da quantidade de salas de exibição registradas no Brasil. Permite acompanhar a expansão/retração do parque exibidor.
     source_id: ancine
-    status: pendente_coleta
+    status: ativo
     coverage: —
     tags:
       - brasil
@@ -2624,9 +2624,9 @@ datasets:
       - serie_historica
     raw:
       path: ancine-salas-exibicao-evolucao/
-      format: csv_pendente
-      files: 0
-      size_bytes: 0
+      format: csv
+      files: 1
+      size_bytes: 3994532
       url_origem: https://dados.gov.br/dados/conjuntos-dados/salas-de-exibicao---evolucao-anual
     cleaned:
       tables: []
@@ -2641,7 +2641,7 @@ datasets:
     description: |
       Listagem de lançamentos comerciais de filmes em salas de cinema brasileiras, agregada por distribuidora.
     source_id: ancine
-    status: pendente_coleta
+    status: ativo
     coverage: —
     tags:
       - brasil
@@ -2652,9 +2652,9 @@ datasets:
       - comercial
     raw:
       path: ancine-lancamentos-distribuidoras/
-      format: csv_pendente
-      files: 0
-      size_bytes: 0
+      format: csv
+      files: 1
+      size_bytes: 1014400
       url_origem: https://dados.gov.br/dados/conjuntos-dados/lancamentos-comerciais-por-distribuidoras
     cleaned:
       tables: []
@@ -2670,7 +2670,7 @@ datasets:
     description: |
       Cadastro de agentes econômicos estrangeiros que atuam no mercado audiovisual brasileiro (registrados na ANCINE).
     source_id: ancine
-    status: pendente_coleta
+    status: ativo
     coverage: —
     tags:
       - brasil
@@ -2680,9 +2680,9 @@ datasets:
       - estrangeiros
     raw:
       path: ancine-agentes-economicos-estrangeiros/
-      format: csv_pendente
-      files: 0
-      size_bytes: 0
+      format: csv
+      files: 1
+      size_bytes: 19591
       url_origem: https://dados.gov.br/dados/conjuntos-dados/agentes-economicos-estrangeiros
     cleaned:
       tables: []
@@ -2698,7 +2698,7 @@ datasets:
     description: |
       Série temporal anual da quantidade de complexos exibidores no Brasil (salas agrupadas por complexo).
     source_id: ancine
-    status: pendente_coleta
+    status: ativo
     coverage: —
     tags:
       - brasil
@@ -2708,9 +2708,9 @@ datasets:
       - evolucao_anual
     raw:
       path: ancine-complexos-cinematograficos-evolucao/
-      format: csv_pendente
-      files: 0
-      size_bytes: 0
+      format: csv
+      files: 1
+      size_bytes: 1145513
       url_origem: https://dados.gov.br/dados/conjuntos-dados/complexos-cinematograficos---evolucao-anual
     cleaned:
       tables: []

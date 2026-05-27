@@ -1,0 +1,8 @@
+Dataset: Produtoras Independentes Regulares Registradas na Ancine
+Fonte oficial: ANCINE -- dados.gov.br
+URL: https://dados.gov.br/dados/conjuntos-dados/produtoras-independentes-regulares-registradas-na-ancine
+Data do snapshot: 2026-05-27
+Status na data: ativo
+Coleta: manual, download via dados.gov.br
+Arquivos:
+  - produtoras-independentes (888790 bytes, sha256:89cf439d52b337c6b282e81e6fb4897a7771f7ef9a0493417c3aa231e0983b17)

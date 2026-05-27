@@ -1,0 +1,65 @@
+{
+  "$schema": "https://specs.frictionlessdata.io/schemas/data-package.json",
+  "name": "ancine-pais-origem-obras-estrangeiras",
+  "title": "País de Origem de Obras Estrangeiras (ROE)",
+  "description": "País de origem declarado das obras estrangeiras com ROE.\n",
+  "version": "2026.05.27",
+  "created": "2026-05-27T00:00:00Z",
+  "homepage": "https://github.com/riabr-dados/riab/tree/main/datasets/ancine-pais-origem-obras-estrangeiras",
+  "licenses": [
+    {
+      "name": "CC-BY-4.0",
+      "title": "Creative Commons Attribution 4.0 International",
+      "path": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ],
+  "sources": [
+    {
+      "title": "ANCINE — dados.gov.br",
+      "path": "https://dados.gov.br/dados/conjuntos-dados/pais-de-origem-de-obras-nao-publicitarias-estrangeiras-roe"
+    }
+  ],
+  "contributors": [
+    {
+      "title": "dados-audiovisual-br",
+      "role": "publisher",
+      "path": "https://github.com/riabr-dados/riab"
+    }
+  ],
+  "status": {
+    "value": "ativo",
+    "options": [
+      "ativo",
+      "intermitente",
+      "alterado",
+      "offline",
+      "descontinuado"
+    ],
+    "last_checked": "2026-05-27",
+    "notes": ""
+  },
+  "collection": {
+    "method": "manual",
+    "script": null,
+    "frequency": "ad-hoc"
+  },
+  "resources": [
+    {
+      "name": "paises-de-origem-das-obras-nao-publicitarias-estrangeiras",
+      "path": "snapshots/2026-05-27/paises-de-origem-das-obras-nao-publicitarias-estrangeiras.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 3832443,
+      "hash": "sha256:d5a26d129c85f0d9bda5b402da0b32fd37dc99be6b3b9720fc0c02d5f6049ac1"
+    }
+  ],
+  "snapshots": [
+    {
+      "date": "2026-05-27",
+      "path": "snapshots/2026-05-27/",
+      "source_url": "https://dados.gov.br/dados/conjuntos-dados/pais-de-origem-de-obras-nao-publicitarias-estrangeiras-roe",
+      "notes": "Snapshot inicial coletado em 2026-05-27 via dados.gov.br."
+    }
+  ]
+}

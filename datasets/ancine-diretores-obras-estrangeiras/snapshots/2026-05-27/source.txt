@@ -1,0 +1,8 @@
+Dataset: Diretores de Obras Não Publicitárias Estrangeiras (ROE)
+Fonte oficial: ANCINE -- dados.gov.br
+URL: https://dados.gov.br/dados/conjuntos-dados/diretores-de-obras-nao-publicitarias-estrangeiras-roe
+Data do snapshot: 2026-05-27
+Status na data: ativo
+Coleta: manual, download via dados.gov.br
+Arquivos:
+  - diretores-de-obras-nao-publicitarias-estrangeiras (4043431 bytes, sha256:fcd9cfb3f5b7b2447e20801f35223f37460c43f5bda0de39cd5009a9917db86e)

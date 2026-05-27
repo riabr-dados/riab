@@ -1,0 +1,32 @@
+Dataset: CRT — Obras Não Publicitárias Registradas
+Fonte oficial: ANCINE -- dados.gov.br
+URL: https://dados.gov.br/dados/conjuntos-dados/crt-obras-nao-publicitarias-registradas
+Data do snapshot: 2026-05-27
+Status na data: ativo
+Coleta: manual, download via dados.gov.br
+Arquivos:
+  - crt-obras-nao-publicitarias-2002 (149978 bytes, sha256:f864b8ec5213d9985c3a0240b37d2fd6334dd56eea39e5e8e7100fbf136f6481)
+  - crt-obras-nao-publicitarias-2003 (918560 bytes, sha256:94f589996d88f0c4ed4bef6e377fc023ff708cad9d32bfb883b7d2431d4dd3d7)
+  - crt-obras-nao-publicitarias-2004 (1199195 bytes, sha256:cd765d93a1e3b59843b702bc6d0c9a3c19c3da4603dfa519b9db756e89641619)
+  - crt-obras-nao-publicitarias-2005 (2335654 bytes, sha256:9c3b47e9871d46567a66973f4a7e57a997b81d7966dfe9838a0c3442aa5d6683)
+  - crt-obras-nao-publicitarias-2006 (2007522 bytes, sha256:fecd645bf5d2750fc5ee1f48a1685dbda7ed4d88cfdf5c3efa4a21e8ea24aacd)
+  - crt-obras-nao-publicitarias-2007 (2005531 bytes, sha256:ef82ac948d50f500038696d89f2f547820558dc2aff1730da938288933c3c785)
+  - crt-obras-nao-publicitarias-2008 (2647422 bytes, sha256:4ef2faee7a1d5227e078c70870490e813eb4fa90fb20fd87ea4357f51c12cf7f)
+  - crt-obras-nao-publicitarias-2009 (2271664 bytes, sha256:eaa2b522375c2e050b11fbda0a091c37fb318c58080d2efffe7e68fea42300bf)
+  - crt-obras-nao-publicitarias-2010 (2773593 bytes, sha256:3d338fba21ea4dcf68ad9afc28dee3eabc11e74aa139f4aa812add4935ba5bda)
+  - crt-obras-nao-publicitarias-2011 (2278119 bytes, sha256:efcca0dd0e656c6380f6f82dcd0e64441d864c9c479c3696b8bcb5b227d1980f)
+  - crt-obras-nao-publicitarias-2012 (2247009 bytes, sha256:ca63b4bc54868af60ec79d92fbf64c828469f85414cdb2b24679aeedb914ff04)
+  - crt-obras-nao-publicitarias-2013 (4596982 bytes, sha256:03bf8166700412ac287627d6fd3392924fd04f390d77e699b8f9824062860b9b)
+  - crt-obras-nao-publicitarias-2014 (4892503 bytes, sha256:e95b1b02da793d1f071407cf6cc6faff6e39ffd4e992c96c16aea5b6b5f5a757)
+  - crt-obras-nao-publicitarias-2015 (5235535 bytes, sha256:3300728f1b500dd50fa55a8f2a0984ca67cce2b2755dbbde05b64e168cb64945)
+  - crt-obras-nao-publicitarias-2016 (3280799 bytes, sha256:5ab5e179f1d93af415ef338c46bec31cf8675947f88955b4a00dd119c89d717e)
+  - crt-obras-nao-publicitarias-2017 (3055075 bytes, sha256:39c40b18b9195e334d445807120490a896fc0d94abff91855623dc31e7611602)
+  - crt-obras-nao-publicitarias-2018 (3164652 bytes, sha256:eb7bb48b6eaab0651e9cd7b21749613047a18cca3785092f9cfce87355d56a99)
+  - crt-obras-nao-publicitarias-2019 (3023741 bytes, sha256:99d2200308eb5d18638a1cd31fa5d7b17f28dcae06dec794a527038d3c087002)
+  - crt-obras-nao-publicitarias-2020 (2931832 bytes, sha256:9a3c6806726ea0c4eddb489394f07ca98958e28ad46c9b29ddcdcad200c8a74b)
+  - crt-obras-nao-publicitarias-2021 (2969039 bytes, sha256:f36b56b76c641196de29715359341fd99c358de81e4fde38c7bb8519517c7256)
+  - crt-obras-nao-publicitarias-2022 (2522646 bytes, sha256:943efe3f8becbb5082e8d7f9477fa829ae35634f009af8351d906869655f1645)
+  - crt-obras-nao-publicitarias-2023 (2632985 bytes, sha256:c03f237abcab2d01f2cc5d296e5ba930b0601fe88052f6e27ff30a9528cd69d2)
+  - crt-obras-nao-publicitarias-2024 (2374276 bytes, sha256:ddaf2364b0e7b494b71f5b2caf34cb396beaf02c38ba1ee21b5dd586383b6dfc)
+  - crt-obras-nao-publicitarias-2025 (2187096 bytes, sha256:fdc8a747a72e6fbf6d7bde263780e48252b3c30f9d543804dfdfd0e19e52e67e)
+  - crt-obras-nao-publicitarias-2026 (605332 bytes, sha256:8f8af4e07f0485e7262e8646675b022bd78146718ff7982b4cd9bbaf8e76315a)

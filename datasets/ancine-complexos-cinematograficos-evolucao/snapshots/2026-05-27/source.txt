@@ -1,0 +1,8 @@
+Dataset: Complexos Cinematográficos — Evolução Anual
+Fonte oficial: ANCINE -- dados.gov.br
+URL: https://dados.gov.br/dados/conjuntos-dados/complexos-cinematograficos---evolucao-anual
+Data do snapshot: 2026-05-27
+Status na data: ativo
+Coleta: manual, download via dados.gov.br
+Arquivos:
+  - complexos-cinematograficos-evolucao-anual (1145513 bytes, sha256:a5acff9c43a16533f55daebb4353ab617beca6628529830560d6ab7dbc340c7f)

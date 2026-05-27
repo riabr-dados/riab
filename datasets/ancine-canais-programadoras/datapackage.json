@@ -1,0 +1,65 @@
+{
+  "$schema": "https://specs.frictionlessdata.io/schemas/data-package.json",
+  "name": "ancine-canais-programadoras",
+  "title": "Canais de Programação de Programadoras Ativos Credenciados na Ancine",
+  "description": "Canais de televisão de prestadores credenciados como Programadoras junto à ANCINE, ativos no momento da coleta.\n",
+  "version": "2026.05.27",
+  "created": "2026-05-27T00:00:00Z",
+  "homepage": "https://github.com/riabr-dados/riab/tree/main/datasets/ancine-canais-programadoras",
+  "licenses": [
+    {
+      "name": "CC-BY-4.0",
+      "title": "Creative Commons Attribution 4.0 International",
+      "path": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ],
+  "sources": [
+    {
+      "title": "ANCINE — dados.gov.br",
+      "path": "https://dados.gov.br/dados/conjuntos-dados/canais-de-programacao-de-programadoras-ativos-credenciados-na-ancine"
+    }
+  ],
+  "contributors": [
+    {
+      "title": "dados-audiovisual-br",
+      "role": "publisher",
+      "path": "https://github.com/riabr-dados/riab"
+    }
+  ],
+  "status": {
+    "value": "ativo",
+    "options": [
+      "ativo",
+      "intermitente",
+      "alterado",
+      "offline",
+      "descontinuado"
+    ],
+    "last_checked": "2026-05-27",
+    "notes": ""
+  },
+  "collection": {
+    "method": "manual",
+    "script": null,
+    "frequency": "ad-hoc"
+  },
+  "resources": [
+    {
+      "name": "canais-de-programacao-de-programadoras-ativos-credenciados",
+      "path": "snapshots/2026-05-27/canais-de-programacao-de-programadoras-ativos-credenciados.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 89840,
+      "hash": "sha256:dcc306de33bcd093f33677e3ff5c08265b31cf30cfb4794c759b9430e6596009"
+    }
+  ],
+  "snapshots": [
+    {
+      "date": "2026-05-27",
+      "path": "snapshots/2026-05-27/",
+      "source_url": "https://dados.gov.br/dados/conjuntos-dados/canais-de-programacao-de-programadoras-ativos-credenciados-na-ancine",
+      "notes": "Snapshot inicial coletado em 2026-05-27 via dados.gov.br."
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+Dataset: Obras Brasileiras com Fomento Indireto Aprovado (Leis de Incentivo)
+Fonte oficial: ANCINE -- dados.gov.br
+URL: https://dados.gov.br/dados/conjuntos-dados/obras-nao-publicitarias-brasileiras-com-fomento-indireto-aprovado-na-ancine-leis-de-incentivo-federa
+Data do snapshot: 2026-05-27
+Status na data: ativo
+Coleta: manual, download via dados.gov.br
+Arquivos:
+  - obras-nao-pub-brasileiras-fomento-indireto (137073 bytes, sha256:b3ac71ab9c97f791de3760d6ffde9e72688998d96b14c0b38463f26534ca618d)

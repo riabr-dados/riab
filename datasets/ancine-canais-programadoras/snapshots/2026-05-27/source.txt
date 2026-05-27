@@ -1,0 +1,8 @@
+Dataset: Canais de Programação de Programadoras Ativos Credenciados na Ancine
+Fonte oficial: ANCINE -- dados.gov.br
+URL: https://dados.gov.br/dados/conjuntos-dados/canais-de-programacao-de-programadoras-ativos-credenciados-na-ancine
+Data do snapshot: 2026-05-27
+Status na data: ativo
+Coleta: manual, download via dados.gov.br
+Arquivos:
+  - canais-de-programacao-de-programadoras-ativos-credenciados (89840 bytes, sha256:dcc306de33bcd093f33677e3ff5c08265b31cf30cfb4794c759b9430e6596009)

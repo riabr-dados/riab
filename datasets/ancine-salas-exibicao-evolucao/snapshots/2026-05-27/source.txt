@@ -1,0 +1,8 @@
+Dataset: Salas de Exibição — Evolução Anual
+Fonte oficial: ANCINE -- dados.gov.br
+URL: https://dados.gov.br/dados/conjuntos-dados/salas-de-exibicao---evolucao-anual
+Data do snapshot: 2026-05-27
+Status na data: ativo
+Coleta: manual, download via dados.gov.br
+Arquivos:
+  - salas-de-exibicao-evolucao-anual (3994532 bytes, sha256:93d04a3df37b3732986de5fa25b55f09f3b5370b363bfc88f93f5dd7cedcc73e)

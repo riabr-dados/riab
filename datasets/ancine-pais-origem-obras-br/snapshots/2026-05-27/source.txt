@@ -1,0 +1,8 @@
+Dataset: País de Origem das Obras Não Publicitárias Brasileiras
+Fonte oficial: ANCINE -- dados.gov.br
+URL: https://dados.gov.br/dados/conjuntos-dados/pais-de-origem-das-obras-nao-publicitarias-brasileiras
+Data do snapshot: 2026-05-27
+Status na data: ativo
+Coleta: manual, download via dados.gov.br
+Arquivos:
+  - paises-de-origem-das-obras-nao-publicitarias-brasileiras (2582559 bytes, sha256:86bba04fd27c53d13be2ddd6f11e1894bb61e5a128fb7e36b59a5a94afae2445)

@@ -1,0 +1,65 @@
+{
+  "$schema": "https://specs.frictionlessdata.io/schemas/data-package.json",
+  "name": "ancine-bilheteria-diaria-exibidoras",
+  "title": "Bilheteria Diária — informações de Exibidoras",
+  "description": "Relatório diário de bilheteria por obra conforme reportado pelas exibidoras (salas de cinema) ao SADIS/ANCINE.\n",
+  "version": "2026.05.27",
+  "created": "2026-05-27T00:00:00Z",
+  "homepage": "https://github.com/riabr-dados/riab/tree/main/datasets/ancine-bilheteria-diaria-exibidoras",
+  "licenses": [
+    {
+      "name": "CC-BY-4.0",
+      "title": "Creative Commons Attribution 4.0 International",
+      "path": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ],
+  "sources": [
+    {
+      "title": "ANCINE -- dados.gov.br",
+      "path": "https://dados.gov.br/dados/conjuntos-dados/relatorio-de-bilheteria-diaria-de-obras-informadas-pelas-exibidoras"
+    }
+  ],
+  "contributors": [
+    {
+      "title": "dados-audiovisual-br",
+      "role": "publisher",
+      "path": "https://github.com/riabr-dados/riab"
+    }
+  ],
+  "status": {
+    "value": "ativo",
+    "options": [
+      "ativo",
+      "intermitente",
+      "alterado",
+      "offline",
+      "descontinuado"
+    ],
+    "last_checked": "2026-05-27",
+    "notes": "Dataset grande (635 arquivos, 8.4 GB). CSVs disponiveis apenas no Hugging Face (riabr-dados/riab)."
+  },
+  "collection": {
+    "method": "manual",
+    "script": null,
+    "frequency": "mensal"
+  },
+  "resources": [
+    {
+      "name": "ver-huggingface",
+      "path": "https://huggingface.co/datasets/riabr-dados/riab/tree/main/raw/ancine-bilheteria-diaria-exibidoras",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "bytes": 8417868063,
+      "files": 635,
+      "note": "CSVs hospedados no HuggingFace ? nao incluidos no repositorio git por tamanho."
+    }
+  ],
+  "snapshots": [
+    {
+      "date": "2026-05-27",
+      "path": "snapshots/2026-05-27/",
+      "source_url": "https://dados.gov.br/dados/conjuntos-dados/relatorio-de-bilheteria-diaria-de-obras-informadas-pelas-exibidoras",
+      "notes": "Snapshot inicial: 635 arquivos CSV, 8.4 GB. Arquivos dispon?veis em raw/ancine-bilheteria-diaria-exibidoras/ no HuggingFace."
+    }
+  ]
+}

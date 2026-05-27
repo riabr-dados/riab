@@ -1,0 +1,8 @@
+Dataset: Bilheteria Diária — informações de Exibidoras
+Fonte oficial: ANCINE -- dados.gov.br
+URL: https://dados.gov.br/dados/conjuntos-dados/relatorio-de-bilheteria-diaria-de-obras-informadas-pelas-exibidoras
+Data do snapshot: 2026-05-27
+Status na data: ativo
+Coleta: manual, download via dados.gov.br
+Arquivos: 635 CSVs (8.4 GB)
+NOTA: Dados hospedados apenas no HuggingFace (riabr-dados/riab raw/ancine-bilheteria-diaria-exibidoras/) -- nao incluidos no git por tamanho.

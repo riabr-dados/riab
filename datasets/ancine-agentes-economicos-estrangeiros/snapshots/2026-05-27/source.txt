@@ -1,0 +1,8 @@
+Dataset: Agentes Econômicos Estrangeiros
+Fonte oficial: ANCINE -- dados.gov.br
+URL: https://dados.gov.br/dados/conjuntos-dados/agentes-economicos-estrangeiros
+Data do snapshot: 2026-05-27
+Status na data: ativo
+Coleta: manual, download via dados.gov.br
+Arquivos:
+  - agentes-economicos-estrangeiros-regulares (19591 bytes, sha256:3776213c2dad461bfb6e857c26c141d3be1cf28d7fd409649412c09c5fd000de)

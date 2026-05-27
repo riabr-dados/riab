@@ -1,0 +1,8 @@
+Dataset: Processos em Fase de Prestação de Contas
+Fonte oficial: ANCINE -- dados.gov.br
+URL: https://dados.gov.br/dados/conjuntos-dados/relacao-de-processos-em-fase-de-prestacao-de-contas
+Data do snapshot: 2026-05-27
+Status na data: ativo
+Coleta: manual, download via dados.gov.br
+Arquivos:
+  - processos-em-prestacao-de-contas (1188040 bytes, sha256:589052f44735e661cf0e7a54daa72ad4a13d2af7cca6cba86f0e5304819a34ad)

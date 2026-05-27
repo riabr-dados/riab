@@ -1,0 +1,1496 @@
+{
+  "$schema": "https://specs.frictionlessdata.io/schemas/data-package.json",
+  "name": "ancine-crt-obras-publicitarias",
+  "title": "CRT — Obras Publicitárias Registradas",
+  "description": "Certificados de Registro de Título (CRT) emitidos para obras publicitárias (filmes publicitários, comerciais).\n",
+  "version": "2026.05.27",
+  "created": "2026-05-27T00:00:00Z",
+  "homepage": "https://github.com/riabr-dados/riab/tree/main/datasets/ancine-crt-obras-publicitarias",
+  "licenses": [
+    {
+      "name": "CC-BY-4.0",
+      "title": "Creative Commons Attribution 4.0 International",
+      "path": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ],
+  "sources": [
+    {
+      "title": "ANCINE — dados.gov.br",
+      "path": "https://dados.gov.br/dados/conjuntos-dados/crt-obras-publicitarias-registradas"
+    }
+  ],
+  "contributors": [
+    {
+      "title": "dados-audiovisual-br",
+      "role": "publisher",
+      "path": "https://github.com/riabr-dados/riab"
+    }
+  ],
+  "status": {
+    "value": "ativo",
+    "options": [
+      "ativo",
+      "intermitente",
+      "alterado",
+      "offline",
+      "descontinuado"
+    ],
+    "last_checked": "2026-05-27",
+    "notes": ""
+  },
+  "collection": {
+    "method": "manual",
+    "script": null,
+    "frequency": "ad-hoc"
+  },
+  "resources": [
+    {
+      "name": "crt-obras-publicitarias-2013-01",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2013-01.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 680757,
+      "hash": "sha256:ada13bb0fc60f3b267c9c3d34d654ad58d396dce467123762ff66301678d9bd3"
+    },
+    {
+      "name": "crt-obras-publicitarias-2013-02",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2013-02.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1091818,
+      "hash": "sha256:e23c731d2bea68e08c77c01a5fb7ac2967a241d4b10d60435856965d81d80c0a"
+    },
+    {
+      "name": "crt-obras-publicitarias-2013-03",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2013-03.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1263980,
+      "hash": "sha256:1665d7e59c5420d8f22b204ac622f62dc076e6e544c9ab90beee2ca46f38b616"
+    },
+    {
+      "name": "crt-obras-publicitarias-2013-04",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2013-04.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1514521,
+      "hash": "sha256:b2a9654a89b1865be8c60ad1b230c7388f59154f65dad71ad1832b657059e4ef"
+    },
+    {
+      "name": "crt-obras-publicitarias-2013-05",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2013-05.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1535726,
+      "hash": "sha256:6d21dab2732817f644607bca31694bf99fd60db12b0013e114c2ee8425cc2ddf"
+    },
+    {
+      "name": "crt-obras-publicitarias-2013-06",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2013-06.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1311542,
+      "hash": "sha256:477e26795d2d8a5cde3ad00562d24bac61e82ae4485c47cf9617fae6c59ca312"
+    },
+    {
+      "name": "crt-obras-publicitarias-2013-07",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2013-07.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 6326912,
+      "hash": "sha256:0e1f7dc92b54199316e0614ac6d1613bba5884c63d87184c0796645c5406a43a"
+    },
+    {
+      "name": "crt-obras-publicitarias-2013-08",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2013-08.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2440200,
+      "hash": "sha256:7f090956985805b49683a38316b373c16a0b7efeaa306723958128c523e951f2"
+    },
+    {
+      "name": "crt-obras-publicitarias-2013-09",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2013-09.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2278299,
+      "hash": "sha256:c80b924856884378a45ccb811969d162d09d90156b49a83b0fa203c72f675a19"
+    },
+    {
+      "name": "crt-obras-publicitarias-2013-10",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2013-10.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2633490,
+      "hash": "sha256:e27274a1a3bb3e1ebdb5e403a37c0fdb67bc0f45f1f56a68cbf1522d03dab89a"
+    },
+    {
+      "name": "crt-obras-publicitarias-2013-11",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2013-11.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2670786,
+      "hash": "sha256:0b77c3d7642ae9ed09b4dd045f7103c03704149d11f31ee5ba84f73d7b45f64c"
+    },
+    {
+      "name": "crt-obras-publicitarias-2013-12",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2013-12.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2332606,
+      "hash": "sha256:f1b9f8ef7cd2dafd7f773e5dff485b1f423ed964f938b9818a6c2316baa9988a"
+    },
+    {
+      "name": "crt-obras-publicitarias-2014-01",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2014-01.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1737514,
+      "hash": "sha256:144b4fb06613efaed6183d5ddfa8663b7412f084575813cc29de2205826b8727"
+    },
+    {
+      "name": "crt-obras-publicitarias-2014-02",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2014-02.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1880210,
+      "hash": "sha256:0f983348c4b0b1f5907d1a8b9cf4af3867b473d04b00e92a3b35a1075cfd3f13"
+    },
+    {
+      "name": "crt-obras-publicitarias-2014-03",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2014-03.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1953114,
+      "hash": "sha256:ac5605976b0aa0cf558814fc12c6b0d82826c52101a9d2991a1662bb79a94a59"
+    },
+    {
+      "name": "crt-obras-publicitarias-2014-04",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2014-04.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2276318,
+      "hash": "sha256:08e299878e30a65323a517c76cd6b0df33378baff0f45173ac868c3c690c2688"
+    },
+    {
+      "name": "crt-obras-publicitarias-2014-05",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2014-05.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2338349,
+      "hash": "sha256:21b9b32212b6f6c69e493870addd7757a8356116a6f0e8059c060a08611bfcb6"
+    },
+    {
+      "name": "crt-obras-publicitarias-2014-06",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2014-06.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1900721,
+      "hash": "sha256:344f61f653c172bb2f772d1d40186b6360a438d101ba85bda4d815d6b5fad759"
+    },
+    {
+      "name": "crt-obras-publicitarias-2014-07",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2014-07.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1987600,
+      "hash": "sha256:7e2b536b7bc94405675d074de3a573ccdad047798e6210d6c4b9575f89f1999e"
+    },
+    {
+      "name": "crt-obras-publicitarias-2014-08",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2014-08.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2165819,
+      "hash": "sha256:bbf0c09b66727db6208ad0e67669c78cebcbb78385147e6f38b6f923879e2a82"
+    },
+    {
+      "name": "crt-obras-publicitarias-2014-09",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2014-09.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1653326,
+      "hash": "sha256:14a35e3c4b7718a1e76fdbc1add8b96226d8ba874d2f1941ee3542797c02181b"
+    },
+    {
+      "name": "crt-obras-publicitarias-2014-10",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2014-10.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2847482,
+      "hash": "sha256:3c020d45c1e431f0d504b1939774e5045113485ead60384717cc8e3c9f8f3f3e"
+    },
+    {
+      "name": "crt-obras-publicitarias-2014-11",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2014-11.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2342300,
+      "hash": "sha256:7bc57e1499e40ab4610fd3d5aeeea3e099f702e58fef2217950f8a0269038101"
+    },
+    {
+      "name": "crt-obras-publicitarias-2014-12",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2014-12.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2122599,
+      "hash": "sha256:ec1b0308918deb554810a7abc06fce15992385e203797aa676343a86ada92897"
+    },
+    {
+      "name": "crt-obras-publicitarias-2015-01",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2015-01.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1409556,
+      "hash": "sha256:33e4de85701942b9ab30352ed669faeb54bfb73b9aed7e7951c73116db7627e3"
+    },
+    {
+      "name": "crt-obras-publicitarias-2015-02",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2015-02.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1487840,
+      "hash": "sha256:5a55cd6cf8c3dba90c948896baa49212506377cb2e76467eb377c3df54d77f30"
+    },
+    {
+      "name": "crt-obras-publicitarias-2015-03",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2015-03.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1990754,
+      "hash": "sha256:be3b21c05ee9b1f7ff2eac9eab5727988465d8647814fdb201a16ba14e34ef6b"
+    },
+    {
+      "name": "crt-obras-publicitarias-2015-04",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2015-04.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2130085,
+      "hash": "sha256:bc0f8246079f9a3723768f61ea6983364eab4aa0097f993dc46f4b07bfa17820"
+    },
+    {
+      "name": "crt-obras-publicitarias-2015-05",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2015-05.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2132359,
+      "hash": "sha256:2b59e750c5d7901b038156468e79a6ed586e7cedf386f5d277554d3e7ffa8c9e"
+    },
+    {
+      "name": "crt-obras-publicitarias-2015-06",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2015-06.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1955327,
+      "hash": "sha256:43b624e0ab90233d15667e574edb72f459320b385ea8d7d09e6d54ab0f9a9e3a"
+    },
+    {
+      "name": "crt-obras-publicitarias-2015-07",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2015-07.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2084742,
+      "hash": "sha256:21f1cf79e93b3e9195b3b6751adbb507548d7b388b4e6fcf40b887ef6723dd86"
+    },
+    {
+      "name": "crt-obras-publicitarias-2015-08",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2015-08.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2181860,
+      "hash": "sha256:0045c5a93598dd282999cf08f86f9103982a54afba3e78afbc855c85b46617d3"
+    },
+    {
+      "name": "crt-obras-publicitarias-2015-09",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2015-09.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2091816,
+      "hash": "sha256:dfce128f02253d62e26f48186154f38cd61d837f221ba322316a9c52795922d0"
+    },
+    {
+      "name": "crt-obras-publicitarias-2015-10",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2015-10.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2235516,
+      "hash": "sha256:ddc740a526719ce116e1fdd62df8cb59346e44b134ea15614bdbec19b40aa291"
+    },
+    {
+      "name": "crt-obras-publicitarias-2015-11",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2015-11.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2366791,
+      "hash": "sha256:7943b50c5ea6a7949ff4a0d05f458dd88712cf6dafefeb069cf02304f65c533d"
+    },
+    {
+      "name": "crt-obras-publicitarias-2015-12",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2015-12.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2168986,
+      "hash": "sha256:36bf4ee6c7f0ceb6331dffca28f415435d7a81ce89f92fe0d798021552ff4e24"
+    },
+    {
+      "name": "crt-obras-publicitarias-2016-01",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2016-01.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1287197,
+      "hash": "sha256:915ec952b629ae428aaeaa0a81560ac29900c786071c4e4c7d32946a82f70934"
+    },
+    {
+      "name": "crt-obras-publicitarias-2016-02",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2016-02.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1559944,
+      "hash": "sha256:58dd1c4728786b3819cd131e21c29092b48f8247b790a40e40234aaee6f46e66"
+    },
+    {
+      "name": "crt-obras-publicitarias-2016-03",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2016-03.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1920299,
+      "hash": "sha256:26ed7b398e9fcdfc5789bf89a6e54a02f1a027cb3445e83e315c1488d26bdc99"
+    },
+    {
+      "name": "crt-obras-publicitarias-2016-04",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2016-04.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1983187,
+      "hash": "sha256:c7676f107634de9f5b9ada88b3f9502e746f4f331f767c4e54ecc9dd8aa57f5d"
+    },
+    {
+      "name": "crt-obras-publicitarias-2016-05",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2016-05.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1827978,
+      "hash": "sha256:5253f9f1377208aa53e2dc38906dca8ab21e2ef2b3078f30cf39b62df6a5b653"
+    },
+    {
+      "name": "crt-obras-publicitarias-2016-06",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2016-06.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1907878,
+      "hash": "sha256:59700a2633a8a8da6c2ec27f521b4dc161ce98d4937d99e5e2011b063aacb77b"
+    },
+    {
+      "name": "crt-obras-publicitarias-2016-07",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2016-07.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1657169,
+      "hash": "sha256:787faedb53deeceb059f97dbbc5ec63d36cdd3e47f64982abc3ac907fdb1249b"
+    },
+    {
+      "name": "crt-obras-publicitarias-2016-08",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2016-08.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1957700,
+      "hash": "sha256:bec3cb9452ee3ffd9f20165c4cb9e6f451a98551153d94d88e1ca8fa2547052d"
+    },
+    {
+      "name": "crt-obras-publicitarias-2016-09",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2016-09.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2007382,
+      "hash": "sha256:c01d7c8518969a873bba001454e9f1e8a923279cf29a2892df3955d1a4b9c9f4"
+    },
+    {
+      "name": "crt-obras-publicitarias-2016-10",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2016-10.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1823752,
+      "hash": "sha256:6675d370e68ce3eb07bb49d5ba9f08577ee14b2ab65298f4cd71e96516ff0957"
+    },
+    {
+      "name": "crt-obras-publicitarias-2016-11",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2016-11.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2110598,
+      "hash": "sha256:b248c89fb606b8f2c9537bfce195952ebfc2bd197f04a1e70398cb0823537dc4"
+    },
+    {
+      "name": "crt-obras-publicitarias-2016-12",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2016-12.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2251127,
+      "hash": "sha256:7e5e8e5b22cf4a4351511fde98cde423fd69a8bc71413e531ff8e51abda9dbf2"
+    },
+    {
+      "name": "crt-obras-publicitarias-2017-01",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2017-01.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1448879,
+      "hash": "sha256:a2826834e97e1de5ab96d8df4d137681620ac8a10743113f38b95c58fbb281c5"
+    },
+    {
+      "name": "crt-obras-publicitarias-2017-02",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2017-02.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1552056,
+      "hash": "sha256:1d519255bd62d3cdba9bafc33340d7429e796beb2a31b232437f3976a3f45a11"
+    },
+    {
+      "name": "crt-obras-publicitarias-2017-03",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2017-03.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1973634,
+      "hash": "sha256:377fd75b6313fce2a8a15200b431436da1c6c054905c99dea10799468f01aef6"
+    },
+    {
+      "name": "crt-obras-publicitarias-2017-04",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2017-04.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1826889,
+      "hash": "sha256:b1c8700d045f5a261d61d6fa4dad3887af6276f1b58f3a7de57a89ca69e24869"
+    },
+    {
+      "name": "crt-obras-publicitarias-2017-05",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2017-05.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2069368,
+      "hash": "sha256:ca022abb030e91e5d9a8d48c254eb03f163f16fac5398e3d1bb39b8d869ba4bb"
+    },
+    {
+      "name": "crt-obras-publicitarias-2017-06",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2017-06.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1841843,
+      "hash": "sha256:13dda0bd6d8cf39dcaa156eab68803783cacb92b163a27ee863f44662df8241e"
+    },
+    {
+      "name": "crt-obras-publicitarias-2017-07",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2017-07.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1959257,
+      "hash": "sha256:f3774afca85ccca69773696abe08fab40ea1754018ba248138dd7d7fc8b03fc6"
+    },
+    {
+      "name": "crt-obras-publicitarias-2017-08",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2017-08.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1976224,
+      "hash": "sha256:dcbec67b978b32cbb69e42bb5a649d91006a9a59f973e81bcdb739658d498f21"
+    },
+    {
+      "name": "crt-obras-publicitarias-2017-09",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2017-09.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2080458,
+      "hash": "sha256:729d793ab47c39103f39a1da26d3bfeb5ab8362c21a8e1e5b20c7c24ac6fcf45"
+    },
+    {
+      "name": "crt-obras-publicitarias-2017-10",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2017-10.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2136132,
+      "hash": "sha256:1e916f909420fe768aed919c2440930348aef1ef0ec0ff26a675b1c8f3fcff29"
+    },
+    {
+      "name": "crt-obras-publicitarias-2017-11",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2017-11.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2246474,
+      "hash": "sha256:0acc8c412d58af385f8f594e97369d4f3487ff4d9b8ab8ba1e71bd9b7b7f4327"
+    },
+    {
+      "name": "crt-obras-publicitarias-2017-12",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2017-12.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2140475,
+      "hash": "sha256:26f5281b8eb61edd5b90fcf50212abd40b3d27ec4597799d9b1ba0dd542dc7e5"
+    },
+    {
+      "name": "crt-obras-publicitarias-2018-01",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2018-01.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1596638,
+      "hash": "sha256:504dc8cbd1fbe5dfe9f848289f3756b185a4f5681b3a9e6e5fac67be0cecccc0"
+    },
+    {
+      "name": "crt-obras-publicitarias-2018-02",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2018-02.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1318443,
+      "hash": "sha256:820425d557b936c040d1b60322b7fe9fffdbfac81c6b72759b905d74e558f552"
+    },
+    {
+      "name": "crt-obras-publicitarias-2018-03",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2018-03.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2049893,
+      "hash": "sha256:3223a125b0658fca9b8b9ca9ed935a5751eb92064add43fd6a333b4ff49859dc"
+    },
+    {
+      "name": "crt-obras-publicitarias-2018-04",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2018-04.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2038506,
+      "hash": "sha256:d6c234232afc765bdf2ba24623e60e4ecd5f488496256990d0e903e71cd2c650"
+    },
+    {
+      "name": "crt-obras-publicitarias-2018-05",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2018-05.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2259796,
+      "hash": "sha256:c28cc835158c241cc7f0f003544d2b354835c7a7de9797cad782ab34bf361b9f"
+    },
+    {
+      "name": "crt-obras-publicitarias-2018-06",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2018-06.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1807316,
+      "hash": "sha256:36c173fb74f5cd444b4676bb6fe764e7cb0f7ab20fb93030467225641404170f"
+    },
+    {
+      "name": "crt-obras-publicitarias-2018-07",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2018-07.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1871011,
+      "hash": "sha256:981eb808c18c0530c3cd6e1d59e216a6e3fc6e9413689a0e18076d73c263b642"
+    },
+    {
+      "name": "crt-obras-publicitarias-2018-08",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2018-08.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2084050,
+      "hash": "sha256:405a261bf2b22701d01a6f41d758d35a83aa0fb3ff98c86f4b1a0ba3ec7f8d70"
+    },
+    {
+      "name": "crt-obras-publicitarias-2018-09",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2018-09.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2058588,
+      "hash": "sha256:c67048b5edf876edc42c85226e0cb8fabeb16ce9986979bb52560c8e4d24eda2"
+    },
+    {
+      "name": "crt-obras-publicitarias-2018-10",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2018-10.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2080815,
+      "hash": "sha256:a1e69debbcf3ef68ef44ca58b6b671c17cb853559ef46987b5f7593abfe8b66a"
+    },
+    {
+      "name": "crt-obras-publicitarias-2018-11",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2018-11.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2374310,
+      "hash": "sha256:ce10213602d0ab5270c95186d87380ee9211ad18a355c8816de6abba825ba018"
+    },
+    {
+      "name": "crt-obras-publicitarias-2018-12",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2018-12.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2096934,
+      "hash": "sha256:9faa189c89f15b7a6e671c22dcb72c1d0c9dcf2b081a4bed1911c7e1c684d834"
+    },
+    {
+      "name": "crt-obras-publicitarias-2019-01",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2019-01.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1331201,
+      "hash": "sha256:0a2e8bec6d1fd8f34d6046da7b926e45f883ffd47d68a181c779703bcf954851"
+    },
+    {
+      "name": "crt-obras-publicitarias-2019-02",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2019-02.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1560271,
+      "hash": "sha256:67b4b8854e4416cd4ed9ccc0f00765b4906c8affae3e6f6b6fa0e14bf43a88e7"
+    },
+    {
+      "name": "crt-obras-publicitarias-2019-03",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2019-03.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1755701,
+      "hash": "sha256:cf11cb15852cd237a2b216a77f5192ec956ba7c1abbd5eafa07d2147dd5079a8"
+    },
+    {
+      "name": "crt-obras-publicitarias-2019-04",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2019-04.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2142448,
+      "hash": "sha256:f6dad9849e3e01cdabfc236d49afe7c05844ec7928af65c9b37c9fc447c76203"
+    },
+    {
+      "name": "crt-obras-publicitarias-2019-05",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2019-05.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2150726,
+      "hash": "sha256:0de058f1b4b488ea9dc048e3dfac7f5d476dd95c5f78edf52c89c1954938ae95"
+    },
+    {
+      "name": "crt-obras-publicitarias-2019-06",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2019-06.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1815485,
+      "hash": "sha256:d876a52099add7d569a511fb25d6f7edd6fd420aa5d08e5f79524e5a0b74063b"
+    },
+    {
+      "name": "crt-obras-publicitarias-2019-07",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2019-07.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1982095,
+      "hash": "sha256:379d2d75547c46125949342d5b717e28dd1cc8f1baa9623fff96e0e0bba93151"
+    },
+    {
+      "name": "crt-obras-publicitarias-2019-08",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2019-08.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2085728,
+      "hash": "sha256:81cc61482890041d89d07fef54297baba630d7fe5fc8ed983b7585f4a96b378b"
+    },
+    {
+      "name": "crt-obras-publicitarias-2019-09",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2019-09.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2122751,
+      "hash": "sha256:4d6d116c583367e419d1c38eeb56c6f1c6847fad30ace250d03fdffc3809e151"
+    },
+    {
+      "name": "crt-obras-publicitarias-2019-10",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2019-10.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2327407,
+      "hash": "sha256:2ebdf2a48abc3bc35c129d1265e461e414d823a22d7e456c36165e9bcdcda6df"
+    },
+    {
+      "name": "crt-obras-publicitarias-2019-11",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2019-11.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2517466,
+      "hash": "sha256:73b61e9ac1d14758d2c5ac63d7e2b5c263c8681a1fa8f8553e3609e416028503"
+    },
+    {
+      "name": "crt-obras-publicitarias-2019-12",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2019-12.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2368657,
+      "hash": "sha256:22047338d048b08d43a394696a3ed9c30dba014b517e2de228af6348bb1e74e2"
+    },
+    {
+      "name": "crt-obras-publicitarias-2020-01",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2020-01.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1502832,
+      "hash": "sha256:ce69c0764d07a5a091580a7180b37f25fa93df50dc578709fd1acbe8375f262a"
+    },
+    {
+      "name": "crt-obras-publicitarias-2020-02",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2020-02.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1603525,
+      "hash": "sha256:dfd72aab6a2dc6a9bf685b278b2702e18defa39f98b1746bf413774cc7d48363"
+    },
+    {
+      "name": "crt-obras-publicitarias-2020-03",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2020-03.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1738239,
+      "hash": "sha256:8f3252168de4f4cbf285211f2d479efec7d646e4cb61b9c63f96fc7c7e8b45cc"
+    },
+    {
+      "name": "crt-obras-publicitarias-2020-04",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2020-04.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1204066,
+      "hash": "sha256:9d7e53fdfeeefd43cf81eee59c87ad9f9230dd9e0e908ce1e0a8e9fbecbff5d4"
+    },
+    {
+      "name": "crt-obras-publicitarias-2020-05",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2020-05.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1196138,
+      "hash": "sha256:fb54762e6fa052f8f812e39d64b2776cc46454bfc288855cea2845ca1fe0467f"
+    },
+    {
+      "name": "crt-obras-publicitarias-2020-06",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2020-06.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1365046,
+      "hash": "sha256:e95fd95dce55a758c4d44d84a2aa38e897dc196eeb4c5610f900d9d21efca68c"
+    },
+    {
+      "name": "crt-obras-publicitarias-2020-07",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2020-07.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1569382,
+      "hash": "sha256:eaeef3b01c0ddbb1a5e21a4c6c329fc3e50650fc81a062f14e4f994ffe145c03"
+    },
+    {
+      "name": "crt-obras-publicitarias-2020-08",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2020-08.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1658453,
+      "hash": "sha256:8c946c4649da3bb323ba64e0fc28397a17a04b295c110ee98b2ceff2e079472f"
+    },
+    {
+      "name": "crt-obras-publicitarias-2020-09",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2020-09.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1905630,
+      "hash": "sha256:0edb3e116f268406d6e1a2133e0b626e4091509393866367d254757caffe803f"
+    },
+    {
+      "name": "crt-obras-publicitarias-2020-10",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2020-10.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2290929,
+      "hash": "sha256:8ca1f594b73503060b8b9c07dd04641977e9fe37044a7526dcf6c165918ef335"
+    },
+    {
+      "name": "crt-obras-publicitarias-2020-11",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2020-11.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2486283,
+      "hash": "sha256:2767b4f77fe5d6fcf162b9c763c6f5e1db1bd1bbf93707d315d909add5c4f80f"
+    },
+    {
+      "name": "crt-obras-publicitarias-2020-12",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2020-12.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2500587,
+      "hash": "sha256:7ef486011b5e21fbb3580a722ef9ed74a8cced72e48295f75db04f71deb9971e"
+    },
+    {
+      "name": "crt-obras-publicitarias-2021-01",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2021-01.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1443859,
+      "hash": "sha256:d18ce6d41f5ff4332d85f52f6d5163eaf216a80973ee568e2c08fa86bc294d67"
+    },
+    {
+      "name": "crt-obras-publicitarias-2021-02",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2021-02.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1498122,
+      "hash": "sha256:f5b5672d767085c08cdcb40b3559fa88bffc2dfc6bf81e0625acdd23d66d41b0"
+    },
+    {
+      "name": "crt-obras-publicitarias-2021-03",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2021-03.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1847168,
+      "hash": "sha256:aaac9e86e4eca24ea69120feff1533b709547357aa9bbb68455c6c615c865979"
+    },
+    {
+      "name": "crt-obras-publicitarias-2021-04",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2021-04.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1698129,
+      "hash": "sha256:3d206c9da9d98788af377999e97defcc22b561e0a7122df47834d1814c55db93"
+    },
+    {
+      "name": "crt-obras-publicitarias-2021-05",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2021-05.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1915579,
+      "hash": "sha256:84d0984e1c2caab3d6b23cdafa2ffb9ce1bd611307d1d6a990f49c3a398a9842"
+    },
+    {
+      "name": "crt-obras-publicitarias-2021-06",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2021-06.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1708082,
+      "hash": "sha256:b245c5dbfe058a245fd359797d44d52990d7e5d24969640430a804c31c9448bd"
+    },
+    {
+      "name": "crt-obras-publicitarias-2021-07",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2021-07.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2027501,
+      "hash": "sha256:01c2909cc4677b5bb574cf394c9d758f5bba2ba89bcef2fa8b4d0c69ed454f86"
+    },
+    {
+      "name": "crt-obras-publicitarias-2021-08",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2021-08.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1999436,
+      "hash": "sha256:7c7fa8406520ff4d2ef978287156df59c0ca88a09bd1d17029afb9b666f72952"
+    },
+    {
+      "name": "crt-obras-publicitarias-2021-09",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2021-09.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2024685,
+      "hash": "sha256:1cbcb3f7316bc65db747dc04ebfe76399f7a0651a378ac15658abd3624b82665"
+    },
+    {
+      "name": "crt-obras-publicitarias-2021-10",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2021-10.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2267344,
+      "hash": "sha256:42900509c993ff01218052c0b347a5704a12cc05b0f06a3b3c68c53bd9844bfb"
+    },
+    {
+      "name": "crt-obras-publicitarias-2021-11",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2021-11.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2574879,
+      "hash": "sha256:9a708fad831a7a61ad1fdb1471df85ecc9966462506d720355cfb224d3bc26aa"
+    },
+    {
+      "name": "crt-obras-publicitarias-2021-12",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2021-12.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2301665,
+      "hash": "sha256:0a58c60a3377807f0e45305ca0da75f7a26b287b8c9999f930a5a2265c3c6f31"
+    },
+    {
+      "name": "crt-obras-publicitarias-2022-01",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2022-01.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1731977,
+      "hash": "sha256:db11addd6d02a2b40bd3737045f33888ad6ee1d9813eed49ff1819eabfc8b96a"
+    },
+    {
+      "name": "crt-obras-publicitarias-2022-02",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2022-02.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1535659,
+      "hash": "sha256:46e59dcb742d383e597983ca5e38ab315fc531c97789d98c60147f2bd63f8f34"
+    },
+    {
+      "name": "crt-obras-publicitarias-2022-03",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2022-03.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2146883,
+      "hash": "sha256:c56bc24e75afe7d27a5dd4dfd78befe71da60fa3d24bdf2f4ca02d3ad1f27f39"
+    },
+    {
+      "name": "crt-obras-publicitarias-2022-04",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2022-04.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1794639,
+      "hash": "sha256:562d27a862e238071d773cda691396b2a97382373bb375b5a58e290f001ad127"
+    },
+    {
+      "name": "crt-obras-publicitarias-2022-05",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2022-05.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1856116,
+      "hash": "sha256:058203b0af59925565dafa227ee1de49cd92440e259bf26e755fd73c610a9ea9"
+    },
+    {
+      "name": "crt-obras-publicitarias-2022-06",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2022-06.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1811338,
+      "hash": "sha256:5b14598ea02c879681ba96b10bd7d453940f9bcb4b80d9bce27ead102e82700c"
+    },
+    {
+      "name": "crt-obras-publicitarias-2022-07",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2022-07.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1761817,
+      "hash": "sha256:34718801c88186277a334fa04d071ff1179621419546461f761485fea2f17471"
+    },
+    {
+      "name": "crt-obras-publicitarias-2022-08",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2022-08.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1935448,
+      "hash": "sha256:2d2856fcd64b0c5f7f798ecff29f4fe043b9771e0b9a704d0decc8130393e010"
+    },
+    {
+      "name": "crt-obras-publicitarias-2022-09",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2022-09.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1885347,
+      "hash": "sha256:c264284a003e7255fbdcf5cb1cc162dae3e89ae3e2230a497fdaa4a5893f7d9d"
+    },
+    {
+      "name": "crt-obras-publicitarias-2022-10",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2022-10.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2005045,
+      "hash": "sha256:9eb425966018ef488959fd42ec2a2de89541924b354f349c4615fbd771ef4d41"
+    },
+    {
+      "name": "crt-obras-publicitarias-2022-11",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2022-11.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2141157,
+      "hash": "sha256:1ea135957ad17da057d35900d6bd225802ba575d8c5f1961146d4e68a514b56e"
+    },
+    {
+      "name": "crt-obras-publicitarias-2022-12",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2022-12.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1966467,
+      "hash": "sha256:5ce05e33b922f80a95f4b9c5f58df79ef8853e36d8c7f67442f98b94dda781e3"
+    },
+    {
+      "name": "crt-obras-publicitarias-2023-01",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2023-01.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1514004,
+      "hash": "sha256:dbaf373e1b90311f3c30a55b53e48557dc94dc5c6b0c6bca4a086ba7fec3f128"
+    },
+    {
+      "name": "crt-obras-publicitarias-2023-02",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2023-02.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1436343,
+      "hash": "sha256:d3240d35dd20b8e307d8d7a52d2dec0e7d53edacd6eb9bd699d47c6e13c27901"
+    },
+    {
+      "name": "crt-obras-publicitarias-2023-03",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2023-03.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1761586,
+      "hash": "sha256:a9c8ad567ab1a7bb185b9d5d5a0e2d2b0cdb355fc155e83a9d217dd70dd0ff1d"
+    },
+    {
+      "name": "crt-obras-publicitarias-2023-04",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2023-04.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1751147,
+      "hash": "sha256:15d496528919d21c518f0cd89dd28b5190fe1a152706451951aedcbab1bfec9a"
+    },
+    {
+      "name": "crt-obras-publicitarias-2023-05",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2023-05.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1944528,
+      "hash": "sha256:ff61944707c104e2e4e5e84ffb6fe39c89c1bfba902317a58144877be2848790"
+    },
+    {
+      "name": "crt-obras-publicitarias-2023-06",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2023-06.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1893894,
+      "hash": "sha256:01bc805bc3d0aba7931e241df96fb74db159b75b41d83757fa438adaa7ef26fa"
+    },
+    {
+      "name": "crt-obras-publicitarias-2023-07",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2023-07.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1890988,
+      "hash": "sha256:06486b11ede5717c9a3e50ddaf59a392196b8d0f8e88a071fccf8ca15e190d8b"
+    },
+    {
+      "name": "crt-obras-publicitarias-2023-08",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2023-08.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1965227,
+      "hash": "sha256:eebee42304dccbcb398a89d539266a182ae3e9db6d1e8f5a3ef8b606c774b952"
+    },
+    {
+      "name": "crt-obras-publicitarias-2023-09",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2023-09.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1993993,
+      "hash": "sha256:8e61272f43f039d564f9dad45cabf5cc47de13b0b5bceaf785927cba5f06d9a7"
+    },
+    {
+      "name": "crt-obras-publicitarias-2023-10",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2023-10.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2132204,
+      "hash": "sha256:bb68ca672b9ad6a39f4f25062d52c74b25c7137e082818899f27fafb2c5e25c9"
+    },
+    {
+      "name": "crt-obras-publicitarias-2023-11",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2023-11.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2184520,
+      "hash": "sha256:40ab87cb6ae5d49f8b1c6737617164add4bd183b1fa9b88b3d6e79997df971e4"
+    },
+    {
+      "name": "crt-obras-publicitarias-2023-12",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2023-12.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1956838,
+      "hash": "sha256:36339ae63ffd5bd3198cbc50d216540e6327b2f99affee768f5f90166744934b"
+    },
+    {
+      "name": "crt-obras-publicitarias-2024-01",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2024-01.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1581940,
+      "hash": "sha256:24dafa98828570bc73dba15280201cf75069926cefbb853b999c86015d52906f"
+    },
+    {
+      "name": "crt-obras-publicitarias-2024-02",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2024-02.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1504707,
+      "hash": "sha256:9b1406be49d19fab1137e015e5c28cb3c0c02ce163c39562f20f5cfeeb7c515e"
+    },
+    {
+      "name": "crt-obras-publicitarias-2024-03",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2024-03.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1689548,
+      "hash": "sha256:87a44f74e81dc2ca156d7314e646645c30cfcd6b7e5a6343f771a09d540eba9a"
+    },
+    {
+      "name": "crt-obras-publicitarias-2024-04",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2024-04.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1975821,
+      "hash": "sha256:f46f7539083059a49a03370be9165609c32d4b6673706853d75344385f4fcc20"
+    },
+    {
+      "name": "crt-obras-publicitarias-2024-05",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2024-05.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1931304,
+      "hash": "sha256:e71cde1ce75ee7f14f1ab75a55b5143997d4ab9718d45d64003e253fbb3f10cf"
+    },
+    {
+      "name": "crt-obras-publicitarias-2024-06",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2024-06.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1832231,
+      "hash": "sha256:0462c12ceee8f7af3e7cffcfca9b09134fbd81725d81327d69b88dce24ff6133"
+    },
+    {
+      "name": "crt-obras-publicitarias-2024-07",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2024-07.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1789357,
+      "hash": "sha256:e24750dbb9619280ebd433133aaecbdc441eeea6583966e8e279a170804150cd"
+    },
+    {
+      "name": "crt-obras-publicitarias-2024-08",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2024-08.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1799790,
+      "hash": "sha256:6b98e269f6a7efdbb62efaeeb78d46e4b4c7ed0d59f7f9433606baf26ef37fb9"
+    },
+    {
+      "name": "crt-obras-publicitarias-2024-09",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2024-09.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1928701,
+      "hash": "sha256:a241d7fda0bb5cd026b3f1234bed2c9546eb45f69bd5c2d5cbf42b30c88f39b2"
+    },
+    {
+      "name": "crt-obras-publicitarias-2024-10",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2024-10.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2136259,
+      "hash": "sha256:302b9c7da40e92c1bfb0286a78aa72d1ad1f24a996154f831111b3dc288303a5"
+    },
+    {
+      "name": "crt-obras-publicitarias-2024-11",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2024-11.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2032084,
+      "hash": "sha256:57a4fbd1b3a0f5386ca42f23b2545e07e870c906e0e9357da8780282c459aed1"
+    },
+    {
+      "name": "crt-obras-publicitarias-2024-12",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2024-12.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 2062061,
+      "hash": "sha256:a705297e970c1a94de7d92d3f4f4fe506acd3515965e2e03a560c64b4ea17b55"
+    },
+    {
+      "name": "crt-obras-publicitarias-2025-01",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2025-01.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1446027,
+      "hash": "sha256:f4e8c95ce77fb27d5fcf26db7023b70245c3642ebcae1f78f06d742ff55613a8"
+    },
+    {
+      "name": "crt-obras-publicitarias-2025-02",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2025-02.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1521753,
+      "hash": "sha256:03be5b327d84ea02c1e287a7290515d2d71cb00cce1b30ac49e4c2c42bb7e255"
+    },
+    {
+      "name": "crt-obras-publicitarias-2025-03",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2025-03.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1527227,
+      "hash": "sha256:cad5c2ede9b361d6b13d82fab77d372d3ffe3ed443c6f4eb4e5ea9261da76e2d"
+    },
+    {
+      "name": "crt-obras-publicitarias-2025-04",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2025-04.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1749254,
+      "hash": "sha256:47b9561b3d26a71535c869eaa6569813828234d09af2670a3d978d3d5d0140fe"
+    },
+    {
+      "name": "crt-obras-publicitarias-2025-05",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2025-05.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1742641,
+      "hash": "sha256:bcb159e7193ea855a4a94a46b0558023cd631bf9c4d2665178d201813aba7b27"
+    },
+    {
+      "name": "crt-obras-publicitarias-2025-06",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2025-06.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1716288,
+      "hash": "sha256:0a639b4681a879d431456c9802ddbb1374dc930c04c58b8a2495e985a480aaf6"
+    },
+    {
+      "name": "crt-obras-publicitarias-2025-07",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2025-07.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1859399,
+      "hash": "sha256:8d5760a6b2d2376a18fbd233e16c6b3d8bba70f57acdefa05c1de13f5094145e"
+    },
+    {
+      "name": "crt-obras-publicitarias-2025-08",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2025-08.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1650447,
+      "hash": "sha256:3ca08e66fae3b672b8fe1a0d30229a3c07093dd33018370d7854f8c316e58191"
+    },
+    {
+      "name": "crt-obras-publicitarias-2025-09",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2025-09.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1854398,
+      "hash": "sha256:da8659767237488007ae15e0c2c934d6909d95d94366c53d6fa7daa63a456806"
+    },
+    {
+      "name": "crt-obras-publicitarias-2025-10",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2025-10.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1933851,
+      "hash": "sha256:4a97df178d7720d3f2b2331228a06275febf22ed6d7734c18dcb684e61c73e61"
+    },
+    {
+      "name": "crt-obras-publicitarias-2025-11",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2025-11.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1896048,
+      "hash": "sha256:9a9ede4e88894ad9ba8394f7f34b1a894c2c58c1d198fe231aa1990884d68aba"
+    },
+    {
+      "name": "crt-obras-publicitarias-2025-12",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2025-12.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1942424,
+      "hash": "sha256:99618fcaacd6d61d1444c76d814552a4a0f7c9e748f143b76f203991b7320cc9"
+    },
+    {
+      "name": "crt-obras-publicitarias-2026-01",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2026-01.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1268211,
+      "hash": "sha256:9c42049dc6168c480356e21baba9998948c98b99c26308e1bdba7015e85cccba"
+    },
+    {
+      "name": "crt-obras-publicitarias-2026-02",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2026-02.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1324881,
+      "hash": "sha256:6d85d3486bde9620e8d7930e2c190e18593b70a90efab158ee040eabdcb6c447"
+    },
+    {
+      "name": "crt-obras-publicitarias-2026-03",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2026-03.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1783809,
+      "hash": "sha256:bb2615c5e83f14d2f5a9bb74c583bfbacb4a4fb2fb36f3848f6fa756474b4162"
+    },
+    {
+      "name": "crt-obras-publicitarias-2026-04",
+      "path": "snapshots/2026-05-27/crt-obras-publicitarias-2026-04.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 82241,
+      "hash": "sha256:9936a394ebf2e5b47a3532d88e5a9d1efb913e9250076b7d6f9298a7feecc810"
+    }
+  ],
+  "snapshots": [
+    {
+      "date": "2026-05-27",
+      "path": "snapshots/2026-05-27/",
+      "source_url": "https://dados.gov.br/dados/conjuntos-dados/crt-obras-publicitarias-registradas",
+      "notes": "Snapshot inicial coletado em 2026-05-27 via dados.gov.br."
+    }
+  ]
+}

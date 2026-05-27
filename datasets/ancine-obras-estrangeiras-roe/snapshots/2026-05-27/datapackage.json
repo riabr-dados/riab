@@ -1,0 +1,173 @@
+{
+  "$schema": "https://specs.frictionlessdata.io/schemas/data-package.json",
+  "name": "ancine-obras-estrangeiras-roe",
+  "title": "Obras Não Publicitárias Estrangeiras (ROE)",
+  "description": "Registro de Obras Estrangeiras (ROE) emitidos pela ANCINE — todas as obras audiovisuais não publicitárias estrangeiras com circulação registrada no Brasil.\n",
+  "version": "2026.05.27",
+  "created": "2026-05-27T00:00:00Z",
+  "homepage": "https://github.com/riabr-dados/riab/tree/main/datasets/ancine-obras-estrangeiras-roe",
+  "licenses": [
+    {
+      "name": "CC-BY-4.0",
+      "title": "Creative Commons Attribution 4.0 International",
+      "path": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ],
+  "sources": [
+    {
+      "title": "ANCINE — dados.gov.br",
+      "path": "https://dados.gov.br/dados/conjuntos-dados/obras-nao-publicitarias-estrangeiras-relacao-de-todos-os-roes-emitidos-excluindo-se-a-categoria-de-r"
+    }
+  ],
+  "contributors": [
+    {
+      "title": "dados-audiovisual-br",
+      "role": "publisher",
+      "path": "https://github.com/riabr-dados/riab"
+    }
+  ],
+  "status": {
+    "value": "ativo",
+    "options": [
+      "ativo",
+      "intermitente",
+      "alterado",
+      "offline",
+      "descontinuado"
+    ],
+    "last_checked": "2026-05-27",
+    "notes": ""
+  },
+  "collection": {
+    "method": "manual",
+    "script": null,
+    "frequency": "ad-hoc"
+  },
+  "resources": [
+    {
+      "name": "obras-nao-pub-estrangeiras-2014",
+      "path": "snapshots/2026-05-27/obras-nao-pub-estrangeiras-2014.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 989055,
+      "hash": "sha256:cd27b87ac5fb21e3916eef06f4f123c285fbb58410970987b8608c04a4e83bdc"
+    },
+    {
+      "name": "obras-nao-pub-estrangeiras-2015",
+      "path": "snapshots/2026-05-27/obras-nao-pub-estrangeiras-2015.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 1154134,
+      "hash": "sha256:0ec9b46599208a40f3581edb421964a3e365763293d0a160f996c65f4bb0329f"
+    },
+    {
+      "name": "obras-nao-pub-estrangeiras-2016",
+      "path": "snapshots/2026-05-27/obras-nao-pub-estrangeiras-2016.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 834348,
+      "hash": "sha256:3571d45f70f2a105fda781aad67ef855d806f04abfb6c054289dd6aa14e5c94e"
+    },
+    {
+      "name": "obras-nao-pub-estrangeiras-2017",
+      "path": "snapshots/2026-05-27/obras-nao-pub-estrangeiras-2017.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 573450,
+      "hash": "sha256:476eae6f34814bceb3cea5abbeef33de69fb8306137c791d306e732d75a7ab01"
+    },
+    {
+      "name": "obras-nao-pub-estrangeiras-2018",
+      "path": "snapshots/2026-05-27/obras-nao-pub-estrangeiras-2018.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 564773,
+      "hash": "sha256:725d1ec9a06c87d1b39178a710fd916a2bdd1a0e23d395fca2b4e87609498161"
+    },
+    {
+      "name": "obras-nao-pub-estrangeiras-2019",
+      "path": "snapshots/2026-05-27/obras-nao-pub-estrangeiras-2019.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 556540,
+      "hash": "sha256:1b04a1911d962951b66e14d1a9fa5bf3bca40ab7342266c2b6397766a9c0aa21"
+    },
+    {
+      "name": "obras-nao-pub-estrangeiras-2020",
+      "path": "snapshots/2026-05-27/obras-nao-pub-estrangeiras-2020.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 544752,
+      "hash": "sha256:652e01c2b592e04ce8f03b0360b8c3516f2d42dd0d89b77049d04697df6a2c50"
+    },
+    {
+      "name": "obras-nao-pub-estrangeiras-2021",
+      "path": "snapshots/2026-05-27/obras-nao-pub-estrangeiras-2021.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 444332,
+      "hash": "sha256:bdca1d981ffaa9c44609cb1a832f35d758cd723a4e912adfa8c4de9246c382a7"
+    },
+    {
+      "name": "obras-nao-pub-estrangeiras-2022",
+      "path": "snapshots/2026-05-27/obras-nao-pub-estrangeiras-2022.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 385105,
+      "hash": "sha256:60d824d8bd843ea9833b875df0e23bf550d2f5c4d0bac519a5b1a242b2ead970"
+    },
+    {
+      "name": "obras-nao-pub-estrangeiras-2023",
+      "path": "snapshots/2026-05-27/obras-nao-pub-estrangeiras-2023.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 379352,
+      "hash": "sha256:87714242112b69361fbec17e6d288a7d4c52b02fc66ad954e1d738af08e3386c"
+    },
+    {
+      "name": "obras-nao-pub-estrangeiras-2024",
+      "path": "snapshots/2026-05-27/obras-nao-pub-estrangeiras-2024.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 325898,
+      "hash": "sha256:2dbef598ac813227e1a97386da018f63c60dd101f3d1be604ec7a747aa8b4e3c"
+    },
+    {
+      "name": "obras-nao-pub-estrangeiras-2025",
+      "path": "snapshots/2026-05-27/obras-nao-pub-estrangeiras-2025.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 313722,
+      "hash": "sha256:37aeb31832206c43d994dceb75fba9c3818627b0da6daa7f2822ee9f387ec27c"
+    },
+    {
+      "name": "obras-nao-pub-estrangeiras-2026",
+      "path": "snapshots/2026-05-27/obras-nao-pub-estrangeiras-2026.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 93487,
+      "hash": "sha256:ccbcd8635f426f19ea0ff5c8767ef5a0f6028e18174c339e5b3c3dff538d9728"
+    }
+  ],
+  "snapshots": [
+    {
+      "date": "2026-05-27",
+      "path": "snapshots/2026-05-27/",
+      "source_url": "https://dados.gov.br/dados/conjuntos-dados/obras-nao-publicitarias-estrangeiras-relacao-de-todos-os-roes-emitidos-excluindo-se-a-categoria-de-r",
+      "notes": "Snapshot inicial coletado em 2026-05-27 via dados.gov.br."
+    }
+  ]
+}

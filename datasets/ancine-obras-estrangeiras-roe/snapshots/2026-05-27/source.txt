@@ -1,0 +1,20 @@
+Dataset: Obras Não Publicitárias Estrangeiras (ROE)
+Fonte oficial: ANCINE -- dados.gov.br
+URL: https://dados.gov.br/dados/conjuntos-dados/obras-nao-publicitarias-estrangeiras-relacao-de-todos-os-roes-emitidos-excluindo-se-a-categoria-de-r
+Data do snapshot: 2026-05-27
+Status na data: ativo
+Coleta: manual, download via dados.gov.br
+Arquivos:
+  - obras-nao-pub-estrangeiras-2014 (989055 bytes, sha256:cd27b87ac5fb21e3916eef06f4f123c285fbb58410970987b8608c04a4e83bdc)
+  - obras-nao-pub-estrangeiras-2015 (1154134 bytes, sha256:0ec9b46599208a40f3581edb421964a3e365763293d0a160f996c65f4bb0329f)
+  - obras-nao-pub-estrangeiras-2016 (834348 bytes, sha256:3571d45f70f2a105fda781aad67ef855d806f04abfb6c054289dd6aa14e5c94e)
+  - obras-nao-pub-estrangeiras-2017 (573450 bytes, sha256:476eae6f34814bceb3cea5abbeef33de69fb8306137c791d306e732d75a7ab01)
+  - obras-nao-pub-estrangeiras-2018 (564773 bytes, sha256:725d1ec9a06c87d1b39178a710fd916a2bdd1a0e23d395fca2b4e87609498161)
+  - obras-nao-pub-estrangeiras-2019 (556540 bytes, sha256:1b04a1911d962951b66e14d1a9fa5bf3bca40ab7342266c2b6397766a9c0aa21)
+  - obras-nao-pub-estrangeiras-2020 (544752 bytes, sha256:652e01c2b592e04ce8f03b0360b8c3516f2d42dd0d89b77049d04697df6a2c50)
+  - obras-nao-pub-estrangeiras-2021 (444332 bytes, sha256:bdca1d981ffaa9c44609cb1a832f35d758cd723a4e912adfa8c4de9246c382a7)
+  - obras-nao-pub-estrangeiras-2022 (385105 bytes, sha256:60d824d8bd843ea9833b875df0e23bf550d2f5c4d0bac519a5b1a242b2ead970)
+  - obras-nao-pub-estrangeiras-2023 (379352 bytes, sha256:87714242112b69361fbec17e6d288a7d4c52b02fc66ad954e1d738af08e3386c)
+  - obras-nao-pub-estrangeiras-2024 (325898 bytes, sha256:2dbef598ac813227e1a97386da018f63c60dd101f3d1be604ec7a747aa8b4e3c)
+  - obras-nao-pub-estrangeiras-2025 (313722 bytes, sha256:37aeb31832206c43d994dceb75fba9c3818627b0da6daa7f2822ee9f387ec27c)
+  - obras-nao-pub-estrangeiras-2026 (93487 bytes, sha256:ccbcd8635f426f19ea0ff5c8767ef5a0f6028e18174c339e5b3c3dff538d9728)

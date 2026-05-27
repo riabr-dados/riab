@@ -1,0 +1,65 @@
+{
+  "$schema": "https://specs.frictionlessdata.io/schemas/data-package.json",
+  "name": "ancine-bilheteria-diaria-distribuidoras",
+  "title": "Bilheteria Diária — informações de Distribuidoras",
+  "description": "Relatório diário de bilheteria por obra conforme reportado pelas distribuidoras ao SADIS/ANCINE. Granularidade muito maior que a bilheteria agregada anual.\n",
+  "version": "2026.05.27",
+  "created": "2026-05-27T00:00:00Z",
+  "homepage": "https://github.com/riabr-dados/riab/tree/main/datasets/ancine-bilheteria-diaria-distribuidoras",
+  "licenses": [
+    {
+      "name": "CC-BY-4.0",
+      "title": "Creative Commons Attribution 4.0 International",
+      "path": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ],
+  "sources": [
+    {
+      "title": "ANCINE -- dados.gov.br",
+      "path": "https://dados.gov.br/dados/conjuntos-dados/relatorio-de-bilheteria-diaria-de-obras-informadas-pelas-distribuidoras"
+    }
+  ],
+  "contributors": [
+    {
+      "title": "dados-audiovisual-br",
+      "role": "publisher",
+      "path": "https://github.com/riabr-dados/riab"
+    }
+  ],
+  "status": {
+    "value": "ativo",
+    "options": [
+      "ativo",
+      "intermitente",
+      "alterado",
+      "offline",
+      "descontinuado"
+    ],
+    "last_checked": "2026-05-27",
+    "notes": "Dataset grande (149 arquivos, 4.8 GB). CSVs disponiveis apenas no Hugging Face (riabr-dados/riab)."
+  },
+  "collection": {
+    "method": "manual",
+    "script": null,
+    "frequency": "mensal"
+  },
+  "resources": [
+    {
+      "name": "ver-huggingface",
+      "path": "https://huggingface.co/datasets/riabr-dados/riab/tree/main/raw/ancine-bilheteria-diaria-distribuidoras",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "bytes": 4818537050,
+      "files": 149,
+      "note": "CSVs hospedados no HuggingFace ? nao incluidos no repositorio git por tamanho."
+    }
+  ],
+  "snapshots": [
+    {
+      "date": "2026-05-27",
+      "path": "snapshots/2026-05-27/",
+      "source_url": "https://dados.gov.br/dados/conjuntos-dados/relatorio-de-bilheteria-diaria-de-obras-informadas-pelas-distribuidoras",
+      "notes": "Snapshot inicial: 149 arquivos CSV, 4.8 GB. Arquivos dispon?veis em raw/ancine-bilheteria-diaria-distribuidoras/ no HuggingFace."
+    }
+  ]
+}

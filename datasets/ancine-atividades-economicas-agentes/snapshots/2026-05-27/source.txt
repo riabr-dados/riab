@@ -1,0 +1,8 @@
+Dataset: Atividades Econômicas dos Agentes Regulares Registrados na Ancine
+Fonte oficial: ANCINE -- dados.gov.br
+URL: https://dados.gov.br/dados/conjuntos-dados/atividades-economicas-dos-agentes-regulares-registrados-na-ancine
+Data do snapshot: 2026-05-27
+Status na data: ativo
+Coleta: manual, download via dados.gov.br
+Arquivos:
+  - atividades-economicas-agentes-regulares (19266691 bytes, sha256:51df5b689732275ad77f32ae28153c6db77aaaaae154018965b80a09595a0875)

@@ -1,0 +1,8 @@
+Dataset: Bilheteria Diária — informações de Distribuidoras
+Fonte oficial: ANCINE -- dados.gov.br
+URL: https://dados.gov.br/dados/conjuntos-dados/relatorio-de-bilheteria-diaria-de-obras-informadas-pelas-distribuidoras
+Data do snapshot: 2026-05-27
+Status na data: ativo
+Coleta: manual, download via dados.gov.br
+Arquivos: 149 CSVs (4.8 GB)
+NOTA: Dados hospedados apenas no HuggingFace (riabr-dados/riab raw/ancine-bilheteria-diaria-distribuidoras/) -- nao incluidos no git por tamanho.

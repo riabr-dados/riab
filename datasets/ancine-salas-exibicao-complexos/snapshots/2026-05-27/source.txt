@@ -1,0 +1,8 @@
+Dataset: Salas de Exibição e Complexos Registrados na Ancine
+Fonte oficial: ANCINE -- dados.gov.br
+URL: https://dados.gov.br/dados/conjuntos-dados/salas-de-exibicao-e-complexos-registrados-na-ancine
+Data do snapshot: 2026-05-27
+Status na data: ativo
+Coleta: manual, download via dados.gov.br
+Arquivos:
+  - salas-de-exibicao-e-complexos (2228579 bytes, sha256:e111c43f8fb870f7b5ee66a5aec1022f3e5d9da08eae49b195b7842b1cb301f9)

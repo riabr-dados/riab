@@ -1,0 +1,8 @@
+Dataset: Lançamentos Comerciais por Distribuidoras
+Fonte oficial: ANCINE -- dados.gov.br
+URL: https://dados.gov.br/dados/conjuntos-dados/lancamentos-comerciais-por-distribuidoras
+Data do snapshot: 2026-05-27
+Status na data: ativo
+Coleta: manual, download via dados.gov.br
+Arquivos:
+  - lancamentos-comerciais-por-distribuidoras (1014400 bytes, sha256:eb9733677284d9284e121210a3d611b9115d4549dff1eb8ab078347afeaff997)
