@@ -1,5 +1,6 @@
 datasets:
-  # ── BRASIL / ANCINE ────────────────────────────────────────────────────────
+  # ── BRASIL / ANCINE ────────────────────────────────────────────────────────
+
 
   - slug: ancine-obras-nao-publicitarias
     title: "Obras Nao Publicitarias"
@@ -962,7 +963,8 @@ datasets:
     related:
       - ancine-obras-nao-publicitarias
 
-  # ── BRASIL / IBGE ──────────────────────────────────────────────────────────
+  # ── BRASIL / IBGE ──────────────────────────────────────────────────────────
+
 
     categoria:
       - diversidade
@@ -991,7 +993,8 @@ datasets:
       - ancine-preco-medio-ingresso
       - ancine-bilheteria-consolidada
 
-  # ── BRASIL / LUMIERE ───────────────────────────────────────────────────────
+  # ── BRASIL / LUMIERE ───────────────────────────────────────────────────────
+
 
     categoria:
       - emprego_economia
@@ -1041,9 +1044,11 @@ datasets:
     related:
       - lumiere-cinemas-europa
 
-  # ── FRANCA / CNC ───────────────────────────────────────────────────────────
+  # ── FRANCA / CNC ───────────────────────────────────────────────────────────
 
-  # -- DERIVADOS / BRASIL NO MUNDO -------------------------------------------
+
+  # -- DERIVADOS / BRASIL NO MUNDO -------------------------------------------
+
 
     categoria:
       - vod_streaming
@@ -1467,7 +1472,8 @@ datasets:
       - bilheteria
     procedencia: cnc
 
-  # ── ARGENTINA / INCAA ──────────────────────────────────────────────────────
+  # ── ARGENTINA / INCAA ──────────────────────────────────────────────────────
+
 
   - slug: incaa-espectadores-origem
     title: "Espectadores de Cinema por Origem do Filme"
@@ -1692,7 +1698,8 @@ datasets:
         - name: incaa_receitas_tv_assinatura
           parquet: incaa_receitas_tv_assinatura.parquet
 
-  # ── REINO UNIDO / BFI ──────────────────────────────────────────────────────
+  # ── REINO UNIDO / BFI ──────────────────────────────────────────────────────
+
 
     categoria:
       - tv_audiencia
@@ -2013,7 +2020,8 @@ datasets:
       - internacional
     procedencia: bfi
 
-  # ── URUGUAI / ACAU ─────────────────────────────────────────────────────────
+  # ── URUGUAI / ACAU ─────────────────────────────────────────────────────────
+
 
   - slug: acau-uruguay-apoios-audiovisual
     title: "Apoios Audiovisuais do Uruguai"
@@ -2211,7 +2219,7 @@ datasets:
     description: |
       Obras audiovisuais brasileiras que receberam investimento do Fundo Setorial do Audiovisual (FSA). Complementa os datasets de projetos FSA.
     source_id: ancine
-    status: pendente_coleta
+    status: ativo
     coverage: —
     tags:
       - brasil
@@ -2221,9 +2229,9 @@ datasets:
       - investimento
     raw:
       path: ancine-obras-investimento-fsa/
-      format: csv_pendente
-      files: 0
-      size_bytes: 0
+      format: csv
+      files: 1
+      size_bytes: 131885
       url_origem: https://dados.gov.br/dados/conjuntos-dados/obras-nao-publicitarias-brasileiras-com-investimento-do-fsa
     cleaned:
       tables: []

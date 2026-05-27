@@ -1,0 +1,65 @@
+{
+  "$schema": "https://specs.frictionlessdata.io/schemas/data-package.json",
+  "name": "ancine-obras-investimento-fsa",
+  "title": "Obras Brasileiras com Investimento do FSA",
+  "description": "Obras audiovisuais brasileiras que receberam investimento do Fundo Setorial do Audiovisual (FSA). Complementa os datasets de projetos FSA.\n",
+  "version": "2026.05.27",
+  "created": "2026-05-27T00:00:00Z",
+  "homepage": "https://github.com/riabr-dados/riab/tree/main/datasets/ancine-obras-investimento-fsa",
+  "licenses": [
+    {
+      "name": "CC-BY-4.0",
+      "title": "Creative Commons Attribution 4.0 International",
+      "path": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ],
+  "sources": [
+    {
+      "title": "ANCINE — dados.gov.br",
+      "path": "https://dados.gov.br/dados/conjuntos-dados/obras-nao-publicitarias-brasileiras-com-investimento-do-fsa"
+    }
+  ],
+  "contributors": [
+    {
+      "title": "dados-audiovisual-br",
+      "role": "publisher",
+      "path": "https://github.com/riabr-dados/riab"
+    }
+  ],
+  "status": {
+    "value": "ativo",
+    "options": [
+      "ativo",
+      "intermitente",
+      "alterado",
+      "offline",
+      "descontinuado"
+    ],
+    "last_checked": "2026-05-27",
+    "notes": "Coletado via dados.gov.br. Lista de obras audiovisuais brasileiras com investimento do FSA."
+  },
+  "collection": {
+    "method": "manual",
+    "script": null,
+    "frequency": "ad-hoc"
+  },
+  "resources": [
+    {
+      "name": "obras-nao-pub-brasileiras-investimento-fsa",
+      "path": "snapshots/2026-05-27/obras-nao-pub-brasileiras-investimento-fsa.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "bytes": 131885,
+      "hash": "sha256:642c4ae68a3cdbf04f1f4ccca1d8393c9904ecfd6e31c951e4f2399d9655cb88"
+    }
+  ],
+  "snapshots": [
+    {
+      "date": "2026-05-27",
+      "path": "snapshots/2026-05-27/",
+      "source_url": "https://dados.gov.br/dados/conjuntos-dados/obras-nao-publicitarias-brasileiras-com-investimento-do-fsa",
+      "notes": "Snapshot inicial coletado em 2026-05-27 via dados.gov.br."
+    }
+  ]
+}

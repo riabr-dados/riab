@@ -1,0 +1,8 @@
+Dataset: Obras Brasileiras com Investimento do FSA
+Fonte oficial: ANCINE — dados.gov.br
+URL: https://dados.gov.br/dados/conjuntos-dados/obras-nao-publicitarias-brasileiras-com-investimento-do-fsa
+Data do snapshot: 2026-05-27
+Status na data: ativo
+Coleta: manual, download via dados.gov.br
+Arquivos:
+  - obras-nao-pub-brasileiras-investimento-fsa (131885 bytes, sha256:642c4ae68a3cdbf04f1f4ccca1d8393c9904ecfd6e31c951e4f2399d9655cb88)
