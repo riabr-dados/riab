@@ -1,0 +1,27 @@
+table: crt_nao_publicitarias_pais_ano
+description: "CRT nao publicitarias agregados por pais x tipo_obra x ano."
+columns:
+  - name: pais
+    type: string
+    nullable: true
+    description: "Pais"
+  - name: tipo_obra
+    type: string
+    nullable: true
+    description: "Tipo obra"
+  - name: ano
+    type: integer
+    nullable: true
+    description: "Ano"
+  - name: n_crts
+    type: integer
+    nullable: true
+    description: "N crts"
+  - name: duracao_media_min
+    type: number
+    nullable: true
+    description: "Duracao media min"
+  - name: n_obras_unicas
+    type: integer
+    nullable: true
+    description: "N obras unicas"

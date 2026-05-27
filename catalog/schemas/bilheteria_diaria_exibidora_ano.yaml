@@ -1,0 +1,35 @@
+table: bilheteria_diaria_exibidora_ano
+description: "Panorama por exibidora-ano: publico total, n_filmes, n_complexos."
+columns:
+  - name: cnpj_exibidor
+    type: string
+    nullable: true
+    description: "Cnpj exibidor"
+  - name: exibidora
+    type: string
+    nullable: true
+    description: "Exibidora"
+  - name: ano
+    type: integer
+    nullable: true
+    description: "Ano"
+  - name: publico_total
+    type: number
+    nullable: true
+    description: "Publico total"
+  - name: sessoes
+    type: integer
+    nullable: true
+    description: "Sessoes"
+  - name: n_filmes
+    type: integer
+    nullable: true
+    description: "N filmes"
+  - name: n_complexos
+    type: integer
+    nullable: true
+    description: "N complexos"
+  - name: n_municipios
+    type: integer
+    nullable: true
+    description: "N municipios"

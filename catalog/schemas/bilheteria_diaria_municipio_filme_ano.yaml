@@ -1,0 +1,35 @@
+table: bilheteria_diaria_municipio_filme_ano
+description: "Bilheteria diaria agregada por filme + ano + municipio + UF."
+columns:
+  - name: cpb_roe
+    type: string
+    nullable: true
+    description: "Cpb roe"
+  - name: ano
+    type: integer
+    nullable: true
+    description: "Ano"
+  - name: titulo_brasil
+    type: string
+    nullable: true
+    description: "Titulo brasil"
+  - name: pais_obra
+    type: string
+    nullable: true
+    description: "Pais obra"
+  - name: uf
+    type: string
+    nullable: true
+    description: "Uf"
+  - name: municipio
+    type: string
+    nullable: true
+    description: "Municipio"
+  - name: publico_total
+    type: number
+    nullable: true
+    description: "Publico total"
+  - name: sessoes
+    type: integer
+    nullable: true
+    description: "Sessoes"

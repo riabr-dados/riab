@@ -1,0 +1,27 @@
+table: crt_publicitarias_anunciante_ano
+description: "CRT publicitarias agregados por CNPJ anunciante x ano."
+columns:
+  - name: cnpj_anunciante
+    type: string
+    nullable: true
+    description: "Cnpj anunciante"
+  - name: anunciante
+    type: string
+    nullable: true
+    description: "Anunciante"
+  - name: ano
+    type: integer
+    nullable: true
+    description: "Ano"
+  - name: n_crts
+    type: integer
+    nullable: true
+    description: "N crts"
+  - name: n_segmentos
+    type: integer
+    nullable: true
+    description: "N segmentos"
+  - name: n_agencias
+    type: integer
+    nullable: true
+    description: "N agencias"

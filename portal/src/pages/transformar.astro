@@ -1,7 +1,49 @@
 ---
 import Base from "../layouts/Base.astro";
+import { getDatasets } from "../lib/catalog.js";
+import { getRegistry } from "../lib/joins.js";
+
 const base = import.meta.env.BASE_URL;
 const HF = "https://huggingface.co/datasets/riabr-dados/riab/resolve/main/cleaned";
+
+// Build BUILDER_CATALOG: every visible table with its dataset metadata
+const datasets = getDatasets();
+const joinsRegistry = getRegistry();
+const tablesByName = Object.fromEntries(joinsRegistry.tables.map((t) => [t.table, t]));
+
+const BUILDER_CATALOG = [];
+for (const ds of datasets) {
+  const tables = ds.cleaned?.tables ?? [];
+  for (const t of tables) {
+    const name = typeof t === "string" ? t : t.name;
+    const reg = tablesByName[name];
+    if (!reg) continue;
+    BUILDER_CATALOG.push({
+      table: name,
+      title: ds.title,
+      slug: ds.slug,
+      country: ds.source?.country ?? "??",
+      source_id: ds.source_id,
+      source_label: ds.source?.label ?? ds.source_id ?? "—",
+      categoria: ds.categoria ?? [],
+      keys: [...new Set((reg.exposes ?? []).map((e) => e.key))],
+      key_cols: (reg.exposes ?? []).reduce((acc, e) => {
+        (acc[e.key] ??= []).push({ col: e.col, normalize: e.normalize ?? null });
+        return acc;
+      }, {}),
+    });
+  }
+}
+
+const BUILDER_BRIDGES = joinsRegistry.bridges.map((b) => ({
+  tables: b.tables,
+  via_keys: b.via_keys,
+  top_key: b.top_key,
+  weight: b.weight,
+}));
+
+const KEY_GLOSSARY = joinsRegistry._meta?.key_glossary ?? {};
+const BUILDER_DATA_JSON = JSON.stringify({ catalog: BUILDER_CATALOG, bridges: BUILDER_BRIDGES, keyGlossary: KEY_GLOSSARY });
 ---
 
 <Base
@@ -28,8 +70,8 @@ const HF = "https://huggingface.co/datasets/riabr-dados/riab/resolve/main/cleane
 
   <!-- MODE TABS -->
   <div class="mode-tabs">
-    <button class="mtab mtab--active" id="mtab-conexoes">⊞ Conexões</button>
-    <button class="mtab" id="mtab-campos">⊕ Campos livres</button>
+    <button class="mtab mtab--active" id="mtab-conexoes">⊞ Conexões prontas</button>
+    <button class="mtab" id="mtab-builder">⊕ Construir cruzamento</button>
   </div>
 
   <!-- ── PANEL: CONEXÕES ─────────────────────────────────────── -->
@@ -43,51 +85,70 @@ const HF = "https://huggingface.co/datasets/riabr-dados/riab/resolve/main/cleane
     </div>
   </div>
 
-  <!-- ── PANEL: CAMPOS LIVRES ───────────────────────────────── -->
-  <div id="panel-campos" style="display:none">
-    <div class="fl-wrap">
+  <!-- ── PANEL: BUILDER ──────────────────────────────────────── -->
+  <div id="panel-builder" style="display:none">
+    <div class="bldr">
 
-      <!-- Table selector -->
-      <div class="fl-section">
-        <div class="fl-section-label">Tabelas <span class="fl-hint">selecione uma ou mais</span></div>
-        <div class="fl-table-pills" id="fl-table-pills"></div>
-      </div>
-
-      <!-- Available + chosen columns -->
-      <div class="fl-cols-area" id="fl-cols-area" style="display:none">
-        <div class="fl-available">
-          <div class="fl-section-label">Colunas disponíveis <span class="fl-hint">clique para adicionar</span></div>
-          <div class="fl-col-list" id="fl-col-list"></div>
+      <!-- COLUNA 1: catálogo -->
+      <aside class="bldr-cat">
+        <div class="bldr-h">Datasets disponíveis</div>
+        <input type="text" class="bldr-search" id="bldr-search" placeholder="buscar (ex.: bilheteria, fsa, BFI)" />
+        <div class="bldr-cat-filters">
+          <span class="bldr-mini-label">com chave:</span>
+          <div class="bldr-key-filters" id="bldr-key-filters"></div>
         </div>
-        <div class="fl-chosen-area">
-          <div class="fl-section-label">Selecionadas</div>
-          <div class="fl-chosen" id="fl-chosen"></div>
+        <div class="bldr-cat-filters">
+          <span class="bldr-mini-label">país:</span>
+          <div class="bldr-country-filters" id="bldr-country-filters"></div>
         </div>
-      </div>
+        <div class="bldr-cat-list" id="bldr-cat-list"></div>
+      </aside>
 
-      <!-- Filters -->
-      <div class="fl-filters-area" id="fl-filters-area" style="display:none">
-        <div class="fl-section-label">
-          Filtros
-          <button class="fl-add-filter" id="fl-add-filter">+ adicionar</button>
+      <!-- COLUNA 2: trilha -->
+      <section class="bldr-trail">
+        <div class="bldr-h">Montagem do relatório</div>
+        <div class="bldr-trail-list" id="bldr-trail-list">
+          <p class="bldr-empty">Clique num dataset à esquerda para começar. O Construtor vai sugerir automaticamente a chave de junção entre os datasets escolhidos.</p>
         </div>
-        <div id="fl-filter-rows"></div>
-      </div>
+        <div class="bldr-trail-warnings" id="bldr-trail-warnings"></div>
+      </section>
 
-      <!-- Limit + Run -->
-      <div class="fl-controls" id="fl-controls" style="display:none">
-        <div class="fl-limit-group">
-          <span class="fl-section-label">Limite</span>
-          <div class="fl-limit-chips" id="fl-limit-chips">
+      <!-- COLUNA 3: agregação -->
+      <aside class="bldr-agg" id="bldr-agg-pane" style="display:none">
+        <div class="bldr-h">Agregação</div>
+
+        <div class="bldr-agg-block">
+          <label class="bldr-mini-label">Agrupar por</label>
+          <select class="bldr-select" id="bldr-groupby">
+            <option value="">— selecione —</option>
+          </select>
+        </div>
+
+        <div class="bldr-agg-block">
+          <label class="bldr-mini-label">Métricas</label>
+          <div class="bldr-metrics" id="bldr-metrics"></div>
+          <button class="bldr-add-metric" id="bldr-add-metric">+ adicionar métrica</button>
+        </div>
+
+        <div class="bldr-agg-block">
+          <label class="bldr-mini-label">Filtros</label>
+          <div id="bldr-filter-rows"></div>
+          <button class="bldr-add-metric" id="bldr-add-filter">+ adicionar filtro</button>
+        </div>
+
+        <div class="bldr-agg-block">
+          <label class="bldr-mini-label">Limite</label>
+          <div class="fl-limit-chips" id="bldr-limit-chips">
             <button class="lchip" data-n="25">25</button>
-            <button class="lchip lchip--active" data-n="50">50</button>
-            <button class="lchip" data-n="100">100</button>
-            <button class="lchip" data-n="250">250</button>
+            <button class="lchip lchip--active" data-n="100">100</button>
             <button class="lchip" data-n="500">500</button>
+            <button class="lchip" data-n="2000">2 k</button>
+            <button class="lchip" data-n="0">tudo</button>
           </div>
         </div>
-        <button class="fl-run-btn" id="fl-run">▶ Executar</button>
-      </div>
+
+        <button class="fl-run-btn" id="bldr-run">▶ Executar relatório</button>
+      </aside>
 
     </div>
   </div>
@@ -157,8 +218,9 @@ const HF = "https://huggingface.co/datasets/riabr-dados/riab/resolve/main/cleane
 </div><!-- /tf -->
 </Base>
 
-<script define:vars={{ HF }}>
+<script define:vars={{ HF, BUILDER_DATA_JSON }}>
   window.__RIDAB_HF__ = HF;
+  window.__RIDAB_BUILDER__ = JSON.parse(BUILDER_DATA_JSON);
 </script>
 
 <script type="module">
@@ -166,30 +228,15 @@ import * as duckdb from "https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.29.0
 
 const HF = window.__RIDAB_HF__;
 
-// ── TABLE META (for campos livres) ─────────────────────────────
-const TABLE_META = [
-  { id: 'obras',                    alias: 'o', label: 'Obras ANCINE',      color: '#007a3c' },
-  { id: 'bilheteria_por_filme_ano', alias: 'b', label: 'Bilheteria BR',     color: '#007a3c' },
-  { id: 'diretores_obras',          alias: 'd', label: 'Diretores',         color: '#007a3c' },
-  { id: 'produtores_obras',         alias: 'p', label: 'Produtores',        color: '#007a3c' },
-  { id: 'fomento_fsa',              alias: 'f', label: 'Fomento FSA',       color: '#c8920a' },
-  { id: 'condecine_arrecadacao',    alias: 'cx', label: 'CONDECINE',        color: '#c8920a' },
-  { id: 'fomento_fluxos_financeiros', alias: 'ff', label: 'Fluxos Fomento', color: '#c8920a' },
-  { id: 'fsa_atas_festivais',       alias: 'af', label: 'Festivais FSA',    color: '#c8920a' },
-  { id: 'fsa_atas_resultados',      alias: 'ar', label: 'Atas FSA',         color: '#c8920a' },
-  { id: 'renuncia_fiscal',          alias: 'r', label: 'Renúncia Fiscal',   color: '#1f3bb8' },
-  { id: 'embrafilme_exibicao_territorio_ano', alias: 'em', label: 'Embrafilme', color: '#007a3c' },
-  { id: 'pib_audiovisual_total_ano', alias: 'pbt', label: 'PIB AV Total', color: '#5a6f2b' },
-  { id: 'pib_audiovisual_atividade_ano', alias: 'pba', label: 'PIB AV CNAE', color: '#5a6f2b' },
-  { id: 'rais_emprego_audiovisual_total_ano', alias: 'ravt', label: 'Emprego AV Total', color: '#5a6f2b' },
-  { id: 'rais_emprego_audiovisual_subclasse_ano', alias: 'ravs', label: 'Emprego AV CNAE', color: '#5a6f2b' },
-  { id: 'comercio_exterior_servicos_audiovisuais_total_ano', alias: 'csat', label: 'Serviços AV Total', color: '#5a6f2b' },
-  { id: 'comercio_exterior_servicos_audiovisuais_servico_ano', alias: 'csas', label: 'Serviços AV NBS', color: '#5a6f2b' },
-  { id: 'comex_bens_audiovisuais_fontes', alias: 'cb', label: 'Fonte Comex Bens', color: '#5a6f2b' },
-  { id: 'diversidade_audiovisual_emprego_sexo_ano', alias: 'davs', label: 'Diversidade Sexo', color: '#5a6f2b' },
-  { id: 'diversidade_audiovisual_emprego_raca_ano', alias: 'davr', label: 'Diversidade Raça', color: '#5a6f2b' },
-  { id: 'bilheteria_europa',        alias: 'l', label: 'Bilheteria Europa', color: '#1f3bb8' },
-];
+// ── BUILDER DATA (loaded from joins.yaml via Astro frontmatter) ──
+const BUILDER_DATA = window.__RIDAB_BUILDER__;
+const COUNTRY_FILL = { BR:'#007a3c', AR:'#2d70c4', UY:'#b07d0a', FR:'#1f3bb8', UK:'#5a2244', EU:'#1f3bb8' };
+const STRONG_KEYS_SET = new Set(['CPB','CRT','ROE','SALIC','CONTRATO','PROCESSO','REG_ANCINE','CNPJ','CPF','GRUPO_ECON','CNAE','PRODUTORA','DISTRIBUIDORA','EXIBIDORA']);
+// Alias generation: derive 2-3 char alias from table name for SQL readability
+function aliasFor(table){
+  const parts = table.split('_');
+  return parts.length === 1 ? parts[0].slice(0,2) : parts.map(p=>p[0]).join('').slice(0,4);
+}
 
 // ── CRUZAMENTOS ────────────────────────────────────────────────
 const CRZ = [
@@ -533,19 +580,24 @@ const JOIN_COLOR = { exact: '#007a3c', proxy: '#c8920a' };
 
 // ── STATE ──────────────────────────────────────────────────────
 let db, conn, ready = false;
-let appMode = 'conexoes'; // 'conexoes' | 'campos'
+let appMode = 'conexoes'; // 'conexoes' | 'builder'
 let activeCrz = null;
 let lastSQL = '', lastRows = [], lastCols = [];
 let viewMode = 'chart';   // 'chart' | 'table'
 let chartType = 'bh';     // 'bh' | 'bv' | 'ln'
 let sortCol = null, sortAsc = true;
 
-// Campos livres state
-let flTables = new Set();
-let flTableCols = {};     // { tableId: [{name,type}] }
-let flChosen = [];        // [{tableId, alias, col}]
-let flFilters = [];       // [{col, op, val}]
-let flLimit = 50;
+// Builder state
+const registeredViews = new Set();
+const builderColCache = {}; // table -> [{name,type}]
+let builderTables = []; // [{table, alias}]
+let builderGroupBy = ''; // "table.col"
+let builderMetrics = []; // [{op:'SUM'|'COUNT'|'AVG'|'COUNT_DISTINCT', col:'table.col'|'*'}]
+let builderFilters = []; // [{col, op, val}]
+let builderLimit = 100;
+let builderActiveKey = null; // filter chip: only datasets exposing this key
+let builderActiveCountry = null;
+let builderSearch = '';
 
 // ── DOM ────────────────────────────────────────────────────────
 const dot        = document.getElementById('tf-dot');
@@ -585,38 +637,24 @@ const viewTable  = document.getElementById('view-table');
     conn = await db.connect();
     await conn.query("INSTALL httpfs; LOAD httpfs; SET s3_region='us-east-1';");
 
-    const views = {
-      obras:                    `${HF}/obras.parquet`,
-      diretores_obras:          `${HF}/diretores_obras.parquet`,
-      produtores_obras:         `${HF}/produtores_obras.parquet`,
-      bilheteria_por_filme_ano: `${HF}/bilheteria_por_filme_ano.parquet`,
-      fomento_fsa:              `${HF}/fomento_fsa.parquet`,
-      condecine_arrecadacao:    `${HF}/condecine_arrecadacao.parquet`,
-      fomento_fluxos_financeiros: `${HF}/fomento_fluxos_financeiros.parquet`,
-      renuncia_fiscal:          `${HF}/renuncia_fiscal.parquet`,
-      fsa_atas_festivais:       `${HF}/fsa_atas_festivais.parquet`,
-      fsa_atas_resultados:      `${HF}/fsa_atas_resultados.parquet`,
-      embrafilme_exibicao_territorio_ano: `${HF}/embrafilme_exibicao_territorio_ano.parquet`,
-      pib_audiovisual_total_ano: `${HF}/pib_audiovisual_total_ano.parquet`,
-      pib_audiovisual_atividade_ano: `${HF}/pib_audiovisual_atividade_ano.parquet`,
-      rais_emprego_audiovisual_total_ano: `${HF}/rais_emprego_audiovisual_total_ano.parquet`,
-      rais_emprego_audiovisual_subclasse_ano: `${HF}/rais_emprego_audiovisual_subclasse_ano.parquet`,
-      comercio_exterior_servicos_audiovisuais_total_ano: `${HF}/comercio_exterior_servicos_audiovisuais_total_ano.parquet`,
-      comercio_exterior_servicos_audiovisuais_servico_ano: `${HF}/comercio_exterior_servicos_audiovisuais_servico_ano.parquet`,
-      comex_bens_audiovisuais_fontes: `${HF}/comex_bens_audiovisuais_fontes.parquet`,
-      diversidade_audiovisual_emprego_sexo_ano: `${HF}/diversidade_audiovisual_emprego_sexo_ano.parquet`,
-      diversidade_audiovisual_emprego_raca_ano: `${HF}/diversidade_audiovisual_emprego_raca_ano.parquet`,
-      bilheteria_europa:        `${HF}/bilheteria_europa.parquet`,
-    };
-    for (const [name, url] of Object.entries(views)) {
-      await conn.query(`CREATE OR REPLACE VIEW ${name} AS SELECT * FROM '${url}'`);
+    // Pre-register only the tables used by curated "Conexões" cards;
+    // the Builder registers tables lazily as they get added to the trail.
+    const eagerViews = [
+      'obras','diretores_obras','produtores_obras','bilheteria_por_filme_ano',
+      'fomento_fsa','condecine_arrecadacao','fomento_fluxos_financeiros',
+      'renuncia_fiscal','fsa_atas_festivais','fsa_atas_resultados',
+      'embrafilme_exibicao_territorio_ano','bilheteria_europa',
+    ];
+    for (const name of eagerViews) {
+      await conn.query(`CREATE OR REPLACE VIEW ${name} AS SELECT * FROM '${HF}/${name}.parquet'`);
+      registeredViews.add(name);
     }
 
     dot.className = 'tdot tdot--ok';
-    statusEl.textContent = `${Object.keys(views).length} tabelas prontas`;
+    statusEl.textContent = `${BUILDER_DATA.catalog.length} datasets · ${eagerViews.length} prontos · resto carrega sob demanda`;
     ready = true;
     renderCards();
-    renderFlTablePills();
+    renderBuilder();
   } catch (e) {
     dot.className = 'tdot tdot--err';
     statusEl.textContent = 'Erro ao iniciar: ' + e.message;
@@ -625,14 +663,14 @@ const viewTable  = document.getElementById('view-table');
 
 // ── MODE TABS ──────────────────────────────────────────────────
 document.getElementById('mtab-conexoes').addEventListener('click', () => switchMode('conexoes'));
-document.getElementById('mtab-campos').addEventListener('click',   () => switchMode('campos'));
+document.getElementById('mtab-builder').addEventListener('click',  () => switchMode('builder'));
 
 function switchMode(mode) {
   appMode = mode;
   document.getElementById('mtab-conexoes').classList.toggle('mtab--active', mode === 'conexoes');
-  document.getElementById('mtab-campos').classList.toggle('mtab--active', mode === 'campos');
+  document.getElementById('mtab-builder').classList.toggle('mtab--active', mode === 'builder');
   document.getElementById('panel-conexoes').style.display = mode === 'conexoes' ? 'block' : 'none';
-  document.getElementById('panel-campos').style.display   = mode === 'campos'   ? 'block' : 'none';
+  document.getElementById('panel-builder').style.display  = mode === 'builder'  ? 'block' : 'none';
   refBar.style.display = mode === 'conexoes' ? 'flex' : 'none';
   resArea.style.display = 'none';
   sqlPanel.style.display = 'none';
@@ -693,7 +731,7 @@ async function runQuery() {
     const search = refSearch.value.trim();
     sql = activeCrz.buildSQL(dim, metric, search);
   } else {
-    sql = buildCamposSQL();
+    sql = await buildBuilderSQL();
     if (!sql) return;
   }
 
@@ -971,8 +1009,413 @@ btnCsv.addEventListener('click', async () => {
   }
 });
 
-// ── CAMPOS LIVRES ──────────────────────────────────────────────
-function renderFlTablePills() {
+// ── REPORT BUILDER ─────────────────────────────────────────────
+//  Three-column UI: catalog (left) · trail (center) · aggregation (right)
+//  Driven by BUILDER_DATA (loaded from joins.yaml at build time).
+
+const BUILDER_KEY_COLORS = {
+  CPB:'#dc2626',CRT:'#ea580c',ROE:'#f59e0b',SALIC:'#7c3aed',CONTRATO:'#9333ea',
+  PROCESSO:'#a855f7',REG_ANCINE:'#0891b2',CNPJ:'#0284c7',CPF:'#0ea5e9',
+  CNAE:'#14b8a6',GRUPO_ECON:'#10b981',PRODUTORA:'#84cc16',DISTRIBUIDORA:'#65a30d',
+  EXIBIDORA:'#4d7c0f',TITULO_OBRA:'#e11d48',MUNICIPIO:'#94a3b8',UF:'#64748b',
+  GENERO:'#a78bfa',CLASSIFICACAO:'#8b5cf6',PAIS:'#cbd5e1',ANO:'#94a3b8',
+};
+
+function bridgeBetween(a, b) {
+  if (!a || !b) return null;
+  return BUILDER_DATA.bridges.find(br =>
+    (br.tables[0] === a && br.tables[1] === b) ||
+    (br.tables[0] === b && br.tables[1] === a)
+  ) || null;
+}
+
+function renderBuilder() {
+  renderBuilderKeyFilters();
+  renderBuilderCountryFilters();
+  renderBuilderCatalog();
+  renderBuilderTrail();
+}
+
+function renderBuilderKeyFilters() {
+  const root = document.getElementById('bldr-key-filters');
+  if (!root) return;
+  const allKeys = Array.from(new Set(BUILDER_DATA.catalog.flatMap(d => d.keys)));
+  const strongFirst = allKeys.filter(k => STRONG_KEYS_SET.has(k)).sort();
+  const weakAfter   = allKeys.filter(k => !STRONG_KEYS_SET.has(k)).sort();
+  const all = ['all', ...strongFirst, ...weakAfter];
+  root.innerHTML = all.map(k => {
+    const label = k === 'all' ? 'todas' : k;
+    const active = (builderActiveKey === null && k === 'all') || builderActiveKey === k;
+    const color = k === 'all' ? '#999' : (BUILDER_KEY_COLORS[k] || '#999');
+    return `<button class="bldr-chip${active ? ' bldr-chip--on' : ''}" data-key="${k}"><span class="bldr-dot" style="background:${color}"></span>${label}</button>`;
+  }).join('');
+  root.querySelectorAll('.bldr-chip').forEach(b => b.onclick = () => {
+    const k = b.dataset.key;
+    builderActiveKey = k === 'all' ? null : k;
+    renderBuilderKeyFilters();
+    renderBuilderCatalog();
+  });
+}
+
+function renderBuilderCountryFilters() {
+  const root = document.getElementById('bldr-country-filters');
+  if (!root) return;
+  const countries = ['all','BR','AR','UY','FR','UK','EU'];
+  const FILL = { BR:'#007a3c', AR:'#2d70c4', UY:'#b07d0a', FR:'#1f3bb8', UK:'#5a2244', EU:'#1f3bb8' };
+  root.innerHTML = countries.map(c => {
+    const active = (builderActiveCountry === null && c === 'all') || builderActiveCountry === c;
+    const color = c === 'all' ? '#999' : FILL[c];
+    return `<button class="bldr-chip${active ? ' bldr-chip--on' : ''}" data-country="${c}"><span class="bldr-dot" style="background:${color}"></span>${c === 'all' ? 'todos' : c}</button>`;
+  }).join('');
+  root.querySelectorAll('.bldr-chip').forEach(b => b.onclick = () => {
+    const c = b.dataset.country;
+    builderActiveCountry = c === 'all' ? null : c;
+    renderBuilderCountryFilters();
+    renderBuilderCatalog();
+  });
+}
+
+function renderBuilderCatalog() {
+  const root = document.getElementById('bldr-cat-list');
+  if (!root) return;
+  const q = builderSearch.toLowerCase();
+  const filtered = BUILDER_DATA.catalog.filter(d => {
+    if (builderActiveKey && !d.keys.includes(builderActiveKey)) return false;
+    if (builderActiveCountry && d.country !== builderActiveCountry) return false;
+    if (q && !d.title.toLowerCase().includes(q) && !d.table.toLowerCase().includes(q) && !d.slug.toLowerCase().includes(q)) return false;
+    return true;
+  });
+  // group by country
+  const byCountry = {};
+  for (const d of filtered) (byCountry[d.country] ??= []).push(d);
+  const COUNTRY_NAMES = { BR:'Brasil', AR:'Argentina', UY:'Uruguai', FR:'França', UK:'Reino Unido', EU:'Europa' };
+  const FILL = { BR:'#007a3c', AR:'#2d70c4', UY:'#b07d0a', FR:'#1f3bb8', UK:'#5a2244', EU:'#1f3bb8' };
+  const COUNTRY_ORDER = ['BR','AR','UY','FR','UK','EU'];
+  let html = '';
+  for (const c of COUNTRY_ORDER) {
+    const items = byCountry[c];
+    if (!items?.length) continue;
+    html += `<div class="bldr-cat-group">
+      <div class="bldr-cat-grouphead" style="border-left-color:${FILL[c]}">${COUNTRY_NAMES[c]} <span class="bldr-cat-count">${items.length}</span></div>`;
+    items.sort((a,b)=>a.title.localeCompare(b.title)).forEach(d => {
+      const inTrail = builderTables.some(t => t.table === d.table);
+      const keysHtml = d.keys.slice(0,5).map(k =>
+        `<span class="bldr-keypill" style="border-color:${BUILDER_KEY_COLORS[k] || '#999'};color:${BUILDER_KEY_COLORS[k] || '#999'}">${k}</span>`
+      ).join('');
+      html += `<button class="bldr-cat-item${inTrail ? ' bldr-cat-item--in' : ''}" data-table="${d.table}" title="${d.slug}">
+        <div class="bldr-cat-title">${d.title}</div>
+        <div class="bldr-cat-keys">${keysHtml || '<span class="bldr-cat-nokeys">— sem chaves de junção</span>'}</div>
+      </button>`;
+    });
+    html += `</div>`;
+  }
+  if (!html) html = '<p class="bldr-empty">Nenhum dataset com esses filtros.</p>';
+  root.innerHTML = html;
+  root.querySelectorAll('.bldr-cat-item').forEach(b => b.onclick = () => addToTrail(b.dataset.table));
+}
+
+async function addToTrail(table) {
+  if (builderTables.some(t => t.table === table)) return; // already in
+  const alias = aliasFor(table);
+  builderTables.push({ table, alias });
+  // ensure DuckDB view for it
+  if (ready && !registeredViews.has(table)) {
+    try {
+      await conn.query(`CREATE OR REPLACE VIEW ${table} AS SELECT * FROM '${HF}/${table}.parquet'`);
+      registeredViews.add(table);
+    } catch (e) {
+      console.warn('view register failed for', table, e);
+    }
+  }
+  // fetch columns once
+  if (!builderColCache[table] && ready) {
+    try {
+      const res = await conn.query(`DESCRIBE SELECT * FROM ${table}`);
+      builderColCache[table] = res.toArray().map(r => ({ name: String(r.column_name), type: String(r.column_type) }));
+    } catch (e) {
+      builderColCache[table] = [];
+    }
+  }
+  renderBuilder();
+  renderAggPane();
+}
+
+function removeFromTrail(table) {
+  builderTables = builderTables.filter(t => t.table !== table);
+  // clean group-by / metrics / filters that referenced this table
+  if (builderGroupBy && builderGroupBy.startsWith(table + '.')) builderGroupBy = '';
+  builderMetrics = builderMetrics.filter(m => !m.col || m.col === '*' || !m.col.startsWith(table + '.'));
+  builderFilters = builderFilters.filter(f => !f.col?.startsWith(table + '.'));
+  renderBuilder();
+  renderAggPane();
+}
+
+function renderBuilderTrail() {
+  const root = document.getElementById('bldr-trail-list');
+  const warn = document.getElementById('bldr-trail-warnings');
+  if (!root) return;
+  if (builderTables.length === 0) {
+    root.innerHTML = '<p class="bldr-empty">Clique num dataset à esquerda para começar.</p>';
+    warn.innerHTML = '';
+    return;
+  }
+  let html = '';
+  let unreachable = [];
+  for (let i = 0; i < builderTables.length; i++) {
+    const t = builderTables[i];
+    const meta = BUILDER_DATA.catalog.find(c => c.table === t.table);
+    let bridgeHtml = '';
+    if (i > 0) {
+      // find best bridge with any prior
+      let best = null;
+      for (let j = 0; j < i; j++) {
+        const b = bridgeBetween(t.table, builderTables[j].table);
+        if (b && (!best || (b.weight ?? 0) > (best.b.weight ?? 0))) best = { b, prev: builderTables[j].table };
+      }
+      if (!best) {
+        unreachable.push(t.table);
+        bridgeHtml = `<div class="bldr-bridge bldr-bridge--err">⚠ sem ponte direta com os datasets anteriores</div>`;
+      } else {
+        const keys = best.b.via_keys.map(k =>
+          `<span class="bldr-keypill" style="border-color:${BUILDER_KEY_COLORS[k]||'#999'};color:${BUILDER_KEY_COLORS[k]||'#999'}">${k}</span>`
+        ).join('');
+        bridgeHtml = `<div class="bldr-bridge">↑ junta com <strong>${best.prev}</strong> via ${keys}</div>`;
+      }
+    }
+    html += `${bridgeHtml}
+      <div class="bldr-trail-item">
+        <span class="bldr-trail-alias">${t.alias}</span>
+        <span class="bldr-trail-name">${meta?.title || t.table}</span>
+        <button class="bldr-trail-rm" data-table="${t.table}" title="remover">×</button>
+      </div>`;
+  }
+  root.innerHTML = html;
+  root.querySelectorAll('.bldr-trail-rm').forEach(b => b.onclick = () => removeFromTrail(b.dataset.table));
+  warn.innerHTML = unreachable.length
+    ? `<div class="bldr-warn">⚠ Os datasets <strong>${unreachable.join(', ')}</strong> não têm chave em comum com os anteriores. O SQL gerado vai produzir produto cartesiano — adicione um dataset-ponte ou remova-os.</div>`
+    : '';
+}
+
+function renderAggPane() {
+  const pane = document.getElementById('bldr-agg-pane');
+  if (!pane) return;
+  pane.style.display = builderTables.length > 0 ? 'flex' : 'none';
+  if (!builderTables.length) return;
+
+  // group-by dropdown: all columns of all selected tables
+  const gb = document.getElementById('bldr-groupby');
+  let opts = '<option value="">— selecione —</option>';
+  for (const t of builderTables) {
+    const cols = builderColCache[t.table] || [];
+    if (cols.length === 0) continue;
+    opts += `<optgroup label="${t.alias} · ${t.table}">`;
+    for (const c of cols) {
+      const v = `${t.table}.${c.name}`;
+      opts += `<option value="${v}"${v === builderGroupBy ? ' selected' : ''}>${c.name}  ·  ${c.type}</option>`;
+    }
+    opts += '</optgroup>';
+  }
+  gb.innerHTML = opts;
+  gb.onchange = () => { builderGroupBy = gb.value; };
+
+  // metrics
+  renderBuilderMetrics();
+  renderBuilderFilters();
+}
+
+function renderBuilderMetrics() {
+  const root = document.getElementById('bldr-metrics');
+  if (!root) return;
+  if (builderMetrics.length === 0) {
+    // default: COUNT(*) suggestion
+    root.innerHTML = '<p class="bldr-empty">Nenhuma métrica. Clique em "+ adicionar métrica" — ou execute como está pra ver COUNT(*).</p>';
+    return;
+  }
+  const numericCols = builderTables.flatMap(t => {
+    const cs = builderColCache[t.table] || [];
+    return cs.filter(c => /int|bigint|double|float|decimal|num/i.test(c.type)).map(c => `${t.table}.${c.name}`);
+  });
+  root.innerHTML = builderMetrics.map((m, i) => {
+    const colOpts = m.op === 'COUNT' ? '<option value="*">*</option>' : numericCols.map(c => `<option value="${c}"${c === m.col ? ' selected' : ''}>${c}</option>`).join('');
+    return `<div class="bldr-metric-row">
+      <select class="bldr-mselect" data-i="${i}" data-f="op">
+        ${['SUM','COUNT','COUNT_DISTINCT','AVG','MIN','MAX'].map(op => `<option value="${op}"${op === m.op ? ' selected' : ''}>${op.replace('_',' ')}</option>`).join('')}
+      </select>
+      <select class="bldr-mselect" data-i="${i}" data-f="col">${colOpts}</select>
+      <button class="bldr-trail-rm" data-i="${i}" data-rm="m">×</button>
+    </div>`;
+  }).join('');
+  root.querySelectorAll('.bldr-mselect').forEach(el => el.onchange = () => {
+    const m = builderMetrics[+el.dataset.i];
+    m[el.dataset.f] = el.value;
+    if (el.dataset.f === 'op') {
+      if (m.op === 'COUNT') m.col = '*';
+      else if (m.col === '*') m.col = '';
+      renderBuilderMetrics();
+    }
+  });
+  root.querySelectorAll('[data-rm="m"]').forEach(el => el.onclick = () => {
+    builderMetrics.splice(+el.dataset.i, 1); renderBuilderMetrics();
+  });
+}
+
+function renderBuilderFilters() {
+  const root = document.getElementById('bldr-filter-rows');
+  if (!root) return;
+  if (builderFilters.length === 0) { root.innerHTML = ''; return; }
+  const allCols = builderTables.flatMap(t => (builderColCache[t.table] || []).map(c => `${t.table}.${c.name}`));
+  root.innerHTML = builderFilters.map((f, i) => {
+    const colOpts = allCols.map(c => `<option value="${c}"${c === f.col ? ' selected' : ''}>${c}</option>`).join('');
+    const needsVal = f.op !== 'IS NOT NULL' && f.op !== 'IS NULL';
+    return `<div class="bldr-metric-row">
+      <select class="bldr-mselect" data-i="${i}" data-f="col">${colOpts}</select>
+      <select class="bldr-mselect bldr-mselect--op" data-i="${i}" data-f="op">
+        ${[['=','='],['!=','≠'],['ILIKE','contém'],['>','>'],['<','<'],['IS NOT NULL','não nulo']].map(([v,l])=>`<option value="${v}"${v===f.op?' selected':''}>${l}</option>`).join('')}
+      </select>
+      ${needsVal ? `<input class="bldr-finput" data-i="${i}" value="${esc(f.val ?? '')}" placeholder="valor">` : ''}
+      <button class="bldr-trail-rm" data-i="${i}" data-rm="f">×</button>
+    </div>`;
+  }).join('');
+  root.querySelectorAll('.bldr-mselect').forEach(el => el.onchange = () => {
+    builderFilters[+el.dataset.i][el.dataset.f] = el.value; renderBuilderFilters();
+  });
+  root.querySelectorAll('.bldr-finput').forEach(el => el.oninput = () => {
+    builderFilters[+el.dataset.i].val = el.value;
+  });
+  root.querySelectorAll('[data-rm="f"]').forEach(el => el.onclick = () => {
+    builderFilters.splice(+el.dataset.i, 1); renderBuilderFilters();
+  });
+}
+
+// Event listeners for the builder pane
+document.getElementById('bldr-search').addEventListener('input', e => {
+  builderSearch = e.target.value;
+  renderBuilderCatalog();
+});
+document.getElementById('bldr-add-metric').addEventListener('click', () => {
+  builderMetrics.push({ op: 'COUNT', col: '*' });
+  renderBuilderMetrics();
+});
+document.getElementById('bldr-add-filter').addEventListener('click', () => {
+  const allCols = builderTables.flatMap(t => (builderColCache[t.table] || []).map(c => `${t.table}.${c.name}`));
+  builderFilters.push({ col: allCols[0] || '', op: 'IS NOT NULL', val: '' });
+  renderBuilderFilters();
+});
+document.getElementById('bldr-limit-chips').addEventListener('click', e => {
+  const b = e.target.closest('.lchip'); if (!b) return;
+  builderLimit = +b.dataset.n;
+  document.querySelectorAll('#bldr-limit-chips .lchip').forEach(x => x.classList.remove('lchip--active'));
+  b.classList.add('lchip--active');
+});
+document.getElementById('bldr-run').addEventListener('click', () => {
+  if (!ready) return;
+  refBar.style.display = 'none';
+  resArea.style.display = 'block';
+  runQuery();
+});
+
+// ── BUILD BUILDER SQL ───────────────────────────────────────────
+async function buildBuilderSQL() {
+  if (builderTables.length === 0) return null;
+
+  const aliasFor_ = (table) => builderTables.find(t => t.table === table)?.alias || aliasFor(table);
+  const qualify = (ref) => {
+    // ref is "table.col" → "alias.col"
+    const [tb, col] = ref.split('.');
+    return `${aliasFor_(tb)}.${col}`;
+  };
+
+  // SELECT clause
+  const selectParts = [];
+  if (builderGroupBy) selectParts.push(`${qualify(builderGroupBy)} AS dim`);
+  if (builderMetrics.length === 0) {
+    selectParts.push('COUNT(*) AS total');
+  } else {
+    for (const m of builderMetrics) {
+      const colExpr = m.col === '*' ? '*' : (m.col ? qualify(m.col) : '*');
+      const op = m.op === 'COUNT_DISTINCT' ? `COUNT(DISTINCT ${colExpr})` : `${m.op}(${colExpr})`;
+      const alias = (m.op + '_' + (m.col || 'all')).toLowerCase().replace(/[^a-z0-9_]+/g,'_');
+      selectParts.push(`${op} AS ${alias}`);
+    }
+  }
+
+  // FROM + JOINs
+  const first = builderTables[0];
+  let fromClause = `FROM ${first.table} ${first.alias}`;
+  const inPlan = new Set([first.table]);
+  for (let i = 1; i < builderTables.length; i++) {
+    const t = builderTables[i];
+    // find best bridge to anything in plan
+    let best = null;
+    for (const prev of inPlan) {
+      const b = bridgeBetween(t.table, prev);
+      if (b && (!best || (b.weight ?? 0) > (best.b.weight ?? 0))) best = { b, prev };
+    }
+    if (!best) {
+      // unreachable → CROSS JOIN with a warning baked in
+      fromClause += `\nCROSS JOIN ${t.table} ${t.alias}  -- ! sem ponte com o anterior — produto cartesiano`;
+      inPlan.add(t.table);
+      continue;
+    }
+    // pick first strong key in via_keys
+    const joinKey = best.b.via_keys.find(k => STRONG_KEYS_SET.has(k)) || best.b.via_keys[0];
+    // find concrete columns on both sides exposing that key
+    const tMeta = BUILDER_DATA.catalog.find(c => c.table === t.table);
+    const pMeta = BUILDER_DATA.catalog.find(c => c.table === best.prev);
+    const tCols = tMeta?.key_cols?.[joinKey] || [];
+    const pCols = pMeta?.key_cols?.[joinKey] || [];
+    if (!tCols.length || !pCols.length) {
+      fromClause += `\nCROSS JOIN ${t.table} ${t.alias}  -- ! chave ${joinKey} sem coluna concreta`;
+      inPlan.add(t.table);
+      continue;
+    }
+    // simple equality join on the first column of each side (with normalization if applicable)
+    const lc = tCols[0]; const rc = pCols[0];
+    const norm = lc.normalize === 'titulo_norm' || rc.normalize === 'titulo_norm';
+    let cond;
+    if (norm) {
+      cond = `lower(regexp_replace(${t.alias}.${lc.col},'[^a-zA-Z0-9 ]','','g')) = lower(regexp_replace(${aliasFor_(best.prev)}.${rc.col},'[^a-zA-Z0-9 ]','','g'))`;
+    } else if (joinKey === 'CNPJ') {
+      cond = `regexp_replace(${t.alias}.${lc.col},'[^0-9]','','g') = regexp_replace(${aliasFor_(best.prev)}.${rc.col},'[^0-9]','','g')`;
+    } else {
+      cond = `${t.alias}.${lc.col} = ${aliasFor_(best.prev)}.${rc.col}`;
+    }
+    fromClause += `\nLEFT JOIN ${t.table} ${t.alias} ON ${cond}`;
+    inPlan.add(t.table);
+  }
+
+  // WHERE clauses
+  const whereClauses = builderFilters.map(f => {
+    if (!f.col) return null;
+    const c = qualify(f.col);
+    if (f.op === 'IS NOT NULL') return `${c} IS NOT NULL`;
+    if (f.op === 'IS NULL') return `${c} IS NULL`;
+    const isNum = f.val !== '' && !Number.isNaN(Number(f.val));
+    const v = isNum ? f.val : `'${esc(f.val)}'`;
+    if (f.op === 'ILIKE') return `${c} ILIKE '%${esc(f.val)}%'`;
+    return `${c} ${f.op} ${v}`;
+  }).filter(Boolean);
+  // also exclude null group key
+  if (builderGroupBy) whereClauses.unshift(`${qualify(builderGroupBy)} IS NOT NULL`);
+  const where = whereClauses.length ? `WHERE ${whereClauses.join('\n  AND ')}` : '';
+
+  // GROUP BY / ORDER BY / LIMIT
+  const groupBy = builderGroupBy ? `GROUP BY 1` : '';
+  const orderBy = builderGroupBy && builderMetrics.length ? `ORDER BY 2 DESC NULLS LAST` : (builderGroupBy ? `ORDER BY 1` : '');
+  const limitClause = builderLimit > 0 ? `LIMIT ${builderLimit}` : '';
+
+  return [
+    `SELECT ${selectParts.join(',\n       ')}`,
+    fromClause,
+    where,
+    groupBy,
+    orderBy,
+    limitClause,
+  ].filter(Boolean).join('\n');
+}
+// Legacy "Campos livres" code removed — replaced by Builder above.
+// __LEGACY_START__ to __LEGACY_END__ is dead code wrapped to keep diff clean.
+/* __LEGACY_START__
   const container = document.getElementById('fl-table-pills');
   container.innerHTML = TABLE_META.map(m =>
     `<button class="fl-tbl-pill" data-id="${m.id}" style="border-color:${m.color};color:${m.color}">${m.label}</button>`
@@ -1215,6 +1658,7 @@ LEFT JOIN fsa_atas_resultados ar
   if (joins.length) from += '\n' + joins.join('\n');
   return { from, ctes };
 }
+__LEGACY_END__ */
 </script>
 
 <style is:global>
@@ -1636,5 +2080,182 @@ LEFT JOIN fsa_atas_resultados ar
   .ref-bar { gap: 10px; }
   .ref-select, .ref-input { min-width: unset; width: 100%; }
   .fl-cols-area { grid-template-columns: 1fr; }
+}
+
+/* ── REPORT BUILDER ─────────────────────────────────────────── */
+.bldr {
+  display: grid;
+  grid-template-columns: 280px 1fr 320px;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  min-height: 600px;
+  margin-bottom: 32px;
+}
+.bldr-cat, .bldr-trail, .bldr-agg {
+  background: var(--bg);
+  padding: 16px 14px;
+  overflow-y: auto;
+  max-height: 78vh;
+}
+.bldr-cat { background: var(--bg2); }
+.bldr-agg { background: var(--surface2); display: flex; flex-direction: column; gap: 14px; }
+.bldr-h {
+  font-family: var(--font-m); font-size: 10px; font-weight: 600;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 12px;
+}
+.bldr-mini-label {
+  font-family: var(--font-m); font-size: 9.5px;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: var(--dim);
+}
+.bldr-search {
+  width: 100%;
+  font-family: var(--font-s); font-size: 12.5px;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border); border-radius: var(--r);
+  padding: 7px 10px; outline: none; margin-bottom: 10px;
+}
+.bldr-search:focus { border-color: var(--br); }
+.bldr-cat-filters {
+  display: flex; align-items: flex-start; gap: 6px;
+  margin-bottom: 8px; flex-wrap: wrap;
+}
+.bldr-key-filters, .bldr-country-filters { display: flex; flex-wrap: wrap; gap: 3px; }
+.bldr-chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-family: var(--font-m); font-size: 9.5px; font-weight: 500;
+  background: var(--surface); color: var(--muted);
+  border: 1px solid var(--border); border-radius: 999px;
+  padding: 2px 7px 2px 5px; cursor: pointer;
+  transition: all .12s;
+}
+.bldr-chip:hover { border-color: var(--border2); color: var(--text); }
+.bldr-chip--on { color: var(--text); border-color: var(--text); }
+.bldr-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.bldr-cat-list { display: flex; flex-direction: column; gap: 12px; margin-top: 4px; }
+.bldr-cat-group { display: flex; flex-direction: column; gap: 2px; }
+.bldr-cat-grouphead {
+  font-family: var(--font-m); font-size: 9.5px; font-weight: 600;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: var(--muted);
+  border-left: 3px solid;
+  padding: 3px 0 3px 8px; margin-bottom: 4px;
+}
+.bldr-cat-count {
+  color: var(--dim); font-weight: 400; margin-left: 4px;
+}
+.bldr-cat-item {
+  display: flex; flex-direction: column; gap: 4px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--r);
+  padding: 7px 10px; cursor: pointer; text-align: left;
+  transition: all .12s; width: 100%;
+}
+.bldr-cat-item:hover { border-color: var(--br); background: var(--surface2); }
+.bldr-cat-item--in {
+  background: color-mix(in srgb, var(--br) 8%, var(--surface));
+  border-color: var(--br);
+}
+.bldr-cat-title {
+  font-family: var(--font-s); font-size: 12px; font-weight: 500;
+  color: var(--text); line-height: 1.3;
+}
+.bldr-cat-keys { display: flex; flex-wrap: wrap; gap: 3px; }
+.bldr-keypill {
+  font-family: var(--font-m); font-size: 8.5px; font-weight: 600;
+  padding: 1px 5px; border: 1px solid; border-radius: 2px;
+  letter-spacing: .04em;
+}
+.bldr-cat-nokeys {
+  font-family: var(--font-m); font-size: 9.5px;
+  color: var(--dim); font-style: italic;
+}
+
+/* Trail */
+.bldr-trail-list { display: flex; flex-direction: column; gap: 6px; }
+.bldr-trail-item {
+  display: grid; grid-template-columns: 28px 1fr 24px; align-items: center; gap: 8px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--r);
+  padding: 8px 10px;
+}
+.bldr-trail-alias {
+  font-family: var(--font-m); font-size: 11px; font-weight: 700;
+  color: var(--br); text-align: center;
+}
+.bldr-trail-name {
+  font-family: var(--font-s); font-size: 13px; color: var(--text);
+}
+.bldr-trail-rm {
+  background: transparent; border: none; color: var(--dim);
+  font-size: 16px; cursor: pointer; line-height: 1;
+  padding: 2px 6px; border-radius: 3px;
+}
+.bldr-trail-rm:hover { background: var(--bg2); color: #e8341a; }
+.bldr-bridge {
+  font-family: var(--font-m); font-size: 10.5px;
+  color: var(--muted); padding: 4px 14px;
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+}
+.bldr-bridge strong { color: var(--text); font-family: var(--font-m); }
+.bldr-bridge--err { color: #c8920a; }
+.bldr-warn {
+  background: color-mix(in srgb, #c8920a 12%, var(--surface));
+  border: 1px solid color-mix(in srgb, #c8920a 30%, var(--border));
+  border-radius: var(--r);
+  padding: 10px 14px;
+  font-size: 12px; color: var(--text);
+  margin-top: 14px;
+}
+.bldr-warn strong { font-weight: 700; }
+.bldr-empty {
+  font-size: 12.5px; color: var(--muted);
+  line-height: 1.55; margin: 0;
+}
+
+/* Aggregation pane */
+.bldr-agg-block { display: flex; flex-direction: column; gap: 6px; }
+.bldr-select {
+  font-family: var(--font-m); font-size: 11.5px;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border); border-radius: var(--r);
+  padding: 7px 8px; cursor: pointer; outline: none;
+}
+.bldr-select:focus { border-color: var(--br); }
+.bldr-metrics { display: flex; flex-direction: column; gap: 6px; }
+.bldr-metric-row {
+  display: grid; grid-template-columns: auto 1fr auto auto; gap: 5px; align-items: center;
+}
+.bldr-metric-row .bldr-finput {
+  font-family: var(--font-m); font-size: 11px;
+  border: 1px solid var(--border); background: var(--surface); color: var(--text);
+  padding: 6px 8px; border-radius: var(--r); outline: none;
+  min-width: 0;
+}
+.bldr-metric-row .bldr-mselect {
+  font-family: var(--font-m); font-size: 10.5px;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border); border-radius: var(--r);
+  padding: 5px 6px; min-width: 0;
+}
+.bldr-metric-row .bldr-mselect--op { max-width: 80px; }
+.bldr-add-metric {
+  font-family: var(--font-m); font-size: 10.5px; font-weight: 500;
+  background: transparent; color: var(--br);
+  border: 1px dashed var(--border2); border-radius: var(--r);
+  padding: 6px 10px; cursor: pointer;
+  transition: all .12s;
+}
+.bldr-add-metric:hover { background: var(--bg2); border-color: var(--br); }
+
+@media (max-width: 1100px) {
+  .bldr { grid-template-columns: 240px 1fr; }
+  .bldr-agg { display: none !important; }
+}
+@media (max-width: 720px) {
+  .bldr { grid-template-columns: 1fr; }
+  .bldr-cat { max-height: 280px; }
 }
 </style>

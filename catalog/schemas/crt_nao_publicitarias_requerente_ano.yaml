@@ -1,0 +1,31 @@
+table: crt_nao_publicitarias_requerente_ano
+description: "CRT nao publicitarias agregados por CNPJ requerente x ano."
+columns:
+  - name: cnpj_requerente
+    type: string
+    nullable: true
+    description: "Cnpj requerente"
+  - name: requerente
+    type: string
+    nullable: true
+    description: "Requerente"
+  - name: uf
+    type: string
+    nullable: true
+    description: "Uf"
+  - name: ano
+    type: integer
+    nullable: true
+    description: "Ano"
+  - name: n_crts
+    type: integer
+    nullable: true
+    description: "N crts"
+  - name: n_obras_unicas
+    type: integer
+    nullable: true
+    description: "N obras unicas"
+  - name: n_tipos
+    type: integer
+    nullable: true
+    description: "N tipos"

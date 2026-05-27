@@ -1,0 +1,27 @@
+table: crt_publicitarias_segmento_ano
+description: "CRT publicitarias agregados por segmento x tipo_publicidade x ano."
+columns:
+  - name: segmento
+    type: string
+    nullable: true
+    description: "Segmento"
+  - name: tipo_publicidade
+    type: string
+    nullable: true
+    description: "Tipo publicidade"
+  - name: ano
+    type: integer
+    nullable: true
+    description: "Ano"
+  - name: n_crts
+    type: integer
+    nullable: true
+    description: "N crts"
+  - name: n_anunciantes
+    type: integer
+    nullable: true
+    description: "N anunciantes"
+  - name: n_agencias
+    type: integer
+    nullable: true
+    description: "N agencias"

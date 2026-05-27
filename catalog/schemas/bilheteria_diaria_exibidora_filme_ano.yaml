@@ -1,0 +1,47 @@
+table: bilheteria_diaria_exibidora_filme_ano
+description: "Bilheteria diaria agregada por filme + ano + CNPJ exibidor. Publico total, sessoes, complexos, municipios."
+columns:
+  - name: cpb_roe
+    type: string
+    nullable: true
+    description: "Cpb roe"
+  - name: ano
+    type: integer
+    nullable: true
+    description: "Ano"
+  - name: titulo_brasil
+    type: string
+    nullable: true
+    description: "Titulo brasil"
+  - name: titulo_original
+    type: string
+    nullable: true
+    description: "Titulo original"
+  - name: pais_obra
+    type: string
+    nullable: true
+    description: "Pais obra"
+  - name: cnpj_exibidor
+    type: string
+    nullable: true
+    description: "Cnpj exibidor"
+  - name: exibidora
+    type: string
+    nullable: true
+    description: "Exibidora"
+  - name: publico_total
+    type: number
+    nullable: true
+    description: "Publico total"
+  - name: sessoes
+    type: integer
+    nullable: true
+    description: "Sessoes"
+  - name: n_complexos
+    type: integer
+    nullable: true
+    description: "N complexos"
+  - name: n_municipios
+    type: integer
+    nullable: true
+    description: "N municipios"

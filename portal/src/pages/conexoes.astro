@@ -1,0 +1,610 @@
+---
+import Base from "../layouts/Base.astro";
+import grafoData from "../data/grafo.json";
+
+const nodesCount = grafoData.nodes.length;
+const edgesCount = grafoData.edges.length;
+const grafoJson = JSON.stringify(grafoData);
+---
+
+<Base
+  title="Conexões · Como os datasets se ligam"
+  description="Grafo interativo das chaves de junção entre os 112 datasets do audiovisual brasileiro e internacional."
+>
+
+<div class="cnx">
+
+  <!-- ── STATUS BAR ──────────────────────────────────────────── -->
+  <div class="cnx-bar">
+    <span class="cnx-ey">RIDAB · CONEXÕES</span>
+    <div class="cnx-status-row">
+      <span class="cdot cdot--ok"></span>
+      <span><strong>{nodesCount}</strong> datasets · <strong>{edgesCount}</strong> conexões totais · <span id="visible-info">…</span></span>
+    </div>
+  </div>
+
+  <!-- ── DOCS / HEADER ───────────────────────────────────────── -->
+  <div class="cnx-intro">
+    <h1 class="cnx-h">Como os datasets se ligam</h1>
+    <p class="cnx-sub">Cada nó é um dataset; cada linha é uma chave que dois datasets compartilham (CPB, CNPJ, SALIC, ROE…). Clique num dataset para isolar seus vizinhos diretos. Clique numa conexão para ver as colunas exatas que fazem a ligação.</p>
+  </div>
+
+  <!-- ── MAIN LAYOUT ─────────────────────────────────────────── -->
+  <div class="cnx-app">
+
+    <!-- LEFT: FILTERS -->
+    <aside class="cnx-side">
+      <div class="cnx-section">
+        <label class="cnx-label">Buscar dataset</label>
+        <input type="text" id="search" placeholder="ex.: bilheteria, fsa, BFI…" autocomplete="off" />
+      </div>
+
+      <div class="cnx-section">
+        <div class="cnx-label-row">
+          <span class="cnx-label">Chaves de junção</span>
+          <div class="cnx-mini-actions">
+            <button id="only-strong">só fortes</button>
+            <button id="all-keys">todas</button>
+          </div>
+        </div>
+        <div class="cnx-chips" id="legend"></div>
+      </div>
+
+      <div class="cnx-section">
+        <span class="cnx-label">País</span>
+        <div class="cnx-chips" id="countries"></div>
+      </div>
+
+      <div class="cnx-section">
+        <span class="cnx-label">Layout</span>
+        <div class="cnx-mini-actions cnx-mini-actions--row">
+          <button data-layout="fcose">Orgânico</button>
+          <button data-layout="concentric">Concêntrico</button>
+          <button data-layout="cose">Físico</button>
+          <button id="reset">Recentrar</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- CENTER: CANVAS -->
+    <div class="cnx-canvas">
+      <div id="cy"></div>
+      <div class="cnx-hint">arraste o canvas · scroll para zoom · clique num nó ou aresta</div>
+    </div>
+
+    <!-- RIGHT: DETAIL -->
+    <aside class="cnx-side cnx-side--right" id="detail">
+      <div class="cnx-section">
+        <span class="cnx-label">Detalhes</span>
+        <p class="cnx-empty">
+          Clique num <strong>dataset</strong> pra ver as chaves que ele expõe e seus vizinhos diretos.
+          Clique numa <strong>aresta</strong> pra ver as colunas reais que conectam os dois datasets.
+        </p>
+      </div>
+    </aside>
+
+  </div>
+
+</div>
+
+</Base>
+
+<script define:vars={{ grafoJson }}>
+  window.__RIDAB_GRAFO__ = JSON.parse(grafoJson);
+</script>
+
+<script src="https://unpkg.com/cytoscape@3.30.2/dist/cytoscape.min.js" is:inline></script>
+<script src="https://unpkg.com/layout-base@2.0.1/layout-base.js" is:inline></script>
+<script src="https://unpkg.com/cose-base@2.2.0/cose-base.js" is:inline></script>
+<script src="https://unpkg.com/cytoscape-fcose@2.2.0/cytoscape-fcose.js" is:inline></script>
+
+<script is:inline>
+(() => {
+  const data = window.__RIDAB_GRAFO__;
+
+  // RIDAB country colors (matches global.css tokens)
+  const COUNTRY_FILL = {
+    BR:'#007a3c', AR:'#2d70c4', UY:'#b07d0a',
+    FR:'#1f3bb8', UK:'#5a2244', EU:'#1f3bb8',
+  };
+  const STRONG_KEYS = new Set(['CPB','CRT','ROE','SALIC','CONTRATO','PROCESSO','REG_ANCINE','CNPJ','CPF','GRUPO_ECON','CNAE','PRODUTORA','DISTRIBUIDORA','EXIBIDORA']);
+
+  // Adapt edge colors to lighter palette (RIDAB is light theme)
+  const KEY_COLOR = Object.assign({}, data.key_colors);
+
+  let cy, activeKeys = new Set(), activeCountries = new Set(), searchTerm = '';
+
+  const $ = id => document.getElementById(id);
+
+  function buildLegend(){
+    const counts = {};
+    for (const e of data.edges) counts[e.data.top_key] = (counts[e.data.top_key]||0)+1;
+    const order = Object.keys(data.key_weights).sort((a,b)=>(counts[b]||0)-(counts[a]||0));
+    const root = $('legend');
+    root.innerHTML = '';
+    for (const k of order){
+      const c = counts[k]||0;
+      const on = STRONG_KEYS.has(k);
+      if (on) activeKeys.add(k);
+      const el = document.createElement('button');
+      el.className = 'cchip';
+      el.dataset.key = k;
+      el.dataset.on  = on ? '1' : '0';
+      el.innerHTML = `<span class="cdot-key" style="background:${KEY_COLOR[k]}"></span>${k}<span class="ccount">${c}</span>`;
+      el.onclick = () => {
+        const cur = el.dataset.on === '1';
+        el.dataset.on = cur ? '0' : '1';
+        if (cur) activeKeys.delete(k); else activeKeys.add(k);
+        applyFilter();
+      };
+      root.appendChild(el);
+    }
+  }
+
+  function buildCountries(){
+    const root = $('countries');
+    root.innerHTML = '';
+    for (const [code,label] of Object.entries(data.countries)){
+      activeCountries.add(code);
+      const el = document.createElement('button');
+      el.className = 'cchip';
+      el.dataset.country = code;
+      el.dataset.on = '1';
+      el.innerHTML = `<span class="cdot-key" style="background:${COUNTRY_FILL[code]||'#999'}"></span>${label}`;
+      el.onclick = () => {
+        const cur = el.dataset.on === '1';
+        el.dataset.on = cur ? '0' : '1';
+        if (cur) activeCountries.delete(code); else activeCountries.add(code);
+        applyFilter();
+      };
+      root.appendChild(el);
+    }
+  }
+
+  function layoutCfg(name){
+    if (name === 'fcose') return {
+      name:'fcose', quality:'proof', randomize:true, animate:false,
+      nodeSeparation:80, idealEdgeLength:120, gravity:0.32, gravityRange:3.8,
+      nodeRepulsion:5000, edgeElasticity:0.45, numIter:2500,
+      packComponents:true, componentSpacing:130, padding:50,
+    };
+    if (name === 'concentric') return { name:'concentric', concentric: n=>n.degree(), levelWidth: ()=>2, padding: 40, spacingFactor: 1.6, animate:true };
+    if (name === 'cose') return { name:'cose', idealEdgeLength: 160, nodeOverlap: 30, animate:true, randomize:false, padding: 50 };
+    return { name:'grid' };
+  }
+
+  function buildGraph(){
+    cytoscape.use(window.cytoscapeFcose);
+    cy = window.cy = cytoscape({
+      container: $('cy'),
+      elements: { nodes: data.nodes, edges: data.edges },
+      minZoom: 0.15, maxZoom: 3,
+      style: [
+        { selector: 'node', style: {
+          'background-color': ele => COUNTRY_FILL[ele.data('country')] || '#a39c83',
+          'label': '',
+          'width':  ele => 11 + Math.min(16, ele.data('keys').length * 1.8),
+          'height': ele => 11 + Math.min(16, ele.data('keys').length * 1.8),
+          'border-width': 1.5,
+          'border-color': '#faf8ef',
+        }},
+        { selector: 'node.show-label', style: {
+          'label': 'data(label)',
+          'color': '#0a0906',
+          'font-family': 'JetBrains Mono',
+          'font-size': 8,
+          'font-weight': 500,
+          'text-outline-width': 2,
+          'text-outline-color': '#faf8ef',
+          'text-outline-opacity': 1,
+          'text-valign': 'bottom',
+          'text-margin-y': 4,
+          'text-wrap': 'wrap',
+          'text-max-width': 100,
+          'min-zoomed-font-size': 6,
+        }},
+        { selector: 'node:selected', style: {
+          'border-width': 3, 'border-color': '#0a0906',
+          'label': 'data(label)',
+          'color': '#0a0906',
+          'font-family': 'Bricolage Grotesque',
+          'font-size': 12, 'font-weight': 700,
+          'text-outline-width': 3, 'text-outline-color': '#faf8ef',
+          'text-valign': 'bottom', 'text-margin-y': 6,
+          'text-wrap': 'wrap', 'text-max-width': 140,
+          'z-index': 99,
+        }},
+        { selector: 'node.dim', style: { 'opacity': 0.22, 'text-opacity': 0 } },
+        { selector: 'node.hi', style: {
+          'border-width': 2.5, 'border-color': '#0a0906',
+          'label': 'data(label)',
+          'color': '#0a0906',
+          'font-family': 'JetBrains Mono',
+          'font-size': 10, 'font-weight': 600,
+          'text-outline-width': 2.5, 'text-outline-color': '#faf8ef',
+          'text-valign': 'bottom', 'text-margin-y': 4,
+          'text-wrap': 'wrap', 'text-max-width': 120,
+          'z-index': 50,
+        }},
+        { selector: 'edge', style: {
+          'line-color': 'data(color)',
+          'width': ele => 0.5 + Math.log2(1 + ele.data('weight')) * 0.4,
+          'curve-style': 'bezier',
+          'opacity': 0.32,
+        }},
+        { selector: 'edge.dim', style: { 'opacity': 0.05 } },
+        { selector: 'edge.hi',  style: { 'opacity': 0.95, 'width': ele => 1.5 + Math.log2(1 + ele.data('weight')) * 0.7 } },
+        { selector: 'edge:selected', style: { 'line-color': '#0a0906', 'opacity': 1, 'width': 3 } },
+      ],
+      layout: layoutCfg('fcose'),
+    });
+
+    cy.on('tap', 'node', evt => selectNode(evt.target));
+    cy.on('tap', 'edge', evt => selectEdge(evt.target));
+    cy.on('tap', e => { if (e.target === cy){ clearSelection(); } });
+    cy.on('zoom', () => updateLabelVisibility());
+    cy.on('layoutstop', () => { cy.fit(null, 40); updateLabelVisibility(); });
+  }
+
+  function updateLabelVisibility(){
+    if (!cy) return;
+    if (cy.zoom() >= 1.6) cy.nodes(':visible').addClass('show-label');
+    else cy.nodes().removeClass('show-label');
+  }
+
+  function applyFilter(){
+    cy.batch(()=>{
+      cy.edges().forEach(e => {
+        const okKey = activeKeys.has(e.data('top_key'));
+        const a = cy.getElementById(e.data('source')).data('country');
+        const b = cy.getElementById(e.data('target')).data('country');
+        const okCountry = activeCountries.has(a) && activeCountries.has(b);
+        e.style('display', (okKey && okCountry) ? 'element' : 'none');
+      });
+      cy.nodes().forEach(n => {
+        const okCountry = activeCountries.has(n.data('country'));
+        const matchSearch = !searchTerm
+          || n.data('label').toLowerCase().includes(searchTerm)
+          || n.data('table').toLowerCase().includes(searchTerm)
+          || n.data('slug').toLowerCase().includes(searchTerm);
+        n.style('display', (okCountry && matchSearch) ? 'element' : 'none');
+      });
+    });
+    updateBadges();
+  }
+
+  function updateBadges(){
+    const vn = cy.nodes(':visible').length;
+    const ve = cy.edges(':visible').length;
+    $('visible-info').innerHTML = `<strong>${vn}</strong> visíveis · <strong>${ve}</strong> conexões ativas`;
+  }
+
+  function selectNode(node){
+    clearSelection();
+    node.select();
+    const nbrs = node.connectedEdges(':visible').connectedNodes();
+    cy.nodes().not(nbrs).not(node).addClass('dim');
+    cy.edges().not(node.connectedEdges(':visible')).addClass('dim');
+    node.connectedEdges(':visible').addClass('hi');
+    nbrs.addClass('hi');
+    showNodeDetail(node);
+  }
+
+  function selectEdge(edge){
+    clearSelection();
+    edge.select();
+    cy.elements().not(edge).not(edge.source()).not(edge.target()).addClass('dim');
+    showEdgeDetail(edge);
+  }
+
+  function clearSelection(){
+    cy.elements().removeClass('dim hi');
+    cy.elements().unselect();
+    $('detail').innerHTML = `
+      <div class="cnx-section">
+        <span class="cnx-label">Detalhes</span>
+        <p class="cnx-empty">
+          Clique num <strong>dataset</strong> pra ver as chaves que ele expõe e seus vizinhos diretos.
+          Clique numa <strong>aresta</strong> pra ver as colunas reais que conectam os dois datasets.
+        </p>
+      </div>`;
+  }
+
+  function showNodeDetail(node){
+    const d = node.data();
+    const keysHtml = d.keys.map(k =>
+      `<span class="kpill" style="border-color:${KEY_COLOR[k]};color:${KEY_COLOR[k]}">${k}</span>`
+    ).join('');
+    const nbrs = node.connectedEdges(':visible').map(e => {
+      const other = e.source().id() === d.id ? e.target() : e.source();
+      return { id: other.id(), label: other.data('label'), country: other.data('country'), keys: e.data('keys') };
+    });
+    nbrs.sort((a,b)=>a.label.localeCompare(b.label));
+    const nbrHtml = nbrs.length === 0
+      ? '<p class="cnx-empty">Nenhum vizinho com os filtros atuais.</p>'
+      : nbrs.map(n =>
+          `<div class="cnx-nb" data-id="${n.id}">
+            <span class="cnx-nb-dot" style="background:${COUNTRY_FILL[n.country]||'#999'}"></span>
+            <span class="cnx-nb-label">${n.label}</span>
+            <span class="cnx-nb-via">${n.keys.slice(0,3).join(' · ')}</span>
+          </div>`).join('');
+    $('detail').innerHTML = `
+      <div class="cnx-section">
+        <span class="cnx-label">Dataset</span>
+        <h3 class="cnx-dtitle">${d.label}</h3>
+        <div class="cnx-dmeta">${d.country_label} · ${d.source_label || d.source_id || '—'} · ${d.columns_n} colunas</div>
+      </div>
+      <div class="cnx-section">
+        <p class="cnx-ddesc">${d.description || '—'}</p>
+      </div>
+      <div class="cnx-section">
+        <span class="cnx-label">Chaves expostas (${d.keys.length})</span>
+        <div class="cnx-kpills">${keysHtml || '<span class="cnx-empty">nenhuma chave forte detectada</span>'}</div>
+      </div>
+      <div class="cnx-section">
+        <span class="cnx-label">Vizinhos visíveis (${nbrs.length})</span>
+        <div class="cnx-nb-list">${nbrHtml}</div>
+      </div>
+    `;
+    $('detail').querySelectorAll('.cnx-nb').forEach(el => {
+      el.onclick = () => {
+        const n = cy.getElementById(el.dataset.id);
+        if (n.length){ cy.animate({ center:{eles:n}, zoom:1.2 }, {duration:400}); selectNode(n); }
+      };
+    });
+  }
+
+  function showEdgeDetail(edge){
+    const e = edge.data();
+    const a = edge.source().data();
+    const b = edge.target().data();
+    const blocks = e.keys.map(k => {
+      const colsA = (a.key_cols && a.key_cols[k]) || [];
+      const colsB = (b.key_cols && b.key_cols[k]) || [];
+      const fmtCols = arr => arr.length ? arr.map(c => `<code>${c}</code>`).join(' ') : '<em>(coluna-ano em wide format)</em>';
+      return `
+        <div class="cnx-keyblock">
+          <div class="cnx-kbhead">
+            <span class="cnx-kbdot" style="background:${KEY_COLOR[k]}"></span>${k}
+          </div>
+          <div class="cnx-kbside"><strong>${a.label}</strong><div>${fmtCols(colsA)}</div></div>
+          <div class="cnx-kbside"><strong>${b.label}</strong><div>${fmtCols(colsB)}</div></div>
+        </div>
+      `;
+    }).join('');
+    $('detail').innerHTML = `
+      <div class="cnx-section">
+        <span class="cnx-label">Conexão</span>
+        <h3 class="cnx-dtitle">${a.label}<br><span class="cnx-pair-sep">↔</span><br>${b.label}</h3>
+        <div class="cnx-dmeta">${e.keys.length} chave(s) compartilhada(s)</div>
+      </div>
+      ${blocks}
+    `;
+  }
+
+  function bindEvents(){
+    $('search').oninput = ev => { searchTerm = ev.target.value.trim().toLowerCase(); applyFilter(); };
+    document.querySelectorAll('[data-layout]').forEach(b => {
+      b.onclick = () => cy.layout(layoutCfg(b.dataset.layout)).run();
+    });
+    $('reset').onclick = () => { cy.fit(null, 40); };
+    $('only-strong').onclick = () => {
+      activeKeys = new Set([...STRONG_KEYS].filter(k => data.key_weights[k] !== undefined));
+      document.querySelectorAll('[data-key]').forEach(el => el.dataset.on = activeKeys.has(el.dataset.key) ? '1' : '0');
+      applyFilter();
+    };
+    $('all-keys').onclick = () => {
+      activeKeys = new Set(Object.keys(data.key_weights));
+      document.querySelectorAll('[data-key]').forEach(el => el.dataset.on = '1');
+      applyFilter();
+    };
+  }
+
+  buildLegend();
+  buildCountries();
+  buildGraph();
+  applyFilter();
+  bindEvents();
+})();
+</script>
+
+<style is:global>
+.cnx { max-width: var(--max-w); margin: 0 auto; padding: 0 var(--pad) 80px; }
+
+/* status bar — same pattern as transformar */
+.cnx-bar {
+  display: flex; align-items: center; gap: 16px;
+  padding: 14px 0; border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+.cnx-ey {
+  font-family: var(--font-m); font-size: 10px;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--muted);
+}
+.cnx-status-row {
+  font-family: var(--font-m); font-size: 11px; color: var(--dim);
+  display: flex; align-items: center; gap: 7px;
+}
+.cnx-status-row strong { color: var(--text); font-weight: 600; }
+.cdot { width: 7px; height: 7px; border-radius: 50%; background: var(--dim); flex-shrink: 0; }
+.cdot--ok { background: #007a3c; box-shadow: 0 0 6px rgba(0,122,60,.4); }
+
+/* intro */
+.cnx-intro { margin-bottom: 28px; }
+.cnx-h {
+  font-family: var(--font-d);
+  font-variation-settings: 'opsz' 16,'wdth' 90,'wght' 650;
+  font-size: clamp(28px, 4vw, 38px);
+  letter-spacing: -.025em; color: var(--text); margin: 0 0 8px;
+}
+.cnx-sub {
+  font-family: var(--font-s); font-size: 14.5px; color: var(--muted);
+  max-width: 760px; line-height: 1.55; margin: 0;
+}
+
+/* app grid */
+.cnx-app {
+  display: grid;
+  grid-template-columns: 260px 1fr 320px;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  min-height: 78vh;
+}
+
+.cnx-side {
+  background: var(--bg2);
+  padding: 18px 16px;
+  overflow-y: auto;
+  max-height: 78vh;
+}
+.cnx-side--right { background: var(--surface2); }
+
+.cnx-canvas {
+  background: var(--surface);
+  position: relative;
+  min-height: 78vh;
+}
+#cy { position: absolute; inset: 0; }
+.cnx-hint {
+  position: absolute; bottom: 12px; right: 16px;
+  font-family: var(--font-m); font-size: 10.5px; color: var(--dim);
+  background: rgba(255,255,255,.85); backdrop-filter: blur(4px);
+  padding: 5px 10px; border-radius: 3px; border: 1px solid var(--border);
+  pointer-events: none;
+}
+
+/* sidebar sections */
+.cnx-section { margin-bottom: 22px; }
+.cnx-section:last-child { margin-bottom: 0; }
+.cnx-label {
+  display: block;
+  font-family: var(--font-m); font-size: 9.5px;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--dim); margin-bottom: 8px;
+}
+.cnx-label-row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 8px;
+}
+.cnx-mini-actions { display: flex; gap: 4px; }
+.cnx-mini-actions--row { flex-wrap: wrap; }
+.cnx-mini-actions button {
+  font-family: var(--font-m); font-size: 10px; font-weight: 500;
+  background: transparent; color: var(--muted);
+  border: 1px solid var(--border); border-radius: 3px;
+  padding: 4px 8px; cursor: pointer; transition: all .12s;
+}
+.cnx-mini-actions button:hover { color: var(--text); border-color: var(--border2); background: var(--surface); }
+
+/* input */
+.cnx input[type=text] {
+  width: 100%;
+  font-family: var(--font-s); font-size: 13px;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border); border-radius: var(--r);
+  padding: 8px 12px; outline: none;
+}
+.cnx input[type=text]:focus { border-color: var(--br); }
+
+/* chips */
+.cnx-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.cchip {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--font-m); font-size: 10.5px; font-weight: 500;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border); border-radius: 999px;
+  padding: 4px 9px 4px 7px; cursor: pointer; user-select: none;
+  transition: all .12s;
+}
+.cchip:hover { border-color: var(--border2); }
+.cchip[data-on="1"] { background: var(--surface); border-color: var(--text); }
+.cchip[data-on="0"] { opacity: .4; }
+.cdot-key { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.ccount { color: var(--dim); font-size: 9.5px; font-variant-numeric: tabular-nums; margin-left: 2px; }
+
+/* detail panel */
+.cnx-empty { color: var(--muted); font-size: 12.5px; line-height: 1.55; margin: 0; }
+.cnx-empty strong { color: var(--text); font-weight: 600; }
+.cnx-dtitle {
+  font-family: var(--font-d);
+  font-variation-settings: 'opsz' 14,'wdth' 90,'wght' 600;
+  font-size: 17px; letter-spacing: -.018em;
+  color: var(--text); margin: 0 0 4px; line-height: 1.25;
+}
+.cnx-dmeta {
+  font-family: var(--font-m); font-size: 10px;
+  letter-spacing: .06em; text-transform: uppercase;
+  color: var(--dim);
+}
+.cnx-pair-sep {
+  font-family: var(--font-m); font-weight: 400;
+  color: var(--dim); font-size: 14px;
+  display: inline-block; padding: 4px 0;
+}
+.cnx-ddesc { font-size: 13px; color: var(--muted); line-height: 1.55; margin: 0; }
+.cnx-kpills { display: flex; flex-wrap: wrap; gap: 4px; }
+.kpill {
+  font-family: var(--font-m); font-size: 9.5px; font-weight: 600;
+  padding: 3px 8px; border: 1px solid; border-radius: 2px;
+  letter-spacing: .04em;
+}
+.cnx-nb-list { display: flex; flex-direction: column; gap: 0; }
+.cnx-nb {
+  display: grid;
+  grid-template-columns: 9px 1fr auto;
+  gap: 8px; align-items: center;
+  padding: 7px 0;
+  border-bottom: 1px dashed var(--border);
+  cursor: pointer;
+  font-size: 12.5px;
+  transition: color .1s;
+}
+.cnx-nb:last-child { border-bottom: none; }
+.cnx-nb:hover { color: var(--br); }
+.cnx-nb-dot { width: 9px; height: 9px; border-radius: 50%; }
+.cnx-nb-label { color: var(--text); }
+.cnx-nb-via {
+  font-family: var(--font-m); font-size: 9.5px;
+  color: var(--dim); letter-spacing: .04em;
+}
+
+/* edge-detail key blocks */
+.cnx-keyblock {
+  margin: 0 0 12px;
+  padding: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+}
+.cnx-kbhead {
+  display: flex; align-items: center; gap: 7px;
+  font-family: var(--font-m); font-size: 10px; font-weight: 600;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--text); margin-bottom: 8px;
+}
+.cnx-kbdot { width: 8px; height: 8px; border-radius: 50%; }
+.cnx-kbside {
+  font-size: 11.5px; line-height: 1.5; color: var(--muted);
+  margin-bottom: 6px;
+}
+.cnx-kbside strong { color: var(--text); font-weight: 600; font-family: var(--font-s); }
+.cnx-kbside code {
+  font-family: var(--font-m); font-size: 11px;
+  background: var(--bg2); padding: 1px 5px; border-radius: 2px;
+  color: var(--text);
+}
+.cnx-kbside em { color: var(--dim); font-style: normal; font-size: 11px; }
+
+/* responsive */
+@media (max-width: 1100px) {
+  .cnx-app { grid-template-columns: 220px 1fr; }
+  .cnx-side--right { display: none; }
+}
+@media (max-width: 720px) {
+  .cnx-app { grid-template-columns: 1fr; }
+  .cnx-side { max-height: 200px; }
+}
+</style>
