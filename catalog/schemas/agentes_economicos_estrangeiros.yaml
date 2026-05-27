@@ -1,0 +1,40 @@
+table: agentes_economicos_estrangeiros
+description: "Agentes economicos estrangeiros regulares cadastrados."
+source_raw: ancine-agentes-economicos-estrangeiros
+columns:
+  - name: registro_ancine
+    type: string
+    nullable: true
+    description: "Registro ancine"
+  - name: razao_social
+    type: string
+    nullable: true
+    description: "Razao social"
+  - name: atividade_principal
+    type: string
+    nullable: true
+    description: "Atividade principal"
+  - name: data_registro
+    type: string
+    nullable: true
+    description: "Data registro"
+  - name: representante
+    type: string
+    nullable: true
+    description: "Representante"
+  - name: registro_representante
+    type: string
+    nullable: true
+    description: "Registro representante"
+  - name: cnpj_representante
+    type: string
+    nullable: true
+    description: "Cnpj representante"
+  - name: data_inicio_representacao
+    type: string
+    nullable: true
+    description: "Data inicio representacao"
+  - name: data_final_representacao
+    type: string
+    nullable: true
+    description: "Data final representacao"

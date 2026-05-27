@@ -1,0 +1,96 @@
+table: crt_obras_nao_publicitarias
+description: "Certificados de Registro de Titulo (CRT) de obras nao publicitarias."
+source_raw: ancine-crt-obras-nao-publicitarias
+columns:
+  - name: titulo_original
+    type: string
+    nullable: true
+    description: "Titulo original"
+  - name: titulo_brasil
+    type: string
+    nullable: true
+    description: "Titulo brasil"
+  - name: crt
+    type: string
+    nullable: true
+    description: "Crt"
+  - name: data_requerimento_crt
+    type: string
+    nullable: true
+    description: "Data requerimento crt"
+  - name: data_emissao_crt
+    type: string
+    nullable: true
+    description: "Data emissao crt"
+  - name: situacao_crt
+    type: string
+    nullable: true
+    description: "Situacao crt"
+  - name: cpb_roe
+    type: string
+    nullable: true
+    description: "Cpb roe"
+  - name: tipo_obra
+    type: string
+    nullable: true
+    description: "Tipo obra"
+  - name: subtipo_obra
+    type: string
+    nullable: true
+    description: "Subtipo obra"
+  - name: classificacao
+    type: string
+    nullable: true
+    description: "Classificacao"
+  - name: pais
+    type: string
+    nullable: true
+    description: "Pais"
+  - name: organizacao_temporal
+    type: string
+    nullable: true
+    description: "Organizacao temporal"
+  - name: duracao_total_minutos
+    type: string
+    nullable: true
+    description: "Duracao total minutos"
+  - name: ano_producao_inicial
+    type: string
+    nullable: true
+    description: "Ano producao inicial"
+  - name: ano_producao_final
+    type: string
+    nullable: true
+    description: "Ano producao final"
+  - name: segmento
+    type: string
+    nullable: true
+    description: "Segmento"
+  - name: reducao_isencao
+    type: string
+    nullable: true
+    description: "Reducao isencao"
+  - name: requerente
+    type: string
+    nullable: true
+    description: "Requerente"
+  - name: registro_ancine_requerente
+    type: string
+    nullable: true
+    description: "Registro ancine requerente"
+  - name: cnpj_requerente
+    type: string
+    nullable: true
+    description: "Cnpj requerente"
+  - name: uf_requerente
+    type: string
+    nullable: true
+    description: "Uf requerente"
+  - name: municipio_requerente
+    type: string
+    nullable: true
+    description: "Municipio requerente"
+  - name: arquivo_origem
+    type: string
+    nullable: true
+    description: "Arquivo origem"

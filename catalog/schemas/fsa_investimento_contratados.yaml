@@ -1,0 +1,56 @@
+table: fsa_investimento_contratados
+description: "Projetos FSA contratados (PDA)."
+source_raw: ancine-fsa-investimento-contratados
+columns:
+  - name: titulo_projeto
+    type: string
+    nullable: true
+    description: "Titulo projeto"
+  - name: chamada_publica
+    type: string
+    nullable: true
+    description: "Chamada publica"
+  - name: ano_edital
+    type: string
+    nullable: true
+    description: "Ano edital"
+  - name: cnpj_proponente
+    type: string
+    nullable: true
+    description: "Cnpj proponente"
+  - name: razao_social_proponente
+    type: string
+    nullable: true
+    description: "Razao social proponente"
+  - name: cnpj_produtora
+    type: string
+    nullable: true
+    description: "Cnpj produtora"
+  - name: razao_social_produtora
+    type: string
+    nullable: true
+    description: "Razao social produtora"
+  - name: cnpj_programadora
+    type: string
+    nullable: true
+    description: "Cnpj programadora"
+  - name: razao_social_programadora
+    type: string
+    nullable: true
+    description: "Razao social programadora"
+  - name: data_extrato_contrato_dou
+    type: string
+    nullable: true
+    description: "Data extrato contrato dou"
+  - name: valor_contrato_dou
+    type: string
+    nullable: true
+    description: "Valor contrato dou"
+  - name: data_primeiro_desembolso
+    type: string
+    nullable: true
+    description: "Data primeiro desembolso"
+  - name: valor_total_liberado
+    type: string
+    nullable: true
+    description: "Valor total liberado"

@@ -1,0 +1,16 @@
+table: pais_origem_obras_estrangeiras
+description: "Paises de origem das obras nao publicitarias estrangeiras."
+source_raw: ancine-pais-origem-obras-estrangeiras
+columns:
+  - name: pais_origem
+    type: string
+    nullable: true
+    description: "Pais origem"
+  - name: titulo_original
+    type: string
+    nullable: true
+    description: "Titulo original"
+  - name: roe
+    type: string
+    nullable: true
+    description: "Roe"

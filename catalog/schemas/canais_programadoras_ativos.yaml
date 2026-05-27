@@ -1,0 +1,48 @@
+table: canais_programadoras_ativos
+description: "Canais de programacao de programadoras ativos credenciados."
+source_raw: ancine-canais-programadoras
+columns:
+  - name: canal
+    type: string
+    nullable: true
+    description: "Canal"
+  - name: nr_identificacao
+    type: string
+    nullable: true
+    description: "Nr identificacao"
+  - name: classificacao_canal
+    type: string
+    nullable: true
+    description: "Classificacao canal"
+  - name: tipo_conteudo_canal
+    type: string
+    nullable: true
+    description: "Tipo conteudo canal"
+  - name: oferta_cliente
+    type: string
+    nullable: true
+    description: "Oferta cliente"
+  - name: data_inicio_oferta
+    type: string
+    nullable: true
+    description: "Data inicio oferta"
+  - name: densidade_canal
+    type: string
+    nullable: true
+    description: "Densidade canal"
+  - name: nome_programadora
+    type: string
+    nullable: true
+    description: "Nome programadora"
+  - name: cnpj_programadora
+    type: string
+    nullable: true
+    description: "Cnpj programadora"
+  - name: classificacao_programadora
+    type: string
+    nullable: true
+    description: "Classificacao programadora"
+  - name: pais_programadora
+    type: string
+    nullable: true
+    description: "Pais programadora"

@@ -1,0 +1,44 @@
+table: lancamentos_distribuidoras
+description: "Lancamentos comerciais por distribuidoras."
+source_raw: ancine-lancamentos-distribuidoras
+columns:
+  - name: data_lancamento_obra
+    type: string
+    nullable: true
+    description: "Data lancamento obra"
+  - name: titulo_original
+    type: string
+    nullable: true
+    description: "Titulo original"
+  - name: cpb_roe
+    type: string
+    nullable: true
+    description: "Cpb roe"
+  - name: tipo_obra
+    type: string
+    nullable: true
+    description: "Tipo obra"
+  - name: pais_obra
+    type: string
+    nullable: true
+    description: "Pais obra"
+  - name: publico_total
+    type: string
+    nullable: true
+    description: "Publico total"
+  - name: renda_total
+    type: string
+    nullable: true
+    description: "Renda total"
+  - name: razao_social_distribuidora
+    type: string
+    nullable: true
+    description: "Razao social distribuidora"
+  - name: registro_distribuidora
+    type: string
+    nullable: true
+    description: "Registro distribuidora"
+  - name: cnpj_distribuidora
+    type: string
+    nullable: true
+    description: "Cnpj distribuidora"

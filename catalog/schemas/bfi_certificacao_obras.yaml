@@ -44,18 +44,18 @@ columns:
   - name: categoria
     type: string
     description: ""
-  - name: 2019_0
+  - name: "2019_0"
     type: number
     description: ""
-  - name: 2020_0
+  - name: "2020_0"
     type: number
     description: ""
-  - name: 2021_0
+  - name: "2021_0"
     type: number
     description: ""
-  - name: 2022_0
+  - name: "2022_0"
     type: number
     description: ""
-  - name: 2023_0
+  - name: "2023_0"
     type: number
     description: ""

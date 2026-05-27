@@ -1,0 +1,68 @@
+table: obras_estrangeiras_roe
+description: "Obras nao publicitarias estrangeiras com Registro de Obra Estrangeira (ROE)."
+source_raw: ancine-obras-estrangeiras-roe
+columns:
+  - name: titulo_original
+    type: string
+    nullable: true
+    description: "Titulo original"
+  - name: titulo_brasil
+    type: string
+    nullable: true
+    description: "Titulo brasil"
+  - name: roe
+    type: string
+    nullable: true
+    description: "Roe"
+  - name: data_emissao_roe
+    type: string
+    nullable: true
+    description: "Data emissao roe"
+  - name: situacao_obra
+    type: string
+    nullable: true
+    description: "Situacao obra"
+  - name: tipo_obra
+    type: string
+    nullable: true
+    description: "Tipo obra"
+  - name: subtipo_obra
+    type: string
+    nullable: true
+    description: "Subtipo obra"
+  - name: classificacao_obra
+    type: string
+    nullable: true
+    description: "Classificacao obra"
+  - name: organizacao_temporal
+    type: string
+    nullable: true
+    description: "Organizacao temporal"
+  - name: duracao_total_minutos
+    type: string
+    nullable: true
+    description: "Duracao total minutos"
+  - name: quantidade_episodios
+    type: string
+    nullable: true
+    description: "Quantidade episodios"
+  - name: ano_producao_inicial
+    type: string
+    nullable: true
+    description: "Ano producao inicial"
+  - name: ano_producao_final
+    type: string
+    nullable: true
+    description: "Ano producao final"
+  - name: requerente
+    type: string
+    nullable: true
+    description: "Requerente"
+  - name: cnpj_requerente
+    type: string
+    nullable: true
+    description: "Cnpj requerente"
+  - name: arquivo_origem
+    type: string
+    nullable: true
+    description: "Arquivo origem"

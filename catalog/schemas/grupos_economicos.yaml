@@ -1,0 +1,36 @@
+table: grupos_economicos
+description: "Relacao de grupos economicos identificados pela ANCINE."
+source_raw: ancine-grupos-economicos
+columns:
+  - name: registro_ancine
+    type: string
+    nullable: true
+    description: "Registro ancine"
+  - name: razao_social
+    type: string
+    nullable: true
+    description: "Razao social"
+  - name: cnpj
+    type: string
+    nullable: true
+    description: "Cnpj"
+  - name: registro_ancine_associado
+    type: string
+    nullable: true
+    description: "Registro ancine associado"
+  - name: agente_economico_associado
+    type: string
+    nullable: true
+    description: "Agente economico associado"
+  - name: cnpj_associado
+    type: string
+    nullable: true
+    description: "Cnpj associado"
+  - name: relacao
+    type: string
+    nullable: true
+    description: "Relacao"
+  - name: data_associacao
+    type: string
+    nullable: true
+    description: "Data associacao"

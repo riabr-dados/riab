@@ -1,0 +1,28 @@
+table: produtoras_independentes
+description: "Produtoras independentes cadastradas na ANCINE."
+source_raw: ancine-produtoras-independentes
+columns:
+  - name: razao_social
+    type: string
+    nullable: true
+    description: "Razao social"
+  - name: registro_ancine
+    type: string
+    nullable: true
+    description: "Registro ancine"
+  - name: cnpj
+    type: string
+    nullable: true
+    description: "Cnpj"
+  - name: municipio
+    type: string
+    nullable: true
+    description: "Municipio"
+  - name: uf
+    type: string
+    nullable: true
+    description: "Uf"
+  - name: classificacao_nivel_produtora
+    type: string
+    nullable: true
+    description: "Classificacao nivel produtora"

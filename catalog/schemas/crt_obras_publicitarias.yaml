@@ -1,0 +1,108 @@
+table: crt_obras_publicitarias
+description: "Certificados de Registro de Titulo (CRT) de obras publicitarias."
+source_raw: ancine-crt-obras-publicitarias
+columns:
+  - name: titulo_original
+    type: string
+    nullable: true
+    description: "Titulo original"
+  - name: crt
+    type: string
+    nullable: true
+    description: "Crt"
+  - name: data_requerimento_crt
+    type: string
+    nullable: true
+    description: "Data requerimento crt"
+  - name: data_emissao_crt
+    type: string
+    nullable: true
+    description: "Data emissao crt"
+  - name: data_validade_crt
+    type: string
+    nullable: true
+    description: "Data validade crt"
+  - name: situacao_crt
+    type: string
+    nullable: true
+    description: "Situacao crt"
+  - name: pais
+    type: string
+    nullable: true
+    description: "Pais"
+  - name: produto_servico_anunciado
+    type: string
+    nullable: true
+    description: "Produto servico anunciado"
+  - name: tipo_publicidade
+    type: string
+    nullable: true
+    description: "Tipo publicidade"
+  - name: qtd_versoes
+    type: string
+    nullable: true
+    description: "Qtd versoes"
+  - name: crts_versoes
+    type: string
+    nullable: true
+    description: "Crts versoes"
+  - name: classificacao_obra
+    type: string
+    nullable: true
+    description: "Classificacao obra"
+  - name: segmento
+    type: string
+    nullable: true
+    description: "Segmento"
+  - name: duracao_segundos
+    type: string
+    nullable: true
+    description: "Duracao segundos"
+  - name: produtor
+    type: string
+    nullable: true
+    description: "Produtor"
+  - name: diretor
+    type: string
+    nullable: true
+    description: "Diretor"
+  - name: agencia
+    type: string
+    nullable: true
+    description: "Agencia"
+  - name: cnpj_agencia
+    type: string
+    nullable: true
+    description: "Cnpj agencia"
+  - name: anunciante
+    type: string
+    nullable: true
+    description: "Anunciante"
+  - name: cnpj_anunciante
+    type: string
+    nullable: true
+    description: "Cnpj anunciante"
+  - name: requerente
+    type: string
+    nullable: true
+    description: "Requerente"
+  - name: registro_ancine_requerente
+    type: string
+    nullable: true
+    description: "Registro ancine requerente"
+  - name: cnpj_requerente
+    type: string
+    nullable: true
+    description: "Cnpj requerente"
+  - name: uf_requerente
+    type: string
+    nullable: true
+    description: "Uf requerente"
+  - name: municipio_requerente
+    type: string
+    nullable: true
+    description: "Municipio requerente"
+  - name: arquivo_origem
+    type: string
+    nullable: true
+    description: "Arquivo origem"

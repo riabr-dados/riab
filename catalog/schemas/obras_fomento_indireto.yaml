@@ -1,0 +1,16 @@
+table: obras_fomento_indireto
+description: "Obras nao publicitarias brasileiras beneficiadas por fomento indireto."
+source_raw: ancine-obras-fomento-indireto
+columns:
+  - name: titulo_original
+    type: string
+    nullable: true
+    description: "Titulo original"
+  - name: cpb
+    type: string
+    nullable: true
+    description: "Cpb"
+  - name: numero_salic
+    type: string
+    nullable: true
+    description: "Numero salic"

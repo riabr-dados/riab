@@ -2070,9 +2070,10 @@ datasets:
       size_bytes: 19266691
       url_origem: https://dados.gov.br/dados/conjuntos-dados/atividades-economicas-dos-agentes-regulares-registrados-na-ancine
     cleaned:
-      tables: []
+      tables:
+        - atividades_economicas_agentes_regulares
       notes: |
-        Dataset listado no Plano de Dados Abertos da ANCINE mas ainda nao foi coletado para o RIDAB. Coleta pendente — ver url_origem para download manual via dados.gov.br.
+        Coletado em 2026-05-27 do dados.gov.br (Plano de Dados Abertos da ANCINE). Concatenado em uma unica tabela RIDAB.
     categoria:
       - emprego_economia
     procedencia: pda
@@ -2097,9 +2098,10 @@ datasets:
       size_bytes: 888790
       url_origem: https://dados.gov.br/dados/conjuntos-dados/produtoras-independentes-regulares-registradas-na-ancine
     cleaned:
-      tables: []
+      tables:
+        - produtoras_independentes
       notes: |
-        Dataset listado no Plano de Dados Abertos da ANCINE mas ainda nao foi coletado para o RIDAB. Coleta pendente — ver url_origem para download manual via dados.gov.br.
+        Coletado em 2026-05-27 do dados.gov.br (Plano de Dados Abertos da ANCINE). Concatenado em uma unica tabela RIDAB.
     categoria:
       - producao_obras
       - emprego_economia
@@ -2126,9 +2128,10 @@ datasets:
       size_bytes: 89840
       url_origem: https://dados.gov.br/dados/conjuntos-dados/canais-de-programacao-de-programadoras-ativos-credenciados-na-ancine
     cleaned:
-      tables: []
+      tables:
+        - canais_programadoras_ativos
       notes: |
-        Dataset listado no Plano de Dados Abertos da ANCINE mas ainda nao foi coletado para o RIDAB. Coleta pendente — ver url_origem para download manual via dados.gov.br.
+        Coletado em 2026-05-27 do dados.gov.br (Plano de Dados Abertos da ANCINE). Concatenado em uma unica tabela RIDAB.
     categoria:
       - tv_audiencia
     procedencia: pda
@@ -2154,9 +2157,10 @@ datasets:
       size_bytes: 15449
       url_origem: https://dados.gov.br/dados/conjuntos-dados/canais-de-programacao-de-distribuicao-obrigatoria-ativos-credenciados-na-ancine
     cleaned:
-      tables: []
+      tables:
+        - canais_distribuicao_obrigatoria
       notes: |
-        Dataset listado no Plano de Dados Abertos da ANCINE mas ainda nao foi coletado para o RIDAB. Coleta pendente — ver url_origem para download manual via dados.gov.br.
+        Coletado em 2026-05-27 do dados.gov.br (Plano de Dados Abertos da ANCINE). Concatenado em uma unica tabela RIDAB.
     categoria:
       - tv_audiencia
     procedencia: pda
@@ -2183,9 +2187,10 @@ datasets:
       size_bytes: 2228579
       url_origem: https://dados.gov.br/dados/conjuntos-dados/salas-de-exibicao-e-complexos-registrados-na-ancine
     cleaned:
-      tables: []
+      tables:
+        - salas_exibicao_complexos
       notes: |
-        Dataset listado no Plano de Dados Abertos da ANCINE mas ainda nao foi coletado para o RIDAB. Coleta pendente — ver url_origem para download manual via dados.gov.br.
+        Coletado em 2026-05-27 do dados.gov.br (Plano de Dados Abertos da ANCINE). Concatenado em uma unica tabela RIDAB.
     categoria:
       - salas_exibicao
     procedencia: pda
@@ -2210,9 +2215,10 @@ datasets:
       size_bytes: 137073
       url_origem: https://dados.gov.br/dados/conjuntos-dados/obras-nao-publicitarias-brasileiras-com-fomento-indireto-aprovado-na-ancine-leis-de-incentivo-federa
     cleaned:
-      tables: []
+      tables:
+        - obras_fomento_indireto
       notes: |
-        Dataset listado no Plano de Dados Abertos da ANCINE mas ainda nao foi coletado para o RIDAB. Coleta pendente — ver url_origem para download manual via dados.gov.br.
+        Coletado em 2026-05-27 do dados.gov.br (Plano de Dados Abertos da ANCINE). Concatenado em uma unica tabela RIDAB.
     categoria:
       - fomento
       - producao_obras
@@ -2238,9 +2244,10 @@ datasets:
       size_bytes: 131885
       url_origem: https://dados.gov.br/dados/conjuntos-dados/obras-nao-publicitarias-brasileiras-com-investimento-do-fsa
     cleaned:
-      tables: []
+      tables:
+        - obras_investimento_fsa_pda
       notes: |
-        Dataset listado no Plano de Dados Abertos da ANCINE mas ainda nao foi coletado para o RIDAB. Coleta pendente — ver url_origem para download manual via dados.gov.br.
+        Coletado em 2026-05-27 do dados.gov.br (Plano de Dados Abertos da ANCINE). Concatenado em uma unica tabela RIDAB.
     categoria:
       - fomento
       - producao_obras
@@ -2266,9 +2273,10 @@ datasets:
       size_bytes: 2582559
       url_origem: https://dados.gov.br/dados/conjuntos-dados/pais-de-origem-das-obras-nao-publicitarias-brasileiras
     cleaned:
-      tables: []
+      tables:
+        - pais_origem_obras_br
       notes: |
-        Dataset listado no Plano de Dados Abertos da ANCINE mas ainda nao foi coletado para o RIDAB. Coleta pendente — ver url_origem para download manual via dados.gov.br.
+        Coletado em 2026-05-27 do dados.gov.br (Plano de Dados Abertos da ANCINE). Concatenado em uma unica tabela RIDAB.
     categoria:
       - producao_obras
       - internacional
@@ -2294,9 +2302,10 @@ datasets:
       size_bytes: 7158948
       url_origem: https://dados.gov.br/dados/conjuntos-dados/obras-nao-publicitarias-estrangeiras-relacao-de-todos-os-roes-emitidos-excluindo-se-a-categoria-de-r
     cleaned:
-      tables: []
+      tables:
+        - obras_estrangeiras_roe
       notes: |
-        Dataset listado no Plano de Dados Abertos da ANCINE mas ainda nao foi coletado para o RIDAB. Coleta pendente — ver url_origem para download manual via dados.gov.br.
+        Coletado em 2026-05-27 do dados.gov.br (Plano de Dados Abertos da ANCINE). Concatenado em uma unica tabela RIDAB.
     categoria:
       - producao_obras
       - internacional
@@ -2323,9 +2332,10 @@ datasets:
       size_bytes: 4043431
       url_origem: https://dados.gov.br/dados/conjuntos-dados/diretores-de-obras-nao-publicitarias-estrangeiras-roe
     cleaned:
-      tables: []
+      tables:
+        - diretores_obras_estrangeiras
       notes: |
-        Dataset listado no Plano de Dados Abertos da ANCINE mas ainda nao foi coletado para o RIDAB. Coleta pendente — ver url_origem para download manual via dados.gov.br.
+        Coletado em 2026-05-27 do dados.gov.br (Plano de Dados Abertos da ANCINE). Concatenado em uma unica tabela RIDAB.
     categoria:
       - producao_obras
       - internacional
@@ -2351,9 +2361,10 @@ datasets:
       size_bytes: 5662791
       url_origem: https://dados.gov.br/dados/conjuntos-dados/produtores-de-obras-nao-publicitarias-estrangeiras-roe
     cleaned:
-      tables: []
+      tables:
+        - produtores_obras_estrangeiras
       notes: |
-        Dataset listado no Plano de Dados Abertos da ANCINE mas ainda nao foi coletado para o RIDAB. Coleta pendente — ver url_origem para download manual via dados.gov.br.
+        Coletado em 2026-05-27 do dados.gov.br (Plano de Dados Abertos da ANCINE). Concatenado em uma unica tabela RIDAB.
     categoria:
       - producao_obras
       - internacional
@@ -2379,9 +2390,10 @@ datasets:
       size_bytes: 3832443
       url_origem: https://dados.gov.br/dados/conjuntos-dados/pais-de-origem-de-obras-nao-publicitarias-estrangeiras-roe
     cleaned:
-      tables: []
+      tables:
+        - pais_origem_obras_estrangeiras
       notes: |
-        Dataset listado no Plano de Dados Abertos da ANCINE mas ainda nao foi coletado para o RIDAB. Coleta pendente — ver url_origem para download manual via dados.gov.br.
+        Coletado em 2026-05-27 do dados.gov.br (Plano de Dados Abertos da ANCINE). Concatenado em uma unica tabela RIDAB.
     categoria:
       - producao_obras
       - internacional
@@ -2393,6 +2405,7 @@ datasets:
       Relatório diário de bilheteria por obra conforme reportado pelas distribuidoras ao SADIS/ANCINE. Granularidade muito maior que a bilheteria agregada anual.
     source_id: ancine
     status: ativo
+    hidden: true
     coverage: —
     tags:
       - brasil
@@ -2410,7 +2423,7 @@ datasets:
     cleaned:
       tables: []
       notes: |
-        Dataset listado no Plano de Dados Abertos da ANCINE mas ainda nao foi coletado para o RIDAB. Coleta pendente — ver url_origem para download manual via dados.gov.br.
+        Raw-only: ~4.8 GB de CSVs diarios disponiveis em raw/ no Hugging Face. Nao publicado como parquet no /explorar por ser muito pesado para DuckDB-WASM no browser. Para analises locais, baixar de https://huggingface.co/datasets/riabr-dados/riab/tree/main/raw/ancine-bilheteria-diaria-distribuidoras.
     categoria:
       - bilheteria
       - distribuicao
@@ -2436,9 +2449,10 @@ datasets:
       size_bytes: 1079092
       url_origem: https://dados.gov.br/dados/conjuntos-dados/relacao-de-grupos-economicos
     cleaned:
-      tables: []
+      tables:
+        - grupos_economicos
       notes: |
-        Dataset listado no Plano de Dados Abertos da ANCINE mas ainda nao foi coletado para o RIDAB. Coleta pendente — ver url_origem para download manual via dados.gov.br.
+        Coletado em 2026-05-27 do dados.gov.br (Plano de Dados Abertos da ANCINE). Concatenado em uma unica tabela RIDAB.
     categoria:
       - emprego_economia
     procedencia: pda
@@ -2464,9 +2478,10 @@ datasets:
       size_bytes: 64306740
       url_origem: https://dados.gov.br/dados/conjuntos-dados/crt-obras-nao-publicitarias-registradas
     cleaned:
-      tables: []
+      tables:
+        - crt_obras_nao_publicitarias
       notes: |
-        Dataset listado no Plano de Dados Abertos da ANCINE mas ainda nao foi coletado para o RIDAB. Coleta pendente — ver url_origem para download manual via dados.gov.br.
+        Coletado em 2026-05-27 do dados.gov.br (Plano de Dados Abertos da ANCINE). Concatenado em uma unica tabela RIDAB.
     categoria:
       - producao_obras
     procedencia: pda
@@ -2492,9 +2507,10 @@ datasets:
       size_bytes: 305751183
       url_origem: https://dados.gov.br/dados/conjuntos-dados/crt-obras-publicitarias-registradas
     cleaned:
-      tables: []
+      tables:
+        - crt_obras_publicitarias
       notes: |
-        Dataset listado no Plano de Dados Abertos da ANCINE mas ainda nao foi coletado para o RIDAB. Coleta pendente — ver url_origem para download manual via dados.gov.br.
+        Coletado em 2026-05-27 do dados.gov.br (Plano de Dados Abertos da ANCINE). Concatenado em uma unica tabela RIDAB.
     categoria:
       - producao_obras
     procedencia: pda
@@ -2505,6 +2521,7 @@ datasets:
       Relatório diário de bilheteria por obra conforme reportado pelas exibidoras (salas de cinema) ao SADIS/ANCINE.
     source_id: ancine
     status: ativo
+    hidden: true
     coverage: —
     tags:
       - brasil
@@ -2522,7 +2539,7 @@ datasets:
     cleaned:
       tables: []
       notes: |
-        Dataset listado no Plano de Dados Abertos da ANCINE mas ainda nao foi coletado para o RIDAB. Coleta pendente — ver url_origem para download manual via dados.gov.br.
+        Raw-only: ~8.4 GB de CSVs diarios disponiveis em raw/ no Hugging Face. Nao publicado como parquet no /explorar por ser muito pesado para DuckDB-WASM no browser. Para analises locais, baixar de https://huggingface.co/datasets/riabr-dados/riab/tree/main/raw/ancine-bilheteria-diaria-exibidoras.
     categoria:
       - bilheteria
       - salas_exibicao
@@ -2549,9 +2566,10 @@ datasets:
       size_bytes: 1123962
       url_origem: https://dados.gov.br/dados/conjuntos-dados/projetos--de-investimento-contratados-no-ambito-do-fsa
     cleaned:
-      tables: []
+      tables:
+        - fsa_investimento_contratados
       notes: |
-        Dataset listado no Plano de Dados Abertos da ANCINE mas ainda nao foi coletado para o RIDAB. Coleta pendente — ver url_origem para download manual via dados.gov.br.
+        Coletado em 2026-05-27 do dados.gov.br (Plano de Dados Abertos da ANCINE). Concatenado em uma unica tabela RIDAB.
     categoria:
       - fomento
     procedencia: pda
@@ -2576,9 +2594,10 @@ datasets:
       size_bytes: 1188040
       url_origem: https://dados.gov.br/dados/conjuntos-dados/relacao-de-processos-em-fase-de-prestacao-de-contas
     cleaned:
-      tables: []
+      tables:
+        - prestacao_contas_processos
       notes: |
-        Dataset listado no Plano de Dados Abertos da ANCINE mas ainda nao foi coletado para o RIDAB. Coleta pendente — ver url_origem para download manual via dados.gov.br.
+        Coletado em 2026-05-27 do dados.gov.br (Plano de Dados Abertos da ANCINE). Concatenado em uma unica tabela RIDAB.
     categoria:
       - fomento
     procedencia: pda
@@ -2604,9 +2623,10 @@ datasets:
       size_bytes: 289904
       url_origem: https://dados.gov.br/dados/conjuntos-dados/filmagem-estrangeira-relacao-de-producao-de-obras-audiovisuais-estrangeiras-em-territorio-nacional
     cleaned:
-      tables: []
+      tables:
+        - filmagem_estrangeira
       notes: |
-        Dataset listado no Plano de Dados Abertos da ANCINE mas ainda nao foi coletado para o RIDAB. Coleta pendente — ver url_origem para download manual via dados.gov.br.
+        Coletado em 2026-05-27 do dados.gov.br (Plano de Dados Abertos da ANCINE). Concatenado em uma unica tabela RIDAB.
     categoria:
       - producao_obras
       - internacional
@@ -2633,9 +2653,10 @@ datasets:
       size_bytes: 3994532
       url_origem: https://dados.gov.br/dados/conjuntos-dados/salas-de-exibicao---evolucao-anual
     cleaned:
-      tables: []
+      tables:
+        - salas_exibicao_evolucao
       notes: |
-        Dataset listado no Plano de Dados Abertos da ANCINE mas ainda nao foi coletado para o RIDAB. Coleta pendente — ver url_origem para download manual via dados.gov.br.
+        Coletado em 2026-05-27 do dados.gov.br (Plano de Dados Abertos da ANCINE). Concatenado em uma unica tabela RIDAB.
     categoria:
       - salas_exibicao
     procedencia: pda
@@ -2661,9 +2682,10 @@ datasets:
       size_bytes: 1014400
       url_origem: https://dados.gov.br/dados/conjuntos-dados/lancamentos-comerciais-por-distribuidoras
     cleaned:
-      tables: []
+      tables:
+        - lancamentos_distribuidoras
       notes: |
-        Dataset listado no Plano de Dados Abertos da ANCINE mas ainda nao foi coletado para o RIDAB. Coleta pendente — ver url_origem para download manual via dados.gov.br.
+        Coletado em 2026-05-27 do dados.gov.br (Plano de Dados Abertos da ANCINE). Concatenado em uma unica tabela RIDAB.
     categoria:
       - distribuicao
       - bilheteria
@@ -2689,9 +2711,10 @@ datasets:
       size_bytes: 19591
       url_origem: https://dados.gov.br/dados/conjuntos-dados/agentes-economicos-estrangeiros
     cleaned:
-      tables: []
+      tables:
+        - agentes_economicos_estrangeiros
       notes: |
-        Dataset listado no Plano de Dados Abertos da ANCINE mas ainda nao foi coletado para o RIDAB. Coleta pendente — ver url_origem para download manual via dados.gov.br.
+        Coletado em 2026-05-27 do dados.gov.br (Plano de Dados Abertos da ANCINE). Concatenado em uma unica tabela RIDAB.
     categoria:
       - emprego_economia
       - internacional
@@ -2717,9 +2740,10 @@ datasets:
       size_bytes: 1145513
       url_origem: https://dados.gov.br/dados/conjuntos-dados/complexos-cinematograficos---evolucao-anual
     cleaned:
-      tables: []
+      tables:
+        - complexos_cinematograficos_evolucao
       notes: |
-        Dataset listado no Plano de Dados Abertos da ANCINE mas ainda nao foi coletado para o RIDAB. Coleta pendente — ver url_origem para download manual via dados.gov.br.
+        Coletado em 2026-05-27 do dados.gov.br (Plano de Dados Abertos da ANCINE). Concatenado em uma unica tabela RIDAB.
     categoria:
       - salas_exibicao
     procedencia: pda

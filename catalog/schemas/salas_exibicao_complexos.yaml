@@ -1,0 +1,132 @@
+table: salas_exibicao_complexos
+description: "Salas de exibicao e complexos cinematograficos cadastrados."
+source_raw: ancine-salas-exibicao-complexos
+columns:
+  - name: nome_sala
+    type: string
+    nullable: true
+    description: "Nome sala"
+  - name: registro_sala
+    type: string
+    nullable: true
+    description: "Registro sala"
+  - name: cnpj_sala
+    type: string
+    nullable: true
+    description: "Cnpj sala"
+  - name: situacao_sala
+    type: string
+    nullable: true
+    description: "Situacao sala"
+  - name: data_situacao_sala
+    type: string
+    nullable: true
+    description: "Data situacao sala"
+  - name: data_inicio_funcionamento_sala
+    type: string
+    nullable: true
+    description: "Data inicio funcionamento sala"
+  - name: assentos_sala
+    type: string
+    nullable: true
+    description: "Assentos sala"
+  - name: assentos_cadeirantes
+    type: string
+    nullable: true
+    description: "Assentos cadeirantes"
+  - name: assentos_mobilidade_reduzida
+    type: string
+    nullable: true
+    description: "Assentos mobilidade reduzida"
+  - name: assentos_obesidade
+    type: string
+    nullable: true
+    description: "Assentos obesidade"
+  - name: acesso_assentos_com_rampa
+    type: string
+    nullable: true
+    description: "Acesso assentos com rampa"
+  - name: acesso_sala_com_rampa
+    type: string
+    nullable: true
+    description: "Acesso sala com rampa"
+  - name: banheiros_acessiveis
+    type: string
+    nullable: true
+    description: "Banheiros acessiveis"
+  - name: nome_complexo
+    type: string
+    nullable: true
+    description: "Nome complexo"
+  - name: registro_complexo
+    type: string
+    nullable: true
+    description: "Registro complexo"
+  - name: situacao_complexo
+    type: string
+    nullable: true
+    description: "Situacao complexo"
+  - name: data_situacao_complexo
+    type: string
+    nullable: true
+    description: "Data situacao complexo"
+  - name: pagina_eletronica_complexo
+    type: string
+    nullable: true
+    description: "Pagina eletronica complexo"
+  - name: endereco_complexo
+    type: string
+    nullable: true
+    description: "Endereco complexo"
+  - name: numero_endereco_complexo
+    type: string
+    nullable: true
+    description: "Numero endereco complexo"
+  - name: complemento_complexo
+    type: string
+    nullable: true
+    description: "Complemento complexo"
+  - name: bairro_complexo
+    type: string
+    nullable: true
+    description: "Bairro complexo"
+  - name: municipio_complexo
+    type: string
+    nullable: true
+    description: "Municipio complexo"
+  - name: cep_complexo
+    type: string
+    nullable: true
+    description: "Cep complexo"
+  - name: uf_complexo
+    type: string
+    nullable: true
+    description: "Uf complexo"
+  - name: complexo_itinerante
+    type: string
+    nullable: true
+    description: "Complexo itinerante"
+  - name: operacao_usual
+    type: string
+    nullable: true
+    description: "Operacao usual"
+  - name: nome_exibidor
+    type: string
+    nullable: true
+    description: "Nome exibidor"
+  - name: registro_exibidor
+    type: string
+    nullable: true
+    description: "Registro exibidor"
+  - name: cnpj_exibidor
+    type: string
+    nullable: true
+    description: "Cnpj exibidor"
+  - name: situacao_exibidor
+    type: string
+    nullable: true
+    description: "Situacao exibidor"
+  - name: nome_grupo_exibidor
+    type: string
+    nullable: true
+    description: "Nome grupo exibidor"

@@ -1,0 +1,24 @@
+table: atividades_economicas_agentes_regulares
+description: "Atividades economicas declaradas pelos agentes regulares (registro ANCINE)."
+source_raw: ancine-atividades-economicas-agentes
+columns:
+  - name: registro_ancine
+    type: string
+    nullable: true
+    description: "Registro ancine"
+  - name: razao_social
+    type: string
+    nullable: true
+    description: "Razao social"
+  - name: cnpj
+    type: string
+    nullable: true
+    description: "Cnpj"
+  - name: classificacao_atividade
+    type: string
+    nullable: true
+    description: "Classificacao atividade"
+  - name: atividade_economica
+    type: string
+    nullable: true
+    description: "Atividade economica"

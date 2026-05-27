@@ -1,0 +1,28 @@
+table: salas_exibicao_evolucao
+description: "Evolucao anual das salas de exibicao no Brasil."
+source_raw: ancine-salas-exibicao-evolucao
+columns:
+  - name: ano
+    type: string
+    nullable: true
+    description: "Ano"
+  - name: nome_sala
+    type: string
+    nullable: true
+    description: "Nome sala"
+  - name: registro_ancine
+    type: string
+    nullable: true
+    description: "Registro ancine"
+  - name: municipio
+    type: string
+    nullable: true
+    description: "Municipio"
+  - name: uf
+    type: string
+    nullable: true
+    description: "Uf"
+  - name: status
+    type: string
+    nullable: true
+    description: "Status"

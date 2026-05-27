@@ -1,0 +1,36 @@
+table: filmagem_estrangeira
+description: "Producoes audiovisuais estrangeiras filmadas no Brasil."
+source_raw: ancine-filmagem-estrangeira
+columns:
+  - name: titulo_obra
+    type: string
+    nullable: true
+    description: "Titulo obra"
+  - name: tipo_obra
+    type: string
+    nullable: true
+    description: "Tipo obra"
+  - name: periodo_producao
+    type: string
+    nullable: true
+    description: "Periodo producao"
+  - name: empresa_brasileira
+    type: string
+    nullable: true
+    description: "Empresa brasileira"
+  - name: uf
+    type: string
+    nullable: true
+    description: "Uf"
+  - name: empresa_estrangeira
+    type: string
+    nullable: true
+    description: "Empresa estrangeira"
+  - name: pais
+    type: string
+    nullable: true
+    description: "Pais"
+  - name: nr_tecnicos_artistas_estrangeiros
+    type: string
+    nullable: true
+    description: "Nr tecnicos artistas estrangeiros"

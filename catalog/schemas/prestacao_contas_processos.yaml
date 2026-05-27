@@ -1,0 +1,24 @@
+table: prestacao_contas_processos
+description: "Processos em fase de prestacao de contas na ANCINE."
+source_raw: ancine-prestacao-contas-processos
+columns:
+  - name: numero_processo
+    type: string
+    nullable: true
+    description: "Numero processo"
+  - name: numero_salic
+    type: string
+    nullable: true
+    description: "Numero salic"
+  - name: titulo_projeto
+    type: string
+    nullable: true
+    description: "Titulo projeto"
+  - name: responsavel_prestacao
+    type: string
+    nullable: true
+    description: "Responsavel prestacao"
+  - name: cnpj_responsavel_prestacao
+    type: string
+    nullable: true
+    description: "Cnpj responsavel prestacao"

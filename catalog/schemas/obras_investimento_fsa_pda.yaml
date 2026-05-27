@@ -1,0 +1,16 @@
+table: obras_investimento_fsa_pda
+description: "Obras nao publicitarias brasileiras com investimento FSA (PDA)."
+source_raw: ancine-obras-investimento-fsa
+columns:
+  - name: titulo_original
+    type: string
+    nullable: true
+    description: "Titulo original"
+  - name: cpb
+    type: string
+    nullable: true
+    description: "Cpb"
+  - name: numero_contrato_fsa
+    type: string
+    nullable: true
+    description: "Numero contrato fsa"

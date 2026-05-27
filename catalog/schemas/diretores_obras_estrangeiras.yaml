@@ -1,0 +1,16 @@
+table: diretores_obras_estrangeiras
+description: "Diretores de obras nao publicitarias estrangeiras."
+source_raw: ancine-diretores-obras-estrangeiras
+columns:
+  - name: diretor
+    type: string
+    nullable: true
+    description: "Diretor"
+  - name: titulo_original
+    type: string
+    nullable: true
+    description: "Titulo original"
+  - name: roe
+    type: string
+    nullable: true
+    description: "Roe"

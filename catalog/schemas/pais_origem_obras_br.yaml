@@ -1,0 +1,16 @@
+table: pais_origem_obras_br
+description: "Paises de origem das obras nao publicitarias brasileiras."
+source_raw: ancine-pais-origem-obras-br
+columns:
+  - name: pais_origem
+    type: string
+    nullable: true
+    description: "Pais origem"
+  - name: titulo_original
+    type: string
+    nullable: true
+    description: "Titulo original"
+  - name: cpb
+    type: string
+    nullable: true
+    description: "Cpb"

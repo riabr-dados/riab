@@ -1,20 +1,40 @@
 table: rais_emprego_audiovisual_fontes
-description: "Inventario das fontes OCA usadas como referencia para futura agregacao RAIS do audiovisual."
+description: "Inventario das fontes RAIS/MTE sobre emprego no audiovisual brasileiro."
 source_raw: br-rais-emprego-audiovisual
 columns:
   - name: dataset_slug
     type: string
     description: "Dataset RIDAB ao qual a fonte pertence"
+  - name: secao
+    type: string
+    nullable: true
+    description: "Secao logica da publicacao (factual vs metodologico)"
   - name: titulo
     type: string
     description: "Titulo da publicacao oficial"
+  - name: formato
+    type: string
+    nullable: true
+    description: "Formato declarado da fonte (planilha, microdados, relatorio, etc.)"
+  - name: data_publicacao
+    type: string
+    nullable: true
+    description: "Data oficial de publicacao da fonte"
   - name: ano_referencia
     type: string
     nullable: true
-    description: "Ano ou periodo de referencia"
+    description: "Ano ou periodo de referencia dos dados"
+  - name: extensao
+    type: string
+    nullable: true
+    description: "Extensao do arquivo bruto (xlsx, csv, pdf, ...)"
   - name: url_arquivo
     type: string
     description: "URL oficial do arquivo"
+  - name: pagina_origem
+    type: string
+    nullable: true
+    description: "URL da pagina oficial que linka o arquivo"
   - name: local_path
     type: string
     nullable: true
@@ -23,6 +43,22 @@ columns:
     type: string
     nullable: true
     description: "SHA-256 do arquivo bruto"
+  - name: tamanho_bytes
+    type: number
+    nullable: true
+    description: "Tamanho do arquivo bruto em bytes"
+  - name: download_status
+    type: string
+    nullable: true
+    description: "Status do download (ok, erro, pendente)"
+  - name: download_erro
+    type: string
+    nullable: true
+    description: "Mensagem de erro caso o download tenha falhado"
+  - name: data_coleta
+    type: string
+    nullable: true
+    description: "Data em que a fonte foi coletada para o RIDAB"
   - name: status_extracao
     type: string
     description: "Status da transformacao factual"

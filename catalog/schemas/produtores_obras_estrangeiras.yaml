@@ -1,0 +1,16 @@
+table: produtores_obras_estrangeiras
+description: "Produtores de obras nao publicitarias estrangeiras."
+source_raw: ancine-produtores-obras-estrangeiras
+columns:
+  - name: produtor
+    type: string
+    nullable: true
+    description: "Produtor"
+  - name: titulo_original
+    type: string
+    nullable: true
+    description: "Titulo original"
+  - name: roe
+    type: string
+    nullable: true
+    description: "Roe"
