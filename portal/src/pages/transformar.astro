@@ -1248,24 +1248,56 @@ function renderAggPane() {
   renderBuilderFilters();
 }
 
+// Categorize a DuckDB type so we know which operators make sense
+function colKind(type){
+  const t = String(type || '').toLowerCase();
+  if (/int|bigint|double|float|decimal|numeric|hugeint|tinyint|smallint|real/.test(t)) return 'num';
+  if (/date|time|timestamp/.test(t)) return 'date';
+  if (/bool/.test(t)) return 'bool';
+  return 'cat'; // varchar, text, etc.
+}
+// Operators available per kind. COUNT(*) is always usable via the "*" column.
+const OPS_BY_KIND = {
+  num:  ['SUM','AVG','MIN','MAX','COUNT','COUNT_DISTINCT'],
+  cat:  ['COUNT','COUNT_DISTINCT','MIN','MAX'],
+  date: ['MIN','MAX','COUNT','COUNT_DISTINCT'],
+  bool: ['COUNT','COUNT_DISTINCT','SUM'], // SUM(bool) = true-count
+};
+const OP_LABEL = {
+  SUM:'soma', AVG:'média', MIN:'mínimo', MAX:'máximo',
+  COUNT:'contar', COUNT_DISTINCT:'contar únicos',
+};
+
 function renderBuilderMetrics() {
   const root = document.getElementById('bldr-metrics');
   if (!root) return;
   if (builderMetrics.length === 0) {
-    // default: COUNT(*) suggestion
     root.innerHTML = '<p class="bldr-empty">Nenhuma métrica. Clique em "+ adicionar métrica" — ou execute como está pra ver COUNT(*).</p>';
     return;
   }
-  const numericCols = builderTables.flatMap(t => {
-    const cs = builderColCache[t.table] || [];
-    return cs.filter(c => /int|bigint|double|float|decimal|num/i.test(c.type)).map(c => `${t.table}.${c.name}`);
-  });
+  // all columns across selected tables, with their type
+  const allCols = builderTables.flatMap(t =>
+    (builderColCache[t.table] || []).map(c => ({
+      ref: `${t.table}.${c.name}`, type: c.type, kind: colKind(c.type),
+    }))
+  );
+  // synthetic "* (todas as linhas)" so user can pick COUNT(*) explicitly
+  const colsWithStar = [{ ref:'*', type:'', kind:'any', label:'*  ·  todas as linhas' }, ...allCols.map(c => ({...c, label:`${c.ref}  ·  ${c.type}`}))];
+
   root.innerHTML = builderMetrics.map((m, i) => {
-    const colOpts = m.op === 'COUNT' ? '<option value="*">*</option>' : numericCols.map(c => `<option value="${c}"${c === m.col ? ' selected' : ''}>${c}</option>`).join('');
+    const colMeta = m.col === '*' ? { kind: 'any' } : (allCols.find(c => c.ref === m.col) || { kind: 'cat' });
+    // ops valid for the chosen column kind (COUNT/COUNT_DISTINCT always work)
+    const opsAllowed = m.col === '*'
+      ? ['COUNT']
+      : (OPS_BY_KIND[colMeta.kind] || ['COUNT','COUNT_DISTINCT']);
+    const opOpts = opsAllowed.map(op =>
+      `<option value="${op}"${op === m.op ? ' selected' : ''}>${OP_LABEL[op]||op}</option>`
+    ).join('');
+    const colOpts = colsWithStar.map(c =>
+      `<option value="${c.ref}"${c.ref === m.col ? ' selected' : ''}>${c.label}</option>`
+    ).join('');
     return `<div class="bldr-metric-row">
-      <select class="bldr-mselect" data-i="${i}" data-f="op">
-        ${['SUM','COUNT','COUNT_DISTINCT','AVG','MIN','MAX'].map(op => `<option value="${op}"${op === m.op ? ' selected' : ''}>${op.replace('_',' ')}</option>`).join('')}
-      </select>
+      <select class="bldr-mselect bldr-mselect--op" data-i="${i}" data-f="op">${opOpts}</select>
       <select class="bldr-mselect" data-i="${i}" data-f="col">${colOpts}</select>
       <button class="bldr-trail-rm" data-i="${i}" data-rm="m">×</button>
     </div>`;
@@ -1273,11 +1305,14 @@ function renderBuilderMetrics() {
   root.querySelectorAll('.bldr-mselect').forEach(el => el.onchange = () => {
     const m = builderMetrics[+el.dataset.i];
     m[el.dataset.f] = el.value;
-    if (el.dataset.f === 'op') {
-      if (m.op === 'COUNT') m.col = '*';
-      else if (m.col === '*') m.col = '';
-      renderBuilderMetrics();
+    if (el.dataset.f === 'col') {
+      // when column changes, snap op to one valid for the new kind
+      const meta = m.col === '*' ? { kind: 'any' } : (allCols.find(c => c.ref === m.col) || { kind: 'cat' });
+      const allowed = m.col === '*' ? ['COUNT'] : (OPS_BY_KIND[meta.kind] || ['COUNT','COUNT_DISTINCT']);
+      if (!allowed.includes(m.op)) m.op = allowed[0];
     }
+    if (el.dataset.f === 'op' && m.op === 'COUNT' && !m.col) m.col = '*';
+    renderBuilderMetrics();
   });
   root.querySelectorAll('[data-rm="m"]').forEach(el => el.onclick = () => {
     builderMetrics.splice(+el.dataset.i, 1); renderBuilderMetrics();
@@ -2112,20 +2147,21 @@ __LEGACY_END__ */
 /* ── REPORT BUILDER ─────────────────────────────────────────── */
 .bldr {
   display: grid;
-  grid-template-columns: 280px 1fr 320px;
+  grid-template-columns: 320px 1fr 360px;
   gap: 1px;
   background: var(--border);
   border: 1px solid var(--border);
   border-radius: var(--r);
   overflow: hidden;
-  min-height: 600px;
+  height: calc(100vh - 240px);
+  min-height: 520px;
   margin-bottom: 32px;
 }
 .bldr-cat, .bldr-trail, .bldr-agg {
   background: var(--bg);
   padding: 16px 14px;
   overflow-y: auto;
-  max-height: 78vh;
+  min-height: 0;
 }
 .bldr-cat { background: var(--bg2); }
 .bldr-agg { background: var(--surface2); display: flex; flex-direction: column; gap: 14px; }
@@ -2277,12 +2313,15 @@ __LEGACY_END__ */
 }
 .bldr-add-metric:hover { background: var(--bg2); border-color: var(--br); }
 
-@media (max-width: 1100px) {
-  .bldr { grid-template-columns: 240px 1fr; }
+@media (max-width: 1280px) {
+  .bldr { grid-template-columns: 260px 1fr 320px; }
+}
+@media (max-width: 1024px) {
+  .bldr { grid-template-columns: 240px 1fr; height: auto; }
   .bldr-agg { display: none !important; }
 }
 @media (max-width: 720px) {
-  .bldr { grid-template-columns: 1fr; }
+  .bldr { grid-template-columns: 1fr; height: auto; }
   .bldr-cat { max-height: 280px; }
 }
 </style>

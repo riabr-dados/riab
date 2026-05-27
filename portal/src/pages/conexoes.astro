@@ -405,14 +405,18 @@ const grafoJson = JSON.stringify(grafoData);
   buildGraph();
   applyFilter();
   bindEvents();
+
+  // Keep the graph filling the canvas when the window resizes
+  let resizeT;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeT);
+    resizeT = setTimeout(() => { if (cy) { cy.resize(); cy.fit(null, 40); } }, 120);
+  });
 })();
 </script>
 
 <style is:global>
-.cnx { max-width: 100%; margin: 0; padding: 0 var(--pad) 80px; }
-.cnx-app { min-height: calc(100vh - 220px); }
-.cnx-side, .cnx-canvas { min-height: calc(100vh - 220px); }
-.cnx-side { max-height: calc(100vh - 220px); }
+.cnx { max-width: 100%; margin: 0; padding: 0 var(--pad) 32px; }
 
 /* status bar — same pattern as transformar */
 .cnx-bar {
@@ -448,27 +452,28 @@ const grafoJson = JSON.stringify(grafoData);
 /* app grid */
 .cnx-app {
   display: grid;
-  grid-template-columns: 260px 1fr 320px;
+  grid-template-columns: 280px 1fr 340px;
   gap: 1px;
   background: var(--border);
   border: 1px solid var(--border);
   border-radius: var(--r);
   overflow: hidden;
-  min-height: 78vh;
+  height: calc(100vh - 220px);
+  min-height: 520px;
 }
 
 .cnx-side {
   background: var(--bg2);
   padding: 18px 16px;
   overflow-y: auto;
-  max-height: 78vh;
+  min-height: 0;
 }
 .cnx-side--right { background: var(--surface2); }
 
 .cnx-canvas {
   background: var(--surface);
   position: relative;
-  min-height: 78vh;
+  min-height: 0;
 }
 #cy { position: absolute; inset: 0; }
 .cnx-hint {
@@ -602,12 +607,16 @@ const grafoJson = JSON.stringify(grafoData);
 .cnx-kbside em { color: var(--dim); font-style: normal; font-size: 11px; }
 
 /* responsive */
-@media (max-width: 1100px) {
-  .cnx-app { grid-template-columns: 220px 1fr; }
+@media (max-width: 1280px) {
+  .cnx-app { grid-template-columns: 240px 1fr 300px; }
+}
+@media (max-width: 1024px) {
+  .cnx-app { grid-template-columns: 220px 1fr; height: auto; min-height: 78vh; }
   .cnx-side--right { display: none; }
 }
 @media (max-width: 720px) {
-  .cnx-app { grid-template-columns: 1fr; }
-  .cnx-side { max-height: 200px; }
+  .cnx-app { grid-template-columns: 1fr; height: auto; }
+  .cnx-side { max-height: 220px; }
+  .cnx-canvas { min-height: 60vh; }
 }
 </style>
