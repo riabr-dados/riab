@@ -118,14 +118,16 @@ const BUILDER_DATA_JSON = JSON.stringify({ catalog: BUILDER_CATALOG, bridges: BU
         <div class="bldr-h">Agregação</div>
 
         <div class="bldr-agg-block">
-          <label class="bldr-mini-label">Agrupar por</label>
-          <select class="bldr-select" id="bldr-groupby">
-            <option value="">— selecione —</option>
+          <label class="bldr-mini-label">Colunas a mostrar</label>
+          <div class="bldr-gb-chips" id="bldr-gb-chips"></div>
+          <select class="bldr-select" id="bldr-gb-add">
+            <option value="">+ adicionar coluna</option>
           </select>
+          <span class="bldr-help" id="bldr-gb-help">Sem métricas embaixo: vira <code>SELECT</code> cru das colunas. Com métricas: viram chaves do <code>GROUP BY</code>.</span>
         </div>
 
         <div class="bldr-agg-block">
-          <label class="bldr-mini-label">Métricas</label>
+          <label class="bldr-mini-label">Métricas <span class="bldr-mini-hint">(opcional)</span></label>
           <div class="bldr-metrics" id="bldr-metrics"></div>
           <button class="bldr-add-metric" id="bldr-add-metric">+ adicionar métrica</button>
         </div>
@@ -616,7 +618,7 @@ let sortCol = null, sortAsc = true;
 const registeredViews = new Set();
 const builderColCache = {}; // table -> [{name,type}]
 let builderTables = []; // [{table, alias}]
-let builderGroupBy = ''; // "table.col"
+let builderGroupBys = []; // ["table.col", ...] — colunas a mostrar. Viram GROUP BY se houver métricas; SELECT cru caso contrário.
 let builderMetrics = []; // [{op:'SUM'|'COUNT'|'AVG'|'COUNT_DISTINCT', col:'table.col'|'*'}]
 let builderFilters = []; // [{col, op, val}]
 let builderLimit = 100;
@@ -1168,7 +1170,7 @@ async function addToTrail(table) {
 function removeFromTrail(table) {
   builderTables = builderTables.filter(t => t.table !== table);
   // clean group-by / metrics / filters that referenced this table
-  if (builderGroupBy && builderGroupBy.startsWith(table + '.')) builderGroupBy = '';
+  builderGroupBys = builderGroupBys.filter(ref => !ref.startsWith(table + '.'));
   builderMetrics = builderMetrics.filter(m => !m.col || m.col === '*' || !m.col.startsWith(table + '.'));
   builderFilters = builderFilters.filter(f => !f.col?.startsWith(table + '.'));
   renderBuilder();
@@ -1227,21 +1229,43 @@ function renderAggPane() {
   pane.style.display = builderTables.length > 0 ? 'flex' : 'none';
   if (!builderTables.length) return;
 
-  // group-by dropdown: all columns of all selected tables
-  const gb = document.getElementById('bldr-groupby');
-  let opts = '<option value="">— selecione —</option>';
+  // drop group-by entries whose table is no longer in the trail
+  const validTables = new Set(builderTables.map(t => t.table));
+  builderGroupBys = builderGroupBys.filter(ref => validTables.has(ref.split('.')[0]));
+
+  // chips of selected columns
+  const chips = document.getElementById('bldr-gb-chips');
+  if (builderGroupBys.length === 0) {
+    chips.innerHTML = '<p class="bldr-empty">Nenhuma coluna escolhida. Sem coluna nem métrica, sai <code>COUNT(*)</code>.</p>';
+  } else {
+    chips.innerHTML = builderGroupBys.map((ref, i) => {
+      const [tb, col] = ref.split('.');
+      const alias = builderTables.find(t => t.table === tb)?.alias || tb;
+      return `<span class="bldr-gb-chip"><span class="bldr-gb-chip-alias">${alias}.</span>${col}<button data-i="${i}" title="remover">×</button></span>`;
+    }).join('');
+    chips.querySelectorAll('button').forEach(b => b.onclick = () => {
+      builderGroupBys.splice(+b.dataset.i, 1); renderAggPane();
+    });
+  }
+
+  // dropdown to add a column (excludes already-chosen)
+  const add = document.getElementById('bldr-gb-add');
+  const chosen = new Set(builderGroupBys);
+  let opts = '<option value="">+ adicionar coluna</option>';
   for (const t of builderTables) {
-    const cols = builderColCache[t.table] || [];
+    const cols = (builderColCache[t.table] || []).filter(c => !chosen.has(`${t.table}.${c.name}`));
     if (cols.length === 0) continue;
     opts += `<optgroup label="${t.alias} · ${t.table}">`;
     for (const c of cols) {
-      const v = `${t.table}.${c.name}`;
-      opts += `<option value="${v}"${v === builderGroupBy ? ' selected' : ''}>${c.name}  ·  ${c.type}</option>`;
+      opts += `<option value="${t.table}.${c.name}">${c.name}  ·  ${c.type}</option>`;
     }
     opts += '</optgroup>';
   }
-  gb.innerHTML = opts;
-  gb.onchange = () => { builderGroupBy = gb.value; };
+  add.innerHTML = opts;
+  add.value = '';
+  add.onchange = () => {
+    if (add.value) { builderGroupBys.push(add.value); renderAggPane(); }
+  };
 
   // metrics
   renderBuilderMetrics();
@@ -1385,20 +1409,36 @@ async function buildBuilderSQL() {
     return `${aliasFor_(tb)}.${col}`;
   };
 
+  // Pick alias for each chosen column — dedupe across tables so headers stay unique.
+  // e.g. obras.cpb + diretores_obras.cpb → "cpb" and "cpb_dob"
+  const usedAliases = new Set();
+  const colAliases = builderGroupBys.map(ref => {
+    const [tb, col] = ref.split('.');
+    let a = col;
+    if (usedAliases.has(a)) a = `${col}_${aliasFor_(tb)}`;
+    let n = 2;
+    while (usedAliases.has(a)) a = `${col}_${aliasFor_(tb)}${n++}`;
+    usedAliases.add(a);
+    return a;
+  });
+
   // SELECT clause
   const selectParts = [];
-  // Use real column name as alias (quoted, to dodge reserved words) — friendlier in CSV/table
-  const groupByCol = builderGroupBy ? builderGroupBy.split('.')[1] : '';
-  if (builderGroupBy) selectParts.push(`${qualify(builderGroupBy)} AS "${groupByCol}"`);
-  if (builderMetrics.length === 0) {
-    selectParts.push('COUNT(*) AS registros');
-  } else {
+  const hasMetrics = builderMetrics.length > 0;
+  const hasCols = builderGroupBys.length > 0;
+  builderGroupBys.forEach((ref, i) => {
+    selectParts.push(`${qualify(ref)} AS "${colAliases[i]}"`);
+  });
+  if (hasMetrics) {
     for (const m of builderMetrics) {
       const colExpr = m.col === '*' ? '*' : (m.col ? qualify(m.col) : '*');
       const op = m.op === 'COUNT_DISTINCT' ? `COUNT(DISTINCT ${colExpr})` : `${m.op}(${colExpr})`;
       const alias = (m.op + '_' + (m.col || 'all')).toLowerCase().replace(/[^a-z0-9_]+/g,'_');
       selectParts.push(`${op} AS ${alias}`);
     }
+  } else if (!hasCols) {
+    // nothing chosen at all → sensible default
+    selectParts.push('COUNT(*) AS registros');
   }
 
   // FROM + JOINs
@@ -1457,13 +1497,24 @@ async function buildBuilderSQL() {
     if (f.op === 'ILIKE') return `${c} ILIKE '%${esc(f.val)}%'`;
     return `${c} ${f.op} ${v}`;
   }).filter(Boolean);
-  // also exclude null group key
-  if (builderGroupBy) whereClauses.unshift(`${qualify(builderGroupBy)} IS NOT NULL`);
+  // exclude null on group keys only when actually aggregating (raw SELECT can keep nulls)
+  if (hasCols && hasMetrics) {
+    builderGroupBys.forEach(ref => whereClauses.unshift(`${qualify(ref)} IS NOT NULL`));
+  }
   const where = whereClauses.length ? `WHERE ${whereClauses.join('\n  AND ')}` : '';
 
   // GROUP BY / ORDER BY / LIMIT
-  const groupBy = builderGroupBy ? `GROUP BY 1` : '';
-  const orderBy = builderGroupBy && builderMetrics.length ? `ORDER BY 2 DESC NULLS LAST` : (builderGroupBy ? `ORDER BY 1` : '');
+  // - cols + metrics: GROUP BY all chosen cols, order by first metric DESC
+  // - cols only (no metrics): raw SELECT, no GROUP BY, order by first col ASC
+  // - metrics only / nothing: single-row aggregate, no GROUP BY / ORDER BY
+  let groupBy = '', orderBy = '';
+  if (hasCols && hasMetrics) {
+    const idxs = builderGroupBys.map((_, i) => i + 1).join(', ');
+    groupBy = `GROUP BY ${idxs}`;
+    orderBy = `ORDER BY ${builderGroupBys.length + 1} DESC NULLS LAST`;
+  } else if (hasCols && !hasMetrics) {
+    orderBy = `ORDER BY 1`;
+  }
   const limitClause = builderLimit > 0 ? `LIMIT ${builderLimit}` : '';
 
   return [
@@ -2287,6 +2338,30 @@ __LEGACY_END__ */
   padding: 7px 8px; cursor: pointer; outline: none;
 }
 .bldr-select:focus { border-color: var(--br); }
+.bldr-gb-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.bldr-gb-chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-family: var(--font-m); font-size: 10.5px;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border); border-radius: 3px;
+  padding: 3px 4px 3px 7px;
+}
+.bldr-gb-chip-alias { color: var(--dim); font-size: 9.5px; }
+.bldr-gb-chip button {
+  background: transparent; border: none; cursor: pointer;
+  color: var(--dim); font-size: 13px; line-height: 1;
+  padding: 0 3px; border-radius: 2px;
+}
+.bldr-gb-chip button:hover { color: #e8341a; background: var(--bg2); }
+.bldr-mini-hint { color: var(--dim); font-weight: 400; text-transform: none; letter-spacing: 0; }
+.bldr-help {
+  font-family: var(--font-s); font-size: 10.5px; color: var(--dim);
+  line-height: 1.45; display: block; margin-top: 2px;
+}
+.bldr-help code {
+  font-family: var(--font-m); font-size: 10px;
+  background: var(--bg2); padding: 1px 4px; border-radius: 2px; color: var(--text);
+}
 .bldr-metrics { display: flex; flex-direction: column; gap: 6px; }
 .bldr-metric-row {
   display: grid; grid-template-columns: auto 1fr auto auto; gap: 5px; align-items: center;
