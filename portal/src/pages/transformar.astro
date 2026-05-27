@@ -232,10 +232,35 @@ const HF = window.__RIDAB_HF__;
 const BUILDER_DATA = window.__RIDAB_BUILDER__;
 const COUNTRY_FILL = { BR:'#007a3c', AR:'#2d70c4', UY:'#b07d0a', FR:'#1f3bb8', UK:'#5a2244', EU:'#1f3bb8' };
 const STRONG_KEYS_SET = new Set(['CPB','CRT','ROE','SALIC','CONTRATO','PROCESSO','REG_ANCINE','CNPJ','CPF','GRUPO_ECON','CNAE','PRODUTORA','DISTRIBUIDORA','EXIBIDORA']);
-// Alias generation: derive 2-3 char alias from table name for SQL readability
-function aliasFor(table){
-  const parts = table.split('_');
-  return parts.length === 1 ? parts[0].slice(0,2) : parts.map(p=>p[0]).join('').slice(0,4);
+// SQL keywords reserved by DuckDB that cannot be used as bare aliases
+const SQL_RESERVED = new Set([
+  'do','in','on','or','as','by','is','at','no','not','if','of','to',
+  'and','any','all','asc','desc','from','where','group','order','having',
+  'union','join','left','right','outer','inner','cross','natural','using',
+  'when','then','else','case','end','null','true','false','select','distinct',
+  'limit','offset','create','drop','table','view','with','as','set','into',
+  'returning','for','full','some','only','primary','foreign','key','unique',
+]);
+
+function aliasBase(table){
+  const parts = table.split('_').filter(Boolean);
+  if (parts.length === 1) return parts[0].slice(0,3);
+  // first letter of each word, min 3 chars to dodge keyword collisions
+  const initials = parts.map(p => p[0]).join('');
+  return initials.length >= 3 ? initials.slice(0,4) : (initials + parts[parts.length-1].slice(1,2)).slice(0,4);
+}
+
+// Generate alias unique in the current trail AND not a SQL reserved word
+function aliasFor(table, taken = new Set()){
+  let base = aliasBase(table);
+  let alias = base;
+  let n = 2;
+  while (SQL_RESERVED.has(alias.toLowerCase()) || taken.has(alias)) {
+    alias = base + n;
+    n++;
+    if (n > 99) break;
+  }
+  return alias;
 }
 
 // ── CRUZAMENTOS ────────────────────────────────────────────────
@@ -1664,8 +1689,8 @@ __LEGACY_END__ */
 <style is:global>
 /* ── Wrapper ─────────────────────────────────────────────────── */
 .tf {
-  max-width: 1200px;
-  margin: 0 auto;
+  max-width: 100%;
+  margin: 0;
   padding: 0 var(--pad) 80px;
 }
 

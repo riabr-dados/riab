@@ -409,7 +409,10 @@ const grafoJson = JSON.stringify(grafoData);
 </script>
 
 <style is:global>
-.cnx { max-width: var(--max-w); margin: 0 auto; padding: 0 var(--pad) 80px; }
+.cnx { max-width: 100%; margin: 0; padding: 0 var(--pad) 80px; }
+.cnx-app { min-height: calc(100vh - 220px); }
+.cnx-side, .cnx-canvas { min-height: calc(100vh - 220px); }
+.cnx-side { max-height: calc(100vh - 220px); }
 
 /* status bar — same pattern as transformar */
 .cnx-bar {

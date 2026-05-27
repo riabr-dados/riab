@@ -141,6 +141,7 @@ a:hover { text-decoration: underline; }
 /* ── MAIN ────────────────────────────────────────────────────── */
 main { max-width: var(--max-w); margin: 0 auto; padding: 0 var(--pad); }
 main:has(.exp-page) { max-width: 100%; padding: 0; }
+main:has(.tf), main:has(.cnx) { max-width: 100%; padding: 0; }
 
 /* ── BUTTONS ─────────────────────────────────────────────────── */
 .btn-primary {
