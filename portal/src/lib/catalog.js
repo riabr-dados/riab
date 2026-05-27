@@ -24,10 +24,12 @@ function loadSources() {
 export function getDatasets() {
   const datasets = loadCatalog();
   const sources = loadSources();
-  return datasets.map((ds) => ({
-    ...ds,
-    source: sources[ds.source_id] ?? null,
-  }));
+  return datasets
+    .filter((ds) => !ds.hidden)
+    .map((ds) => ({
+      ...ds,
+      source: sources[ds.source_id] ?? null,
+    }));
 }
 
 export function getDataset(slug) {

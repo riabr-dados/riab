@@ -540,6 +540,7 @@ datasets:
       projetos habilitados e resultados finais.
     source_id: ancine
     status: ativo
+    hidden: true
     coverage: "2014-2024"
     tags: [fomento, fsa, atas, pdf, brasil, ancine]
     raw:
@@ -605,6 +606,7 @@ datasets:
       proveniencia que liga os datasets do RIDAB aos arquivos oficiais OCA.
     source_id: ancine
     status: ativo
+    hidden: true
     coverage: "2007-2026"
     tags: [oca, ancine, inventario, proveniencia, metadata]
     raw:
@@ -978,6 +980,7 @@ datasets:
       monetarios ao longo do tempo (bilheteria, fomento, preco do ingresso).
     source_id: ibge
     status: ativo
+    hidden: true
     coverage: "serie historica"
     tags: [deflator, ipca, inflacao, brasil, ibge]
     raw:
@@ -1774,6 +1777,7 @@ datasets:
       cinematografica no Reino Unido. BFI Statistical Yearbook 2023.
     source_id: bfi
     status: ativo
+    hidden: true
     coverage: "2023"
     tags: [cinema, educacao, reino-unido, bfi]
     raw:
