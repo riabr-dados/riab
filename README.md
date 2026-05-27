@@ -81,8 +81,9 @@ riab/
     update-data.yml    # Coleta e transformacao semanal (cron)
   datasets/            # Legado: snapshots brutos (migrando para HF)
   MANIFESTO.md
-  LICENSE-code         # MIT
-  LICENSE-data         # CC-BY-4.0
+  LICENSE-app          # AGPL-3.0  (portal/ + catalog/joins.yaml)
+  LICENSE-code         # MIT       (pipelines/, scripts/)
+  LICENSE-data         # CC-BY-4.0 (dados na HF, catalog/datasets.yaml)
 ```
 
 ## Datasets — 65 de 6 paises
@@ -94,9 +95,20 @@ Ver catalogo completo com descricoes e schemas em: https://riabr-dados.github.io
 
 ## Licenca
 
-- **Dados:** [CC-BY-4.0](LICENSE-data) — use livremente, cite a fonte original
-- **Codigo:** [MIT](LICENSE-code)
-- **Fontes originais:** cada dataset tem sua propria licenca — ver `catalog/sources.yaml`
+Este projeto usa licenciamento dividido conforme a sensibilidade de cada parte:
+
+| Parte | Licenca | Por que |
+|-------|---------|---------|
+| **Dados** (HF, `catalog/datasets.yaml`, `catalog/schemas/`, `catalog/sources.yaml`) | [CC-BY-4.0](LICENSE-data) | Dado publico derivado de fontes oficiais; use livremente citando a fonte |
+| **Pipelines & scripts** (`pipelines/`, `scripts/`) | [MIT](LICENSE-code) | Queremos que pesquisadores contribuam com novos scrapers livremente |
+| **Portal & registry de joins** (`portal/`, `catalog/joins.yaml`) | [AGPL-3.0](LICENSE-app) | O builder interativo, o grafo de conexoes e as pontes curadas entre datasets sao o conhecimento de dominio do projeto. AGPL garante que quem rodar uma versao modificada como servico publique as modificacoes. |
+
+**Em pratica:**
+- Pesquisador, jornalista, estudante: usa tudo livremente.
+- Empresa que quiser hospedar o portal modificado: precisa publicar as modificacoes sob AGPL.
+- Empresa que quiser usar so os dados / pipelines pra rodar analises proprias: completamente livre, basta citar a fonte.
+
+**Fontes originais:** cada dataset tem sua propria licenca — ver `catalog/sources.yaml`
 
 Os dados brutos sao publicos por forca da Lei de Acesso a Informacao (Lei 12.527/2011)
 e legislacoes equivalentes nos demais paises. Este repositorio acrescenta organizacao,

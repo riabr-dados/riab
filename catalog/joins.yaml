@@ -1,3 +1,7 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Copyright (c) 2026 Contribuidores de dados-audiovisual-br (RIDAB)
+# Curated join registry between RIDAB datasets. Domain knowledge.
+# Ver catalog/LICENSE.
 version: 0.1.0
 _meta:
   generated_at: '2026-05-27'

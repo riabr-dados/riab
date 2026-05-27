@@ -1,5 +1,10 @@
 MIT License
 
+Aplica-se a: pipelines/, scripts/ e demais scripts utilitarios na raiz do
+repositorio. NAO se aplica a portal/ nem a catalog/joins.yaml — esses estao
+sob AGPL-3.0 (ver LICENSE-app). NAO se aplica aos dados — esses estao
+sob CC-BY-4.0 (ver LICENSE-data).
+
 Copyright (c) 2026 Contribuidores de dados-audiovisual-br
 
 Permission is hereby granted, free of charge, to any person obtaining a copy

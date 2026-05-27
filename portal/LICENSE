@@ -1,0 +1,27 @@
+The Portal (this directory) and the joins registry
+(catalog/joins.yaml) are licensed under the GNU Affero General
+Public License v3.0 (AGPL-3.0-or-later).
+
+See ../LICENSE-app for the full license text.
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+
+Copyright (c) 2026 Contribuidores de dados-audiovisual-br (RIDAB)
+
+────────────────────────────────────────────────────────────────────
+Why AGPL for the portal and the joins registry?
+
+The interactive query builder (portal/src/pages/transformar.astro),
+the dataset-graph (portal/src/pages/conexoes.astro), and the curated
+join registry (catalog/joins.yaml) together encode domain knowledge
+about how Brazilian audiovisual datasets connect. They are the
+sensitive parts of this project.
+
+AGPL-3.0 ensures that if anyone runs a modified version of this
+software as a network-accessible service (SaaS, internal portal,
+embedded product), they must publish their modified source under
+the same license. This protects the open-source nature of the work
+against private commercial appropriation.
+
+The rest of the repository (pipelines, cleaned data) uses more
+permissive licenses — see the root README for the full breakdown.

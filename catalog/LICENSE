@@ -1,0 +1,26 @@
+Mixed-license directory.
+
+────────────────────────────────────────────────────────────────────
+
+joins.yaml  →  AGPL-3.0-or-later  (../LICENSE-app)
+
+The curated join registry between datasets — the bridges, normalization
+rules, and key relationships — is licensed under AGPL-3.0. This is
+domain knowledge that took significant work to compile, and is the
+same license as the application that consumes it (portal/).
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+
+────────────────────────────────────────────────────────────────────
+
+datasets.yaml, sources.yaml, schemas/  →  CC-BY-4.0  (../LICENSE-data)
+
+The dataset catalog (titles, descriptions, schemas, source URLs)
+is metadata about public data and stays under CC-BY-4.0, like the
+data it describes.
+
+SPDX-License-Identifier: CC-BY-4.0
+
+────────────────────────────────────────────────────────────────────
+
+Copyright (c) 2026 Contribuidores de dados-audiovisual-br (RIDAB)
