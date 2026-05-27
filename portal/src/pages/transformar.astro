@@ -1352,9 +1352,11 @@ async function buildBuilderSQL() {
 
   // SELECT clause
   const selectParts = [];
-  if (builderGroupBy) selectParts.push(`${qualify(builderGroupBy)} AS dim`);
+  // Use real column name as alias (quoted, to dodge reserved words) — friendlier in CSV/table
+  const groupByCol = builderGroupBy ? builderGroupBy.split('.')[1] : '';
+  if (builderGroupBy) selectParts.push(`${qualify(builderGroupBy)} AS "${groupByCol}"`);
   if (builderMetrics.length === 0) {
-    selectParts.push('COUNT(*) AS total');
+    selectParts.push('COUNT(*) AS registros');
   } else {
     for (const m of builderMetrics) {
       const colExpr = m.col === '*' ? '*' : (m.col ? qualify(m.col) : '*');
