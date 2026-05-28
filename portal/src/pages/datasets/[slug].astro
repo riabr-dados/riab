@@ -193,6 +193,56 @@ FROM produtores_obras
 GROUP BY produtor, pais_produtor
 ORDER BY obras DESC
 LIMIT 30`,
+
+  comercio_exterior_servicos_audiovisuais_total_ano: `SELECT
+  ano,
+  ROUND(valor_vendido_usd_nominal / 1e6, 2) AS vendido_mi_usd,
+  ROUND(valor_adquirido_usd_nominal / 1e6, 2) AS adquirido_mi_usd,
+  ROUND(saldo_usd_nominal / 1e6, 2) AS saldo_mi_usd
+FROM comercio_exterior_servicos_audiovisuais_total_ano
+ORDER BY ano`,
+
+  comercio_exterior_servicos_audiovisuais_servico_ano: `SELECT
+  ano,
+  grupo_servico,
+  codigo_nbs,
+  descricao_servico,
+  ROUND(valor_vendido_usd_nominal / 1e6, 4) AS vendido_mi_usd,
+  ROUND(valor_adquirido_usd_nominal / 1e6, 4) AS adquirido_mi_usd,
+  ROUND(saldo_usd_nominal / 1e6, 4) AS saldo_mi_usd
+FROM comercio_exterior_servicos_audiovisuais_servico_ano
+ORDER BY ano, ABS(saldo_usd_nominal) DESC`,
+
+  pib_audiovisual_total_ano: `SELECT
+  ano,
+  valor_adicionado_brl_milhoes_correntes AS vab_mi_brl_correntes,
+  participacao_va_total_economia_pct AS pct_va_economia,
+  participacao_va_total_servicos_pct AS pct_va_servicos
+FROM pib_audiovisual_total_ano
+ORDER BY ano`,
+
+  pib_audiovisual_atividade_ano: `SELECT
+  ano,
+  segmento_ancine,
+  atividade,
+  valor_adicionado_brl_milhoes_correntes AS vab_mi_brl
+FROM pib_audiovisual_atividade_ano
+WHERE incluido_no_total_publicado = true
+ORDER BY ano, valor_adicionado_brl_milhoes_correntes DESC`,
+
+  rais_emprego_audiovisual_total_ano: `SELECT
+  ano,
+  empregos_formais_ativos_31_12
+FROM rais_emprego_audiovisual_total_ano
+ORDER BY ano`,
+
+  rais_emprego_audiovisual_subclasse_ano: `SELECT
+  ano,
+  cnae_subclasse,
+  subclasse,
+  empregos_formais_ativos_31_12
+FROM rais_emprego_audiovisual_subclasse_ano
+ORDER BY ano, empregos_formais_ativos_31_12 DESC`,
 };
 
 // Cruzamentos prontos por tabela
@@ -377,6 +427,123 @@ LIMIT 50`,
 FROM brasil_no_mundo_indice
 WHERE dataset_derivado = 'brasil_no_mundo_mercado_bfi'
 ORDER BY ano, indicador`,
+    },
+  ],
+
+  comercio_exterior_servicos_audiovisuais_total_ano: [
+    {
+      label: "Evolucao do saldo",
+      sql: `SELECT
+  ano,
+  ROUND(valor_vendido_usd_nominal / 1e6, 2) AS vendido_mi_usd,
+  ROUND(valor_adquirido_usd_nominal / 1e6, 2) AS adquirido_mi_usd,
+  ROUND(saldo_usd_nominal / 1e6, 2) AS saldo_mi_usd
+FROM comercio_exterior_servicos_audiovisuais_total_ano
+ORDER BY ano`,
+    },
+  ],
+
+  comercio_exterior_servicos_audiovisuais_servico_ano: [
+    {
+      label: "Por grupo de servico",
+      sql: `SELECT
+  grupo_servico,
+  ROUND(SUM(valor_vendido_usd_nominal) / 1e6, 2) AS vendido_mi_usd,
+  ROUND(SUM(valor_adquirido_usd_nominal) / 1e6, 2) AS adquirido_mi_usd,
+  ROUND(SUM(saldo_usd_nominal) / 1e6, 2) AS saldo_mi_usd
+FROM comercio_exterior_servicos_audiovisuais_servico_ano
+GROUP BY grupo_servico
+ORDER BY ABS(SUM(saldo_usd_nominal)) DESC`,
+    },
+    {
+      label: "Top codigos NBS por saldo",
+      sql: `SELECT
+  codigo_nbs,
+  descricao_servico,
+  ROUND(SUM(saldo_usd_nominal) / 1e6, 2) AS saldo_acumulado_mi_usd
+FROM comercio_exterior_servicos_audiovisuais_servico_ano
+GROUP BY codigo_nbs, descricao_servico
+ORDER BY saldo_acumulado_mi_usd
+LIMIT 20`,
+    },
+    {
+      label: "Evolucao por grupo e ano",
+      sql: `SELECT
+  ano,
+  grupo_servico,
+  ROUND(SUM(saldo_usd_nominal) / 1e6, 2) AS saldo_mi_usd
+FROM comercio_exterior_servicos_audiovisuais_servico_ano
+GROUP BY ano, grupo_servico
+ORDER BY ano, saldo_mi_usd`,
+    },
+  ],
+
+  pib_audiovisual_total_ano: [
+    {
+      label: "Participacao no VA da economia",
+      sql: `SELECT
+  ano,
+  valor_adicionado_brl_milhoes_correntes AS vab_mi_brl,
+  participacao_va_total_economia_pct AS pct_economia,
+  participacao_va_total_servicos_pct AS pct_servicos
+FROM pib_audiovisual_total_ano
+ORDER BY ano`,
+    },
+  ],
+
+  pib_audiovisual_atividade_ano: [
+    {
+      label: "Por segmento ANCINE",
+      sql: `SELECT
+  segmento_ancine,
+  ROUND(SUM(valor_adicionado_brl_milhoes_correntes), 2) AS vab_total_mi_brl
+FROM pib_audiovisual_atividade_ano
+WHERE incluido_no_total_publicado = true
+GROUP BY segmento_ancine
+ORDER BY vab_total_mi_brl DESC`,
+    },
+    {
+      label: "Evolucao por atividade (2019)",
+      sql: `SELECT
+  cnae_classe,
+  atividade,
+  valor_adicionado_brl_milhoes_correntes AS vab_mi_brl
+FROM pib_audiovisual_atividade_ano
+WHERE ano = 2019
+  AND incluido_no_total_publicado = true
+ORDER BY valor_adicionado_brl_milhoes_correntes DESC`,
+    },
+  ],
+
+  rais_emprego_audiovisual_total_ano: [
+    {
+      label: "Serie historica",
+      sql: `SELECT ano, empregos_formais_ativos_31_12
+FROM rais_emprego_audiovisual_total_ano
+ORDER BY ano`,
+    },
+  ],
+
+  rais_emprego_audiovisual_subclasse_ano: [
+    {
+      label: "Top subclasses (2019)",
+      sql: `SELECT
+  cnae_subclasse,
+  subclasse,
+  empregos_formais_ativos_31_12
+FROM rais_emprego_audiovisual_subclasse_ano
+WHERE ano = 2019
+ORDER BY empregos_formais_ativos_31_12 DESC`,
+    },
+    {
+      label: "Por classe CNAE",
+      sql: `SELECT
+  cnae_classe,
+  SUM(empregos_formais_ativos_31_12) AS empregos
+FROM rais_emprego_audiovisual_subclasse_ano
+WHERE ano = 2019
+GROUP BY cnae_classe
+ORDER BY empregos DESC`,
     },
   ],
 };

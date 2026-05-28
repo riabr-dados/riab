@@ -777,14 +777,12 @@ datasets:
           Como o SISCOSERV foi encerrado, a reproducao depende de arquivos
           historicos oficiais por NBS/ano que permitam aplicar o mesmo recorte
           de servicos audiovisuais.
-    related:
-      - br-comex-bens-audiovisuais
-
     categoria:
       - emprego_economia
     procedencia: oca
     subfonte: oca
   - slug: br-comex-bens-audiovisuais
+    hidden: true
     title: "Comex Bens Audiovisuais - Fonte MDIC"
     description: >
       Inventario da fonte MDIC/Comex Stat para futura extracao de bens fisicos
