@@ -1,4 +1,5 @@
 ---
+// SPDX-License-Identifier: AGPL-3.0-or-later
 import Base from "../layouts/Base.astro";
 import CodeSnippet from "../components/CodeSnippet.astro";
 
@@ -13,14 +14,14 @@ const EXAMPLES = [
 conn = duckdb.connect()
 conn.sql("INSTALL httpfs; LOAD httpfs;")
 conn.sql("""
-  SELECT tipo_obra, COUNT(*) as total
+  SELECT tipo_obra, COUNT(*) AS total
   FROM '${HF_BASE}/obras.parquet'
   GROUP BY tipo_obra
   ORDER BY total DESC
 """).show()`,
   },
   {
-    titulo: "Top 20 filmes por bilheteria no Brasil (pandas)",
+    titulo: "Top 20 filmes por bilheteria (pandas)",
     lang: "python",
     code: `import pandas as pd
 df = pd.read_parquet("${HF_BASE}/bilheteria_por_filme_ano.parquet")
@@ -28,7 +29,7 @@ top = df.sort_values("publico", ascending=False).head(20)
 print(top[["titulo_original", "ano", "publico"]])`,
   },
   {
-    titulo: "Obras com FSA e circulação europeia (DuckDB)",
+    titulo: "Obras com FSA e bilheteria (DuckDB join por título)",
     lang: "python",
     code: `import duckdb
 conn = duckdb.connect()
@@ -50,10 +51,9 @@ conn.sql("""
 """).show()`,
   },
   {
-    titulo: "Baixar via CLI",
+    titulo: "Baixar via CLI (Hugging Face)",
     lang: "bash",
-    code: `# Instalar o cliente HF
-pip install huggingface_hub
+    code: `pip install huggingface_hub
 
 # Baixar todos os Parquets tratados
 huggingface-cli download riabr-dados/riab \\
@@ -62,7 +62,7 @@ huggingface-cli download riabr-dados/riab \\
   --local-dir ./dados`,
   },
   {
-    titulo: "R — carregar e analisar",
+    titulo: "R — carregar e analisar com arrow",
     lang: "r",
     code: `library(arrow)
 library(dplyr)
@@ -76,10 +76,19 @@ obras |>
 ];
 ---
 
-<Base title="Docs" description="Metodologia de transformação e guia de acesso aos dados do RIDAB.">
+<Base title="Docs" description="Tecnologias, metodologia de transformação e guia de acesso aos dados do RIDAB.">
   <div class="page-inner page-inner--narrow">
 
-    <!-- ─── INTRO MANIFESTO ─────────────────────────────────── -->
+    <!-- ─── ANCHOR NAV ─────────────────────────────────────────── -->
+    <nav class="docs-nav">
+      <a href="#tecnologias" class="docs-nav-a">Tecnologias do portal</a>
+      <span class="docs-nav-sep">·</span>
+      <a href="#metodologia" class="docs-nav-a">Metodologia de transformação</a>
+      <span class="docs-nav-sep">·</span>
+      <a href="#acesso" class="docs-nav-a">Como acessar os dados</a>
+    </nav>
+
+    <!-- ─── INTRO MANIFESTO ─────────────────────────────────────── -->
     <section class="doc-section doc-section--intro">
       <div class="docs-manifesto-ref">
         <span class="docs-manifesto-label">Do manifesto</span>
@@ -94,34 +103,185 @@ obras |>
       </div>
     </section>
 
-    <!-- ─── METODOLOGIA ─────────────────────────────────────── -->
-    <section class="doc-section" id="metodologia">
-      <h1 class="page-title">Metodologia de Transformação</h1>
+    <!-- ─── TECNOLOGIAS DO PORTAL ──────────────────────────────── -->
+    <section class="doc-section" id="tecnologias">
+      <h1 class="page-title">Tecnologias do portal</h1>
       <p class="page-sub">
-        As bases do RIDAB vêm de fontes distintas que usam chaves diferentes.
-        Esta seção documenta como elas são conectadas, normalizadas e deflacionadas
-        — incluindo os casos onde não existe chave direta e o join é feito por título.
+        Como 13 GB de dados audiovisuais chegam ao seu browser sem servidor, sem backend e sem nenhuma instalação.
       </p>
 
-      <!-- 1. Normalização -->
+      <!-- Zero servidor callout -->
+      <div class="tech-callout">
+        <div class="tech-callout-eyebrow">✦ A ideia central</div>
+        <div class="tech-callout-body">
+          <strong>DuckDB no browser</strong> abre arquivos <strong>Parquet hospedados no Hugging Face</strong>
+          via HTTP range requests — lê só os bytes necessários para cada query, sem baixar o arquivo inteiro.
+          O resultado é uma interface de análise SQL que roda inteiramente no seu computador,
+          sem passar por nenhum servidor do RIDAB.
+        </div>
+      </div>
+
+      <!-- Data flow pipeline -->
+      <div class="tech-flow">
+        <div class="tflow-step">
+          <div class="tflow-icon tflow-icon--dim">PDFs · CSVs · APIs</div>
+          <div class="tflow-label">Fontes brutas</div>
+          <div class="tflow-sub">ANCINE · CNC · Lumière<br>FSA · OCA · ACAU</div>
+        </div>
+        <div class="tflow-arr">→</div>
+        <div class="tflow-step">
+          <div class="tflow-icon tflow-icon--dim">⚙ Python</div>
+          <div class="tflow-label">Pipeline</div>
+          <div class="tflow-sub">limpeza · join<br>normalização · deflação</div>
+        </div>
+        <div class="tflow-arr">→</div>
+        <div class="tflow-step tflow-step--hi">
+          <div class="tflow-icon">.parquet</div>
+          <div class="tflow-label">Parquet no HF</div>
+          <div class="tflow-sub">~400 MB comprimidos<br>CDN global · range requests</div>
+        </div>
+        <div class="tflow-arr">→</div>
+        <div class="tflow-step tflow-step--hi">
+          <div class="tflow-icon">🦆 WASM</div>
+          <div class="tflow-label">DuckDB no browser</div>
+          <div class="tflow-sub">SQL analítico<br>lê só o necessário</div>
+        </div>
+        <div class="tflow-arr">→</div>
+        <div class="tflow-step">
+          <div class="tflow-icon tflow-icon--br">você</div>
+          <div class="tflow-label">Portal · Python · R</div>
+          <div class="tflow-sub">query · análise<br>export · visualização</div>
+        </div>
+      </div>
+
+      <!-- Tech cards -->
+      <div class="tech-cards">
+
+        <!-- Parquet -->
+        <div class="tech-card">
+          <div class="tech-card-badge tech-card-badge--mono">.parquet</div>
+          <div class="tech-card-title">Apache Parquet</div>
+          <p class="tech-card-desc">
+            Formato de arquivo <strong>colunar e comprimido</strong> otimizado para leitura analítica.
+            Diferente de CSV (linha por linha), Parquet armazena os dados por coluna —
+            uma query que usa 3 de 80 colunas lê menos de 4% do arquivo.
+          </p>
+          <ul class="tech-card-list">
+            <li>13 GB em CSV viram ~400 MB comprimidos</li>
+            <li>HTTP range requests: o DuckDB pede só os bytes da coluna pedida</li>
+            <li>Leitura 10–100× mais rápida que CSV para queries analíticas</li>
+          </ul>
+        </div>
+
+        <!-- DuckDB WASM -->
+        <div class="tech-card">
+          <div class="tech-card-badge tech-card-badge--green">DuckDB WASM</div>
+          <div class="tech-card-title">DuckDB no browser</div>
+          <p class="tech-card-desc">
+            Banco SQL analítico que roda <strong>inteiramente no browser</strong> via WebAssembly
+            (código C++ compilado para a web — velocidade quase nativa).
+            Consegue abrir arquivos Parquet remotos via HTTP sem baixá-los por completo.
+          </p>
+          <ul class="tech-card-list">
+            <li>Zero servidor: a query roda no seu computador</li>
+            <li>SQL completo: window functions, CTEs, regexp, lateral joins</li>
+            <li>Uma query típica no RIDAB busca 2–5 MB, não 400 MB</li>
+          </ul>
+        </div>
+
+        <!-- HuggingFace -->
+        <div class="tech-card">
+          <div class="tech-card-badge tech-card-badge--yellow">HuggingFace</div>
+          <div class="tech-card-title">Hugging Face Datasets</div>
+          <p class="tech-card-desc">
+            Plataforma de hospedagem gratuita para datasets de pesquisa e ML —
+            o <strong>equivalente ao GitHub, mas para dados</strong>.
+            Suporta HTTP range requests (essencial para o DuckDB), CDN global, versionamento e download público.
+          </p>
+          <ul class="tech-card-list">
+            <li>Dados em: <code>riabr-dados/riab</code></li>
+            <li>Acessível via <code>hf://</code> no DuckDB e <code>read_parquet()</code> no pandas/arrow</li>
+            <li>Download via CLI: <code>huggingface-cli download riabr-dados/riab</code></li>
+          </ul>
+        </div>
+
+        <!-- GitHub Pages -->
+        <div class="tech-card">
+          <div class="tech-card-badge tech-card-badge--blue">GitHub Pages</div>
+          <div class="tech-card-title">Portal estático (Astro)</div>
+          <p class="tech-card-desc">
+            O portal é compilado pelo <strong>Astro</strong> (gerador de sites estáticos) e
+            publicado como HTML/CSS/JS puro via GitHub Pages — sem servidor, sem custo de compute.
+            A cada commit no <code>main</code>, um GitHub Action compila e publica automaticamente.
+          </p>
+          <ul class="tech-card-list">
+            <li>Código-fonte: <a href="https://github.com/riabr-dados/riab" target="_blank" rel="noopener">github.com/riabr-dados/riab</a></li>
+            <li>Licença do portal: AGPL-3.0 · Dados: CC-BY-4.0</li>
+            <li>Deploy automático: push → build → <code>gh-pages</code></li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <div class="docs-divider"></div>
+
+    <!-- ─── METODOLOGIA ──────────────────────────────────────────── -->
+    <section class="doc-section" id="metodologia">
+      <h2 class="page-title">Metodologia de Transformação</h2>
+      <p class="page-sub">
+        Por que as bases precisam de tratamento? Porque cada fonte usa chaves diferentes.
+        A ANCINE tem CPB. O FSA tem títulos de projeto. O Lumière tem títulos internacionais.
+        Nenhum deles conversa diretamente — este é o problema que a metodologia resolve.
+      </p>
+
+      <!-- 1. CPB -->
       <div class="meta-block">
-        <h2 class="meta-h">1 · Normalização de título</h2>
+        <h2 class="meta-h">1 · CPB — a chave mestra</h2>
         <p class="meta-p">
-          Como não existe um identificador de texto padronizado entre todas as bases,
+          O <strong>CPB (Certificado de Produto Brasileiro)</strong> é o identificador único de obra audiovisual emitido
+          pela ANCINE. É a chave de junção primária do RIDAB — presente no cadastro de obras,
+          bilheteria 2014+, janelas CRT, diretores, produtores e atas FSA.
+        </p>
+        <p class="meta-p">
+          Quando o CPB está disponível em ambas as tabelas, o join é exato e sem ambiguidade:
+        </p>
+        <CodeSnippet lang="sql" code={`-- join exato via CPB
+SELECT o.titulo_original, b.publico
+FROM obras o
+INNER JOIN bilheteria_por_filme_ano b
+  ON b.cpb_roe = o.cpb AND b.cpb_roe LIKE 'B%'`} />
+        <div class="meta-aside">
+          <strong>CPB vs. ROE.</strong> Obras brasileiras têm CPB (prefixo <code>B</code>).
+          Obras estrangeiras têm ROE (<em>Registro de Obra Estrangeira</em>). A coluna <code>cpb_roe</code>
+          na bilheteria contém ambos — o filtro <code>LIKE 'B%'</code> seleciona só as brasileiras.
+        </div>
+        <p class="meta-p">
+          O desafio começa nas bases que não têm CPB: projetos FSA, renúncia fiscal, Lumière e
+          bilheteria pré-2014 usam apenas o título da obra. Para esses casos, o RIDAB usa o
+          esquema de normalização e joins em cascata descrito a seguir.
+        </p>
+      </div>
+
+      <!-- 2. Normalização -->
+      <div class="meta-block">
+        <h2 class="meta-h">2 · Normalização de título</h2>
+        <p class="meta-p">
+          Como não existe identificador de texto padronizado entre todas as bases,
           o pipeline usa uma função de normalização (<code>_norm</code>) antes de qualquer
           busca textual. A sequência aplicada:
         </p>
         <ol class="meta-list">
-          <li>Converte para <strong>maiúsculas</strong></li>
-          <li>Remove acentos (decomposição NFD → descarta diacríticos: <em>ã→a, é→e</em>)</li>
-          <li>Substitui qualquer caractere fora de <code>[A-Z 0-9]</code> por espaço</li>
+          <li>Converte para <strong>minúsculas</strong></li>
+          <li>Remove acentos e diacríticos: <em>ã→a, é→e, ç→c</em></li>
+          <li>Substitui qualquer caractere fora de <code>[a-z 0-9]</code> por espaço</li>
           <li>Colapsa espaços múltiplos e remove bordas</li>
         </ol>
         <div class="meta-examples">
-          <div class="meta-ex"><span class="meta-ex-in">"Aquarius"</span><span class="meta-ex-arr">→</span><span class="meta-ex-out">AQUARIUS</span></div>
-          <div class="meta-ex"><span class="meta-ex-in">"O Som ao Redor"</span><span class="meta-ex-arr">→</span><span class="meta-ex-out">O SOM AO REDOR</span></div>
-          <div class="meta-ex"><span class="meta-ex-in">"Ela Volta na Quinta"</span><span class="meta-ex-arr">→</span><span class="meta-ex-out">ELA VOLTA NA QUINTA</span></div>
-          <div class="meta-ex"><span class="meta-ex-in">"Bacurau"</span><span class="meta-ex-arr">→</span><span class="meta-ex-out">BACURAU</span></div>
+          <div class="meta-ex"><span class="meta-ex-in">"Aquarius"</span><span class="meta-ex-arr">→</span><span class="meta-ex-out">aquarius</span></div>
+          <div class="meta-ex"><span class="meta-ex-in">"O Som ao Redor"</span><span class="meta-ex-arr">→</span><span class="meta-ex-out">o som ao redor</span></div>
+          <div class="meta-ex"><span class="meta-ex-in">"Ela Volta na Quinta"</span><span class="meta-ex-arr">→</span><span class="meta-ex-out">ela volta na quinta</span></div>
+          <div class="meta-ex"><span class="meta-ex-in">"Bacurau"</span><span class="meta-ex-arr">→</span><span class="meta-ex-out">bacurau</span></div>
         </div>
         <p class="meta-note">
           Em DuckDB (versão simplificada, sem remoção de acentos — adequada para a maioria dos casos):
@@ -129,9 +289,9 @@ obras |>
         <CodeSnippet lang="sql" code={`lower(regexp_replace(titulo, '[^a-zA-Z0-9 ]', '', 'g')) AS titulo_norm`} />
       </div>
 
-      <!-- 2. Joins em cascata -->
+      <!-- 3. Joins em cascata -->
       <div class="meta-block">
-        <h2 class="meta-h">2 · Joins em cascata (proxy título)</h2>
+        <h2 class="meta-h">3 · Joins em cascata (proxy título)</h2>
         <p class="meta-p">
           Quando o CPB não está disponível como chave direta — casos FSA, renúncia fiscal,
           Lumière e bilheteria pré-2014 — o join é feito por <strong>cascata de 3 níveis</strong>,
@@ -160,7 +320,7 @@ obras |>
             <div class="cascade-body">
               <div class="cascade-label">Containment 80%</div>
               <code class="cascade-code">overlap / min(len_a, len_b) ≥ 0,80 · (mín. 3 palavras)</code>
-              <p class="cascade-note">Cobre subtítulos, reordenação de palavras e variações maiores. Mais lento; aplicado apenas se os níveis anteriores falharem.</p>
+              <p class="cascade-note">Cobre subtítulos, reordenação de palavras e variações maiores. Aplicado apenas se os níveis anteriores falharem.</p>
             </div>
           </div>
         </div>
@@ -185,9 +345,9 @@ obras |>
         </div>
       </div>
 
-      <!-- 3. Derivações financeiras -->
+      <!-- 4. Derivações financeiras -->
       <div class="meta-block">
-        <h2 class="meta-h">3 · Derivações financeiras</h2>
+        <h2 class="meta-h">4 · Derivações financeiras</h2>
 
         <h3 class="meta-h3">Receita estimada por bilheteria</h3>
         <p class="meta-p">
@@ -235,57 +395,53 @@ obras |>
         <div class="meta-formula">Bilheteria R$2024&nbsp;&nbsp;=&nbsp;&nbsp;Público total × R$&nbsp;19,88</div>
       </div>
 
-      <!-- 4. Diagrama -->
-      <div class="meta-block">
-        <h2 class="meta-h">4 · Diagrama de conexões por chave</h2>
-        <pre class="doc-pre doc-pre--diagram">CPB ────────────────────── obras, bilheteria 2014+, janelas CRT, diretores, produtores, festivais
-
-TITULO_NORM ───────────── FSA (cascata 3 níveis)
-(+ alias curado)          renúncia fiscal (cascata 3 níveis)
-                          bilheteria pré-2014
-                          Lumière (salas europeias)
-                          VOD internacional
-
-CNPJ ──────────────────── desambiguação de FSA e renúncia
-                          quando título tem múltiplos candidatos</pre>
+      <!-- Diagrama link -->
+      <div class="meta-aside">
+        <strong>Diagrama interativo de relações.</strong> O grafo completo de conexões entre todas
+        as tabelas — por chave e tipo de join — está disponível como aba interativa em Transformar.
+        <br><a href={`${base}transformar/`} style="color:var(--br);font-weight:600;margin-top:4px;display:inline-block">Transformar → Diagrama de relações →</a>
       </div>
+
     </section>
 
     <div class="docs-divider"></div>
 
-    <!-- ─── COMO CONSULTAR ──────────────────────────────────── -->
-    <section class="doc-section" id="consulta">
-      <h2 class="page-title page-title--sm">Como Consultar os Dados</h2>
+    <!-- ─── COMO ACESSAR ─────────────────────────────────────────── -->
+    <section class="doc-section" id="acesso">
+      <h2 class="page-title page-title--sm">Como Acessar os Dados</h2>
       <p class="page-sub">
         Todos os dados tratados estão no Hugging Face como arquivos Parquet.
         Você pode consultar direto da URL, sem baixar nada.
       </p>
 
       <div class="meta-block">
-        <h3 class="meta-h3">Requisitos mínimos</h3>
-        <CodeSnippet lang="bash" code={`pip install pandas pyarrow duckdb huggingface_hub`} />
+        <h3 class="meta-h3">Instalar dependências</h3>
+        <CodeSnippet lang="bash" code={`pip install duckdb pandas pyarrow huggingface_hub`} />
       </div>
 
       <div class="meta-block">
-        <h3 class="meta-h3">Estrutura dos dados no Hugging Face</h3>
+        <h3 class="meta-h3">Estrutura dos arquivos no Hugging Face</h3>
         <pre class="doc-pre">riabr-dados/riab  (dataset repo)
-  raw/
-    ancine-obras-nao-publicitarias/   ← dados brutos intocados
-    ancine-fsa-projetos/
-    cnc-lumiere/
-    ...
-  cleaned/
-    obras.parquet                     ← obras ANCINE (cadastro)
-    bilheteria_por_filme_ano.parquet  ← público × CPB × ano
-    fomento_fsa.parquet               ← projetos FSA
-    renuncia_fiscal.parquet           ← captação Lei do Audiovisual
-    diretores_obras.parquet
-    produtores_obras.parquet
-    bilheteria_europa.parquet         ← Lumière (salas europeias)</pre>
+├── raw/
+│   ├── ancine-obras-nao-publicitarias/   ← dados brutos intocados
+│   ├── ancine-fsa-projetos/
+│   ├── cnc-lumiere/
+│   └── ...
+└── cleaned/
+    ├── obras.parquet                     ← cadastro de obras ANCINE
+    ├── bilheteria_por_filme_ano.parquet  ← público × CPB × ano
+    ├── fomento_fsa.parquet               ← projetos FSA
+    ├── renuncia_fiscal.parquet           ← captação Lei do Audiovisual
+    ├── diretores_obras.parquet           ← diretores por CPB
+    ├── produtores_obras.parquet          ← produtoras por CPB
+    ├── bilheteria_europa.parquet         ← Lumière (salas europeias)
+    ├── condecine_arrecadacao.parquet     ← arrecadação CONDECINE
+    ├── fsa_atas_festivais.parquet        ← festivais e premiações FSA
+    └── embrafilme_exibicao_*.parquet     ← histórico 1970–1987</pre>
       </div>
 
       <div class="meta-block">
-        <h3 class="meta-h3">Exemplos</h3>
+        <h3 class="meta-h3">Exemplos de consulta</h3>
         {EXAMPLES.map((ex) => (
           <div class="doc-example">
             <h4 class="doc-example__title">{ex.titulo}</h4>
@@ -295,11 +451,7 @@ CNPJ ──────────────────── desambiguaçã
       </div>
 
       <div class="meta-block">
-        <h3 class="meta-h3">Tabelas disponíveis</h3>
-        <p class="meta-p">
-          Consulte o catálogo para ver todas as tabelas Parquet e seus campos.
-        </p>
-        <a class="btn-outline" href={`${base}datasets/`}>Ver catálogo de datasets</a>
+        <a class="btn-outline" href={`${base}datasets/`}>Ver catálogo completo de datasets →</a>
       </div>
     </section>
 
@@ -307,73 +459,161 @@ CNPJ ──────────────────── desambiguaçã
 </Base>
 
 <style>
+/* ── Anchor nav ──────────────────────────────────────────────── */
+.docs-nav {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 40px;
+}
+.docs-nav-a {
+  font-family: var(--font-m); font-size: 11px; font-weight: 600;
+  color: var(--muted); letter-spacing: .06em;
+  text-decoration: none; transition: color .13s;
+}
+.docs-nav-a:hover { color: var(--br); text-decoration: none; }
+.docs-nav-sep { color: var(--border2); font-size: 12px; }
+
+/* ── Section intro ───────────────────────────────────────────── */
 .doc-section--intro { padding-bottom: 0; border-bottom: none; }
 .docs-manifesto-ref {
   border-left: 3px solid var(--br);
   padding: 20px 24px;
   background: var(--green-d);
   border-radius: 0 var(--r) var(--r) 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  display: flex; flex-direction: column; gap: 10px;
 }
 .docs-manifesto-label {
-  font-family: var(--font-m);
-  font-size: 9px;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: var(--br);
+  font-family: var(--font-m); font-size: 9px;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--br);
 }
-.docs-manifesto-ref p {
-  font-size: 13px;
-  color: var(--muted);
-  line-height: 1.65;
-  font-style: italic;
-}
-.docs-manifesto-link {
-  font-family: var(--font-m);
-  font-size: 10px;
-  letter-spacing: .06em;
-  color: var(--br);
-}
+.docs-manifesto-ref p { font-size: 13px; color: var(--muted); line-height: 1.65; font-style: italic; }
+.docs-manifesto-link { font-family: var(--font-m); font-size: 10px; letter-spacing: .06em; color: var(--br); }
 .page-title--sm { font-size: 26px; }
-.docs-divider {
-  border: none; border-top: 1px solid var(--border);
-  margin: 56px 0;
-}
+.docs-divider { border: none; border-top: 1px solid var(--border); margin: 56px 0; }
 
-/* Meta blocks */
+/* ── Tech callout ────────────────────────────────────────────── */
+.tech-callout {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--br) 7%, var(--bg)), var(--bg2));
+  border: 1px solid color-mix(in srgb, var(--br) 20%, var(--border));
+  border-radius: var(--r); padding: 20px 24px;
+  margin-bottom: 36px;
+}
+.tech-callout-eyebrow {
+  font-family: var(--font-m); font-size: 10px; font-weight: 600;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--br);
+  margin-bottom: 8px;
+}
+.tech-callout-body {
+  font-size: 14px; color: var(--text); line-height: 1.7;
+}
+.tech-callout-body strong { color: var(--br); }
+
+/* ── Data flow pipeline ──────────────────────────────────────── */
+.tech-flow {
+  display: flex; align-items: stretch; gap: 0;
+  margin-bottom: 40px; overflow-x: auto;
+  border: 1px solid var(--border); border-radius: var(--r);
+}
+.tflow-step {
+  flex: 1; min-width: 120px;
+  display: flex; flex-direction: column; gap: 5px;
+  padding: 18px 14px;
+  border-right: 1px solid var(--border);
+  background: var(--bg2);
+}
+.tflow-step:last-child { border-right: none; }
+.tflow-step--hi { background: var(--surface); }
+.tflow-arr {
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 4px; font-size: 16px; color: var(--dim); flex-shrink: 0;
+  background: var(--bg); border-right: 1px solid var(--border);
+}
+.tflow-icon {
+  font-family: var(--font-m); font-size: 11px; font-weight: 700;
+  color: var(--br); letter-spacing: .04em;
+}
+.tflow-icon--dim { color: var(--dim); }
+.tflow-icon--br  { color: var(--br); }
+.tflow-label {
+  font-family: var(--font-s); font-size: 12.5px; font-weight: 600;
+  color: var(--text); line-height: 1.3;
+}
+.tflow-sub { font-family: var(--font-m); font-size: 10px; color: var(--dim); line-height: 1.6; }
+
+/* ── Tech cards grid ─────────────────────────────────────────── */
+.tech-cards {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border); border-radius: var(--r); overflow: hidden;
+  margin-bottom: 0;
+}
+.tech-card {
+  background: var(--bg); padding: 24px 22px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.tech-card-badge {
+  display: inline-flex; align-items: center;
+  font-family: var(--font-m); font-size: 10px; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase;
+  padding: 3px 8px; border-radius: 3px;
+  width: fit-content;
+}
+.tech-card-badge--mono  { background: var(--text); color: var(--bg); }
+.tech-card-badge--green { background: var(--br); color: #fff; }
+.tech-card-badge--yellow{ background: #c8920a; color: #fff; }
+.tech-card-badge--blue  { background: #1f3bb8; color: #fff; }
+.tech-card-title {
+  font-family: var(--font-d);
+  font-variation-settings: 'opsz' 14,'wdth' 90,'wght' 600;
+  font-size: 16px; letter-spacing: -.02em; color: var(--text);
+}
+.tech-card-desc {
+  font-size: 13px; color: var(--muted); line-height: 1.65;
+}
+.tech-card-desc strong { color: var(--text); font-weight: 600; }
+.tech-card-list {
+  list-style: none; padding: 0; margin: 0;
+  display: flex; flex-direction: column; gap: 5px;
+}
+.tech-card-list li {
+  font-family: var(--font-m); font-size: 11px; color: var(--muted);
+  padding-left: 14px; position: relative; line-height: 1.5;
+}
+.tech-card-list li::before {
+  content: '—'; position: absolute; left: 0; color: var(--dim);
+}
+.tech-card-list code {
+  background: var(--bg2); padding: 1px 4px;
+  border-radius: 2px; font-size: 10.5px; color: var(--text);
+}
+.tech-card-list a { color: var(--br); }
+
+/* ── Meta blocks ─────────────────────────────────────────────── */
 .meta-block { margin-bottom: 48px; }
 .meta-h {
   font-family: var(--font-d);
   font-variation-settings: 'opsz' 14,'wdth' 90,'wght' 650;
-  font-size: 19px; letter-spacing: -.02em;
-  color: var(--text); margin-bottom: 14px;
-  padding-bottom: 10px;
+  font-size: 19px; letter-spacing: -.02em; color: var(--text);
+  margin-bottom: 14px; padding-bottom: 10px;
   border-bottom: 1px solid var(--border);
 }
 .meta-h3 {
   font-family: var(--font-d);
   font-variation-settings: 'opsz' 14,'wdth' 90,'wght' 580;
-  font-size: 14px; letter-spacing: -.01em;
-  color: var(--text); margin: 24px 0 10px;
+  font-size: 14px; letter-spacing: -.01em; color: var(--text);
+  margin: 24px 0 10px;
 }
 .meta-p { font-size: 13.5px; color: var(--muted); line-height: 1.65; margin-bottom: 12px; }
 .meta-note { font-size: 12px; color: var(--dim); line-height: 1.5; margin-top: 8px; }
-
-.meta-list {
-  font-size: 13px; color: var(--muted); line-height: 1.8;
-  padding-left: 20px; margin-bottom: 16px;
-}
+.meta-list { font-size: 13px; color: var(--muted); line-height: 1.8; padding-left: 20px; margin-bottom: 16px; }
 .meta-list li { margin-bottom: 2px; }
 
 /* Normalization examples */
 .meta-examples {
   display: flex; flex-direction: column; gap: 6px;
-  margin: 16px 0;
-  padding: 16px 18px;
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: var(--r);
+  margin: 16px 0; padding: 16px 18px;
+  background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r);
 }
 .meta-ex { display: flex; align-items: center; gap: 12px; font-family: var(--font-m); font-size: 12px; }
 .meta-ex-in  { color: var(--muted); }
@@ -384,74 +624,53 @@ CNPJ ──────────────────── desambiguaçã
 .cascade-steps { display: flex; flex-direction: column; gap: 1px; margin: 16px 0; }
 .cascade-step {
   display: flex; gap: 0;
-  border: 1px solid var(--border);
-  border-bottom: none;
-  background: var(--bg);
+  border: 1px solid var(--border); border-bottom: none; background: var(--bg);
 }
 .cascade-steps .cascade-step:first-child { border-radius: var(--r) var(--r) 0 0; }
-.cascade-steps .cascade-step:last-child  { border-bottom: 1px solid var(--border); border-radius: 0 0 var(--r) var(--r); }
+.cascade-steps .cascade-step:last-child { border-bottom: 1px solid var(--border); border-radius: 0 0 var(--r) var(--r); }
 .cascade-n {
   width: 44px; flex-shrink: 0;
-  display: flex; align-items: flex-start; justify-content: center;
-  padding-top: 16px;
-  font-family: var(--font-m); font-size: 11px; font-weight: 700;
-  color: var(--br); border-right: 1px solid var(--border);
+  display: flex; align-items: flex-start; justify-content: center; padding-top: 16px;
+  font-family: var(--font-m); font-size: 11px; font-weight: 700; color: var(--br);
+  border-right: 1px solid var(--border);
 }
 .cascade-body { padding: 14px 16px; flex: 1; }
 .cascade-label {
   font-family: var(--font-m); font-size: 11px; font-weight: 600;
-  letter-spacing: .06em; text-transform: uppercase;
-  color: var(--text); margin-bottom: 6px;
+  letter-spacing: .06em; text-transform: uppercase; color: var(--text); margin-bottom: 6px;
 }
-.cascade-code {
-  display: block; font-family: var(--font-m); font-size: 11.5px;
-  color: var(--br); background: transparent;
-  margin-bottom: 6px;
-}
+.cascade-code { display: block; font-family: var(--font-m); font-size: 11.5px; color: var(--br); background: transparent; margin-bottom: 6px; }
 .cascade-note { font-size: 12px; color: var(--dim); line-height: 1.5; }
 
 /* Aside callouts */
 .meta-aside {
   font-size: 12.5px; color: var(--muted); line-height: 1.6;
-  margin: 10px 0;
-  padding: 12px 16px;
-  border-left: 3px solid var(--border);
-  background: var(--bg2);
+  margin: 10px 0; padding: 12px 16px;
+  border-left: 3px solid var(--border); background: var(--bg2);
 }
 .meta-aside strong { color: var(--text); }
 .meta-aside--warn { border-left-color: #c8920a; background: rgba(200,146,10,.05); }
 
-/* Formula display */
+/* Formula */
 .meta-formula {
-  font-family: var(--font-m); font-size: 13px;
-  color: var(--text); letter-spacing: .02em;
-  padding: 12px 18px;
-  background: var(--bg2); border: 1px solid var(--border);
-  border-left: 3px solid var(--br);
-  border-radius: var(--r);
-  margin: 12px 0;
+  font-family: var(--font-m); font-size: 13px; color: var(--text); letter-spacing: .02em;
+  padding: 12px 18px; background: var(--bg2); border: 1px solid var(--border);
+  border-left: 3px solid var(--br); border-radius: var(--r); margin: 12px 0;
 }
 
 /* PMI table */
 .pmi-table-wrap { overflow-x: auto; margin: 12px 0; }
-.pmi-table {
-  border-collapse: collapse; font-size: 12px; font-family: var(--font-m);
-  width: auto;
-}
+.pmi-table { border-collapse: collapse; font-size: 12px; font-family: var(--font-m); width: auto; }
 .pmi-table th {
   background: var(--bg2); padding: 7px 18px;
   text-align: left; font-size: 10px; font-weight: 600;
   letter-spacing: .06em; text-transform: uppercase; color: var(--dim);
   border: 1px solid var(--border);
 }
-.pmi-table td {
-  padding: 6px 18px; border: 1px solid var(--border);
-  color: var(--muted);
-}
-.pmi-table tr:first-child td,
-.pmi-table tr:last-child td { color: var(--text); font-weight: 600; }
+.pmi-table td { padding: 6px 18px; border: 1px solid var(--border); color: var(--muted); }
+.pmi-table tr:first-child td, .pmi-table tr:last-child td { color: var(--text); font-weight: 600; }
 
-/* Generic meta table */
+/* Generic table */
 .meta-table {
   width: 100%; border-collapse: collapse;
   font-size: 12.5px; font-family: var(--font-m); margin: 12px 0;
@@ -462,28 +681,33 @@ CNPJ ──────────────────── desambiguaçã
   letter-spacing: .06em; text-transform: uppercase; color: var(--dim);
   border: 1px solid var(--border);
 }
-.meta-table td {
-  padding: 8px 14px; border: 1px solid var(--border); color: var(--muted);
-}
-
-/* Diagram */
-.doc-pre--diagram {
-  font-family: var(--font-m); font-size: 12px;
-  line-height: 1.9; color: var(--muted);
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: var(--r); padding: 20px 22px;
-  overflow-x: auto; white-space: pre;
-}
+.meta-table td { padding: 8px 14px; border: 1px solid var(--border); color: var(--muted); }
 
 /* Doc examples */
 .doc-example { margin-bottom: 28px; }
-.doc-example__title {
-  font-size: 13px; font-weight: 600; color: var(--muted);
-  margin-bottom: 8px; font-family: var(--font-m);
-}
+.doc-example__title { font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 8px; font-family: var(--font-m); }
 
-@media (max-width: 600px) {
+/* Misc */
+.doc-pre {
+  font-family: var(--font-m); font-size: 11.5px; line-height: 1.75;
+  color: var(--muted); background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 16px 18px; overflow-x: auto; white-space: pre;
+  margin: 12px 0;
+}
+.btn-outline {
+  display: inline-flex; align-items: center;
+  font-family: var(--font-m); font-size: 11.5px; font-weight: 600;
+  color: var(--br); border: 1px solid color-mix(in srgb, var(--br) 40%, var(--border));
+  border-radius: var(--r); padding: 9px 18px; letter-spacing: .04em;
+  text-decoration: none; transition: all .13s;
+}
+.btn-outline:hover { background: var(--br); color: #fff; text-decoration: none; }
+
+@media (max-width: 768px) {
+  .tech-flow { flex-direction: column; }
+  .tflow-arr { transform: rotate(90deg); height: 32px; padding: 0; }
   .cascade-step { flex-direction: column; }
   .cascade-n { width: 100%; padding: 10px 14px 0; border-right: none; border-bottom: 1px solid var(--border); }
+  .tech-cards { grid-template-columns: 1fr; }
 }
 </style>

@@ -76,6 +76,7 @@ const BUILDER_DATA_JSON = JSON.stringify({ catalog: BUILDER_CATALOG, bridges: BU
   <div class="mode-tabs">
     <button class="mtab mtab--active" id="mtab-builder">⊕ Construir cruzamento</button>
     <button class="mtab" id="mtab-conexoes">⊞ Conexões prontas</button>
+    <button class="mtab" id="mtab-diagrama">⊚ Diagrama de relações</button>
   </div>
 
   <!-- ── PANEL: CONEXÕES ─────────────────────────────────────── -->
@@ -183,6 +184,26 @@ const BUILDER_DATA_JSON = JSON.stringify({ catalog: BUILDER_CATALOG, bridges: BU
         <button class="fl-run-btn" id="bldr-run">▶ Executar relatório</button>
       </aside>
 
+    </div>
+  </div>
+
+  <!-- ── PANEL: DIAGRAMA ──────────────────────────────────────── -->
+  <div id="panel-diagrama" style="display:none">
+    <div class="diag-wrap">
+      <div class="diag-head">
+        <div class="diag-head-top">
+          <span class="diag-title">Diagrama de relações por chave canônica</span>
+          <span class="diag-sub">Cada nó é uma tabela · cada aresta é uma chave de junção · arraste para reorganizar</span>
+        </div>
+        <div class="diag-legend" id="diag-legend"></div>
+      </div>
+      <div class="diag-body">
+        <svg id="diag-svg" class="diag-svg">
+          <g id="diag-edges"></g>
+          <g id="diag-nodes"></g>
+        </svg>
+        <div class="diag-tooltip" id="diag-tooltip"></div>
+      </div>
     </div>
   </div>
 
@@ -913,6 +934,7 @@ let lastSQL = '', lastRows = [], lastCols = [];
 let viewMode = 'chart';   // 'chart' | 'table'
 let chartType = 'bh';     // 'bh' | 'bv' | 'ln'
 let sortCol = null, sortAsc = true;
+let diagramInitialized = false;
 
 // Builder state
 const registeredViews = new Set();
@@ -991,17 +1013,21 @@ const viewTable  = document.getElementById('view-table');
 // ── MODE TABS ──────────────────────────────────────────────────
 document.getElementById('mtab-conexoes').addEventListener('click', () => switchMode('conexoes'));
 document.getElementById('mtab-builder').addEventListener('click',  () => switchMode('builder'));
+document.getElementById('mtab-diagrama').addEventListener('click', () => switchMode('diagrama'));
 
 function switchMode(mode) {
   appMode = mode;
   document.getElementById('mtab-conexoes').classList.toggle('mtab--active', mode === 'conexoes');
   document.getElementById('mtab-builder').classList.toggle('mtab--active', mode === 'builder');
+  document.getElementById('mtab-diagrama').classList.toggle('mtab--active', mode === 'diagrama');
   document.getElementById('panel-conexoes').style.display = mode === 'conexoes' ? 'block' : 'none';
   document.getElementById('panel-builder').style.display  = mode === 'builder'  ? 'block' : 'none';
+  document.getElementById('panel-diagrama').style.display = mode === 'diagrama' ? 'block' : 'none';
   refBar.style.display = mode === 'conexoes' ? 'flex' : 'none';
   resArea.style.display = 'none';
   sqlPanel.style.display = 'none';
   btnSql.classList.remove('res-btn--active');
+  if (mode === 'diagrama') initDiagram();
 }
 
 // ── RENDER CARDS ───────────────────────────────────────────────
@@ -1835,6 +1861,217 @@ async function buildBuilderSQL() {
     limitClause,
   ].filter(Boolean).join('\n');
 }
+// ── DIAGRAM ────────────────────────────────────────────────────
+function initDiagram() {
+  if (diagramInitialized) return;
+  diagramInitialized = true;
+
+  const svg   = document.getElementById('diag-svg');
+  const wrap  = svg.parentElement;
+  const W = wrap.clientWidth  || 900;
+  const H = wrap.clientHeight || 520;
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+
+  const NS = 'http://www.w3.org/2000/svg';
+
+  const catMap = Object.fromEntries(BUILDER_DATA.catalog.map(d => [d.table, d]));
+  // Only catalog tables (those with a cleaned parquet in the Builder)
+  const catalogSet = new Set(BUILDER_DATA.catalog.map(d => d.table));
+
+  // Strong identifier + proxy keys only — skip dimensional (ANO, UF, PAIS, etc.)
+  const JOIN_KEYS_PRE = new Set(['CPB','CRT','ROE','SALIC','CONTRATO','PROCESSO',
+    'REG_ANCINE','CNPJ','CPF','GRUPO_ECON','PRODUTORA','DISTRIBUIDORA','EXIBIDORA','TITULO_OBRA']);
+
+  // Bridges where both endpoints are catalog tables AND key is join-worthy.
+  // High-cardinality keys (TITULO_OBRA, CNPJ) are throttled to high-weight only
+  // so the graph stays readable instead of becoming a hairball.
+  const filteredBridges = BUILDER_DATA.bridges.filter(b => {
+    if (!JOIN_KEYS_PRE.has(b.top_key)) return false;
+    if (!catalogSet.has(b.tables[0]) || !catalogSet.has(b.tables[1])) return false;
+    if (b.top_key === 'TITULO_OBRA' && (b.weight || 0) < 6) return false;
+    if (b.top_key === 'CNPJ'        && (b.weight || 0) < 12) return false;
+    return true;
+  });
+  const bridgedSet = new Set(filteredBridges.flatMap(b => b.tables));
+
+  const tableList = [...bridgedSet];
+  const nodes = tableList.map((id, i) => {
+    const meta  = catMap[id];
+    const angle = (i / tableList.length) * 2 * Math.PI;
+    const r     = Math.min(W, H) * 0.32;
+    return {
+      id, label: id.length > 20 ? id.slice(0, 18) + '…' : id,
+      title: meta?.title || id, country: meta?.country || '??',
+      x: W / 2 + r * Math.cos(angle) + (Math.random() - 0.5) * 30,
+      y: H / 2 + r * Math.sin(angle) + (Math.random() - 0.5) * 30,
+      vx: 0, vy: 0, deg: 0,
+    };
+  });
+
+  const nodeById = Object.fromEntries(nodes.map(n => [n.id, n]));
+
+  const edges = filteredBridges.map(b => {
+    const s = nodeById[b.tables[0]];
+    const t = nodeById[b.tables[1]];
+    if (!s || !t) return null;
+    s.deg++; t.deg++;
+    return { s, t, key: b.top_key, keys: b.via_keys, w: b.weight || 1 };
+  }).filter(Boolean);
+
+  // Legend
+  const legendEl = document.getElementById('diag-legend');
+  const usedKeys = [...new Set(edges.map(e => e.key).filter(Boolean))];
+  legendEl.innerHTML = usedKeys.map(k => {
+    const color = BUILDER_KEY_COLORS[k] || '#999';
+    const gloss = (BUILDER_DATA.keyGlossary[k] || '').split(' ').slice(0, 6).join(' ');
+    return `<span class="diag-leg-item">
+      <span class="diag-leg-dot" style="background:${color}"></span>
+      <strong>${k}</strong>${gloss ? `<span class="diag-leg-gloss"> — ${gloss}${gloss.split(' ').length >= 6 ? '…' : ''}</span>` : ''}
+    </span>`;
+  }).join('');
+
+  // Edge SVG elements
+  const edgeG = document.getElementById('diag-edges');
+  const edgeEls = edges.map(e => {
+    const line = document.createElementNS(NS, 'line');
+    line.setAttribute('stroke', BUILDER_KEY_COLORS[e.key] || '#bbb');
+    line.setAttribute('stroke-width', (0.6 + Math.log(1 + e.w) * 0.7).toFixed(1));
+    line.setAttribute('stroke-opacity', '0.38');
+    edgeG.appendChild(line);
+    return { el: line, e };
+  });
+
+  // Node SVG elements
+  const nodeG   = document.getElementById('diag-nodes');
+  const tooltip = document.getElementById('diag-tooltip');
+
+  const nodeEls = nodes.map(n => {
+    const g    = document.createElementNS(NS, 'g');
+    const fill = COUNTRY_FILL[n.country] || '#888';
+    const r    = 4 + Math.min(n.deg, 10) * 1.1;
+
+    const circ = document.createElementNS(NS, 'circle');
+    circ.setAttribute('r', r.toFixed(1));
+    circ.setAttribute('fill', fill);
+    circ.setAttribute('fill-opacity', '0.85');
+    circ.setAttribute('stroke', '#fff');
+    circ.setAttribute('stroke-width', '1.2');
+
+    const txt = document.createElementNS(NS, 'text');
+    txt.textContent = n.label;
+    txt.setAttribute('font-size', '8');
+    txt.setAttribute('font-family', 'JetBrains Mono, monospace');
+    txt.setAttribute('text-anchor', 'middle');
+    txt.setAttribute('dy', (r + 10).toFixed(0));
+    txt.setAttribute('fill', 'var(--muted)');
+    txt.setAttribute('pointer-events', 'none');
+
+    g.appendChild(circ);
+    g.appendChild(txt);
+    nodeG.appendChild(g);
+
+    // drag
+    let dragging = false, ox = 0, oy = 0;
+    g.style.cursor = 'grab';
+    g.addEventListener('mousedown', ev => {
+      dragging = true; g.style.cursor = 'grabbing';
+      const svgRect = svg.getBoundingClientRect();
+      const scaleX  = W / svgRect.width;
+      const scaleY  = H / svgRect.height;
+      ox = ev.clientX * scaleX - n.x;
+      oy = ev.clientY * scaleY - n.y;
+      ev.stopPropagation();
+    });
+    window.addEventListener('mousemove', ev => {
+      if (!dragging) return;
+      const svgRect = svg.getBoundingClientRect();
+      n.x = ev.clientX * (W / svgRect.width)  - ox;
+      n.y = ev.clientY * (H / svgRect.height) - oy;
+      n.vx = 0; n.vy = 0;
+    });
+    window.addEventListener('mouseup', () => {
+      if (dragging) { dragging = false; g.style.cursor = 'grab'; }
+    });
+
+    // tooltip
+    g.addEventListener('mouseenter', () => {
+      circ.setAttribute('stroke', fill);
+      circ.setAttribute('stroke-width', '2.5');
+      const connKeys = [...new Set(edges.filter(e => e.s.id===n.id||e.t.id===n.id).map(e=>e.key))];
+      tooltip.style.display = 'block';
+      tooltip.innerHTML = `<strong>${n.title}</strong><br><span class="diag-tt-table">${n.id}</span>${connKeys.length ? `<br><span class="diag-tt-keys">${connKeys.join(' · ')}</span>` : ''}`;
+    });
+    g.addEventListener('mousemove', ev => {
+      const rect = svg.getBoundingClientRect();
+      tooltip.style.left = (ev.clientX - rect.left + 14) + 'px';
+      tooltip.style.top  = (ev.clientY - rect.top  - 10) + 'px';
+    });
+    g.addEventListener('mouseleave', () => {
+      circ.setAttribute('stroke', '#fff');
+      circ.setAttribute('stroke-width', '1.2');
+      tooltip.style.display = 'none';
+    });
+
+    return { el: g, n };
+  });
+
+  function draw() {
+    for (const { el, e } of edgeEls) {
+      el.setAttribute('x1', e.s.x.toFixed(1)); el.setAttribute('y1', e.s.y.toFixed(1));
+      el.setAttribute('x2', e.t.x.toFixed(1)); el.setAttribute('y2', e.t.y.toFixed(1));
+    }
+    for (const { el, n } of nodeEls) {
+      el.setAttribute('transform', `translate(${n.x.toFixed(1)},${n.y.toFixed(1)})`);
+    }
+  }
+
+  // Run simulation in batches off-screen, then do one final draw
+  // to avoid blocking the renderer for 10+ seconds
+  let frame = 0;
+  const TOTAL = 280;
+
+  function tick() {
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        let dx = nodes[j].x - nodes[i].x || 0.1;
+        let dy = nodes[j].y - nodes[i].y || 0.1;
+        const d2 = dx*dx + dy*dy + 1;
+        const d  = Math.sqrt(d2);
+        const f  = 4200 / d2;
+        nodes[i].vx -= (dx/d)*f; nodes[i].vy -= (dy/d)*f;
+        nodes[j].vx += (dx/d)*f; nodes[j].vy += (dy/d)*f;
+      }
+    }
+    for (const e of edges) {
+      const dx   = e.t.x - e.s.x;
+      const dy   = e.t.y - e.s.y;
+      const d    = Math.sqrt(dx*dx + dy*dy) || 0.01;
+      const rest = 50 + 90 / Math.max(0.4, e.w);
+      const f    = (d - rest) * 0.11;
+      const fx = (dx/d)*f, fy = (dy/d)*f;
+      e.s.vx += fx; e.s.vy += fy;
+      e.t.vx -= fx; e.t.vy -= fy;
+    }
+    const cx = W/2, cy = H/2;
+    for (const n of nodes) {
+      n.vx += (cx - n.x) * 0.003;
+      n.vy += (cy - n.y) * 0.003;
+      n.vx *= 0.82; n.vy *= 0.82;
+      n.x = Math.max(28, Math.min(W-28, n.x + n.vx));
+      n.y = Math.max(18, Math.min(H-22, n.y + n.vy));
+    }
+  }
+
+  function loop() {
+    // run 5 ticks per animation frame to converge faster without starving renderer
+    for (let k = 0; k < 5; k++) tick();
+    draw();
+    frame += 5;
+    if (frame < TOTAL) requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+}
+
 // Legacy "Campos livres" code removed — replaced by Builder above.
 // __LEGACY_START__ to __LEGACY_END__ is dead code wrapped to keep diff clean.
 /* __LEGACY_START__
@@ -2859,4 +3096,47 @@ __LEGACY_END__ */
   .bldr { grid-template-columns: 1fr; height: auto; }
   .bldr-cat { max-height: 280px; }
 }
+
+/* ── DIAGRAMA ────────────────────────────────────────────────── */
+.diag-wrap {
+  border: 1px solid var(--border); border-radius: var(--r);
+  overflow: hidden; margin-bottom: 32px; background: var(--bg);
+}
+.diag-head {
+  padding: 14px 20px 12px; background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  display: flex; flex-direction: column; gap: 8px;
+}
+.diag-head-top { display: flex; flex-direction: column; gap: 3px; }
+.diag-title {
+  font-family: var(--font-m); font-size: 10px; font-weight: 600;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--muted);
+}
+.diag-sub { font-family: var(--font-m); font-size: 9.5px; color: var(--dim); }
+.diag-legend {
+  display: flex; flex-wrap: wrap; gap: 4px 16px;
+}
+.diag-leg-item {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: var(--font-m); font-size: 9.5px; color: var(--text);
+}
+.diag-leg-item strong { font-weight: 700; }
+.diag-leg-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.diag-leg-gloss { color: var(--dim); font-weight: 400; }
+.diag-body {
+  position: relative;
+  height: calc(100vh - 360px);
+  min-height: 440px;
+}
+.diag-svg { width: 100%; height: 100%; display: block; }
+.diag-tooltip {
+  position: absolute; pointer-events: none; display: none;
+  background: var(--text); color: var(--bg);
+  font-family: var(--font-m); font-size: 11px;
+  padding: 7px 11px; border-radius: var(--r);
+  line-height: 1.55; max-width: 300px; z-index: 10;
+  white-space: nowrap;
+}
+.diag-tt-table { font-size: 9.5px; color: rgba(250,248,239,.45); display: block; }
+.diag-tt-keys  { font-size: 9.5px; color: rgba(250,248,239,.65); display: block; }
 </style>
