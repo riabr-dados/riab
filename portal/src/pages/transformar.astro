@@ -299,27 +299,26 @@ function aliasFor(table, taken = new Set()){
 // ── CRUZAMENTOS ────────────────────────────────────────────────
 const CRZ_CATS = [
   { id: 'producao', label: 'Produção Nacional', color: '#007a3c' },
-  { id: 'mercado',  label: 'Mercado & Circulação', color: '#1f3bb8' },
+  { id: 'mercado',  label: 'Mercado & Público', color: '#1f3bb8' },
   { id: 'fomento',  label: 'Fomento Público', color: '#c8920a' },
 ];
 
 const CRZ = [
+  // ── PRODUÇÃO NACIONAL ──────────────────────────────────────
   {
-    id: 'obras-ano',
+    id: 'obras-serie',
     cat: 'producao',
-    label: 'Produção por ano',
-    desc: 'Como evoluiu o número de obras registradas na ANCINE desde 2000',
+    label: '25 anos de produção',
+    desc: 'Pico pré-corte de 2019, queda na pandemia, retomada. Quebre por estado, tipo de obra ou janela de destino.',
     tables: [{ name: 'obras-nao-pub', color: '#007a3c' }],
-    join: null, icon: '📅',
+    join: null, icon: '↗',
     dims: [
       { label: 'Ano de produção',   col: 'ano_producao_inicial' },
-      { label: 'Tipo de obra',      col: 'tipo_obra' },
       { label: 'Estado (UF)',       col: 'uf_requerente' },
+      { label: 'Tipo de obra',      col: 'tipo_obra' },
       { label: 'Janela de destino', col: 'segmento_destinacao_inicial' },
     ],
-    metrics: [
-      { label: 'Nº de obras', expr: 'COUNT(*)', alias: 'obras' },
-    ],
+    metrics: [{ label: 'Nº de obras', expr: 'COUNT(*)', alias: 'obras' }],
     buildSQL: (dim, metric, search) => {
       const isYear = dim.col === 'ano_producao_inicial';
       const where = buildWhere([
@@ -335,34 +334,34 @@ LIMIT 60`;
     },
   },
   {
-    id: 'obras-bilheteria',
-    cat: 'mercado',
-    label: 'Obras + bilheteria',
-    desc: 'Liga registro ANCINE ao público real no cinema via CPB',
+    id: 'quem-dirige',
+    cat: 'producao',
+    label: 'Quem dirige o Brasil',
+    desc: 'Diretores mais prolíficos e sua distribuição por estado. A concentração geográfica na direção audiovisual brasileira.',
     tables: [
-      { name: 'obras-nao-pub',       color: '#007a3c' },
-      { name: 'bilheteria-agregada', color: '#007a3c' },
+      { name: 'obras-nao-pub',   color: '#007a3c' },
+      { name: 'diretores-obras', color: '#007a3c' },
     ],
-    join: { type: 'exact', label: 'CPB exato' }, icon: '🎟',
+    join: { type: 'exact', label: 'CPB exato' }, icon: '🎬',
     dims: [
-      { label: 'Obra (título)',    col: 'o.titulo_original' },
-      { label: 'Tipo de obra',    col: 'o.tipo_obra' },
-      { label: 'Estado (UF)',     col: 'o.uf_requerente' },
-      { label: 'Ano de exibição', col: 'b.ano' },
+      { label: 'Diretor',       col: 'd.diretor' },
+      { label: 'Estado (UF)',   col: 'o.uf_requerente' },
+      { label: 'Tipo de obra',  col: 'o.tipo_obra' },
+      { label: 'Ano',           col: 'o.ano_producao_inicial' },
     ],
     metrics: [
-      { label: 'Espectadores', expr: 'SUM(b.publico)',         alias: 'espectadores' },
-      { label: 'Nº de obras',  expr: 'COUNT(DISTINCT o.cpb)', alias: 'obras' },
+      { label: 'Nº de obras',      expr: 'COUNT(DISTINCT o.cpb)', alias: 'obras' },
     ],
     buildSQL: (dim, metric, search) => {
+      const isYear = dim.col === 'o.ano_producao_inicial';
       const where = buildWhere([
         `${dim.col} IS NOT NULL`,
+        isYear ? `o.ano_producao_inicial >= 2000` : null,
         search ? `CAST(${dim.col} AS VARCHAR) ILIKE '%${esc(search)}%'` : null,
       ]);
       return `SELECT ${dim.col} AS dim, ${metric.expr} AS valor
 FROM obras o
-INNER JOIN bilheteria_por_filme_ano b
-  ON b.cpb_roe = o.cpb AND b.cpb_roe LIKE 'B%'
+LEFT JOIN diretores_obras d ON d.cpb = o.cpb
 ${where}
 GROUP BY 1 ORDER BY 2 DESC LIMIT 40`;
     },
@@ -370,17 +369,17 @@ GROUP BY 1 ORDER BY 2 DESC LIMIT 40`;
   {
     id: 'ficha-tecnica',
     cat: 'producao',
-    label: 'Ficha técnica',
-    desc: 'Obras com diretor(es) e produtora(s) — tudo via CPB exato',
+    label: 'Obra + diretor + produtora',
+    desc: 'Ficha técnica completa. Quais produtoras trabalham com os mesmos diretores? Quem produz mais por estado?',
     tables: [
       { name: 'obras-nao-pub',    color: '#007a3c' },
       { name: 'diretores-obras',  color: '#007a3c' },
       { name: 'produtores-obras', color: '#007a3c' },
     ],
-    join: { type: 'exact', label: 'CPB exato' }, icon: '🎬',
+    join: { type: 'exact', label: 'CPB exato' }, icon: '🎞',
     dims: [
-      { label: 'Diretor',      col: 'd.diretor' },
       { label: 'Produtora',    col: 'p.produtor' },
+      { label: 'Diretor',      col: 'd.diretor' },
       { label: 'Estado (UF)', col: 'o.uf_requerente' },
       { label: 'Tipo de obra', col: 'o.tipo_obra' },
     ],
@@ -400,21 +399,116 @@ ${where}
 GROUP BY 1 ORDER BY 2 DESC LIMIT 40`;
     },
   },
+  // ── MERCADO & PÚBLICO ──────────────────────────────────────
+  {
+    id: 'obras-bilheteria',
+    cat: 'mercado',
+    label: 'Do registro à tela',
+    desc: 'De 61 mil obras registradas, quantas chegaram ao cinema? Espectadores reais por obra, estado e ano de exibição.',
+    tables: [
+      { name: 'obras-nao-pub',       color: '#007a3c' },
+      { name: 'bilheteria-agregada', color: '#007a3c' },
+    ],
+    join: { type: 'exact', label: 'CPB exato' }, icon: '🎟',
+    dims: [
+      { label: 'Obra (título)',    col: 'o.titulo_original' },
+      { label: 'Ano de exibição', col: 'b.ano' },
+      { label: 'Estado (UF)',     col: 'o.uf_requerente' },
+      { label: 'Tipo de obra',    col: 'o.tipo_obra' },
+    ],
+    metrics: [
+      { label: 'Espectadores', expr: 'SUM(b.publico)',         alias: 'espectadores' },
+      { label: 'Nº de obras',  expr: 'COUNT(DISTINCT o.cpb)', alias: 'obras' },
+    ],
+    buildSQL: (dim, metric, search) => {
+      const where = buildWhere([
+        `${dim.col} IS NOT NULL`,
+        search ? `CAST(${dim.col} AS VARCHAR) ILIKE '%${esc(search)}%'` : null,
+      ]);
+      return `SELECT ${dim.col} AS dim, ${metric.expr} AS valor
+FROM obras o
+INNER JOIN bilheteria_por_filme_ano b
+  ON b.cpb_roe = o.cpb AND b.cpb_roe LIKE 'B%'
+${where}
+GROUP BY 1 ORDER BY 2 DESC LIMIT 40`;
+    },
+  },
+  {
+    id: 'br-eu',
+    cat: 'mercado',
+    label: 'Brasil nas telas da Europa',
+    desc: 'Quais filmes brasileiros acumularam mais espectadores nos 37 países europeus? Dados do Observatório Europeu (Lumière).',
+    tables: [
+      { name: 'lumiere-cinemas-europa', color: '#1f3bb8' },
+    ],
+    join: null, icon: '🌍',
+    dims: [
+      { label: 'Filme (título)',     col: 'titulo_original' },
+      { label: 'Ano de produção',    col: 'ano_producao' },
+      { label: 'País(es) produção',  col: 'paises_producao' },
+    ],
+    metrics: [
+      { label: 'Admissões (Europa)', expr: 'SUM(admissoes_1996_2026)', alias: 'admissoes_europa' },
+      { label: 'Nº de filmes',       expr: 'COUNT(*)',                  alias: 'filmes' },
+    ],
+    buildSQL: (dim, metric, search) => {
+      const where = buildWhere([
+        `${dim.col} IS NOT NULL`,
+        `tem_brasil = TRUE`,
+        search ? `CAST(${dim.col} AS VARCHAR) ILIKE '%${esc(search)}%'` : null,
+      ]);
+      return `SELECT ${dim.col} AS dim, ${metric.expr} AS valor
+FROM bilheteria_europa
+${where}
+GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 40`;
+    },
+  },
+  {
+    id: 'embrafilme-historico',
+    cat: 'mercado',
+    label: 'Cinema antes do mercado',
+    desc: 'Indicadores históricos de 1970 a 1987 — público, renda e distribuição territorial na era da empresa estatal.',
+    tables: [
+      { name: 'embrafilme-historico', color: '#007a3c' },
+    ],
+    join: null, icon: '1980',
+    dims: [
+      { label: 'Ano',            col: 'ano' },
+      { label: 'Indicador',      col: 'indicador' },
+      { label: 'Território',     col: 'territorio_nome' },
+      { label: 'Tipo território', col: 'territorio_tipo' },
+    ],
+    metrics: [
+      { label: 'Valor',     expr: 'SUM(valor)', alias: 'valor' },
+      { label: 'Registros', expr: 'COUNT(*)',   alias: 'registros' },
+    ],
+    buildSQL: (dim, metric, search) => {
+      const where = buildWhere([
+        `${dim.col} IS NOT NULL`,
+        search ? `CAST(${dim.col} AS VARCHAR) ILIKE '%${esc(search)}%'` : null,
+      ]);
+      return `SELECT ${dim.col} AS dim, ${metric.expr} AS valor
+FROM embrafilme_exibicao_territorio_ano
+${where}
+GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 60`;
+    },
+  },
+  // ── FOMENTO PÚBLICO ────────────────────────────────────────
   {
     id: 'obras-fsa',
     cat: 'fomento',
-    label: 'Obras + fomento FSA',
-    desc: 'Liga obras ANCINE a projetos do Fundo Setorial via título normalizado',
+    label: 'Onde vai o FSA',
+    desc: 'Distribuição do Fundo Setorial por chamada, estado e tipo de obra — 15 anos de investimento público audiovisual.',
     tables: [
       { name: 'obras-nao-pub', color: '#007a3c' },
       { name: 'fsa-projetos',  color: '#c8920a' },
     ],
     join: { type: 'proxy', label: 'proxy título' }, icon: '💰',
     dims: [
-      { label: 'Chamada FSA',     col: 'f.chamada_publica' },
-      { label: 'Tipo de obra',    col: 'o.tipo_obra' },
+      { label: 'Estado (UF)',      col: 'o.uf_requerente' },
+      { label: 'Chamada FSA',      col: 'f.chamada_publica' },
+      { label: 'Tipo de obra',     col: 'o.tipo_obra' },
       { label: 'Produtora (FSA)', col: 'f.razao_social_produtora' },
-      { label: 'Estado (UF)',     col: 'o.uf_requerente' },
     ],
     metrics: [
       { label: 'Total investido (R$)', expr: 'SUM(f.valor_contrato_brl)', alias: 'total_reais' },
@@ -441,25 +535,68 @@ GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 40`;
     },
   },
   {
+    id: 'fsa-publico',
+    cat: 'fomento',
+    label: 'FSA que chegou ao público',
+    desc: 'Obras com fomento do FSA que tiveram espectadores no cinema. O retorno em audiência do investimento público.',
+    tables: [
+      { name: 'obras-nao-pub',       color: '#007a3c' },
+      { name: 'fsa-projetos',        color: '#c8920a' },
+      { name: 'bilheteria-agregada', color: '#007a3c' },
+    ],
+    join: { type: 'proxy', label: 'proxy título + CPB' }, icon: '📊',
+    dims: [
+      { label: 'Obra (título)',    col: 'o.titulo_original' },
+      { label: 'Chamada FSA',     col: 'f.chamada_publica' },
+      { label: 'Estado (UF)',     col: 'o.uf_requerente' },
+      { label: 'Ano de exibição', col: 'b.ano' },
+    ],
+    metrics: [
+      { label: 'Espectadores',      expr: 'SUM(b.publico)',            alias: 'espectadores' },
+      { label: 'Total FSA (R$)',    expr: 'SUM(f.valor_contrato_brl)', alias: 'fsa_investido' },
+      { label: 'Nº de obras',      expr: 'COUNT(DISTINCT o.cpb)',      alias: 'obras' },
+    ],
+    buildSQL: (dim, metric, search) => {
+      const where = buildWhere([
+        `${dim.col} IS NOT NULL`,
+        search ? `CAST(${dim.col} AS VARCHAR) ILIKE '%${esc(search)}%'` : null,
+      ]);
+      return `WITH o_n AS (
+  SELECT *, lower(regexp_replace(titulo_original,'[^a-zA-Z0-9 ]','','g')) AS _tn
+  FROM obras
+),
+f_n AS (
+  SELECT *, lower(regexp_replace(titulo_projeto,'[^a-zA-Z0-9 ]','','g')) AS _tn
+  FROM fomento_fsa
+)
+SELECT ${dim.col} AS dim, ${metric.expr} AS valor
+FROM o_n o
+INNER JOIN f_n f ON f._tn = o._tn
+INNER JOIN bilheteria_por_filme_ano b
+  ON b.cpb_roe = o.cpb AND b.cpb_roe LIKE 'B%'
+${where}
+GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 40`;
+    },
+  },
+  {
     id: 'festivais-fsa',
     cat: 'fomento',
-    label: 'Festivais FSA',
-    desc: 'Participações e premiações registradas nas atas de desempenho artístico',
+    label: 'Premiações internacionais',
+    desc: 'Quais obras com fomento FSA foram mais premiadas? Festivais internacionais registrados nas atas de desempenho artístico.',
     tables: [
       { name: 'atas-fsa-festivais', color: '#c8920a' },
     ],
     join: null, icon: '★',
     dims: [
-      { label: 'Ano da chamada', col: 'ano_chamada' },
-      { label: 'Evento',         col: 'evento' },
-      { label: 'País extraído',  col: 'pais_evento_extraido' },
-      { label: 'Tipo pontuação', col: 'tipo_pontuacao' },
       { label: 'Obra',           col: 'titulo_obra' },
+      { label: 'País do festival', col: 'pais_evento_extraido' },
+      { label: 'Evento',         col: 'evento' },
+      { label: 'Ano da chamada', col: 'ano_chamada' },
     ],
     metrics: [
-      { label: 'Registros',      expr: 'COUNT(*)',                    alias: 'registros' },
-      { label: 'Nº de obras',    expr: 'COUNT(DISTINCT titulo_obra)', alias: 'obras' },
-      { label: 'Pontos somados', expr: 'SUM(pontos_evento)',          alias: 'pontos' },
+      { label: 'Nº de premiações', expr: 'COUNT(*)',                    alias: 'premiacoes' },
+      { label: 'Nº de obras',      expr: 'COUNT(DISTINCT titulo_obra)', alias: 'obras' },
+      { label: 'Pontos somados',   expr: 'SUM(pontos_evento)',          alias: 'pontos' },
     ],
     buildSQL: (dim, metric, search) => {
       const where = buildWhere([
@@ -474,112 +611,19 @@ GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 40`;
     },
   },
   {
-    id: 'condecine-arrecadacao',
-    cat: 'fomento',
-    label: 'Arrecadação CONDECINE',
-    desc: 'Série anual e mensal da CONDECINE consolidada a partir do OCA',
-    tables: [
-      { name: 'condecine-arrecadacao', color: '#c8920a' },
-    ],
-    join: null, icon: 'R$',
-    dims: [
-      { label: 'Ano',             col: 'ano' },
-      { label: 'Mês',             col: 'mes' },
-      { label: 'Tipo CONDECINE',  col: 'recorte_nome' },
-      { label: 'Periodicidade',   col: 'periodicidade' },
-    ],
-    metrics: [
-      { label: 'Valor nominal (R$)', expr: 'SUM(valor_brl_nominal)', alias: 'valor_brl' },
-      { label: 'Registros',          expr: 'COUNT(*)',               alias: 'registros' },
-    ],
-    buildSQL: (dim, metric, search) => {
-      const where = buildWhere([
-        `${dim.col} IS NOT NULL`,
-        search ? `CAST(${dim.col} AS VARCHAR) ILIKE '%${esc(search)}%'` : null,
-      ]);
-      return `SELECT ${dim.col} AS dim, ${metric.expr} AS valor
-FROM condecine_arrecadacao
-${where}
-GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 60`;
-    },
-  },
-  {
-    id: 'fluxos-fomento',
-    cat: 'fomento',
-    label: 'Fluxos de fomento',
-    desc: 'Captacao, recolhimento, liberacao, FSA, editais, premios e coproducao',
-    tables: [
-      { name: 'fluxos-fomento', color: '#c8920a' },
-    ],
-    join: null, icon: '$',
-    dims: [
-      { label: 'Ano',           col: 'ano' },
-      { label: 'Tipo de fluxo', col: 'tipo_fluxo' },
-      { label: 'Mecanismo',     col: 'mecanismo' },
-      { label: 'Moeda',         col: 'moeda_original' },
-      { label: 'Fonte',         col: 'titulo_publicacao' },
-    ],
-    metrics: [
-      { label: 'Valor BRL nominal', expr: 'SUM(valor_brl_nominal)', alias: 'valor_brl' },
-      { label: 'Valor original',    expr: 'SUM(valor_original)',    alias: 'valor_original' },
-      { label: 'Registros',         expr: 'COUNT(*)',               alias: 'registros' },
-    ],
-    buildSQL: (dim, metric, search) => {
-      const where = buildWhere([
-        `${dim.col} IS NOT NULL`,
-        search ? `CAST(${dim.col} AS VARCHAR) ILIKE '%${esc(search)}%'` : null,
-      ]);
-      return `SELECT ${dim.col} AS dim, ${metric.expr} AS valor
-FROM fomento_fluxos_financeiros
-${where}
-GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 60`;
-    },
-  },
-  {
-    id: 'embrafilme-historico',
-    cat: 'mercado',
-    label: 'Histórico Embrafilme',
-    desc: 'Público, renda e lugares oferecidos em PDFs históricos do OCA',
-    tables: [
-      { name: 'embrafilme-historico', color: '#007a3c' },
-    ],
-    join: null, icon: '1980',
-    dims: [
-      { label: 'Ano',       col: 'ano' },
-      { label: 'Indicador', col: 'indicador' },
-      { label: 'Território', col: 'territorio_nome' },
-      { label: 'Tipo território', col: 'territorio_tipo' },
-      { label: 'Documento', col: 'titulo_publicacao' },
-    ],
-    metrics: [
-      { label: 'Valor',     expr: 'SUM(valor)', alias: 'valor' },
-      { label: 'Registros', expr: 'COUNT(*)',   alias: 'registros' },
-    ],
-    buildSQL: (dim, metric, search) => {
-      const where = buildWhere([
-        `${dim.col} IS NOT NULL`,
-        search ? `CAST(${dim.col} AS VARCHAR) ILIKE '%${esc(search)}%'` : null,
-      ]);
-      return `SELECT ${dim.col} AS dim, ${metric.expr} AS valor
-FROM embrafilme_exibicao_territorio_ano
-${where}
-GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 60`;
-    },
-  },
-  {
     id: 'obras-renuncia',
     cat: 'fomento',
-    label: 'Obras + renúncia fiscal',
-    desc: 'Obras que captaram via Lei do Audiovisual — ligação por título',
+    label: 'Lei do Audiovisual',
+    desc: 'Captação via renúncia fiscal por obra, estado e tipo — o mecanismo de incentivo privado ao cinema brasileiro.',
     tables: [
       { name: 'obras-nao-pub',   color: '#007a3c' },
       { name: 'renuncia-fiscal', color: '#1f3bb8' },
     ],
     join: { type: 'proxy', label: 'proxy título' }, icon: '📋',
     dims: [
+      { label: 'Estado (UF)',   col: 'o.uf_requerente' },
       { label: 'Obra (título)', col: 'o.titulo_original' },
       { label: 'Tipo de obra',  col: 'o.tipo_obra' },
-      { label: 'Estado (UF)',   col: 'o.uf_requerente' },
     ],
     metrics: [
       { label: 'Total captado (R$)', expr: 'SUM(r.total_captado)', alias: 'total_captado' },
@@ -606,33 +650,63 @@ GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 40`;
     },
   },
   {
-    id: 'br-eu',
-    cat: 'mercado',
-    label: 'Brasil ↔ Europa',
-    desc: 'Filmes brasileiros com mais espectadores em salas europeias (Lumière)',
+    id: 'condecine-arrecadacao',
+    cat: 'fomento',
+    label: 'A conta do setor',
+    desc: 'Série histórica da arrecadação CONDECINE por tipo de taxa — a saúde financeira do fomento audiovisual ao longo dos anos.',
     tables: [
-      { name: 'lumiere-cinemas-europa', color: '#1f3bb8' },
+      { name: 'condecine-arrecadacao', color: '#c8920a' },
     ],
-    join: null, icon: '🌍',
+    join: null, icon: 'R$',
     dims: [
-      { label: 'Filme (título)',     col: 'titulo_original' },
-      { label: 'País(es) produção',  col: 'paises_producao' },
-      { label: 'Ano de produção',    col: 'ano_producao' },
+      { label: 'Ano',            col: 'ano' },
+      { label: 'Tipo CONDECINE', col: 'recorte_nome' },
+      { label: 'Mês',            col: 'mes' },
     ],
     metrics: [
-      { label: 'Admissões (Europa)', expr: 'SUM(admissoes_1996_2026)', alias: 'admissoes_europa' },
-      { label: 'Nº de filmes',       expr: 'COUNT(*)',                  alias: 'filmes' },
+      { label: 'Valor nominal (R$)', expr: 'SUM(valor_brl_nominal)', alias: 'valor_brl' },
+      { label: 'Registros',          expr: 'COUNT(*)',               alias: 'registros' },
     ],
     buildSQL: (dim, metric, search) => {
       const where = buildWhere([
         `${dim.col} IS NOT NULL`,
-        `tem_brasil = TRUE`,
         search ? `CAST(${dim.col} AS VARCHAR) ILIKE '%${esc(search)}%'` : null,
       ]);
       return `SELECT ${dim.col} AS dim, ${metric.expr} AS valor
-FROM bilheteria_europa
+FROM condecine_arrecadacao
 ${where}
-GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 40`;
+GROUP BY 1 ORDER BY 1 ${dim.col === 'ano' || dim.col === 'mes' ? 'ASC' : 'DESC'} NULLS LAST LIMIT 60`;
+    },
+  },
+  {
+    id: 'fluxos-fomento',
+    cat: 'fomento',
+    label: 'Todos os mecanismos',
+    desc: 'FSA, editais, prêmios, renúncia e coprodução numa série temporal única — o quadro completo do fomento audiovisual.',
+    tables: [
+      { name: 'fluxos-fomento', color: '#c8920a' },
+    ],
+    join: null, icon: '$',
+    dims: [
+      { label: 'Ano',           col: 'ano' },
+      { label: 'Mecanismo',     col: 'mecanismo' },
+      { label: 'Tipo de fluxo', col: 'tipo_fluxo' },
+      { label: 'Fonte',         col: 'titulo_publicacao' },
+    ],
+    metrics: [
+      { label: 'Valor BRL nominal', expr: 'SUM(valor_brl_nominal)', alias: 'valor_brl' },
+      { label: 'Valor original',    expr: 'SUM(valor_original)',    alias: 'valor_original' },
+      { label: 'Registros',         expr: 'COUNT(*)',               alias: 'registros' },
+    ],
+    buildSQL: (dim, metric, search) => {
+      const where = buildWhere([
+        `${dim.col} IS NOT NULL`,
+        search ? `CAST(${dim.col} AS VARCHAR) ILIKE '%${esc(search)}%'` : null,
+      ]);
+      return `SELECT ${dim.col} AS dim, ${metric.expr} AS valor
+FROM fomento_fluxos_financeiros
+${where}
+GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 60`;
     },
   },
 ];
