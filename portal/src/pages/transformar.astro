@@ -189,20 +189,30 @@ const BUILDER_DATA_JSON = JSON.stringify({ catalog: BUILDER_CATALOG, bridges: BU
 
   <!-- ── PANEL: DIAGRAMA ──────────────────────────────────────── -->
   <div id="panel-diagrama" style="display:none">
-    <div class="diag-wrap">
-      <div class="diag-head">
-        <div class="diag-head-top">
-          <span class="diag-title">Diagrama de relações por chave canônica</span>
-          <span class="diag-sub">Cada nó é uma tabela · cada aresta é uma chave de junção · arraste para reorganizar</span>
+    <div class="diag-layout">
+      <aside class="diag-sidebar">
+        <div class="diag-sb-section">
+          <div class="diag-sb-title">Chaves de junção</div>
+          <div id="diag-key-filters" class="diag-sb-chips"></div>
         </div>
-        <div class="diag-legend" id="diag-legend"></div>
-      </div>
-      <div class="diag-body">
-        <svg id="diag-svg" class="diag-svg">
-          <g id="diag-edges"></g>
-          <g id="diag-nodes"></g>
-        </svg>
-        <div class="diag-tooltip" id="diag-tooltip"></div>
+        <div class="diag-sb-section">
+          <div class="diag-sb-title">País / origem</div>
+          <div id="diag-country-filters" class="diag-sb-chips"></div>
+        </div>
+        <p class="diag-sb-hint">Clique num nó para destacar suas conexões.<br>Arraste para reorganizar.</p>
+      </aside>
+      <div class="diag-main">
+        <div class="diag-head">
+          <span class="diag-title">Diagrama de relações por chave canônica</span>
+          <span class="diag-sub">Cada nó é uma tabela · cada aresta é uma chave de junção</span>
+        </div>
+        <div class="diag-body">
+          <svg id="diag-svg" class="diag-svg">
+            <g id="diag-edges"></g>
+            <g id="diag-nodes"></g>
+          </svg>
+          <div class="diag-tooltip" id="diag-tooltip"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -1873,18 +1883,12 @@ function initDiagram() {
   svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
 
   const NS = 'http://www.w3.org/2000/svg';
-
-  const catMap = Object.fromEntries(BUILDER_DATA.catalog.map(d => [d.table, d]));
-  // Only catalog tables (those with a cleaned parquet in the Builder)
+  const catMap     = Object.fromEntries(BUILDER_DATA.catalog.map(d => [d.table, d]));
   const catalogSet = new Set(BUILDER_DATA.catalog.map(d => d.table));
 
-  // Strong identifier + proxy keys only — skip dimensional (ANO, UF, PAIS, etc.)
   const JOIN_KEYS_PRE = new Set(['CPB','CRT','ROE','SALIC','CONTRATO','PROCESSO',
     'REG_ANCINE','CNPJ','CPF','GRUPO_ECON','PRODUTORA','DISTRIBUIDORA','EXIBIDORA','TITULO_OBRA']);
 
-  // Bridges where both endpoints are catalog tables AND key is join-worthy.
-  // High-cardinality keys (TITULO_OBRA, CNPJ) are throttled to high-weight only
-  // so the graph stays readable instead of becoming a hairball.
   const filteredBridges = BUILDER_DATA.bridges.filter(b => {
     if (!JOIN_KEYS_PRE.has(b.top_key)) return false;
     if (!catalogSet.has(b.tables[0]) || !catalogSet.has(b.tables[1])) return false;
@@ -1892,9 +1896,10 @@ function initDiagram() {
     if (b.top_key === 'CNPJ'        && (b.weight || 0) < 12) return false;
     return true;
   });
-  const bridgedSet = new Set(filteredBridges.flatMap(b => b.tables));
 
-  const tableList = [...bridgedSet];
+  const bridgedSet = new Set(filteredBridges.flatMap(b => b.tables));
+  const tableList  = [...bridgedSet];
+
   const nodes = tableList.map((id, i) => {
     const meta  = catMap[id];
     const angle = (i / tableList.length) * 2 * Math.PI;
@@ -1918,20 +1923,61 @@ function initDiagram() {
     return { s, t, key: b.top_key, keys: b.via_keys, w: b.weight || 1 };
   }).filter(Boolean);
 
-  // Legend
-  const legendEl = document.getElementById('diag-legend');
-  const usedKeys = [...new Set(edges.map(e => e.key).filter(Boolean))];
-  legendEl.innerHTML = usedKeys.map(k => {
-    const color = BUILDER_KEY_COLORS[k] || '#999';
-    const gloss = (BUILDER_DATA.keyGlossary[k] || '').split(' ').slice(0, 6).join(' ');
-    return `<span class="diag-leg-item">
-      <span class="diag-leg-dot" style="background:${color}"></span>
-      <strong>${k}</strong>${gloss ? `<span class="diag-leg-gloss"> — ${gloss}${gloss.split(' ').length >= 6 ? '…' : ''}</span>` : ''}
-    </span>`;
-  }).join('');
+  // ── State ──────────────────────────────────────────────────
+  const usedKeys = [...new Set(edges.map(e => e.key))];
+  let activeKeys    = new Set(usedKeys);
+  let activeCountry = null;
+  let selectedNode  = null;
 
-  // Edge SVG elements
-  const edgeG = document.getElementById('diag-edges');
+  // ── Sidebar: key filters ───────────────────────────────────
+  const keyFiltersEl = document.getElementById('diag-key-filters');
+  function renderKeyFilters() {
+    keyFiltersEl.innerHTML = usedKeys.map(k => {
+      const color = BUILDER_KEY_COLORS[k] || '#999';
+      const gloss = (BUILDER_DATA.keyGlossary[k] || '').split(' ').slice(0, 4).join(' ');
+      const on = activeKeys.has(k);
+      return `<button class="diag-kf-chip${on ? ' diag-kf-chip--on' : ''}" data-key="${k}">
+        <span class="diag-kf-dot" style="background:${color}"></span>
+        <span class="diag-kf-label">${k}</span>
+        ${gloss ? `<span class="diag-kf-gloss">${gloss}…</span>` : ''}
+      </button>`;
+    }).join('');
+    keyFiltersEl.querySelectorAll('.diag-kf-chip').forEach(b => {
+      b.onclick = () => {
+        const k = b.dataset.key;
+        if (activeKeys.has(k)) activeKeys.delete(k); else activeKeys.add(k);
+        renderKeyFilters();
+        updateVisibility();
+      };
+    });
+  }
+  renderKeyFilters();
+
+  // ── Sidebar: country filters ───────────────────────────────
+  const countryFiltersEl = document.getElementById('diag-country-filters');
+  const usedCountries = [...new Set(nodes.map(n => n.country))].filter(Boolean).sort();
+  function renderCountryFilters() {
+    countryFiltersEl.innerHTML = ['all', ...usedCountries].map(c => {
+      const active = (activeCountry === null && c === 'all') || activeCountry === c;
+      const color  = c === 'all' ? '#999' : (COUNTRY_FILL[c] || '#999');
+      return `<button class="diag-kf-chip${active ? ' diag-kf-chip--on' : ''}" data-country="${c}">
+        <span class="diag-kf-dot" style="background:${color}"></span>
+        <span class="diag-kf-label">${c === 'all' ? 'todos' : c}</span>
+      </button>`;
+    }).join('');
+    countryFiltersEl.querySelectorAll('.diag-kf-chip').forEach(b => {
+      b.onclick = () => {
+        const c = b.dataset.country;
+        activeCountry = c === 'all' ? null : c;
+        renderCountryFilters();
+        updateVisibility();
+      };
+    });
+  }
+  renderCountryFilters();
+
+  // ── Edge elements ──────────────────────────────────────────
+  const edgeG  = document.getElementById('diag-edges');
   const edgeEls = edges.map(e => {
     const line = document.createElementNS(NS, 'line');
     line.setAttribute('stroke', BUILDER_KEY_COLORS[e.key] || '#bbb');
@@ -1941,17 +1987,17 @@ function initDiagram() {
     return { el: line, e };
   });
 
-  // Node SVG elements
+  // ── Node elements ──────────────────────────────────────────
   const nodeG   = document.getElementById('diag-nodes');
   const tooltip = document.getElementById('diag-tooltip');
 
   const nodeEls = nodes.map(n => {
     const g    = document.createElementNS(NS, 'g');
     const fill = COUNTRY_FILL[n.country] || '#888';
-    const r    = 4 + Math.min(n.deg, 10) * 1.1;
+    const nr   = 4 + Math.min(n.deg, 10) * 1.1;
 
     const circ = document.createElementNS(NS, 'circle');
-    circ.setAttribute('r', r.toFixed(1));
+    circ.setAttribute('r', nr.toFixed(1));
     circ.setAttribute('fill', fill);
     circ.setAttribute('fill-opacity', '0.85');
     circ.setAttribute('stroke', '#fff');
@@ -1962,41 +2008,50 @@ function initDiagram() {
     txt.setAttribute('font-size', '8');
     txt.setAttribute('font-family', 'JetBrains Mono, monospace');
     txt.setAttribute('text-anchor', 'middle');
-    txt.setAttribute('dy', (r + 10).toFixed(0));
+    txt.setAttribute('dy', (nr + 10).toFixed(0));
     txt.setAttribute('fill', 'var(--muted)');
     txt.setAttribute('pointer-events', 'none');
 
-    g.appendChild(circ);
-    g.appendChild(txt);
+    g.appendChild(circ); g.appendChild(txt);
     nodeG.appendChild(g);
 
-    // drag
-    let dragging = false, ox = 0, oy = 0;
+    n._circ = circ; n._fill = fill; n._nr = nr;
+
+    // ── Drag ────────────────────────────────────────────────
+    let dragging = false, ox = 0, oy = 0, movedWhileDragging = false;
     g.style.cursor = 'grab';
+
     g.addEventListener('mousedown', ev => {
-      dragging = true; g.style.cursor = 'grabbing';
-      const svgRect = svg.getBoundingClientRect();
-      const scaleX  = W / svgRect.width;
-      const scaleY  = H / svgRect.height;
-      ox = ev.clientX * scaleX - n.x;
-      oy = ev.clientY * scaleY - n.y;
-      ev.stopPropagation();
+      dragging = true; movedWhileDragging = false;
+      g.style.cursor = 'grabbing';
+      const rect = svg.getBoundingClientRect();
+      ox = ev.clientX * (W / rect.width)  - n.x;
+      oy = ev.clientY * (H / rect.height) - n.y;
+      ev.stopPropagation(); ev.preventDefault();
     });
     window.addEventListener('mousemove', ev => {
       if (!dragging) return;
-      const svgRect = svg.getBoundingClientRect();
-      n.x = ev.clientX * (W / svgRect.width)  - ox;
-      n.y = ev.clientY * (H / svgRect.height) - oy;
+      movedWhileDragging = true;
+      const rect = svg.getBoundingClientRect();
+      n.x = ev.clientX * (W / rect.width)  - ox;
+      n.y = ev.clientY * (H / rect.height) - oy;
       n.vx = 0; n.vy = 0;
+      draw();
     });
     window.addEventListener('mouseup', () => {
       if (dragging) { dragging = false; g.style.cursor = 'grab'; }
     });
 
-    // tooltip
+    // ── Click highlight ─────────────────────────────────────
+    g.addEventListener('click', ev => {
+      if (movedWhileDragging) return;
+      ev.stopPropagation();
+      selectedNode = selectedNode === n.id ? null : n.id;
+      updateVisibility();
+    });
+
+    // ── Tooltip ─────────────────────────────────────────────
     g.addEventListener('mouseenter', () => {
-      circ.setAttribute('stroke', fill);
-      circ.setAttribute('stroke-width', '2.5');
       const connKeys = [...new Set(edges.filter(e => e.s.id===n.id||e.t.id===n.id).map(e=>e.key))];
       tooltip.style.display = 'block';
       tooltip.innerHTML = `<strong>${n.title}</strong><br><span class="diag-tt-table">${n.id}</span>${connKeys.length ? `<br><span class="diag-tt-keys">${connKeys.join(' · ')}</span>` : ''}`;
@@ -2006,15 +2061,71 @@ function initDiagram() {
       tooltip.style.left = (ev.clientX - rect.left + 14) + 'px';
       tooltip.style.top  = (ev.clientY - rect.top  - 10) + 'px';
     });
-    g.addEventListener('mouseleave', () => {
-      circ.setAttribute('stroke', '#fff');
-      circ.setAttribute('stroke-width', '1.2');
-      tooltip.style.display = 'none';
-    });
+    g.addEventListener('mouseleave', () => { tooltip.style.display = 'none'; });
 
     return { el: g, n };
   });
 
+  // ── Click on SVG background → deselect ────────────────────
+  svg.addEventListener('click', () => { selectedNode = null; updateVisibility(); });
+
+  // ── updateVisibility ───────────────────────────────────────
+  function updateVisibility() {
+    const connectedNodes = new Set();
+    if (selectedNode) {
+      connectedNodes.add(selectedNode);
+      for (const e of edges) {
+        if (e.s.id === selectedNode || e.t.id === selectedNode) {
+          connectedNodes.add(e.s.id); connectedNodes.add(e.t.id);
+        }
+      }
+    }
+
+    for (const { el, e } of edgeEls) {
+      const keyOk     = activeKeys.has(e.key);
+      const countryOk = !activeCountry || e.s.country === activeCountry || e.t.country === activeCountry;
+      const selOk     = !selectedNode || e.s.id === selectedNode || e.t.id === selectedNode;
+
+      if (!keyOk || !countryOk) {
+        el.setAttribute('stroke-opacity', '0');
+      } else if (!selOk) {
+        el.setAttribute('stroke-opacity', '0.06');
+        el.setAttribute('stroke-width', (0.6 + Math.log(1 + e.w) * 0.7).toFixed(1));
+      } else {
+        const hi = !!selectedNode;
+        el.setAttribute('stroke-opacity', hi ? '0.88' : '0.38');
+        el.setAttribute('stroke-width', hi
+          ? (1.8 + Math.log(1 + e.w) * 0.9).toFixed(1)
+          : (0.6 + Math.log(1 + e.w) * 0.7).toFixed(1)
+        );
+      }
+    }
+
+    for (const { el, n } of nodeEls) {
+      const countryOk = !activeCountry || n.country === activeCountry;
+      if (!countryOk) {
+        el.setAttribute('opacity', '0.1');
+      } else if (selectedNode && !connectedNodes.has(n.id)) {
+        el.setAttribute('opacity', '0.18');
+        n._circ.setAttribute('stroke', '#fff');
+        n._circ.setAttribute('stroke-width', '1.2');
+        n._circ.setAttribute('r', n._nr.toFixed(1));
+      } else {
+        el.setAttribute('opacity', '1');
+        if (n.id === selectedNode) {
+          n._circ.setAttribute('stroke', n._fill);
+          n._circ.setAttribute('stroke-width', '3');
+          n._circ.setAttribute('r', (n._nr * 1.35).toFixed(1));
+        } else {
+          n._circ.setAttribute('stroke', '#fff');
+          n._circ.setAttribute('stroke-width', '1.2');
+          n._circ.setAttribute('r', n._nr.toFixed(1));
+        }
+      }
+    }
+  }
+
+  // ── Draw positions ─────────────────────────────────────────
   function draw() {
     for (const { el, e } of edgeEls) {
       el.setAttribute('x1', e.s.x.toFixed(1)); el.setAttribute('y1', e.s.y.toFixed(1));
@@ -2025,8 +2136,7 @@ function initDiagram() {
     }
   }
 
-  // Run simulation in batches off-screen, then do one final draw
-  // to avoid blocking the renderer for 10+ seconds
+  // ── Force simulation ───────────────────────────────────────
   let frame = 0;
   const TOTAL = 280;
 
@@ -2063,7 +2173,6 @@ function initDiagram() {
   }
 
   function loop() {
-    // run 5 ticks per animation frame to converge faster without starving renderer
     for (let k = 0; k < 5; k++) tick();
     draw();
     frame += 5;
@@ -3098,35 +3207,58 @@ __LEGACY_END__ */
 }
 
 /* ── DIAGRAMA ────────────────────────────────────────────────── */
-.diag-wrap {
-  border: 1px solid var(--border); border-radius: var(--r);
-  overflow: hidden; margin-bottom: 32px; background: var(--bg);
+.diag-layout {
+  display: flex; gap: 0; border: 1px solid var(--border);
+  border-radius: var(--r); overflow: hidden; margin-bottom: 32px;
+  background: var(--bg); min-height: 540px;
+}
+.diag-sidebar {
+  width: 196px; flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  background: var(--bg2);
+  display: flex; flex-direction: column; gap: 0;
+  overflow-y: auto;
+}
+.diag-sb-section { padding: 14px 14px 10px; border-bottom: 1px solid var(--border); }
+.diag-sb-title {
+  font-family: var(--font-m); font-size: 9px; font-weight: 700;
+  letter-spacing: .13em; text-transform: uppercase; color: var(--dim);
+  margin-bottom: 8px;
+}
+.diag-sb-chips { display: flex; flex-direction: column; gap: 4px; }
+.diag-kf-chip {
+  display: flex; align-items: flex-start; gap: 6px;
+  background: none; border: 1px solid var(--border);
+  border-radius: 5px; padding: 4px 7px; cursor: pointer;
+  font-family: var(--font-m); text-align: left;
+  opacity: 0.45; transition: opacity .12s, border-color .12s;
+  width: 100%;
+}
+.diag-kf-chip--on { opacity: 1; border-color: var(--muted); }
+.diag-kf-chip:hover { opacity: 0.8; }
+.diag-kf-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; }
+.diag-kf-label { font-size: 10px; font-weight: 600; color: var(--text); line-height: 1.3; }
+.diag-kf-gloss { font-size: 9px; color: var(--dim); display: block; line-height: 1.3; }
+.diag-sb-hint {
+  padding: 12px 14px; font-family: var(--font-m); font-size: 9px;
+  color: var(--dim); line-height: 1.6; margin: auto 0 0;
+}
+.diag-main {
+  flex: 1; display: flex; flex-direction: column; min-width: 0;
 }
 .diag-head {
-  padding: 14px 20px 12px; background: var(--bg2);
+  padding: 12px 18px 10px; background: var(--bg2);
   border-bottom: 1px solid var(--border);
-  display: flex; flex-direction: column; gap: 8px;
+  display: flex; flex-direction: column; gap: 3px;
 }
-.diag-head-top { display: flex; flex-direction: column; gap: 3px; }
 .diag-title {
   font-family: var(--font-m); font-size: 10px; font-weight: 600;
   letter-spacing: .14em; text-transform: uppercase; color: var(--muted);
 }
 .diag-sub { font-family: var(--font-m); font-size: 9.5px; color: var(--dim); }
-.diag-legend {
-  display: flex; flex-wrap: wrap; gap: 4px 16px;
-}
-.diag-leg-item {
-  display: inline-flex; align-items: center; gap: 5px;
-  font-family: var(--font-m); font-size: 9.5px; color: var(--text);
-}
-.diag-leg-item strong { font-weight: 700; }
-.diag-leg-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.diag-leg-gloss { color: var(--dim); font-weight: 400; }
 .diag-body {
-  position: relative;
-  height: calc(100vh - 360px);
-  min-height: 440px;
+  position: relative; flex: 1;
+  height: calc(100vh - 340px); min-height: 460px;
 }
 .diag-svg { width: 100%; height: 100%; display: block; }
 .diag-tooltip {
