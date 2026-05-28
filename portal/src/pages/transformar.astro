@@ -74,15 +74,42 @@ const BUILDER_DATA_JSON = JSON.stringify({ catalog: BUILDER_CATALOG, bridges: BU
 
   <!-- MODE TABS -->
   <div class="mode-tabs">
-    <button class="mtab mtab--active" id="mtab-conexoes">⊞ Conexões prontas</button>
-    <button class="mtab" id="mtab-builder">⊕ Construir cruzamento</button>
+    <button class="mtab mtab--active" id="mtab-builder">⊕ Construir cruzamento</button>
+    <button class="mtab" id="mtab-conexoes">⊞ Conexões prontas</button>
   </div>
 
   <!-- ── PANEL: CONEXÕES ─────────────────────────────────────── -->
-  <div id="panel-conexoes">
+  <div id="panel-conexoes" style="display:none">
+
+    <!-- ── CAIXA DE IA ─────────────────────────────────────── -->
+    <div class="nl-box">
+      <div class="nl-box-head">
+        <div class="nl-box-title">
+          <span class="nl-sparkle">✦</span>
+          <span>Relatório via linguagem natural</span>
+        </div>
+        <p class="nl-box-sub">Descreva o que quer analisar — a IA gera o SQL e executa nos dados do RIDAB diretamente no navegador</p>
+      </div>
+      <div class="nl-providers" id="nl-providers">
+        <span class="nl-providers-label">Modelo:</span>
+        <button class="nl-pvr nl-pvr--active" data-provider="gemini">Gemini Flash <span class="nl-free-badge">grátis</span></button>
+        <button class="nl-pvr" data-provider="anthropic">Claude</button>
+        <button class="nl-pvr" data-provider="openai">GPT-4o</button>
+      </div>
+      <div class="nl-form">
+        <input class="nl-apikey" type="password" id="nl-apikey" placeholder="API key — AIzaSy… (Gemini) · sk-ant-… (Claude) · sk-… (OpenAI)" />
+        <textarea class="nl-textarea" id="nl-query" rows="2" placeholder="Ex: Top 10 diretores com mais obras desde 2010 · Quanto o FSA investiu por estado? · Filmes brasileiros com maior bilheteria na Europa"></textarea>
+        <div class="nl-form-footer">
+          <span class="nl-hint" id="nl-hint">Gemini Flash tem camada gratuita — gere uma key gratuita em <strong>aistudio.google.com</strong></span>
+          <button class="nl-run-btn" id="nl-run">↵ Analisar</button>
+        </div>
+      </div>
+      <div class="nl-result" id="nl-result" style="display:none"></div>
+    </div>
+
     <div class="cr-section">
       <div class="cr-intro">
-        <h2 class="cr-h">Escolha uma conexão para explorar</h2>
+        <h2 class="cr-h">Conexões prontas para explorar</h2>
         <p class="cr-sub">Cada card liga duas ou mais bases. Clique para ver os dados imediatamente.</p>
       </div>
       <div class="cr-grid" id="cr-grid"></div>
@@ -90,7 +117,7 @@ const BUILDER_DATA_JSON = JSON.stringify({ catalog: BUILDER_CATALOG, bridges: BU
   </div>
 
   <!-- ── PANEL: BUILDER ──────────────────────────────────────── -->
-  <div id="panel-builder" style="display:none">
+  <div id="panel-builder">
     <div class="bldr">
 
       <!-- COLUNA 1: catálogo -->
@@ -163,7 +190,7 @@ const BUILDER_DATA_JSON = JSON.stringify({ catalog: BUILDER_CATALOG, bridges: BU
   <div class="res-area" id="res-area" style="display:none">
 
     <!-- Refinement bar (conexoes mode only) -->
-    <div class="ref-bar" id="ref-bar">
+    <div class="ref-bar" id="ref-bar" style="display:none">
       <div class="ref-group">
         <label class="ref-label" for="ref-dim">Agrupar por</label>
         <select class="ref-select" id="ref-dim"></select>
@@ -270,9 +297,16 @@ function aliasFor(table, taken = new Set()){
 }
 
 // ── CRUZAMENTOS ────────────────────────────────────────────────
+const CRZ_CATS = [
+  { id: 'producao', label: 'Produção Nacional', color: '#007a3c' },
+  { id: 'mercado',  label: 'Mercado & Circulação', color: '#1f3bb8' },
+  { id: 'fomento',  label: 'Fomento Público', color: '#c8920a' },
+];
+
 const CRZ = [
   {
     id: 'obras-ano',
+    cat: 'producao',
     label: 'Produção por ano',
     desc: 'Como evoluiu o número de obras registradas na ANCINE desde 2000',
     tables: [{ name: 'obras-nao-pub', color: '#007a3c' }],
@@ -302,6 +336,7 @@ LIMIT 60`;
   },
   {
     id: 'obras-bilheteria',
+    cat: 'mercado',
     label: 'Obras + bilheteria',
     desc: 'Liga registro ANCINE ao público real no cinema via CPB',
     tables: [
@@ -334,6 +369,7 @@ GROUP BY 1 ORDER BY 2 DESC LIMIT 40`;
   },
   {
     id: 'ficha-tecnica',
+    cat: 'producao',
     label: 'Ficha técnica',
     desc: 'Obras com diretor(es) e produtora(s) — tudo via CPB exato',
     tables: [
@@ -366,6 +402,7 @@ GROUP BY 1 ORDER BY 2 DESC LIMIT 40`;
   },
   {
     id: 'obras-fsa',
+    cat: 'fomento',
     label: 'Obras + fomento FSA',
     desc: 'Liga obras ANCINE a projetos do Fundo Setorial via título normalizado',
     tables: [
@@ -405,6 +442,7 @@ GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 40`;
   },
   {
     id: 'festivais-fsa',
+    cat: 'fomento',
     label: 'Festivais FSA',
     desc: 'Participações e premiações registradas nas atas de desempenho artístico',
     tables: [
@@ -437,6 +475,7 @@ GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 40`;
   },
   {
     id: 'condecine-arrecadacao',
+    cat: 'fomento',
     label: 'Arrecadação CONDECINE',
     desc: 'Série anual e mensal da CONDECINE consolidada a partir do OCA',
     tables: [
@@ -466,6 +505,7 @@ GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 60`;
   },
   {
     id: 'fluxos-fomento',
+    cat: 'fomento',
     label: 'Fluxos de fomento',
     desc: 'Captacao, recolhimento, liberacao, FSA, editais, premios e coproducao',
     tables: [
@@ -497,6 +537,7 @@ GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 60`;
   },
   {
     id: 'embrafilme-historico',
+    cat: 'mercado',
     label: 'Histórico Embrafilme',
     desc: 'Público, renda e lugares oferecidos em PDFs históricos do OCA',
     tables: [
@@ -527,6 +568,7 @@ GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 60`;
   },
   {
     id: 'obras-renuncia',
+    cat: 'fomento',
     label: 'Obras + renúncia fiscal',
     desc: 'Obras que captaram via Lei do Audiovisual — ligação por título',
     tables: [
@@ -565,6 +607,7 @@ GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 40`;
   },
   {
     id: 'br-eu',
+    cat: 'mercado',
     label: 'Brasil ↔ Europa',
     desc: 'Filmes brasileiros com mais espectadores em salas europeias (Lumière)',
     tables: [
@@ -609,9 +652,188 @@ function fmtNum(n) {
 
 const JOIN_COLOR = { exact: '#007a3c', proxy: '#c8920a' };
 
+// ── NL AI BOX ──────────────────────────────────────────────────
+const NL_SCHEMA = `Você é um assistente SQL para o repositório RIDAB de dados do audiovisual brasileiro.
+Gere uma única query DuckDB válida com base na descrição do usuário.
+Use APENAS estas tabelas (views DuckDB sobre arquivos Parquet no HuggingFace):
+
+- obras: Obras audiovisuais registradas na ANCINE. Colunas principais: cpb (ID), titulo_original, tipo_obra, ano_producao_inicial, uf_requerente, segmento_destinacao_inicial
+- bilheteria_por_filme_ano: Bilheteria real no cinema. Colunas: cpb_roe, ano, publico (espectadores). Join com obras: cpb_roe = obras.cpb AND cpb_roe LIKE 'B%'
+- diretores_obras: Diretores. Colunas: cpb, diretor. Join com obras: cpb = obras.cpb
+- produtores_obras: Produtores. Colunas: cpb, produtor. Join com obras: cpb = obras.cpb
+- fomento_fsa: Projetos do FSA. Colunas: titulo_projeto, chamada_publica, razao_social_produtora, valor_contrato_brl, ano. Join com obras via título normalizado.
+- condecine_arrecadacao: Arrecadação CONDECINE. Colunas: ano, mes, recorte_nome, periodicidade, valor_brl_nominal
+- fomento_fluxos_financeiros: Fluxos financeiros. Colunas: ano, tipo_fluxo, mecanismo, moeda_original, valor_brl_nominal, valor_original
+- renuncia_fiscal: Renúncia fiscal (Lei do Audiovisual). Colunas: titulo_projeto, total_captado, ano. Join com obras via título normalizado.
+- fsa_atas_festivais: Festivais e premiações FSA. Colunas: titulo_obra, cpb, evento, pais_evento_extraido, tipo_pontuacao, pontos_evento, ano_chamada, evento_internacional_estimado
+- fsa_atas_resultados: Resultados do FSA. Colunas: titulo_obra, cpb, ano_chamada
+- embrafilme_exibicao_territorio_ano: Dados históricos da Embrafilme (1970-87). Colunas: ano, indicador, territorio_nome, territorio_tipo, titulo_publicacao, valor
+- bilheteria_europa: Filmes em salas europeias (Lumière). Colunas: titulo_original, paises_producao, ano_producao, admissoes_1996_2026, tem_brasil
+
+Para joins por título normalizado use: lower(regexp_replace(coluna,'[^a-zA-Z0-9 ]','','g'))
+Retorne APENAS o SQL, sem explicação, sem markdown. Use LIMIT 40 no máximo. Formate para legibilidade.`;
+
+const NL_HINTS = {
+  gemini: 'Gemini Flash tem camada gratuita — gere uma key em <strong>aistudio.google.com</strong>',
+  anthropic: 'API paga — gere sua key em <strong>console.anthropic.com</strong>',
+  openai: 'API paga — gere sua key em <strong>platform.openai.com</strong>',
+};
+
+let nlProvider = 'gemini';
+
+document.getElementById('nl-providers').querySelectorAll('.nl-pvr').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.nl-pvr').forEach(b => b.classList.remove('nl-pvr--active'));
+    btn.classList.add('nl-pvr--active');
+    nlProvider = btn.dataset.provider;
+    document.getElementById('nl-hint').innerHTML = NL_HINTS[nlProvider] ?? '';
+    const keyEl = document.getElementById('nl-apikey');
+    if (nlProvider === 'gemini') keyEl.placeholder = 'AIzaSy… (Google AI Studio)';
+    else if (nlProvider === 'anthropic') keyEl.placeholder = 'sk-ant-api03-…';
+    else keyEl.placeholder = 'sk-…';
+  });
+});
+
+document.getElementById('nl-run').addEventListener('click', async () => {
+  const apiKey = document.getElementById('nl-apikey').value.trim();
+  const query  = document.getElementById('nl-query').value.trim();
+  const result = document.getElementById('nl-result');
+
+  if (!query) { alert('Digite uma pergunta antes de analisar.'); return; }
+  if (!apiKey) { alert('Insira sua API key.'); return; }
+  if (!ready)  { alert('DuckDB ainda não carregou — aguarde o ponto verde.'); return; }
+
+  const btn = document.getElementById('nl-run');
+  btn.disabled = true;
+  btn.textContent = '⏳ Gerando SQL…';
+  result.style.display = 'none';
+
+  try {
+    const sql = await nlGenerateSQL(nlProvider, apiKey, query);
+    btn.textContent = '⏳ Executando…';
+
+    let sqlClean = sql.replace(/```sql\s*/i, '').replace(/```\s*$/, '').trim();
+    if (!sqlClean.toLowerCase().startsWith('select') && !sqlClean.toLowerCase().startsWith('with')) {
+      const match = sql.match(/((?:WITH|SELECT)[\s\S]+)/i);
+      if (match) sqlClean = match[1].trim();
+    }
+
+    const t0  = Date.now();
+    const res = await conn.query(sqlClean);
+    const ms  = Date.now() - t0;
+    const rows = res.toArray();
+    const cols = res.schema.fields.map(f => f.name);
+
+    lastSQL  = sqlClean;
+    lastRows = rows;
+    lastCols = cols;
+    sqlPre.textContent = sqlClean;
+
+    result.style.display = 'block';
+    result.innerHTML = `
+      <div class="nl-sql-bar">
+        <span class="nl-sql-label">SQL gerado</span>
+        <pre class="nl-sql-pre">${sqlClean}</pre>
+        <div class="nl-result-meta">${rows.length} linhas · ${ms}ms</div>
+      </div>
+      <div class="nl-tbl-wrap">${nlRenderTable(rows, cols)}</div>`;
+  } catch (e) {
+    result.style.display = 'block';
+    result.innerHTML = `<div class="nl-err">Erro: ${e.message}</div>`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '↵ Analisar';
+  }
+});
+
+async function nlGenerateSQL(provider, apiKey, userQuery) {
+  if (provider === 'gemini') {
+    const r = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          system_instruction: { parts: [{ text: NL_SCHEMA }] },
+          contents: [{ parts: [{ text: userQuery }] }],
+          generationConfig: { temperature: 0.1, maxOutputTokens: 1024 },
+        }),
+      }
+    );
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.error?.message ?? `HTTP ${r.status}`);
+    return d.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
+  }
+
+  if (provider === 'anthropic') {
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 1024,
+        system: NL_SCHEMA,
+        messages: [{ role: 'user', content: userQuery }],
+      }),
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.error?.message ?? `HTTP ${r.status}`);
+    return d.content?.[0]?.text ?? '';
+  }
+
+  if (provider === 'openai') {
+    const r = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        temperature: 0.1,
+        max_tokens: 1024,
+        messages: [
+          { role: 'system', content: NL_SCHEMA },
+          { role: 'user', content: userQuery },
+        ],
+      }),
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.error?.message ?? `HTTP ${r.status}`);
+    return d.choices?.[0]?.message?.content ?? '';
+  }
+
+  throw new Error('Provedor desconhecido: ' + provider);
+}
+
+function nlRenderTable(rows, cols) {
+  if (!rows.length) return '<p class="nl-empty">Nenhum resultado.</p>';
+  const metricCol = cols[cols.length - 1];
+  const metricVals = rows.map(r => Number(r[metricCol]) || 0);
+  const maxVal = Math.max(...metricVals, 1);
+  let h = `<table class="nl-dtbl"><thead><tr>` + cols.map(c => `<th>${c}</th>`).join('') + `</tr></thead><tbody>`;
+  rows.slice(0, 40).forEach(row => {
+    h += `<tr>`;
+    cols.forEach((col, i) => {
+      const v = row[col];
+      const disp = v == null ? '—' : String(v);
+      if (i === cols.length - 1 && Number.isFinite(Number(v)) && maxVal > 0) {
+        const pct = Math.round((Number(v) / maxVal) * 100);
+        h += `<td class="td-metric"><div class="td-bar-wrap"><div class="td-bar" style="width:${pct}%"></div><span>${fmtNum(Number(v))}</span></div></td>`;
+      } else {
+        h += `<td title="${disp}">${disp.slice(0, 120)}</td>`;
+      }
+    });
+    h += `</tr>`;
+  });
+  return h + `</tbody></table>`;
+}
+
 // ── STATE ──────────────────────────────────────────────────────
 let db, conn, ready = false;
-let appMode = 'conexoes'; // 'conexoes' | 'builder'
+let appMode = 'builder'; // 'conexoes' | 'builder'
 let activeCrz = null;
 let lastSQL = '', lastRows = [], lastCols = [];
 let viewMode = 'chart';   // 'chart' | 'table'
@@ -710,21 +932,30 @@ function switchMode(mode) {
 
 // ── RENDER CARDS ───────────────────────────────────────────────
 function renderCards() {
-  crGrid.innerHTML = CRZ.map(c => {
-    const tablePills = c.tables.map(t =>
-      `<span class="cr-tbl-pill" style="border-color:${t.color};color:${t.color}">${t.name}</span>`
-    ).join('<span class="cr-plus">+</span>');
-    const joinBadge = c.join
-      ? `<span class="cr-join-badge" style="color:${JOIN_COLOR[c.join.type]};border-color:${JOIN_COLOR[c.join.type]}20;background:${JOIN_COLOR[c.join.type]}10">${c.join.label}</span>`
-      : '';
-    return `<button class="cr-card" data-id="${c.id}" ${!ready ? 'disabled' : ''}>
-      <div class="cr-card-top"><div class="cr-tables">${tablePills}</div>${joinBadge}</div>
-      <div class="cr-card-icon">${c.icon}</div>
-      <div class="cr-card-label">${c.label}</div>
-      <div class="cr-card-desc">${c.desc}</div>
-      <div class="cr-card-cta">Explorar →</div>
-    </button>`;
-  }).join('');
+  let html = '';
+  for (const cat of CRZ_CATS) {
+    const items = CRZ.filter(c => c.cat === cat.id);
+    if (!items.length) continue;
+    html += `<div class="cr-cat-header" style="--cat-clr:${cat.color}">
+      <span class="cr-cat-dot"></span><span class="cr-cat-label">${cat.label}</span>
+    </div>`;
+    html += items.map(c => {
+      const tablePills = c.tables.map(t =>
+        `<span class="cr-tbl-pill" style="border-color:${t.color};color:${t.color}">${t.name}</span>`
+      ).join('<span class="cr-plus">+</span>');
+      const joinBadge = c.join
+        ? `<span class="cr-join-badge" style="color:${JOIN_COLOR[c.join.type]};border-color:${JOIN_COLOR[c.join.type]}20;background:${JOIN_COLOR[c.join.type]}10">${c.join.label}</span>`
+        : '';
+      return `<button class="cr-card" data-id="${c.id}" ${!ready ? 'disabled' : ''}>
+        <div class="cr-card-top"><div class="cr-tables">${tablePills}</div>${joinBadge}</div>
+        <div class="cr-card-icon">${c.icon}</div>
+        <div class="cr-card-label">${c.label}</div>
+        <div class="cr-card-desc">${c.desc}</div>
+        <div class="cr-card-cta">Explorar →</div>
+      </button>`;
+    }).join('');
+  }
+  crGrid.innerHTML = html;
   crGrid.querySelectorAll('.cr-card').forEach(btn => {
     btn.addEventListener('click', () => selectCrz(btn.dataset.id));
   });
@@ -1844,6 +2075,157 @@ __LEGACY_END__ */
 .mtab:hover { color: var(--text); }
 .mtab--active { color: var(--text); }
 .mtab--active::after { background: var(--br); }
+
+/* ── NL AI Box ───────────────────────────────────────────────── */
+.nl-box {
+  border: 1px solid var(--border2);
+  border-radius: var(--r);
+  overflow: hidden;
+  margin-bottom: 40px;
+  background: var(--surface);
+}
+.nl-box-head {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--br) 6%, var(--surface)), var(--surface));
+}
+.nl-box-title {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-d);
+  font-variation-settings: 'opsz' 14,'wdth' 90,'wght' 600;
+  font-size: 16px; letter-spacing: -.02em; color: var(--text);
+  margin-bottom: 4px;
+}
+.nl-sparkle { color: var(--br); font-size: 14px; }
+.nl-box-sub { font-size: 12.5px; color: var(--muted); line-height: 1.5; margin: 0; }
+.nl-providers {
+  display: flex; align-items: center; gap: 6px;
+  padding: 12px 24px; border-bottom: 1px solid var(--border);
+  background: var(--bg2); flex-wrap: wrap;
+}
+.nl-providers-label {
+  font-family: var(--font-m); font-size: 9.5px; font-weight: 600;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--dim);
+  margin-right: 2px;
+}
+.nl-pvr {
+  font-family: var(--font-m); font-size: 11px; font-weight: 500;
+  background: var(--surface); color: var(--muted);
+  border: 1px solid var(--border); border-radius: 99px;
+  padding: 4px 12px; cursor: pointer; transition: all .12s;
+  display: flex; align-items: center; gap: 5px;
+}
+.nl-pvr:hover { border-color: var(--br); color: var(--text); }
+.nl-pvr--active { background: var(--br); color: #fff; border-color: var(--br); }
+.nl-free-badge {
+  font-size: 9px; font-weight: 700; letter-spacing: .06em;
+  text-transform: uppercase; background: rgba(255,255,255,.25);
+  border-radius: 99px; padding: 1px 5px;
+}
+.nl-pvr:not(.nl-pvr--active) .nl-free-badge {
+  background: color-mix(in srgb, var(--br) 15%, transparent);
+  color: var(--br);
+}
+.nl-form {
+  display: flex; flex-direction: column; gap: 10px;
+  padding: 16px 24px;
+}
+.nl-apikey {
+  width: 100%; font-family: var(--font-m); font-size: 12px;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--r); color: var(--text);
+  padding: 8px 12px; outline: none; transition: border-color .13s;
+}
+.nl-apikey:focus { border-color: var(--br); }
+.nl-textarea {
+  width: 100%; font-family: var(--font-s); font-size: 13px;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--r); color: var(--text);
+  padding: 10px 12px; outline: none; resize: vertical;
+  min-height: 56px; line-height: 1.5; transition: border-color .13s;
+}
+.nl-textarea:focus { border-color: var(--br); }
+.nl-form-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap;
+}
+.nl-hint {
+  font-family: var(--font-m); font-size: 11px; color: var(--dim); line-height: 1.4;
+}
+.nl-hint strong { color: var(--text); font-weight: 600; }
+.nl-run-btn {
+  background: var(--br); color: #fff; border: none;
+  border-radius: var(--r); font-family: var(--font-s);
+  font-size: 12px; font-weight: 700;
+  padding: 9px 22px; cursor: pointer;
+  transition: opacity .14s; white-space: nowrap;
+  letter-spacing: .04em;
+}
+.nl-run-btn:hover { opacity: .88; }
+.nl-run-btn:disabled { opacity: .5; cursor: default; }
+.nl-result {
+  border-top: 1px solid var(--border);
+}
+.nl-sql-bar {
+  background: #0d0b08;
+  padding: 10px 16px 0;
+}
+.nl-sql-label {
+  font-family: var(--font-m); font-size: 9px; font-weight: 600;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: rgba(250,248,239,.35); display: block; margin-bottom: 6px;
+}
+.nl-sql-pre {
+  font-family: var(--font-m); font-size: 11px; line-height: 1.7;
+  color: rgba(250,248,239,.75); overflow-x: auto; margin: 0;
+  padding-bottom: 10px; max-height: 160px;
+  white-space: pre; border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.nl-result-meta {
+  padding: 8px 0;
+  font-family: var(--font-m); font-size: 10.5px;
+  color: rgba(250,248,239,.3);
+}
+.nl-tbl-wrap { overflow-x: auto; background: var(--surface); }
+.nl-dtbl { width: 100%; border-collapse: collapse; font-size: 12px; }
+.nl-dtbl th {
+  background: var(--bg2); padding: 8px 12px;
+  text-align: left; font-size: 10px; font-weight: 600;
+  letter-spacing: .05em; text-transform: uppercase; color: var(--muted);
+  border-bottom: 1px solid var(--border); white-space: nowrap;
+}
+.nl-dtbl td {
+  padding: 6px 12px; border-bottom: 1px solid var(--border);
+  font-family: var(--font-m); font-size: 11px;
+  white-space: nowrap; max-width: 280px;
+  overflow: hidden; text-overflow: ellipsis;
+}
+.nl-dtbl tbody tr:hover td { background: rgba(0,122,60,.03); }
+.nl-empty { font-size: 12px; color: var(--dim); padding: 16px 24px; margin: 0; }
+.nl-err {
+  padding: 14px 24px; color: #b5250e;
+  font-family: var(--font-m); font-size: 12px;
+  background: rgba(232,52,26,.05);
+}
+
+/* ── Category headers inside grid ────────────────────────────── */
+.cr-cat-header {
+  grid-column: 1 / -1;
+  display: flex; align-items: center; gap: 8px;
+  padding: 14px 20px 10px;
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+}
+.cr-cat-header:first-child { border-top: none; }
+.cr-cat-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--cat-clr, var(--br)); flex-shrink: 0;
+}
+.cr-cat-label {
+  font-family: var(--font-m); font-size: 9px; font-weight: 700;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--cat-clr, var(--br));
+}
 
 /* ── Cruzamento grid ─────────────────────────────────────────── */
 .cr-section { margin-bottom: 48px; }
