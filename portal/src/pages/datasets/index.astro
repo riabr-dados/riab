@@ -43,6 +43,8 @@ const CATEGORIA_LABEL = {
 };
 const PROCEDENCIA_LABEL = {
   pda: "Plano de Dados Abertos",
+  oca: "OCA / ANCINE",
+  ancine: "ANCINE",
   ibge: "IBGE",
   mdic: "Comex Stat / MDIC",
   composto: "Composto",
@@ -62,7 +64,7 @@ for (const ds of datasets) {
 }
 const categoriasOrdenadas = Object.keys(CATEGORIA_LABEL).filter((k) => catCounts[k]);
 // Ordem: PDA primeiro (umbrella destacado), depois fontes BR independentes, composto, depois internacionais.
-const PROC_ORDER = ["pda", "ibge", "mdic", "composto", "cnc", "bfi", "incaa", "acau", "lumiere"];
+const PROC_ORDER = ["pda", "oca", "ancine", "ibge", "mdic", "composto", "cnc", "bfi", "incaa", "acau", "lumiere"];
 const procedenciasOrdenadas = PROC_ORDER.filter((k) => procCounts[k]);
 ---
 

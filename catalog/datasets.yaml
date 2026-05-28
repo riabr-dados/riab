@@ -108,7 +108,7 @@ datasets:
 
     categoria:
       - bilheteria
-    procedencia: pda
+    procedencia: ancine
     subfonte: sadis
   - slug: ancine-bilheteria-agregada-filme-ano
     title: "Bilheteria Agregada Filme x Ano"
@@ -134,7 +134,7 @@ datasets:
 
     categoria:
       - bilheteria
-    procedencia: pda
+    procedencia: oca
     subfonte: oca
   - slug: ancine-fsa-projetos
     title: "Projetos FSA"
@@ -162,7 +162,7 @@ datasets:
 
     categoria:
       - fomento
-    procedencia: pda
+    procedencia: ancine
     subfonte: fsa
   - slug: ancine-renuncia-fiscal
     title: "Renuncia Fiscal"
@@ -221,7 +221,7 @@ datasets:
 
     categoria:
       - fomento
-    procedencia: pda
+    procedencia: oca
     subfonte: oca
   - slug: ancine-condecine-recolhimento
     title: "CONDECINE - Recolhimento por Mecanismo e Contribuinte"
@@ -254,7 +254,7 @@ datasets:
 
     categoria:
       - fomento
-    procedencia: pda
+    procedencia: oca
     subfonte: oca
   - slug: ancine-fomento-fluxos-financeiros
     title: "Fomento - Series Historicas Agregadas (OCA)"
@@ -289,7 +289,7 @@ datasets:
 
     categoria:
       - fomento
-    procedencia: pda
+    procedencia: oca
     subfonte: oca
   - slug: ancine-ibermedia-projetos
     title: "Ibermedia - Projetos Contemplados"
@@ -319,7 +319,7 @@ datasets:
     categoria:
       - fomento
       - internacional
-    procedencia: pda
+    procedencia: oca
     subfonte: oca
   - slug: ancine-coproducao-internacional-projetos
     title: "Coproducao Internacional - Projetos Contemplados"
@@ -348,8 +348,8 @@ datasets:
     categoria:
       - fomento
       - internacional
-    procedencia: pda
-    subfonte: ancine_pda
+    procedencia: oca
+    subfonte: oca
   - slug: ancine-apoio-festivais-internacionais
     title: "Apoio a Festivais Internacionais - Contemplados"
     description: >
@@ -379,7 +379,7 @@ datasets:
     categoria:
       - fomento
       - internacional
-    procedencia: pda
+    procedencia: oca
     subfonte: oca
   - slug: ancine-premio-adicional-renda
     title: "Premio Adicional de Renda (PAR)"
@@ -409,7 +409,7 @@ datasets:
 
     categoria:
       - fomento
-    procedencia: pda
+    procedencia: oca
     subfonte: oca
   - slug: ancine-filmes-lancados-captacao
     title: "Filmes Lancados com Valores Captados (serie historica)"
@@ -443,7 +443,7 @@ datasets:
     categoria:
       - producao_obras
       - fomento
-    procedencia: pda
+    procedencia: oca
     subfonte: oca
   - slug: ancine-captacao-por-projeto-investidor
     title: "Captacao por Projeto Incentivado e por Investidor"
@@ -530,7 +530,7 @@ datasets:
 
     categoria:
       - bilheteria
-    procedencia: pda
+    procedencia: oca
     subfonte: oca
   - slug: ancine-atas-fsa
     title: "Atas Oficiais FSA"
@@ -562,7 +562,7 @@ datasets:
     categoria:
       - fomento
       - fontes_metadados
-    procedencia: pda
+    procedencia: ancine
     subfonte: fsa
   - slug: ancine-festivais-fsa
     title: "Participacao Brasileira em Festivais - FSA"
@@ -594,7 +594,7 @@ datasets:
 
     categoria:
       - fomento
-    procedencia: pda
+    procedencia: ancine
     subfonte: fsa
   - slug: oca-publicacoes-complementares
     title: "OCA - Inventario de Publicacoes Complementares"
@@ -628,7 +628,7 @@ datasets:
 
     categoria:
       - fontes_metadados
-    procedencia: pda
+    procedencia: oca
     subfonte: oca
   - slug: br-pib-audiovisual
     title: "PIB do Audiovisual - Metodologia ANCINE"
@@ -681,7 +681,7 @@ datasets:
 
     categoria:
       - emprego_economia
-    procedencia: pda
+    procedencia: oca
     subfonte: oca
   - slug: br-rais-emprego-audiovisual
     title: "Emprego no Setor Audiovisual - Metodologia ANCINE"
@@ -732,7 +732,7 @@ datasets:
 
     categoria:
       - emprego_economia
-    procedencia: pda
+    procedencia: oca
     subfonte: oca
   - slug: br-comercio-exterior-servicos-audiovisuais
     title: "Comercio Exterior de Servicos Audiovisuais - Metodologia ANCINE"
@@ -782,7 +782,7 @@ datasets:
 
     categoria:
       - emprego_economia
-    procedencia: pda
+    procedencia: oca
     subfonte: oca
   - slug: br-comex-bens-audiovisuais
     title: "Comex Bens Audiovisuais - Fonte MDIC"
@@ -845,7 +845,7 @@ datasets:
     categoria:
       - bilheteria
       - salas_exibicao
-    procedencia: pda
+    procedencia: oca
     subfonte: embrafilme
   - slug: ibge-seculoxx-cinema
     title: "IBGE Seculo XX - Cinema (1971-1985)"
@@ -970,7 +970,7 @@ datasets:
 
     categoria:
       - diversidade
-    procedencia: pda
+    procedencia: oca
     subfonte: oca
   - slug: ibge-deflator-ipca
     title: "Deflator IPCA"

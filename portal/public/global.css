@@ -326,6 +326,16 @@ main:has(.tf), main:has(.cnx) { max-width: 100%; padding: 0; }
   border: 1px solid rgba(0,106,53,.45);
   font-weight: 700;
 }
+.dcard__proc--oca {
+  background: rgba(180,100,0,.10);
+  color: #7a4200;
+  border: 1px solid rgba(180,100,0,.30);
+}
+.dcard__proc--ancine {
+  background: rgba(30,80,140,.10);
+  color: #1a4a7a;
+  border: 1px solid rgba(30,80,140,.30);
+}
 .dcard__proc--ibge {
   background: rgba(42,122,58,.10);
   color: #1f5d2c;
