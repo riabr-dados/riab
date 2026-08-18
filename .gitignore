@@ -22,3 +22,21 @@ analysis/rais_repro_test/*.txt
 analysis/rais_repro_test/*.csv
 analysis/rais_repro_test/reproduce_rais_2019.py
 analysis/rais_repro_test/legado/
+
+# ── Material de trabalho local — nunca vai para o repositório ─────────────────
+# (2026-08-17: o Desktop marcava 1.552 arquivos para commit, incluindo os
+#  8,2 GB de analysis/. Estas linhas evitam o acidente.)
+analysis/
+auditoria-codex-ridab/
+manifesto_unpacked/
+MANIFESTO_RIDAB_01.docx
+outputs/.drafts/
+outputs/.plans/
+
+# Ferramentas e caches locais
+.claude/
+portal/.claude/
+portal/.astro/
+
+# Clone criado por engano dentro do próprio projeto (pode apagar)
+/riab/
