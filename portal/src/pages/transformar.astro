@@ -208,10 +208,19 @@ const BUILDER_DATA_JSON = JSON.stringify({ catalog: BUILDER_CATALOG, bridges: BU
         </div>
         <div class="diag-body">
           <svg id="diag-svg" class="diag-svg">
-            <g id="diag-edges"></g>
-            <g id="diag-nodes"></g>
+            <g id="diag-zoom">
+              <g id="diag-clusters"></g>
+              <g id="diag-edges"></g>
+              <g id="diag-nodes"></g>
+            </g>
           </svg>
+          <div class="diag-zoom-ctl">
+            <button class="diag-zb" id="diag-zoom-in" title="Mais zoom">+</button>
+            <button class="diag-zb" id="diag-zoom-out" title="Menos zoom">−</button>
+            <button class="diag-zb" id="diag-zoom-reset" title="Reorganizar">⟲</button>
+          </div>
           <div class="diag-tooltip" id="diag-tooltip"></div>
+          <div class="diag-keypop" id="diag-keypop" style="display:none"></div>
         </div>
       </div>
     </div>
@@ -1393,6 +1402,81 @@ const BUILDER_KEY_COLORS = {
   GENERO:'#a78bfa',CLASSIFICACAO:'#8b5cf6',PAIS:'#cbd5e1',ANO:'#94a3b8',
 };
 
+// Descrição regulatória das chaves — usada no popover de hover do diagrama
+const KEY_REGULATION = {
+  CPB: {
+    title: 'CPB — Certificado de Produto Brasileiro',
+    role: 'Identifica oficialmente uma obra como brasileira perante a ANCINE.',
+    body: 'Toda obra brasileira que queira cumprir cota de tela, ser usada como comprovação de entrega de obra financiada (FSA, Lei do Audiovisual, Rouanet) ou acessar incentivos precisa ter um CPB. É a “certidão de nascimento” regulatória da obra.'
+  },
+  CRT: {
+    title: 'CRT — Certificado de Registro de Título',
+    role: 'Autoriza a veiculação comercial da obra (cinema, TV, vídeo doméstico, VoD).',
+    body: 'Toda exibição ou veiculação regulada gera obrigação de emitir um CRT e recolher a CONDECINE — tributo cobrado por título e por segmento de mercado. Uma mesma obra (um CPB) pode ter vários CRTs, um para cada segmento/janela em que é veiculada.'
+  },
+  ROE: {
+    title: 'ROE — Registro de Obra Estrangeira',
+    role: 'Equivalente ao CPB para obras de origem não-brasileira distribuídas no mercado nacional.',
+    body: 'Obras estrangeiras que entram nos circuitos regulados (cinema, TV, VoD, vídeo físico) precisam de ROE. Pareia com a CONDECINE-Remessa quando há remessa de receita ao exterior. É a chave usada para casar dados de bilheteria, cota e distribuição de filmes não-brasileiros.'
+  },
+  SALIC: {
+    title: 'SALIC / Pronac — Sistema de Apoio às Leis de Incentivo à Cultura',
+    role: 'Identifica cada projeto cultural inscrito na Lei Rouanet e em leis correlatas.',
+    body: 'O número Pronac/SALIC acompanha o projeto da inscrição à prestação de contas — captação, execução, fiscalização e renúncia fiscal. Permite cruzar valores captados, aprovados, executados e desembolsos por proponente.'
+  },
+  CONTRATO: {
+    title: 'CONTRATO — Número de contrato administrativo',
+    role: 'Vincula execução financeira pública a uma obra ou projeto.',
+    body: 'Usado quando há contrato de fomento (ex.: FSA — Fundo Setorial do Audiovisual), apoio direto ou prestação de serviço. Liga investimento, cronograma de desembolso e marcos contratuais à obra/projeto correspondente.'
+  },
+  PROCESSO: {
+    title: 'PROCESSO — Número de processo administrativo',
+    role: 'Identificador do trâmite regulatório dentro da ANCINE / órgãos públicos.',
+    body: 'Cobre análise técnica, fiscalização, aplicação de penalidades e recursos. Permite ligar uma decisão regulatória ao agente, à obra e ao instrumento legal envolvido.'
+  },
+  REG_ANCINE: {
+    title: 'REG_ANCINE — Registro de agente econômico',
+    role: 'Cadastro obrigatório para atuar como produtora, distribuidora, exibidora ou empresa de programação.',
+    body: 'É o “CNPJ regulado” do setor: qualquer agente que opere o mercado audiovisual brasileiro precisa estar registrado, classificado por atividade e por independência. Permite cruzar atuação de mercado com a estrutura societária real.'
+  },
+  CNPJ: {
+    title: 'CNPJ — Cadastro Nacional de Pessoa Jurídica',
+    role: 'Identificador empresarial brasileiro padrão.',
+    body: 'Permite ligar agentes do audiovisual a bases extra-setoriais (Receita Federal, CNAE, grupo econômico) e cruzar produtoras/distribuidoras/exibidoras com seus controladores e atividades secundárias.'
+  },
+  CPF: {
+    title: 'CPF — Cadastro de Pessoa Física',
+    role: 'Identificador de pessoa física (diretores, roteiristas, sócios).',
+    body: 'Usado para casar autorias, participações societárias e indicações nominais entre bases. Sempre tratado de forma agregada / anonimizada no portal.'
+  },
+  TITULO_OBRA: {
+    title: 'TITULO_OBRA — Título da obra (junção fuzzy)',
+    role: 'Liga registros de obras quando não há CPB/ROE em ambos os lados.',
+    body: 'Junção feita por título normalizado (lowercase, sem acentos/pontuação, sem artigos), com fallback de ano. Útil para cruzar bilheteria, festivais, BFI e bases internacionais. Tem ruído — sempre validar amostragem.'
+  },
+  PRODUTORA: {
+    title: 'PRODUTORA — Nome da produtora',
+    role: 'Junção fuzzy por nome de produtora quando o REG_ANCINE/CNPJ não está disponível.',
+    body: 'Usado principalmente para casar bases internacionais ou históricas. Recomenda-se preferir REG_ANCINE/CNPJ sempre que possível para evitar colisões e variações ortográficas.'
+  },
+  DISTRIBUIDORA: {
+    title: 'DISTRIBUIDORA — Nome da distribuidora',
+    role: 'Junção fuzzy por nome quando a chave regulada (REG_ANCINE) está ausente.',
+    body: 'Útil principalmente nas bases de bilheteria histórica. Sujeito às mesmas ressalvas de PRODUTORA.'
+  },
+  EXIBIDORA: {
+    title: 'EXIBIDORA — Nome de exibidora / grupo de salas',
+    role: 'Junção fuzzy de grupo exibidor.',
+    body: 'Casa bilheteria, parque exibidor e infraestrutura por grupo. Quando possível, preferir REG_ANCINE para precisão.'
+  },
+  GRUPO_ECON: {
+    title: 'GRUPO_ECON — Grupo econômico',
+    role: 'Identificação da holding/controlador que reúne múltiplos agentes regulados.',
+    body: 'Permite olhar concentração de mercado: várias produtoras/distribuidoras podem pertencer ao mesmo grupo. Crítico para análises de pluralidade e dominância.'
+  },
+};
+const KEY_REGULATION_FALLBACK = (k, gloss) => ({ title: k, role: gloss || '', body: '' });
+
 function bridgeBetween(a, b) {
   if (!a || !b) return null;
   return BUILDER_DATA.bridges.find(br =>
@@ -1871,6 +1955,70 @@ async function buildBuilderSQL() {
     limitClause,
   ].filter(Boolean).join('\n');
 }
+// ── DIAGRAM: parquet row-count fetcher (footer-only, cached) ───
+const ROWCOUNT_CACHE_KEY = 'ridab_rowcounts_v1';
+function loadRowcountCache() {
+  try { return JSON.parse(localStorage.getItem(ROWCOUNT_CACHE_KEY) || '{}'); }
+  catch { return {}; }
+}
+function saveRowcountCache(c) {
+  try { localStorage.setItem(ROWCOUNT_CACHE_KEY, JSON.stringify(c)); } catch {}
+}
+async function fetchRowCounts(nodes) {
+  // Wait for DuckDB to be ready
+  const start = Date.now();
+  while (!conn && Date.now() - start < 30000) {
+    await new Promise(r => setTimeout(r, 250));
+  }
+  if (!conn) return;
+
+  const cache = loadRowcountCache();
+
+  // Apply cached values immediately
+  for (const n of nodes) {
+    if (cache[n.id] != null) applyRowsToNode(n, cache[n.id]);
+  }
+
+  // Fetch missing in small concurrent batches
+  const todo = nodes.filter(n => cache[n.id] == null);
+  const CONCURRENCY = 4;
+  let i = 0;
+  async function worker() {
+    while (i < todo.length) {
+      const n = todo[i++];
+      const url = `${HF}/${n.id}.parquet`;
+      try {
+        const res = await conn.query(
+          `SELECT CAST(SUM(num_rows) AS BIGINT) AS r FROM parquet_file_metadata('${url}')`
+        );
+        const row = res.toArray()[0];
+        const rows = row?.r != null ? Number(row.r) : 0;
+        cache[n.id] = rows;
+        applyRowsToNode(n, rows);
+      } catch (e) {
+        cache[n.id] = 0; // mark attempted so we don't retry every load
+      }
+    }
+  }
+  await Promise.all(Array.from({ length: CONCURRENCY }, worker));
+  saveRowcountCache(cache);
+}
+function applyRowsToNode(n, rows) {
+  if (!n._circ) return;
+  n._rows = rows;
+  const r = (function radiusFromRows(r2){
+    if (!r2 || r2 <= 0) return null;
+    return Math.max(4, Math.min(26, 3.5 + Math.log10(r2 + 1) * 2.3));
+  })(rows);
+  if (r == null) return;
+  n._nr = r;
+  n._circ.setAttribute('r', r.toFixed(1));
+  if (n._txt) {
+    const dy = n._labelAbove ? (-r - 5).toFixed(0) : (r + 11).toFixed(0);
+    n._txt.setAttribute('dy', dy);
+  }
+}
+
 // ── DIAGRAM ────────────────────────────────────────────────────
 function initDiagram() {
   if (diagramInitialized) return;
@@ -1879,7 +2027,7 @@ function initDiagram() {
   const svg   = document.getElementById('diag-svg');
   const wrap  = svg.parentElement;
   const W = wrap.clientWidth  || 900;
-  const H = wrap.clientHeight || 520;
+  const H = wrap.clientHeight || 540;
   svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
 
   const NS = 'http://www.w3.org/2000/svg';
@@ -1900,15 +2048,58 @@ function initDiagram() {
   const bridgedSet = new Set(filteredBridges.flatMap(b => b.tables));
   const tableList  = [...bridgedSet];
 
-  const nodes = tableList.map((id, i) => {
+  // ── Cluster assignment: each node's dominant join-key ──────
+  const nodeKeyCount = {};
+  for (const b of filteredBridges) {
+    for (const t of b.tables) {
+      (nodeKeyCount[t] = nodeKeyCount[t] || {})[b.top_key] =
+        (nodeKeyCount[t]?.[b.top_key] || 0) + (b.weight || 1);
+    }
+  }
+  const nodeCluster = {};
+  for (const id of tableList) {
+    const counts = nodeKeyCount[id] || {};
+    let bestKey = 'OUTROS', bestVal = -1;
+    for (const k in counts) if (counts[k] > bestVal) { bestVal = counts[k]; bestKey = k; }
+    nodeCluster[id] = bestKey;
+  }
+  const clusterGroups = {};
+  for (const id of tableList) {
+    (clusterGroups[nodeCluster[id]] = clusterGroups[nodeCluster[id]] || []).push(id);
+  }
+  // Sort clusters by size desc for stable placement
+  const clusterOrder = Object.keys(clusterGroups)
+    .sort((a, b) => clusterGroups[b].length - clusterGroups[a].length);
+
+  // Cluster centers on a ring around canvas center
+  const cx = W / 2, cy = H / 2;
+  const maxSub = Math.max(...clusterOrder.map(k => clusterGroups[k].length));
+  // Elliptical cluster ring: wider than tall to match a typical landscape container
+  const ringRy = Math.max(H * 0.48, maxSub * 19, 280);
+  const ringRx = ringRy * 1.85;
+  const clusterCenter = {};
+  clusterOrder.forEach((k, i) => {
+    const a = (i / clusterOrder.length) * 2 * Math.PI - Math.PI / 2;
+    clusterCenter[k] = { x: cx + ringRx * Math.cos(a), y: cy + ringRy * Math.sin(a), key: k };
+  });
+
+  const nodes = tableList.map(id => {
     const meta  = catMap[id];
-    const angle = (i / tableList.length) * 2 * Math.PI;
-    const r     = Math.min(W, H) * 0.32;
+    const ck    = nodeCluster[id];
+    const group = clusterGroups[ck];
+    const idx   = group.indexOf(id);
+    const sub   = group.length;
+    // Place each node on an inner ring within its cluster
+    const innerR = 18 + Math.min(60, sub * 4.2);
+    const a = (idx / Math.max(1, sub)) * 2 * Math.PI;
     return {
-      id, label: id.length > 20 ? id.slice(0, 18) + '…' : id,
-      title: meta?.title || id, country: meta?.country || '??',
-      x: W / 2 + r * Math.cos(angle) + (Math.random() - 0.5) * 30,
-      y: H / 2 + r * Math.sin(angle) + (Math.random() - 0.5) * 30,
+      id,
+      label: id.length > 24 ? id.slice(0, 22) + '…' : id,
+      title: meta?.title || id,
+      country: meta?.country || '??',
+      cluster: ck,
+      x: clusterCenter[ck].x + innerR * Math.cos(a),
+      y: clusterCenter[ck].y + innerR * Math.sin(a),
       vx: 0, vy: 0, deg: 0,
     };
   });
@@ -1949,9 +2140,28 @@ function initDiagram() {
         renderKeyFilters();
         updateVisibility();
       };
+      b.onmouseenter = () => showKeyPopover(b.dataset.key);
+      b.onmouseleave = () => hideKeyPopover();
     });
   }
   renderKeyFilters();
+
+  // ── Key regulation popover ─────────────────────────────────
+  const keypop = document.getElementById('diag-keypop');
+  function showKeyPopover(k) {
+    const gloss = BUILDER_DATA.keyGlossary?.[k] || '';
+    const info = KEY_REGULATION[k] || KEY_REGULATION_FALLBACK(k, gloss);
+    const color = BUILDER_KEY_COLORS[k] || 'var(--muted)';
+    keypop.style.borderLeftColor = color;
+    keypop.innerHTML = `
+      <div class="diag-keypop-title" style="color:${color}">${info.title}</div>
+      ${info.role ? `<div class="diag-keypop-role">${info.role}</div>` : ''}
+      ${info.body ? `<div class="diag-keypop-body">${info.body}</div>` : ''}
+      <div class="diag-keypop-hint">papel regulatório</div>
+    `;
+    keypop.style.display = 'block';
+  }
+  function hideKeyPopover() { keypop.style.display = 'none'; }
 
   // ── Sidebar: country filters ───────────────────────────────
   const countryFiltersEl = document.getElementById('diag-country-filters');
@@ -1976,25 +2186,65 @@ function initDiagram() {
   }
   renderCountryFilters();
 
-  // ── Edge elements ──────────────────────────────────────────
+  // ── Cluster background labels + rings ──────────────────────
+  const clusterG = document.getElementById('diag-clusters');
+  const clusterEls = {};
+  for (const k of clusterOrder) {
+    const c = clusterCenter[k];
+    const members = clusterGroups[k];
+    const ringR2 = 26 + Math.min(80, members.length * 4.6);
+    const ring = document.createElementNS(NS, 'circle');
+    ring.setAttribute('class', 'diag-cluster-ring');
+    ring.setAttribute('cx', c.x.toFixed(1));
+    ring.setAttribute('cy', c.y.toFixed(1));
+    ring.setAttribute('r', ringR2.toFixed(1));
+    ring.setAttribute('stroke', BUILDER_KEY_COLORS[k] || 'var(--border)');
+    clusterG.appendChild(ring);
+
+    const lbl = document.createElementNS(NS, 'text');
+    lbl.setAttribute('class', 'diag-cluster-label');
+    lbl.setAttribute('x', c.x.toFixed(1));
+    lbl.setAttribute('y', (c.y - ringR2 - 6).toFixed(1));
+    lbl.textContent = k;
+    clusterG.appendChild(lbl);
+    clusterEls[k] = { ring, lbl, ringR: ringR2 };
+  }
+
+  // ── Edge elements (curved bezier, grouped per key) ─────────
   const edgeG  = document.getElementById('diag-edges');
+  // Deterministic bend offset per key for visual grouping
+  const keyBend = {};
+  [...new Set(filteredBridges.map(b => b.top_key))].forEach((k, i, arr) => {
+    keyBend[k] = ((i / Math.max(1, arr.length - 1)) - 0.5) * 0.6;
+  });
   const edgeEls = edges.map(e => {
-    const line = document.createElementNS(NS, 'line');
-    line.setAttribute('stroke', BUILDER_KEY_COLORS[e.key] || '#bbb');
-    line.setAttribute('stroke-width', (0.6 + Math.log(1 + e.w) * 0.7).toFixed(1));
-    line.setAttribute('stroke-opacity', '0.38');
-    edgeG.appendChild(line);
-    return { el: line, e };
+    const path = document.createElementNS(NS, 'path');
+    path.setAttribute('fill', 'none');
+    path.setAttribute('stroke', BUILDER_KEY_COLORS[e.key] || '#bbb');
+    path.setAttribute('stroke-width', (0.7 + Math.log(1 + e.w) * 0.7).toFixed(1));
+    path.setAttribute('stroke-opacity', '0.32');
+    path.setAttribute('stroke-linecap', 'round');
+    edgeG.appendChild(path);
+    return { el: path, e, bend: keyBend[e.key] || 0 };
   });
 
   // ── Node elements ──────────────────────────────────────────
   const nodeG   = document.getElementById('diag-nodes');
   const tooltip = document.getElementById('diag-tooltip');
 
+  // Bubble radius from row count (log-scale). Until counts arrive,
+  // a neutral fallback based on degree is used.
+  function radiusFromRows(rows) {
+    if (!rows || rows <= 0) return null;
+    const r = 3.5 + Math.log10(rows + 1) * 2.3;
+    return Math.max(4, Math.min(26, r));
+  }
+  function radiusFallback(n) { return 5 + Math.min(n.deg, 10) * 0.9; }
+
   const nodeEls = nodes.map(n => {
     const g    = document.createElementNS(NS, 'g');
     const fill = COUNTRY_FILL[n.country] || '#888';
-    const nr   = 4 + Math.min(n.deg, 10) * 1.1;
+    const nr   = radiusFallback(n);
 
     const circ = document.createElementNS(NS, 'circle');
     circ.setAttribute('r', nr.toFixed(1));
@@ -2005,36 +2255,44 @@ function initDiagram() {
 
     const txt = document.createElementNS(NS, 'text');
     txt.textContent = n.label;
-    txt.setAttribute('font-size', '8');
-    txt.setAttribute('font-family', 'JetBrains Mono, monospace');
+    txt.setAttribute('class', 'diag-node-label');
     txt.setAttribute('text-anchor', 'middle');
-    txt.setAttribute('dy', (nr + 10).toFixed(0));
-    txt.setAttribute('fill', 'var(--muted)');
-    txt.setAttribute('pointer-events', 'none');
+    // Label placement: above node if node is above cluster center, else below
+    const cc = clusterCenter[n.cluster];
+    const labelAbove = n.y < cc.y;
+    txt.setAttribute('dy', labelAbove ? (-nr - 5).toFixed(0) : (nr + 11).toFixed(0));
+    n._labelAbove = labelAbove;
 
     g.appendChild(circ); g.appendChild(txt);
     nodeG.appendChild(g);
 
-    n._circ = circ; n._fill = fill; n._nr = nr;
+    n._circ = circ; n._fill = fill; n._nr = nr; n._txt = txt;
 
     // ── Drag ────────────────────────────────────────────────
     let dragging = false, ox = 0, oy = 0, movedWhileDragging = false;
     g.style.cursor = 'grab';
 
+    function screenToGraph(ev) {
+      const rect = svg.getBoundingClientRect();
+      const v = svg.viewBox.baseVal;
+      const vw = v.width || W, vh = v.height || H;
+      const vx0 = v.x || 0, vy0 = v.y || 0;
+      const mx = vx0 + (ev.clientX - rect.left) * (vw / rect.width);
+      const my = vy0 + (ev.clientY - rect.top)  * (vh / rect.height);
+      return { x: (mx - zx) / zk, y: (my - zy) / zk };
+    }
     g.addEventListener('mousedown', ev => {
       dragging = true; movedWhileDragging = false;
       g.style.cursor = 'grabbing';
-      const rect = svg.getBoundingClientRect();
-      ox = ev.clientX * (W / rect.width)  - n.x;
-      oy = ev.clientY * (H / rect.height) - n.y;
+      const p = screenToGraph(ev);
+      ox = p.x - n.x; oy = p.y - n.y;
       ev.stopPropagation(); ev.preventDefault();
     });
     window.addEventListener('mousemove', ev => {
       if (!dragging) return;
       movedWhileDragging = true;
-      const rect = svg.getBoundingClientRect();
-      n.x = ev.clientX * (W / rect.width)  - ox;
-      n.y = ev.clientY * (H / rect.height) - oy;
+      const p = screenToGraph(ev);
+      n.x = p.x - ox; n.y = p.y - oy;
       n.vx = 0; n.vy = 0;
       draw();
     });
@@ -2066,8 +2324,12 @@ function initDiagram() {
     return { el: g, n };
   });
 
-  // ── Click on SVG background → deselect ────────────────────
-  svg.addEventListener('click', () => { selectedNode = null; updateVisibility(); });
+  // ── Click on SVG background → deselect (skip if just panned) ──
+  let panMoved = false;
+  svg.addEventListener('click', () => {
+    if (panMoved) { panMoved = false; return; }
+    selectedNode = null; updateVisibility();
+  });
 
   // ── updateVisibility ───────────────────────────────────────
   function updateVisibility() {
@@ -2103,16 +2365,18 @@ function initDiagram() {
 
     for (const { el, n } of nodeEls) {
       const countryOk = !activeCountry || n.country === activeCountry;
+      const dim   = (selectedNode && !connectedNodes.has(n.id)) || !countryOk;
+      const isSel = n.id === selectedNode;
       if (!countryOk) {
         el.setAttribute('opacity', '0.1');
-      } else if (selectedNode && !connectedNodes.has(n.id)) {
-        el.setAttribute('opacity', '0.18');
+      } else if (dim) {
+        el.setAttribute('opacity', '0.22');
         n._circ.setAttribute('stroke', '#fff');
         n._circ.setAttribute('stroke-width', '1.2');
         n._circ.setAttribute('r', n._nr.toFixed(1));
       } else {
         el.setAttribute('opacity', '1');
-        if (n.id === selectedNode) {
+        if (isSel) {
           n._circ.setAttribute('stroke', n._fill);
           n._circ.setAttribute('stroke-width', '3');
           n._circ.setAttribute('r', (n._nr * 1.35).toFixed(1));
@@ -2122,63 +2386,181 @@ function initDiagram() {
           n._circ.setAttribute('r', n._nr.toFixed(1));
         }
       }
+      n._txt.setAttribute('class',
+        'diag-node-label' +
+        (isSel ? ' diag-node-label--hi' : '') +
+        (dim ? ' diag-node-label--dim' : '')
+      );
     }
   }
 
   // ── Draw positions ─────────────────────────────────────────
   function draw() {
-    for (const { el, e } of edgeEls) {
-      el.setAttribute('x1', e.s.x.toFixed(1)); el.setAttribute('y1', e.s.y.toFixed(1));
-      el.setAttribute('x2', e.t.x.toFixed(1)); el.setAttribute('y2', e.t.y.toFixed(1));
+    for (const { el, e, bend } of edgeEls) {
+      const x1 = e.s.x, y1 = e.s.y, x2 = e.t.x, y2 = e.t.y;
+      const mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
+      // perpendicular offset for curve, magnitude scales with length
+      const dx = x2 - x1, dy = y2 - y1;
+      const len = Math.sqrt(dx*dx + dy*dy) || 1;
+      const ox = -dy / len * len * bend * 0.25;
+      const oy =  dx / len * len * bend * 0.25;
+      el.setAttribute('d',
+        `M${x1.toFixed(1)},${y1.toFixed(1)} Q${(mx+ox).toFixed(1)},${(my+oy).toFixed(1)} ${x2.toFixed(1)},${y2.toFixed(1)}`
+      );
     }
     for (const { el, n } of nodeEls) {
       el.setAttribute('transform', `translate(${n.x.toFixed(1)},${n.y.toFixed(1)})`);
     }
   }
 
-  // ── Force simulation ───────────────────────────────────────
-  let frame = 0;
-  const TOTAL = 280;
-
-  function tick() {
-    for (let i = 0; i < nodes.length; i++) {
-      for (let j = i + 1; j < nodes.length; j++) {
-        let dx = nodes[j].x - nodes[i].x || 0.1;
-        let dy = nodes[j].y - nodes[i].y || 0.1;
-        const d2 = dx*dx + dy*dy + 1;
-        const d  = Math.sqrt(d2);
-        const f  = 4200 / d2;
-        nodes[i].vx -= (dx/d)*f; nodes[i].vy -= (dy/d)*f;
-        nodes[j].vx += (dx/d)*f; nodes[j].vy += (dy/d)*f;
+  // ── Silent settle (cluster-aware, no animation) ────────────
+  function settle(iters) {
+    for (let step = 0; step < iters; step++) {
+      // Repulsion (only between reasonably close nodes — O(n²) but n~50 is fine)
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const a = nodes[i], b = nodes[j];
+          let dx = b.x - a.x || 0.1;
+          let dy = b.y - a.y || 0.1;
+          const d2 = dx*dx + dy*dy + 1;
+          if (d2 > 16000) continue;
+          const d  = Math.sqrt(d2);
+          const f  = 2600 / d2;
+          a.vx -= (dx/d)*f; a.vy -= (dy/d)*f;
+          b.vx += (dx/d)*f; b.vy += (dy/d)*f;
+        }
+      }
+      // Edge springs (weaker for inter-cluster)
+      for (const e of edges) {
+        const dx   = e.t.x - e.s.x;
+        const dy   = e.t.y - e.s.y;
+        const d    = Math.sqrt(dx*dx + dy*dy) || 0.01;
+        const sameCluster = e.s.cluster === e.t.cluster;
+        const rest = sameCluster ? 38 : 220;
+        const k    = sameCluster ? 0.10 : 0.008;
+        const f    = (d - rest) * k;
+        const fx = (dx/d)*f, fy = (dy/d)*f;
+        e.s.vx += fx; e.s.vy += fy;
+        e.t.vx -= fx; e.t.vy -= fy;
+      }
+      // Pull each node toward its cluster center
+      for (const n of nodes) {
+        const c = clusterCenter[n.cluster];
+        n.vx += (c.x - n.x) * 0.18;
+        n.vy += (c.y - n.y) * 0.18;
+        n.vx *= 0.55; n.vy *= 0.55;
+        n.x += n.vx; n.y += n.vy;
+        // Hard clamp: never let a node drift more than maxR from its cluster center
+        const sub = clusterGroups[n.cluster].length;
+        const maxR = 30 + sub * 10;
+        const dxc = n.x - c.x, dyc = n.y - c.y;
+        const dC  = Math.sqrt(dxc*dxc + dyc*dyc);
+        if (dC > maxR) {
+          n.x = c.x + (dxc / dC) * maxR;
+          n.y = c.y + (dyc / dC) * maxR;
+          n.vx *= 0.4; n.vy *= 0.4;
+        }
       }
     }
-    for (const e of edges) {
-      const dx   = e.t.x - e.s.x;
-      const dy   = e.t.y - e.s.y;
-      const d    = Math.sqrt(dx*dx + dy*dy) || 0.01;
-      const rest = 50 + 90 / Math.max(0.4, e.w);
-      const f    = (d - rest) * 0.11;
-      const fx = (dx/d)*f, fy = (dy/d)*f;
-      e.s.vx += fx; e.s.vy += fy;
-      e.t.vx -= fx; e.t.vy -= fy;
-    }
-    const cx = W/2, cy = H/2;
-    for (const n of nodes) {
-      n.vx += (cx - n.x) * 0.003;
-      n.vy += (cy - n.y) * 0.003;
-      n.vx *= 0.82; n.vy *= 0.82;
-      n.x = Math.max(28, Math.min(W-28, n.x + n.vx));
-      n.y = Math.max(18, Math.min(H-22, n.y + n.vy));
-    }
   }
+  settle(90);
 
-  function loop() {
-    for (let k = 0; k < 5; k++) tick();
-    draw();
-    frame += 5;
-    if (frame < TOTAL) requestAnimationFrame(loop);
+  // ── Fit viewBox to actual content bounding box (with padding) ──
+  function fitViewBox() {
+    let minX =  Infinity, minY =  Infinity, maxX = -Infinity, maxY = -Infinity;
+    for (const n of nodes) {
+      if (n.x < minX) minX = n.x; if (n.x > maxX) maxX = n.x;
+      if (n.y < minY) minY = n.y; if (n.y > maxY) maxY = n.y;
+    }
+    for (const k of clusterOrder) {
+      const c = clusterCenter[k]; const r = clusterEls[k].ringR + 18;
+      if (c.x - r < minX) minX = c.x - r; if (c.x + r > maxX) maxX = c.x + r;
+      if (c.y - r < minY) minY = c.y - r; if (c.y + r > maxY) maxY = c.y + r;
+    }
+    const padX = 60, padY = 60;
+    const vbW = (maxX - minX) + 2 * padX;
+    const vbH = (maxY - minY) + 2 * padY;
+    svg.setAttribute('viewBox', `${(minX - padX).toFixed(1)} ${(minY - padY).toFixed(1)} ${vbW.toFixed(1)} ${vbH.toFixed(1)}`);
+    svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
   }
-  requestAnimationFrame(loop);
+  fitViewBox();
+  draw();
+  updateVisibility();
+
+  // ── Async: bubble size by parquet row count (cached) ───────
+  fetchRowCounts(nodes).catch(err => console.warn('rowcount fetch failed', err));
+
+  // ── Zoom & pan ─────────────────────────────────────────────
+  const zoomG = document.getElementById('diag-zoom');
+  let zx = 0, zy = 0, zk = 1;
+  function applyZoom() {
+    zoomG.setAttribute('transform', `translate(${zx.toFixed(1)},${zy.toFixed(1)}) scale(${zk.toFixed(3)})`);
+  }
+  function zoomAt(mx, my, factor) {
+    const nk = Math.max(0.5, Math.min(4, zk * factor));
+    const r  = nk / zk;
+    zx = mx - (mx - zx) * r;
+    zy = my - (my - zy) * r;
+    zk = nk;
+    applyZoom();
+  }
+  function vbDims() {
+    const v = svg.viewBox.baseVal;
+    return { vw: v.width || W, vh: v.height || H };
+  }
+  svg.addEventListener('wheel', ev => {
+    ev.preventDefault();
+    const rect = svg.getBoundingClientRect();
+    const { vw, vh } = vbDims();
+    const mx = (ev.clientX - rect.left) * (vw / rect.width);
+    const my = (ev.clientY - rect.top)  * (vh / rect.height);
+    zoomAt(mx, my, ev.deltaY < 0 ? 1.15 : 1/1.15);
+  }, { passive: false });
+
+  // Pan on background drag
+  let panning = false, pX = 0, pY = 0;
+  svg.addEventListener('mousedown', ev => {
+    if (ev.target.closest('g[id^="diag-nodes"] g')) return; // node handles its own drag
+    panning = true; pX = ev.clientX; pY = ev.clientY;
+    svg.classList.add('is-panning');
+  });
+  window.addEventListener('mousemove', ev => {
+    if (!panning) return;
+    panMoved = true;
+    const rect = svg.getBoundingClientRect();
+    const { vw, vh } = vbDims();
+    zx += (ev.clientX - pX) * (vw / rect.width);
+    zy += (ev.clientY - pY) * (vh / rect.height);
+    pX = ev.clientX; pY = ev.clientY;
+    applyZoom();
+  });
+  window.addEventListener('mouseup', () => {
+    if (panning) { panning = false; svg.classList.remove('is-panning'); }
+  });
+
+  document.getElementById('diag-zoom-in').onclick  = () => {
+    const v = svg.viewBox.baseVal; zoomAt(v.x + v.width/2, v.y + v.height/2, 1.25);
+  };
+  document.getElementById('diag-zoom-out').onclick = () => {
+    const v = svg.viewBox.baseVal; zoomAt(v.x + v.width/2, v.y + v.height/2, 1/1.25);
+  };
+  document.getElementById('diag-zoom-reset').onclick = () => {
+    zx = 0; zy = 0; zk = 1; applyZoom();
+    for (const n of nodes) {
+      const c = clusterCenter[n.cluster];
+      const group = clusterGroups[n.cluster];
+      const idx = group.indexOf(n.id);
+      const sub = group.length;
+      const innerR = 18 + Math.min(60, sub * 4.2);
+      const a = (idx / Math.max(1, sub)) * 2 * Math.PI;
+      n.x = c.x + innerR * Math.cos(a);
+      n.y = c.y + innerR * Math.sin(a);
+      n.vx = 0; n.vy = 0;
+    }
+    settle(140);
+    fitViewBox();
+    draw();
+  };
 }
 
 // Legacy "Campos livres" code removed — replaced by Builder above.
@@ -3258,9 +3640,48 @@ __LEGACY_END__ */
 .diag-sub { font-family: var(--font-m); font-size: 9.5px; color: var(--dim); }
 .diag-body {
   position: relative; flex: 1;
-  height: calc(100vh - 340px); min-height: 460px;
+  height: calc(100vh - 320px); min-height: 540px;
+  background:
+    radial-gradient(ellipse at center, rgba(0,0,0,0.015) 0%, transparent 70%),
+    var(--bg);
 }
-.diag-svg { width: 100%; height: 100%; display: block; }
+.diag-svg { width: 100%; height: 100%; display: block; cursor: grab; }
+.diag-svg.is-panning { cursor: grabbing; }
+.diag-zoom-ctl {
+  position: absolute; right: 12px; bottom: 12px;
+  display: flex; flex-direction: column; gap: 4px; z-index: 5;
+}
+.diag-zb {
+  width: 28px; height: 28px; border-radius: 6px;
+  background: var(--bg2); border: 1px solid var(--border);
+  color: var(--text); font-family: var(--font-m); font-size: 14px;
+  cursor: pointer; line-height: 1; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .12s, border-color .12s;
+}
+.diag-zb:hover { background: var(--bg); border-color: var(--muted); }
+.diag-cluster-label {
+  font-family: var(--font-m); font-size: 10px; font-weight: 700;
+  letter-spacing: .2em; text-transform: uppercase;
+  fill: var(--dim); opacity: 0.55;
+  text-anchor: middle; pointer-events: none;
+  paint-order: stroke; stroke: var(--bg); stroke-width: 4px;
+}
+.diag-cluster-ring {
+  fill: none; stroke: var(--border);
+  stroke-dasharray: 2 4; opacity: 0.5;
+  pointer-events: none;
+}
+.diag-node-label {
+  font-family: var(--font-m); font-size: 8.5px;
+  fill: var(--text); pointer-events: none;
+  paint-order: stroke; stroke: var(--bg); stroke-width: 3px;
+  stroke-linejoin: round;
+}
+.diag-node-label--hi {
+  font-weight: 700; font-size: 10.5px; fill: var(--text);
+}
+.diag-node-label--dim { opacity: 0.25; }
 .diag-tooltip {
   position: absolute; pointer-events: none; display: none;
   background: var(--text); color: var(--bg);
@@ -3271,4 +3692,34 @@ __LEGACY_END__ */
 }
 .diag-tt-table { font-size: 9.5px; color: rgba(250,248,239,.45); display: block; }
 .diag-tt-keys  { font-size: 9.5px; color: rgba(250,248,239,.65); display: block; }
+
+.diag-keypop {
+  position: absolute; z-index: 20; pointer-events: none;
+  top: 14px; left: 14px;
+  width: 320px; max-width: calc(100% - 28px);
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 14px 16px 14px 18px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.06);
+  border-left: 3px solid var(--muted);
+}
+.diag-keypop-title {
+  font-family: var(--font-m); font-size: 11px; font-weight: 700;
+  letter-spacing: .04em; color: var(--text);
+  margin: 0 0 6px;
+}
+.diag-keypop-role {
+  font-family: var(--font-m); font-size: 10px;
+  color: var(--muted); margin: 0 0 10px; line-height: 1.5;
+  font-style: italic;
+}
+.diag-keypop-body {
+  font-family: var(--font-m); font-size: 10.5px;
+  color: var(--text); line-height: 1.65; margin: 0;
+}
+.diag-keypop-hint {
+  font-family: var(--font-m); font-size: 9px;
+  color: var(--dim); margin: 10px 0 0; letter-spacing: .08em;
+  text-transform: uppercase;
+}
 </style>
