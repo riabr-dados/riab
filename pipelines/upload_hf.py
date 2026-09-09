@@ -16,7 +16,7 @@ import json
 import hashlib
 import yaml
 from pathlib import Path
-from huggingface_hub import HfApi, CommitOperationAdd
+from huggingface_hub import HfApi, CommitOperationAdd, CommitOperationDelete
 
 HF_ORG  = "riabr-dados"
 HF_REPO = "riab"
@@ -25,6 +25,8 @@ HF_TYPE = "dataset"
 CATALOG_PATH = "catalog/datasets.yaml"
 RAW_LOCAL    = "datasets"
 CLEANED_LOCAL = os.path.join("pipelines", "output", "cleaned")
+MAX_COMMIT_FILES = 100
+MAX_COMMIT_BYTES = 256 * 1024 * 1024
 
 
 def download_operations(datasets: list) -> list:
@@ -156,6 +158,33 @@ def build_operations(datasets: list) -> list:
     return ops
 
 
+def operation_size(operation) -> int:
+    """Tamanho local usado para manter cada commit dentro de um lote administrável."""
+    if isinstance(operation, CommitOperationAdd):
+        path = operation.path_or_fileobj
+        if isinstance(path, (str, os.PathLike)) and os.path.isfile(path):
+            return os.path.getsize(path)
+    return 0
+
+
+def operation_batches(operations: list) -> list[list]:
+    """Divide a publicação para permitir retomada e limitar memória do cliente."""
+    batches = []
+    current = []
+    current_bytes = 0
+    for operation in operations:
+        size = operation_size(operation)
+        if current and (len(current) >= MAX_COMMIT_FILES or current_bytes + size > MAX_COMMIT_BYTES):
+            batches.append(current)
+            current = []
+            current_bytes = 0
+        current.append(operation)
+        current_bytes += size
+    if current:
+        batches.append(current)
+    return batches
+
+
 def main():
     datasets = load_catalog()
     # Preparar e validar localmente antes de qualquer chamada com efeito externo.
@@ -186,13 +215,26 @@ def main():
         print("Nenhuma operacao gerada.")
         return
 
-    print(f"\nEnviando {len(ops)} arquivo(s) para o Hugging Face...")
-    api.create_commit(
-        repo_id=f"{HF_ORG}/{HF_REPO}",
-        repo_type=HF_TYPE,
-        operations=ops,
-        commit_message="dados: atualiza raw e cleaned",
+    desired = {operation.path_in_repo for operation in ops if isinstance(operation, CommitOperationAdd)}
+    remote = set(api.list_repo_files(repo_id=f"{HF_ORG}/{HF_REPO}", repo_type=HF_TYPE))
+    stale = sorted(
+        path for path in remote
+        if path.startswith(("cleaned/", "downloads/")) and path not in desired
     )
+    ops.extend(CommitOperationDelete(path_in_repo=path) for path in stale)
+    batches = operation_batches(ops)
+    print(
+        f"\nEnviando {len(desired)} arquivo(s) e removendo {len(stale)} obsoleto(s) "
+        f"em {len(batches)} lote(s)..."
+    )
+    for index, batch in enumerate(batches, start=1):
+        print(f"[LOTE {index}/{len(batches)}] {len(batch)} operacoes")
+        api.create_commit(
+            repo_id=f"{HF_ORG}/{HF_REPO}",
+            repo_type=HF_TYPE,
+            operations=batch,
+            commit_message=f"dados: atualiza raw e cleaned ({index}/{len(batches)})",
+        )
     print("Upload concluido.")
 
 
