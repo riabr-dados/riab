@@ -16,7 +16,7 @@
   "sources": [
     {
       "title": "European Audiovisual Observatory — Lumiere VOD",
-      "path": "https://lumiere.obs.coe.int/vod"
+      "path": "https://lumierevod.obs.coe.int/"
     }
   ],
   "contributors": [
@@ -35,8 +35,8 @@
       "offline",
       "descontinuado"
     ],
-    "last_checked": "2026-05-19",
-    "notes": "Snapshot resultante de busca por país de produção = Brasil."
+    "last_checked": "2026-09-09",
+    "notes": "A origem correta é https://lumierevod.obs.coe.int/. O snapshot não registra todos os filtros e a data da consulta, portanto sua completude não pôde ser demonstrada."
   },
   "collection": {
     "method": "manual",
@@ -58,7 +58,7 @@
     {
       "date": "2026-05-19",
       "path": "snapshots/2026-05-19/",
-      "source_url": "https://lumiere.obs.coe.int/vod",
+      "source_url": "https://lumierevod.obs.coe.int/",
       "notes": "Snapshot inicial migrado do projeto fomento-audiovisual."
     }
   ]

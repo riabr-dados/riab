@@ -1,0 +1,75 @@
+table: cnc_public_films_historique_2005_2015
+description: Public des films selon la nationalité
+source_raw: cnc-public-films
+source_file: public-films.xlsx
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo oficial publicado pelo CNC.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original do arquivo CNC.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela.
+- name: hommes
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: hommes.'
+- name: '49_36161119224006'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 49_36161119224006.'
+- name: '48_037127247499946'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 48_037127247499946.'
+- name: '48_59980796817106'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 48_59980796817106.'
+- name: '48_25291091459165'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 48_25291091459165.'
+- name: '47_18033213327652'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 47_18033213327652.'
+- name: '48_77117787582788'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 48_77117787582788.'
+- name: '47_47954656693936'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 47_47954656693936.'
+- name: '46_20903619977875'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 46_20903619977875.'
+- name: '42_140926200030435'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 42_140926200030435.'
+- name: '41_01105837353644'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 41_01105837353644.'
+- name: '42_120932088301885'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 42_120932088301885.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo oficial.
+notes:
+- Uma saída corresponde a uma tabela factual; abas temáticas diferentes não são empilhadas.

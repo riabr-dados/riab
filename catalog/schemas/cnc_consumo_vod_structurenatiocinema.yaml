@@ -1,0 +1,68 @@
+table: cnc_consumo_vod_structurenatiocinema
+description: Structure du chiffre d'affaires de la VàD (VOD+EST) selon la nationalité des films cinématographiques
+  (%)
+source_raw: cnc-consumo-vod
+source_file: consumo-menages-vod.xlsx
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo oficial publicado pelo CNC.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original do arquivo CNC.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela.
+- name: films_francais
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: films_francais.'
+- name: '36_4104079544913'
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 36_4104079544913.'
+- name: '37_50001613963636'
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 37_50001613963636.'
+- name: '30_52283913231672'
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 30_52283913231672.'
+- name: '32_84055569472141'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 32_84055569472141.'
+- name: '30_349341498995074'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 30_349341498995074.'
+- name: '29_881803323253536'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 29_881803323253536.'
+- name: '34_32045800213706'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 34_32045800213706.'
+- name: '35_44187637487693'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 35_44187637487693.'
+- name: dimensao_10
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: dimensao_10.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo oficial.
+notes:
+- Uma saída corresponde a uma tabela factual; abas temáticas diferentes não são empilhadas.

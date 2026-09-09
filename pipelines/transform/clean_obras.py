@@ -76,11 +76,13 @@ def load_csv(path: str, ano: int) -> pd.DataFrame:
             sep=";",
             encoding="latin-1",
             dtype=str,
-            on_bad_lines="skip",
+            keep_default_na=False,
+            na_values=[""],
+            on_bad_lines="error",
         )
     except Exception as e:
         print(f"  ERRO ao ler {os.path.basename(path)}: {e}", file=sys.stderr)
-        return pd.DataFrame()
+        raise
 
     # Corrige nomes de colunas (mojibake)
     df.columns = [fix_encoding(c).strip() for c in df.columns]
@@ -111,7 +113,7 @@ def transform(df: pd.DataFrame) -> pd.DataFrame:
             df[col] = df[col].apply(
                 lambda x: fix_encoding(x).strip().upper() if isinstance(x, str) else None
             )
-            df[col] = df[col].replace({"": None, "NAN": None, "NONE": None})
+            df[col] = df[col].replace({"": None})
 
     # CPB: strip simples (nao altera case)
     if "cpb" in df.columns:

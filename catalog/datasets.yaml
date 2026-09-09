@@ -176,11 +176,12 @@ datasets:
     tags: [fomento, renuncia-fiscal, lei-audiovisual, brasil, ancine]
     raw:
       path: ancine-renuncia-fiscal/
+      file: projetos-com-renuncia-fiscal.csv
       format: csv
-      encoding: latin-1
+      encoding: utf-8
       delimiter: ";"
       files: 1
-      size_bytes: 1472298
+      size_bytes: 1488575
     cleaned:
       tables: [renuncia_fiscal]
     related:
@@ -190,105 +191,202 @@ datasets:
       - fomento
     procedencia: pda
     subfonte: ancine_pda
-  - slug: ancine-condecine-arrecadacao
-    title: "CONDECINE - Arrecadacao"
-    description: >
-      Serie consolidada da arrecadacao total da CONDECINE publicada pelo OCA/ANCINE.
-      Une a serie anual 2007-2025 e as planilhas mensais disponiveis para 2010-2025,
-      preservando tipo de CONDECINE, arquivo de origem, URL oficial e hash.
-      Para recolhimento detalhado por artigo de lei e por empresa contribuinte,
-      ver ancine-condecine-recolhimento.
+  - slug: ancine-condecine-arrecadacao-bruta
+    title: "CONDECINE - Arrecadacao Bruta"
+    description: "Valores totais arrecadados da CONDECINE por modalidade, antes do abatimento da DRU. Recursos anual e mensal separados."
     source_id: ancine
     status: ativo
     coverage: "2007-2025"
-    tags: [tributacao, condecine, arrecadacao, oca, brasil, ancine]
-    raw:
-      path: ancine-condecine-arrecadacao/
-      format: csv,xlsx,pdf
-      files: 21
-      size_bytes: 0
+    tags: [tributacao, condecine, arrecadacao-bruta, oca, brasil, ancine]
+    raw: {path: ancine-condecine-arrecadacao/, format: "csv,xlsx,pdf", files: 17, size_bytes: 0}
     cleaned:
-      tables:
-        - condecine_arrecadacao
-      notes: >
-        Transformacao gerada a partir dos CSVs oficiais do OCA Dados Financeiros.
-        Valores reais deflacionados permanecem nulos ate a ligacao com deflator
-        metodologico especifico para esta serie.
-    related:
-      - ibge-deflator-ipca
-      - ancine-renuncia-fiscal
-      - ancine-condecine-recolhimento
-
-    categoria:
-      - fomento
+      tables: [condecine_arrecadacao_bruta_anual, condecine_arrecadacao_bruta_mensal]
+      notes: "Totais de planilha são validados e omitidos das tabelas factuais para evitar dupla contagem."
+    related: [ancine-condecine-arrecadacao-pos-dru, ancine-condecine-recolhimento-mensal]
+    categoria: [fomento]
     procedencia: oca
     subfonte: oca
-  - slug: ancine-condecine-recolhimento
-    title: "CONDECINE - Recolhimento por Mecanismo e Contribuinte"
-    description: >
-      Valores recolhidos de CONDECINE desagregados por artigo de lei (Art. 3 e
-      Art. 3A da Lei 8.685/93 e Art. 39 da MP 2.228-1/01) e por empresa
-      contribuinte (distribuidoras, programadoras e empresas de video domestico).
-      Complementa a serie de arrecadacao total (ancine-condecine-arrecadacao)
-      com granularidade por mecanismo e por CNPJ contribuinte. Publicado pelo
-      OCA/ANCINE. Cobertura historica 2002-2017, sem atualizacao posterior.
+
+  - slug: ancine-condecine-arrecadacao-pos-dru
+    title: "CONDECINE - Arrecadacao apos DRU"
+    description: "Valores da CONDECINE após abatimento da Desvinculação das Receitas da União, por modalidade. Recursos anual e mensal separados."
+    source_id: ancine
+    status: ativo
+    coverage: "2007-2025"
+    tags: [tributacao, condecine, dru, oca, brasil, ancine]
+    raw: {path: ancine-condecine-arrecadacao/, format: "csv,xlsx,pdf", files: 17, size_bytes: 0}
+    cleaned:
+      tables: [condecine_arrecadacao_pos_dru_anual, condecine_arrecadacao_pos_dru_mensal]
+    related: [ancine-condecine-arrecadacao-bruta]
+    categoria: [fomento]
+    procedencia: oca
+    subfonte: oca
+
+  - slug: ancine-condecine-recolhimento-mensal
+    title: "CONDECINE - Recolhimento Mensal por Mecanismo"
+    description: "Recolhimentos mensais dos artigos 3º, 3º-A e 39, sem subtotais ou totais duplicados."
     source_id: ancine
     status: intermitente
     coverage: "2002-2017"
-    tags: [tributacao, condecine, recolhimento, contribuinte, oca, brasil, ancine]
-    raw:
-      path: ancine-condecine-recolhimento/
-      format: csv,xlsx,pdf
-      files: 21
-      size_bytes: 0
-    cleaned:
-      tables:
-        - condecine_recolhimento
-      notes: >
-        Processado pelo mesmo parser de fluxos financeiros (clean_oca_complementos.py).
-        Agrega arquivos por artigo de lei (wide-year) e por empresa contribuinte
-        (detail). tipo_fluxo = recolhido.
-    related:
-      - ancine-condecine-arrecadacao
-      - ibge-deflator-ipca
-
-    categoria:
-      - fomento
+    tags: [tributacao, condecine, recolhimento, mensal, oca, brasil]
+    raw: {path: ancine-condecine-recolhimento/, format: "csv,xlsx,pdf", files: 9, size_bytes: 0}
+    cleaned: {tables: [condecine_recolhimento_mensal]}
+    related: [ancine-condecine-recolhimento-mecanismo]
+    categoria: [fomento]
     procedencia: oca
     subfonte: oca
-  - slug: ancine-fomento-fluxos-financeiros
-    title: "Fomento - Series Historicas Agregadas (OCA)"
-    description: >
-      Series historicas agregadas de fomento audiovisual publicadas pelo OCA/ANCINE:
-      execucao orcamentaria do FSA, valores liberados por mecanismo de incentivo,
-      totais captados por mecanismo (2006-2024) e totais de editais, programas e
-      premios (2003-2020). Unico nivel de agregacao — sem granularidade por projeto
-      ou empresa. Para microdados por projeto ver ancine-fsa-projetos,
-      ancine-renuncia-fiscal, ancine-ibermedia-projetos e datasets relacionados.
+
+  - slug: ancine-condecine-recolhimento-mecanismo
+    title: "CONDECINE - Recolhimento Anual por Mecanismo"
+    description: "Recolhimentos anuais por mecanismo legal, separados da série de créditos e remessas ao exterior."
     source_id: ancine
     status: intermitente
-    coverage: "2003-2024"
-    tags: [fomento, fsa, agregados, series-historicas, oca, brasil, ancine]
-    raw:
-      path: ancine-fomento-fluxos-financeiros/
-      format: csv,xlsx,pdf
-      files: 10
-      size_bytes: 0
-    cleaned:
-      tables:
-        - fomento_fluxos_financeiros
-      notes: >
-        Contem apenas agregados anuais/totais. Datasets de microdados extraidos
-        deste conjunto foram movidos para datasets proprios em mai/2026.
-    related:
-      - ancine-fsa-projetos
-      - ancine-renuncia-fiscal
-      - ancine-condecine-recolhimento
-      - ancine-ibermedia-projetos
-      - ancine-captacao-por-projeto-investidor
+    coverage: "2002-2017"
+    tags: [tributacao, condecine, recolhimento, mecanismo, oca, brasil]
+    raw: {path: ancine-condecine-recolhimento/, format: "csv,xlsx,pdf", files: 3, size_bytes: 0}
+    cleaned: {tables: [condecine_recolhimento_mecanismo]}
+    related: [ancine-condecine-creditos-remessas]
+    categoria: [fomento]
+    procedencia: oca
+    subfonte: oca
 
-    categoria:
-      - fomento
+  - slug: ancine-condecine-creditos-remessas
+    title: "CONDECINE - Creditos e Remessas ao Exterior"
+    description: "Créditos e remessas para o exterior associados aos artigos 3º, 3º-A e 39."
+    source_id: ancine
+    status: intermitente
+    coverage: "2002-2017"
+    tags: [tributacao, condecine, remessas, exterior, oca, brasil]
+    raw: {path: ancine-condecine-recolhimento/, format: "csv,xlsx,pdf", files: 3, size_bytes: 0}
+    cleaned: {tables: [condecine_creditos_remessas_exterior]}
+    related: [ancine-condecine-recolhimento-mecanismo]
+    categoria: [fomento]
+    procedencia: oca
+    subfonte: oca
+
+  - slug: ancine-condecine-distribuidoras-art3
+    title: "CONDECINE - Distribuidoras (Art. 3º)"
+    description: "Recolhimentos por empresa brasileira distribuidora e empresa estrangeira representada."
+    source_id: ancine
+    status: intermitente
+    coverage: "2002-2017"
+    tags: [tributacao, condecine, distribuidoras, artigo-3, oca, brasil]
+    raw: {path: ancine-condecine-recolhimento/, format: "csv,xlsx,pdf", files: 3, size_bytes: 0}
+    cleaned: {tables: [condecine_recolhimento_distribuidoras_art3]}
+    related: [ancine-condecine-recolhimento-mensal]
+    categoria: [fomento]
+    procedencia: oca
+    subfonte: oca
+
+  - slug: ancine-condecine-empresas-art3a
+    title: "CONDECINE - Empresas Remetentes (Art. 3º-A)"
+    description: "Recolhimentos por empresa remetente brasileira e contribuinte estrangeira."
+    source_id: ancine
+    status: intermitente
+    coverage: "2009-2017"
+    tags: [tributacao, condecine, empresas, artigo-3a, oca, brasil]
+    raw: {path: ancine-condecine-recolhimento/, format: "csv,xlsx,pdf", files: 3, size_bytes: 0}
+    cleaned: {tables: [condecine_recolhimento_empresas_art3a]}
+    related: [ancine-condecine-recolhimento-mensal]
+    categoria: [fomento]
+    procedencia: oca
+    subfonte: oca
+
+  - slug: ancine-condecine-programadoras-art39
+    title: "CONDECINE - Programadoras Estrangeiras (Art. 39)"
+    description: "Recolhimentos individualizados por programadora estrangeira."
+    source_id: ancine
+    status: intermitente
+    coverage: "2003-2017"
+    tags: [tributacao, condecine, programadoras, artigo-39, oca, brasil]
+    raw: {path: ancine-condecine-recolhimento/, format: "csv,xlsx,pdf", files: 3, size_bytes: 0}
+    cleaned: {tables: [condecine_recolhimento_programadoras_art39]}
+    related: [ancine-condecine-recolhimento-mensal]
+    categoria: [fomento]
+    procedencia: oca
+    subfonte: oca
+
+  - slug: ancine-fsa-arrecadacao
+    title: "FSA - Arrecadacao Anual"
+    description: "Valores anuais arrecadados pelo Fundo Setorial do Audiovisual."
+    source_id: ancine
+    status: intermitente
+    coverage: "2007-2019"
+    tags: [fomento, fsa, arrecadacao, oca, brasil]
+    raw: {path: ancine-fomento-fluxos-financeiros/, format: "xlsx,pdf", files: 2, size_bytes: 0}
+    cleaned: {tables: [fsa_arrecadacao_anual]}
+    related: [ancine-fsa-editais-lancados, ancine-fsa-desembolsos]
+    categoria: [fomento]
+    procedencia: oca
+    subfonte: oca
+
+  - slug: ancine-fsa-editais-lancados
+    title: "FSA - Editais Lancados"
+    description: "Valores de editais lançados pelo Fundo Setorial do Audiovisual por período."
+    source_id: ancine
+    status: intermitente
+    coverage: "2008-2019"
+    tags: [fomento, fsa, editais, oca, brasil]
+    raw: {path: ancine-fomento-fluxos-financeiros/, format: "xlsx,pdf", files: 2, size_bytes: 0}
+    cleaned: {tables: [fsa_editais_lancados]}
+    related: [ancine-fsa-arrecadacao, ancine-fsa-desembolsos]
+    categoria: [fomento]
+    procedencia: oca
+    subfonte: oca
+
+  - slug: ancine-fsa-desembolsos
+    title: "FSA - Desembolsos"
+    description: "Valores anuais desembolsados para projetos contratados em editais e chamadas do FSA."
+    source_id: ancine
+    status: intermitente
+    coverage: "2015-2019"
+    tags: [fomento, fsa, desembolsos, oca, brasil]
+    raw: {path: ancine-fomento-fluxos-financeiros/, format: "xlsx,pdf", files: 2, size_bytes: 0}
+    cleaned: {tables: [fsa_desembolsos]}
+    related: [ancine-fsa-arrecadacao, ancine-fsa-editais-lancados]
+    categoria: [fomento]
+    procedencia: oca
+    subfonte: oca
+
+  - slug: ancine-fomento-valores-liberados
+    title: "Fomento - Valores Liberados por Mecanismo"
+    description: "Valores liberados por mecanismo de incentivo, em reais correntes."
+    source_id: ancine
+    status: intermitente
+    coverage: "2015-2019"
+    tags: [fomento, valores-liberados, mecanismos, oca, brasil]
+    raw: {path: ancine-fomento-fluxos-financeiros/, format: "xlsx,pdf", files: 2, size_bytes: 0}
+    cleaned: {tables: [fomento_valores_liberados_mecanismo]}
+    related: [ancine-fomento-valores-captados]
+    categoria: [fomento]
+    procedencia: oca
+    subfonte: oca
+
+  - slug: ancine-fomento-valores-captados
+    title: "Valores Captados/Contratados por Mecanismo"
+    description: "Valores anuais captados ou contratados por mecanismo de incentivo, em reais correntes."
+    source_id: ancine
+    status: ativo
+    coverage: "2006-2024"
+    tags: [fomento, captacao, mecanismos, oca, brasil]
+    raw: {path: ancine-fomento-fluxos-financeiros/, format: "csv,xlsx,pdf", files: 3, size_bytes: 0}
+    cleaned: {tables: [fomento_valores_captados_mecanismo]}
+    related: [ancine-fomento-valores-liberados]
+    categoria: [fomento]
+    procedencia: oca
+    subfonte: oca
+
+  - slug: ancine-fomento-editais-programas-premios
+    title: "Fomento - Editais, Programas e Premios"
+    description: "Valores anuais de editais, programas e prêmios, preservando BRL, USD ou EUR sem conversão implícita."
+    source_id: ancine
+    status: intermitente
+    coverage: "2003-2020"
+    tags: [fomento, editais, programas, premios, oca, brasil]
+    raw: {path: ancine-fomento-fluxos-financeiros/, format: "csv,xlsx,pdf", files: 3, size_bytes: 0}
+    cleaned: {tables: [fomento_editais_programas_premios]}
+    related: [ancine-ibermedia-projetos]
+    categoria: [fomento]
     procedencia: oca
     subfonte: oca
   - slug: ancine-ibermedia-projetos
@@ -446,39 +544,96 @@ datasets:
     procedencia: oca
     subfonte: oca
   - slug: ancine-captacao-por-projeto-investidor
-    title: "Captacao por Projeto Incentivado e por Investidor"
-    description: >
-      Valores captados por projeto via incentivo fiscal (Art. 1, 3 e 3A da Lei
-      do Audiovisual e Lei Rouanet audiovisual), de 2002 a julho de 2020, e
-      cruzamento projeto x investidor de 2007 a 2019. Inclui tambem valores
-      aportados por incentivador/investidor agregados por lei. Complementa
-      ancine-renuncia-fiscal (habilitados) com os valores efetivamente captados
-      e a identidade dos investidores. Publicado pelo OCA/ANCINE.
+    title: Captação por Projeto e Investidor
+    description: Cada linha preserva um registro da planilha de captação por projeto e investidor, com nomes,
+      identificadores, data e valores por mecanismo. Aportes agregados por investidor e captação por projeto
+      têm cartões próprios.
     source_id: ancine
     status: intermitente
-    coverage: "2002-2020"
-    tags: [fomento, captacao, incentivo-fiscal, investidor, lei-audiovisual, oca, brasil, ancine]
+    coverage: 2007-2019
+    tags: &id001
+    - fomento
+    - captacao
+    - incentivo-fiscal
+    - investidor
+    - lei-audiovisual
+    - oca
+    - brasil
+    - ancine
     raw:
       path: ancine-captacao-por-projeto-investidor/
-      format: csv,xlsx,pdf
-      files: 6
-      size_bytes: 0
+      file: valores-captados-por-projeto-incentivado-e-por-investidor-em-reais-r-2007-a-2019.xlsx
+      format: xlsx
+      files: 1
+      size_bytes: 1860137
     cleaned:
       tables:
-        - captacao_por_projeto_investidor
-      notes: >
-        Processado por clean_oca_complementos.py. Consolida tres arquivos OCA:
-        captados por projeto (2002-2020), projeto x investidor (2007-2019) e
-        aportados por incentivador (2007-2019). tipo_fluxo = captado ou aportado.
+      - captacao_por_projeto_investidor
+      notes: Processado por clean_captacao.py. Uma linha por registro factual original; títulos e notas
+        ficam na documentação. Valores decimais preservam a precisão da origem; CNPJ original é mantido
+        ao lado da normalização quando disponível.
     related:
-      - ancine-renuncia-fiscal
-      - ancine-filmes-lancados-captacao
-      - ancine-fomento-fluxos-financeiros
-
-    categoria:
-      - fomento
-    procedencia: pda
-    subfonte: ancine_pda
+    - ancine-aportes-por-investidor
+    - ancine-captacao-por-projeto
+    - ancine-renuncia-fiscal
+    categoria: &id002
+    - fomento
+    procedencia: oca
+    subfonte: oca
+  - slug: ancine-aportes-por-investidor
+    title: Aportes por Incentivador e Investidor
+    description: Valores aportados por incentivador/investidor, ano e mecanismo de incentivo. Preserva o
+      nome do investidor e a precisão numérica da origem. Esta fonte não fornece CNPJ.
+    source_id: ancine
+    status: intermitente
+    coverage: 2007-2019
+    tags: *id001
+    raw:
+      path: ancine-captacao-por-projeto-investidor/
+      file: valores-aportados-por-incentivador-investidor-lei-8-313-91-lei-8-685-93-mp-2-228-01-em-reais-r-2007-a-2019.xlsx
+      format: xlsx
+      files: 1
+      size_bytes: 192691
+    cleaned:
+      tables:
+      - aportes_por_investidor
+      notes: Processado por clean_captacao.py. Uma linha por registro factual original; títulos e notas
+        ficam na documentação. Valores decimais preservam a precisão da origem; CNPJ original é mantido
+        ao lado da normalização quando disponível.
+    related:
+    - ancine-captacao-por-projeto-investidor
+    - ancine-captacao-por-projeto
+    - ancine-renuncia-fiscal
+    categoria: *id002
+    procedencia: oca
+    subfonte: oca
+  - slug: ancine-captacao-por-projeto
+    title: Captação por Projeto Incentivado
+    description: Valores captados por projeto e ano, de 2002 a julho de 2020, com proponente, identificação,
+      tipo, gênero e valores por mecanismo. Total anual é uma coluna separada dos componentes.
+    source_id: ancine
+    status: intermitente
+    coverage: 2002-2020
+    tags: *id001
+    raw:
+      path: ancine-captacao-por-projeto-investidor/
+      file: valores-captados-por-projeto-incentivado-em-reais-r-2002-a-julho-de-2020.xlsx
+      format: xlsx
+      files: 1
+      size_bytes: 717300
+    cleaned:
+      tables:
+      - captacao_por_projeto
+      notes: Processado por clean_captacao.py. Uma linha por registro factual original; títulos e notas
+        ficam na documentação. Valores decimais preservam a precisão da origem; CNPJ original é mantido
+        ao lado da normalização quando disponível.
+    related:
+    - ancine-captacao-por-projeto-investidor
+    - ancine-aportes-por-investidor
+    - ancine-renuncia-fiscal
+    categoria: *id002
+    procedencia: oca
+    subfonte: oca
   - slug: ancine-agentes-economicos
     title: "Agentes Economicos"
     description: >
@@ -495,7 +650,7 @@ datasets:
       encoding: latin-1
       delimiter: ";"
       files: 1
-      size_bytes: 3154164
+      size_bytes: 3187490
     cleaned:
       tables: [agentes_economicos]
     related:
@@ -540,7 +695,6 @@ datasets:
       projetos habilitados e resultados finais.
     source_id: ancine
     status: ativo
-    hidden: true
     coverage: "2014-2024"
     tags: [fomento, fsa, atas, pdf, brasil, ancine]
     raw:
@@ -896,10 +1050,15 @@ datasets:
     coverage: "1971-2024"
     tags: [cinema, bilheteria, historico, complementar, embrafilme, oca, brasil]
     raw:
-      path: br-embrafilme-historico-exibicao/, ancine-filmes-lancados-captacao/, ibge-seculoxx-cinema/
+      path: br-bilheteria-historica-complementar/
       format: derivado
       files: 0
       size_bytes: 0
+      script: pipelines/transform/clean_bilheteria_historica_complementar.py
+      sources:
+        - br-embrafilme-historico-exibicao
+        - ancine-filmes-lancados-captacao
+        - ibge-seculoxx-cinema
     cleaned:
       tables:
         - bilheteria_historica_complementar
@@ -978,7 +1137,6 @@ datasets:
       monetarios ao longo do tempo (bilheteria, fomento, preco do ingresso).
     source_id: ibge
     status: ativo
-    hidden: true
     coverage: "serie historica"
     tags: [deflator, ipca, inflacao, brasil, ibge]
     raw:
@@ -1015,6 +1173,7 @@ datasets:
       format: xlsx
       files: 1
       size_bytes: 16135
+      url_origem: https://lumiere.obs.coe.int/search
     cleaned:
       tables: [bilheteria_europa]
     related:
@@ -1040,6 +1199,7 @@ datasets:
       format: xlsx
       files: 1
       size_bytes: 440349
+      url_origem: https://lumierevod.obs.coe.int/
     cleaned:
       tables: [vod_europa]
     related:
@@ -1067,10 +1227,19 @@ datasets:
     coverage: "1957-2026"
     tags: [brasil-no-mundo, circulacao-internacional, cinema, vod, mercado, derivado]
     raw:
-      path: pipelines/transform/build_brasil_no_mundo.py
+      path: brasil-no-mundo/
       format: derived
-      files: 1
+      files: 0
       size_bytes: 164980
+      script: pipelines/transform/build_brasil_no_mundo.py
+      sources:
+        - lumiere-cinemas-europa
+        - lumiere-vod-europa
+        - cnc-visas-exploitation
+        - cnc-films-agrees
+        - bfi-mercado-cinematografico
+        - bfi-talentos-britanicos-mundo
+        - acau-uruguay-apoios-audiovisual
     cleaned:
       tables:
         - brasil_no_mundo_indice
@@ -1133,7 +1302,26 @@ datasets:
       files: 1
       size_bytes: 436623
     cleaned:
-      tables: [cnc_frequentation_salles]
+      tables:
+        - cnc_frequentation_salles_freqcine
+        - cnc_frequentation_salles_decompos
+        - cnc_frequentation_salles_mois
+        - cnc_frequentation_salles_semaine
+        - cnc_frequentation_salles_jour
+        - cnc_frequentation_salles_lm_cm_hf
+        - cnc_frequentation_salles_filmexpl_1979
+        - cnc_frequentation_salles_filmexpl
+        - cnc_frequentation_salles_natio
+        - cnc_frequentation_salles_entrees
+        - cnc_frequentation_salles_perform
+        - cnc_frequentation_salles_entrees_ff
+        - cnc_frequentation_salles_age
+        - cnc_frequentation_salles_classae
+        - cnc_frequentation_salles_natio_sortie1
+        - cnc_frequentation_salles_entrees_sortie1
+        - cnc_frequentation_salles_genre_sortie1
+        - cnc_frequentation_salles_perform_sortie1
+        - cnc_frequentation_salles_ae_sortie1
     related:
       - cnc-parc-cinematographique
       - cnc-distribution-salles
@@ -1157,7 +1345,8 @@ datasets:
       files: 1
       size_bytes: 2640686
     cleaned:
-      tables: [cnc_etablissements]
+      tables:
+        - cnc_etablissements
     related:
       - cnc-geographie-cinema
       - cnc-parc-cinematographique
@@ -1180,7 +1369,8 @@ datasets:
       files: 1
       size_bytes: 109816
     cleaned:
-      tables: [cnc_films_million_entrees]
+      tables:
+        - cnc_films_million_entrees
     related:
       - cnc-frequentation-salles
       - cnc-visas-exploitation
@@ -1204,7 +1394,17 @@ datasets:
       files: 1
       size_bytes: 87814
     cleaned:
-      tables: [cnc_donnees_internationales]
+      tables:
+        - cnc_donnees_internationales_u_e
+        - cnc_donnees_internationales_allemagne
+        - cnc_donnees_internationales_espagne
+        - cnc_donnees_internationales_italie
+        - cnc_donnees_internationales_royaume_uni
+        - cnc_donnees_internationales_russie
+        - cnc_donnees_internationales_etats_unis
+        - cnc_donnees_internationales_mexique
+        - cnc_donnees_internationales_japon
+        - cnc_donnees_internationales_chine
     categoria:
       - internacional
     procedencia: cnc
@@ -1225,7 +1425,8 @@ datasets:
       files: 1
       size_bytes: 843119
     cleaned:
-      tables: [cnc_films_agrees]
+      tables:
+        - cnc_films_agrees
     related:
       - cnc-visas-exploitation
 
@@ -1247,7 +1448,12 @@ datasets:
       files: 1
       size_bytes: 77505
     cleaned:
-      tables: [cnc_audience_television]
+      tables:
+        - cnc_audience_television_dureeecoute1
+        - cnc_audience_television_dureeecoute2
+        - cnc_audience_television_partdaudience
+        - cnc_audience_television_o_c
+        - cnc_audience_television_topaudiences
     related:
       - cnc-films-television
 
@@ -1269,7 +1475,13 @@ datasets:
       files: 1
       size_bytes: 253628
     cleaned:
-      tables: [cnc_films_television]
+      tables:
+        - cnc_films_television_films
+        - cnc_films_television_diffusions
+        - cnc_films_television_filmsinedits
+        - cnc_films_television_filmspt
+        - cnc_films_television_filmsptinedits
+        - cnc_films_television_b_diff_tv
     related:
       - cnc-audience-television
 
@@ -1291,7 +1503,14 @@ datasets:
       files: 1
       size_bytes: 77796
     cleaned:
-      tables: [cnc_exportacao_programas]
+      tables:
+        - cnc_exportacao_programas_export
+        - cnc_exportacao_programas_genre
+        - cnc_exportacao_programas_geo
+        - cnc_exportacao_programas_europeouest
+        - cnc_exportacao_programas_europecent
+        - cnc_exportacao_programas_ameriquenord
+        - cnc_exportacao_programas_asieoceanie
     categoria:
       - emprego_economia
       - internacional
@@ -1312,7 +1531,135 @@ datasets:
       files: 4
       size_bytes: 2822075
     cleaned:
-      tables: [cnc_geographie_commune, cnc_geographie_departement, cnc_geographie_region, cnc_geographie_urbain]
+      tables:
+        - cnc_geographie_commune_tranchepopulation
+        - cnc_geographie_commune_etablissements
+        - cnc_geographie_commune_ecrans
+        - cnc_geographie_commune_fauteuils
+        - cnc_geographie_commune_multiplexes
+        - cnc_geographie_commune_art_et_essai
+        - cnc_geographie_commune_seances
+        - cnc_geographie_commune_entrees
+        - cnc_geographie_commune_recettes
+        - cnc_geographie_commune_rme
+        - cnc_geographie_commune_indice_de_frequentation
+        - cnc_geographie_commune_taux_d_occupation_des_fauteuils
+        - cnc_geographie_departement_etablissements
+        - cnc_geographie_departement_ecrans
+        - cnc_geographie_departement_fauteuils
+        - cnc_geographie_departement_multiplexes
+        - cnc_geographie_departement_seances
+        - cnc_geographie_departement_entrees
+        - cnc_geographie_departement_recettes
+        - cnc_geographie_departement_rme
+        - cnc_geographie_departement_indice_de_frequentation
+        - cnc_geographie_departement_taux_d_occupation_des_fauteuils
+        - cnc_geographie_departement_etabae
+        - cnc_geographie_departement_ecransae
+        - cnc_geographie_departement_fauteuilsae
+        - cnc_geographie_departement_seances_ae
+        - cnc_geographie_departement_entreesae
+        - cnc_geographie_departement_recettesae
+        - cnc_geographie_departement_rmeae
+        - cnc_geographie_departement_indice_de_frequentationae
+        - cnc_geographie_departement_tmofae
+        - cnc_geographie_departement_etabp
+        - cnc_geographie_departement_ecransp
+        - cnc_geographie_departement_fauteuilsp
+        - cnc_geographie_departement_seancesp
+        - cnc_geographie_departement_entreesp
+        - cnc_geographie_departement_recettesp
+        - cnc_geographie_departement_rmep
+        - cnc_geographie_departement_indice_de_frequentationp
+        - cnc_geographie_departement_tmofp
+        - cnc_geographie_departement_etabm
+        - cnc_geographie_departement_ecransm
+        - cnc_geographie_departement_fauteuilsm
+        - cnc_geographie_departement_seancesm
+        - cnc_geographie_departement_entreesm
+        - cnc_geographie_departement_recettesm
+        - cnc_geographie_departement_rmem
+        - cnc_geographie_departement_indice_de_frequentationm
+        - cnc_geographie_departement_tmofm
+        - cnc_geographie_departement_etabg
+        - cnc_geographie_departement_ecransg
+        - cnc_geographie_departement_fauteuilsg
+        - cnc_geographie_departement_seancesg
+        - cnc_geographie_departement_entreesg
+        - cnc_geographie_departement_recettesg
+        - cnc_geographie_departement_rmeg
+        - cnc_geographie_departement_indice_de_frequentationg
+        - cnc_geographie_departement_tmofg
+        - cnc_geographie_region_etablissements
+        - cnc_geographie_region_ecrans
+        - cnc_geographie_region_fauteuils
+        - cnc_geographie_region_multiplexes
+        - cnc_geographie_region_seances
+        - cnc_geographie_region_entrees
+        - cnc_geographie_region_recettes
+        - cnc_geographie_region_rme
+        - cnc_geographie_region_indice_de_frequentation
+        - cnc_geographie_region_taux_d_occupation_des_fauteuils
+        - cnc_geographie_region_etabae
+        - cnc_geographie_region_ecransae
+        - cnc_geographie_region_fauteuilsae
+        - cnc_geographie_region_seances_ae
+        - cnc_geographie_region_entreesae
+        - cnc_geographie_region_recettesae
+        - cnc_geographie_region_rmeae
+        - cnc_geographie_region_indice_de_frequentationae
+        - cnc_geographie_region_tmofae
+        - cnc_geographie_region_etabp
+        - cnc_geographie_region_ecransp
+        - cnc_geographie_region_fauteuilsp
+        - cnc_geographie_region_seancesp
+        - cnc_geographie_region_entreesp
+        - cnc_geographie_region_recettesp
+        - cnc_geographie_region_rmep
+        - cnc_geographie_region_indice_de_frequentationp
+        - cnc_geographie_region_tmofp
+        - cnc_geographie_region_etabm
+        - cnc_geographie_region_ecransm
+        - cnc_geographie_region_fauteuilsm
+        - cnc_geographie_region_seancesm
+        - cnc_geographie_region_entreesm
+        - cnc_geographie_region_recettesm
+        - cnc_geographie_region_rmem
+        - cnc_geographie_region_indice_de_frequentationm
+        - cnc_geographie_region_tmofm
+        - cnc_geographie_region_etabg
+        - cnc_geographie_region_ecransg
+        - cnc_geographie_region_fauteuilsg
+        - cnc_geographie_region_seancesg
+        - cnc_geographie_region_entreesg
+        - cnc_geographie_region_recettesg
+        - cnc_geographie_region_rmeg
+        - cnc_geographie_region_indice_de_frequentationg
+        - cnc_geographie_region_tmofg
+        - cnc_geographie_urbain_tranchepopulation
+        - cnc_geographie_urbain_tranchepopulationpetite
+        - cnc_geographie_urbain_tranchepopulationmoyenne
+        - cnc_geographie_urbain_tranchepopulationgrande
+        - cnc_geographie_urbain_etablissements
+        - cnc_geographie_urbain_ecrans
+        - cnc_geographie_urbain_fauteuils
+        - cnc_geographie_urbain_multiplexes
+        - cnc_geographie_urbain_seances
+        - cnc_geographie_urbain_entrees
+        - cnc_geographie_urbain_recettes
+        - cnc_geographie_urbain_rme
+        - cnc_geographie_urbain_indice_de_frequentation
+        - cnc_geographie_urbain_taux_d_occupation_des_fauteuils
+        - cnc_geographie_urbain_tranchepopulationae
+        - cnc_geographie_urbain_etabae
+        - cnc_geographie_urbain_ecransae
+        - cnc_geographie_urbain_fauteuilsae
+        - cnc_geographie_urbain_seances_ae
+        - cnc_geographie_urbain_entreesae
+        - cnc_geographie_urbain_recettesae
+        - cnc_geographie_urbain_rmeae
+        - cnc_geographie_urbain_indice_de_frequentationae
+        - cnc_geographie_urbain_tmofae
     related:
       - cnc-etablissements
       - cnc-parc-cinematographique
@@ -1335,7 +1682,14 @@ datasets:
       files: 1
       size_bytes: 65787
     cleaned:
-      tables: [cnc_public_vod]
+      tables:
+        - cnc_public_vod_penetration
+        - cnc_public_vod_profil
+        - cnc_public_vod_frequence
+        - cnc_public_vod_media
+        - cnc_public_vod_mobile
+        - cnc_public_vod_modeconso
+        - cnc_public_vod_service
     related:
       - cnc-referencias-ativas-vod
       - cnc-consumo-vod
@@ -1358,7 +1712,16 @@ datasets:
       files: 1
       size_bytes: 77553
     cleaned:
-      tables: [cnc_referencias_ativas_vod]
+      tables:
+        - cnc_referencias_ativas_vod_conso
+        - cnc_referencias_ativas_vod_programmeconso
+        - cnc_referencias_ativas_vod_support
+        - cnc_referencias_ativas_vod_filmnatio
+        - cnc_referencias_ativas_vod_filmplateforme
+        - cnc_referencias_ativas_vod_programmesupport_gfk
+        - cnc_referencias_ativas_vod_filmplateforme_gfk
+        - cnc_referencias_ativas_vod_filmnatio_gfk
+        - cnc_referencias_ativas_vod_filmnatiosupport_gfk
     related:
       - cnc-public-vod
 
@@ -1380,7 +1743,14 @@ datasets:
       files: 1
       size_bytes: 71895
     cleaned:
-      tables: [cnc_consumo_vod]
+      tables:
+        - cnc_consumo_vod_ca_100_typeachat
+        - cnc_consumo_vod_100_acte
+        - cnc_consumo_vod_structuregenre
+        - cnc_consumo_vod_structurenatiocinema
+        - cnc_consumo_vod_poidstop
+        - cnc_consumo_vod_structuregenreav
+        - cnc_consumo_vod_ca_100_support
     related:
       - cnc-public-vod
 
@@ -1402,7 +1772,30 @@ datasets:
       files: 1
       size_bytes: 420992
     cleaned:
-      tables: [cnc_parc_cinematographique]
+      tables:
+        - cnc_parc_cinematographique_parc
+        - cnc_parc_cinematographique_paris
+        - cnc_parc_cinematographique_freq_geo
+        - cnc_parc_cinematographique_exploitants
+        - cnc_parc_cinematographique_groupements
+        - cnc_parc_cinematographique_etab_ecrans
+        - cnc_parc_cinematographique_etab_fauteuils
+        - cnc_parc_cinematographique_etab_entrees
+        - cnc_parc_cinematographique_etab_recettes
+        - cnc_parc_cinematographique_etab_rms
+        - cnc_parc_cinematographique_etab_perf
+        - cnc_parc_cinematographique_etab_ae
+        - cnc_parc_cinematographique_etab_aecat
+        - cnc_parc_cinematographique_etab_aelabel
+        - cnc_parc_cinematographique_etab_entreesae
+        - cnc_parc_cinematographique_ecran_fauteuils
+        - cnc_parc_cinematographique_ecran_semaine
+        - cnc_parc_cinematographique_ecran_seahebdo
+        - cnc_parc_cinematographique_ecran_entrees
+        - cnc_parc_cinematographique_ecran_tmof
+        - cnc_parc_cinematographique_ecran_recettes
+        - cnc_parc_cinematographique_ecran_rms
+        - cnc_parc_cinematographique_ecran_perf
     related:
       - cnc-etablissements
       - cnc-geographie-cinema
@@ -1425,7 +1818,10 @@ datasets:
       files: 1
       size_bytes: 78336
     cleaned:
-      tables: [cnc_financement_television]
+      tables:
+        - cnc_financement_television_cap
+        - cnc_financement_television_publicite
+        - cnc_financement_television_abonnement
     categoria:
       - tv_audiencia
     procedencia: cnc
@@ -1445,7 +1841,17 @@ datasets:
       files: 1
       size_bytes: 185531
     cleaned:
-      tables: [cnc_distribution_salles]
+      tables:
+        - cnc_distribution_salles_echantillon
+        - cnc_distribution_salles_coutsdistrib
+        - cnc_distribution_salles_coutsdistrib_2
+        - cnc_distribution_salles_vpf
+        - cnc_distribution_salles_genre
+        - cnc_distribution_salles_ae
+        - cnc_distribution_salles_combinaisonsortie
+        - cnc_distribution_salles_coutprod
+        - cnc_distribution_salles_entrees
+        - cnc_distribution_salles_coutdef
     related:
       - cnc-frequentation-salles
       - cnc-visas-exploitation
@@ -1468,7 +1874,13 @@ datasets:
       files: 1
       size_bytes: 152164
     cleaned:
-      tables: [cnc_public_films]
+      tables:
+        - cnc_public_films_nationalite
+        - cnc_public_films_genre
+        - cnc_public_films_entrees
+        - cnc_public_films_ae
+        - cnc_public_films_3d
+        - cnc_public_films_historique_2005_2015
     categoria:
       - bilheteria
     procedencia: cnc
@@ -1493,6 +1905,7 @@ datasets:
       delimiter: ","
       files: 1
       size_bytes: 922
+      url_origem: https://portal-andino.datos.gob.ar/dataset/cultura-sector-audiovisual/archivo/cultura_96c5fd8b-4cec-4060-bfb8-bd2a7af33008
     cleaned:
       tables:
         - name: incaa_espectadores_origem
@@ -1518,6 +1931,7 @@ datasets:
       delimiter: ","
       files: 1
       size_bytes: 1044
+      url_origem: https://portal-andino.datos.gob.ar/dataset/cultura-sector-audiovisual/archivo/cultura_40ce52b7-2240-4c58-b662-803b97df0bc0
     cleaned:
       tables:
         - name: incaa_receita_origem
@@ -1543,6 +1957,7 @@ datasets:
       delimiter: ","
       files: 1
       size_bytes: 511
+      url_origem: https://portal-andino.datos.gob.ar/dataset/cultura-sector-audiovisual/archivo/cultura_26914562-e043-4690-8251-fc94dd5ad3cd
     cleaned:
       tables:
         - name: incaa_estreias_origem
@@ -1554,8 +1969,8 @@ datasets:
   - slug: incaa-espectadores-provincias
     title: "Espectadores de Cinema por Provincias Argentinas"
     description: >
-      Distribuicao geografica de espectadores do cinema argentino por
-      provincia, com abertura por origem do filme, 2001-2023.
+      Distribuição geográfica de espectadores do cinema argentino por
+      província, 2001-2023. A fonte não oferece abertura por origem do filme nesta tabela.
     source_id: incaa
     status: ativo
     coverage: "2001-2023"
@@ -1568,6 +1983,7 @@ datasets:
       delimiter: ","
       files: 1
       size_bytes: 4545
+      url_origem: https://portal-andino.datos.gob.ar/dataset/cultura-sector-audiovisual/archivo/cultura_f9912e5b-332a-4994-ae01-55f590f32acb
     cleaned:
       tables:
         - name: incaa_espectadores_provincias
@@ -1580,8 +1996,8 @@ datasets:
   - slug: incaa-receita-provincias
     title: "Receita de Cinema por Provincias Argentinas"
     description: >
-      Receita bruta do cinema por provincia argentina, com abertura por
-      origem do filme, serie historica 2001-2023.
+      Receita bruta do cinema por província argentina, sem abertura por
+      origem do filme, série histórica 2001-2023.
     source_id: incaa
     status: ativo
     coverage: "2001-2023"
@@ -1594,6 +2010,7 @@ datasets:
       delimiter: ","
       files: 1
       size_bytes: 5473
+      url_origem: https://portal-andino.datos.gob.ar/dataset/cultura-sector-audiovisual/archivo/cultura_c2fdfef0-38fe-4871-9976-f70eceae200f
     cleaned:
       tables:
         - name: incaa_receita_provincias
@@ -1605,11 +2022,11 @@ datasets:
   - slug: incaa-participacao-distribuidoras
     title: "Participacao das Distribuidoras no Mercado Argentino"
     description: >
-      Quota de espectadores de cada distribuidora no mercado cinematografico
-      argentino, por ano e por origem do filme, 2001-2023.
+      Participação dos espectadores atendidos por distribuidoras nacionais e
+      estrangeiras no mercado argentino, 2000-2023.
     source_id: incaa
     status: ativo
-    coverage: "2001-2023"
+    coverage: "2000-2023"
     tags: [cinema, distribuicao, mercado, argentina, incaa]
     raw:
       path: incaa-sector-audiovisual/
@@ -1619,6 +2036,7 @@ datasets:
       delimiter: ","
       files: 1
       size_bytes: 600
+      url_origem: https://portal-andino.datos.gob.ar/dataset/cultura-sector-audiovisual/archivo/cultura_2fc0eb39-e5b1-4be0-b350-7b140f959cff
     cleaned:
       tables:
         - name: incaa_participacao_distribuidoras
@@ -1630,11 +2048,11 @@ datasets:
   - slug: incaa-empregos-longa-metragem
     title: "Empregos em Longa-Metragem Nacional Argentina"
     description: >
-      Postos de trabalho gerados pela producao de longa-metragem nacional
-      argentina, por categoria profissional, 2001-2023.
+      Total anual de postos de trabalho em longas-metragens nacionais
+      argentinos, 1996-2023. A fonte não apresenta categoria profissional nesta tabela.
     source_id: incaa
     status: ativo
-    coverage: "2001-2023"
+    coverage: "1996-2023"
     tags: [cinema, emprego, producao, argentina, incaa]
     raw:
       path: incaa-sector-audiovisual/
@@ -1644,6 +2062,7 @@ datasets:
       delimiter: ","
       files: 1
       size_bytes: 511
+      url_origem: https://portal-andino.datos.gob.ar/dataset/cultura-sector-audiovisual/archivo/cultura_168c583a-3104-40a2-8224-1275fcf2cea9
     cleaned:
       tables:
         - name: incaa_empregos_longa_metragem
@@ -1656,10 +2075,10 @@ datasets:
     title: "Acessos a Servicos de TV por Assinatura na Argentina"
     description: >
       Total de acessos a servicos de televisao por assinatura na Argentina
-      (cabo e satelite), serie historica com dados do ENACOM, 2001-2023.
+      (cabo e satélite), série histórica com dados do ENACOM, 2014-2023.
     source_id: incaa
     status: ativo
-    coverage: "2001-2023"
+    coverage: "2014-2023"
     tags: [televisao, tv-assinatura, acesso, argentina, incaa, enacom]
     raw:
       path: incaa-sector-audiovisual/
@@ -1669,6 +2088,7 @@ datasets:
       delimiter: ","
       files: 1
       size_bytes: 271
+      url_origem: https://portal-andino.datos.gob.ar/dataset/cultura-sector-audiovisual/archivo/cultura_a35e79fa-3a18-447a-8e59-ecb34bfe07c4
     cleaned:
       tables:
         - name: incaa_acessos_tv_assinatura
@@ -1681,10 +2101,10 @@ datasets:
     title: "Receitas de Servicos de TV por Assinatura na Argentina"
     description: >
       Receitas dos servicos de televisao por assinatura na Argentina
-      (cabo e satelite), serie historica com dados do ENACOM, 2001-2023.
+      (cabo e satélite), série histórica com dados do ENACOM, 2014-2023.
     source_id: incaa
     status: ativo
-    coverage: "2001-2023"
+    coverage: "2014-2023"
     tags: [televisao, tv-assinatura, receita, argentina, incaa, enacom]
     raw:
       path: incaa-sector-audiovisual/
@@ -1694,6 +2114,7 @@ datasets:
       delimiter: ","
       files: 1
       size_bytes: 298
+      url_origem: https://portal-andino.datos.gob.ar/dataset/cultura-sector-audiovisual/archivo/cultura_4029b3ad-63d9-4cc5-95b1-58b8b40c5169
     cleaned:
       tables:
         - name: incaa_receitas_tv_assinatura
@@ -1721,7 +2142,8 @@ datasets:
       files: 1
       size_bytes: 60049
     cleaned:
-      tables: [bfi_audiences]
+      tables:
+        - bfi_audiences_t01
     categoria:
       - bilheteria
     procedencia: bfi
@@ -1742,7 +2164,16 @@ datasets:
       files: 1
       size_bytes: 67643
     cleaned:
-      tables: [bfi_box_office_2023]
+      tables:
+        - bfi_box_office_2023_t01
+        - bfi_box_office_2023_t02
+        - bfi_box_office_2023_t03
+        - bfi_box_office_2023_t04
+        - bfi_box_office_2023_t05
+        - bfi_box_office_2023_t06
+        - bfi_box_office_2023_t07
+        - bfi_box_office_2023_t08
+        - bfi_box_office_2023_t09
     categoria:
       - bilheteria
     procedencia: bfi
@@ -1763,7 +2194,13 @@ datasets:
       files: 1
       size_bytes: 49245
     cleaned:
-      tables: [bfi_exhibition]
+      tables:
+        - bfi_exhibition_t01
+        - bfi_exhibition_t02
+        - bfi_exhibition_t03
+        - bfi_exhibition_t04
+        - bfi_exhibition_t05
+        - bfi_exhibition_t06
     categoria:
       - salas_exibicao
     procedencia: bfi
@@ -1775,7 +2212,6 @@ datasets:
       cinematografica no Reino Unido. BFI Statistical Yearbook 2023.
     source_id: bfi
     status: ativo
-    hidden: true
     coverage: "2023"
     tags: [cinema, educacao, reino-unido, bfi]
     raw:
@@ -1785,7 +2221,10 @@ datasets:
       files: 1
       size_bytes: 51031
     cleaned:
-      tables: [bfi_educacao_cinematografica]
+      tables:
+        - bfi_educacao_cinematografica_t01
+        - bfi_educacao_cinematografica_t02
+        - bfi_educacao_cinematografica_t03
     categoria:
       - fontes_metadados
     procedencia: bfi
@@ -1806,7 +2245,15 @@ datasets:
       files: 1
       size_bytes: 39042
     cleaned:
-      tables: [bfi_empresas_industria]
+      tables:
+        - bfi_empresas_industria_t01
+        - bfi_empresas_industria_t02
+        - bfi_empresas_industria_t03
+        - bfi_empresas_industria_t04
+        - bfi_empresas_industria_t05
+        - bfi_empresas_industria_t06
+        - bfi_empresas_industria_t07
+        - bfi_empresas_industria_t08
     categoria:
       - emprego_economia
     procedencia: bfi
@@ -1827,7 +2274,13 @@ datasets:
       files: 1
       size_bytes: 43435
     cleaned:
-      tables: [bfi_emprego_industria]
+      tables:
+        - bfi_emprego_industria_t01
+        - bfi_emprego_industria_t02
+        - bfi_emprego_industria_t03
+        - bfi_emprego_industria_t04
+        - bfi_emprego_industria_t05
+        - bfi_emprego_industria_t06
     categoria:
       - emprego_economia
     procedencia: bfi
@@ -1848,7 +2301,12 @@ datasets:
       files: 1
       size_bytes: 44128
     cleaned:
-      tables: [bfi_video_digital]
+      tables:
+        - bfi_video_digital_t01
+        - bfi_video_digital_t02
+        - bfi_video_digital_t03
+        - bfi_video_digital_t04
+        - bfi_video_digital_t05
     categoria:
       - vod_streaming
     procedencia: bfi
@@ -1869,7 +2327,13 @@ datasets:
       files: 1
       size_bytes: 41904
     cleaned:
-      tables: [bfi_video_fisico]
+      tables:
+        - bfi_video_fisico_t01
+        - bfi_video_fisico_t02
+        - bfi_video_fisico_t03
+        - bfi_video_fisico_t04
+        - bfi_video_fisico_t05
+        - bfi_video_fisico_t06
     categoria:
       - vod_streaming
     procedencia: bfi
@@ -1890,7 +2354,16 @@ datasets:
       files: 1
       size_bytes: 66401
     cleaned:
-      tables: [bfi_filmes_televisao]
+      tables:
+        - bfi_filmes_televisao_t01
+        - bfi_filmes_televisao_t02
+        - bfi_filmes_televisao_t03
+        - bfi_filmes_televisao_t04
+        - bfi_filmes_televisao_t05
+        - bfi_filmes_televisao_t06
+        - bfi_filmes_televisao_t07
+        - bfi_filmes_televisao_t08
+        - bfi_filmes_televisao_t09
     categoria:
       - tv_audiencia
     procedencia: bfi
@@ -1911,7 +2384,14 @@ datasets:
       files: 1
       size_bytes: 32975
     cleaned:
-      tables: [bfi_investimento_publico]
+      tables:
+        - bfi_investimento_publico_t01
+        - bfi_investimento_publico_t02
+        - bfi_investimento_publico_t03
+        - bfi_investimento_publico_t04
+        - bfi_investimento_publico_t05
+        - bfi_investimento_publico_t06
+        - bfi_investimento_publico_t07
     categoria:
       - fomento
     procedencia: bfi
@@ -1932,7 +2412,14 @@ datasets:
       files: 1
       size_bytes: 30592
     cleaned:
-      tables: [bfi_certificacao_obras]
+      tables:
+        - bfi_certificacao_obras_t01
+        - bfi_certificacao_obras_t02
+        - bfi_certificacao_obras_t03
+        - bfi_certificacao_obras_t04
+        - bfi_certificacao_obras_t05
+        - bfi_certificacao_obras_t06
+        - bfi_certificacao_obras_t07
     categoria:
       - producao_obras
     procedencia: bfi
@@ -1953,7 +2440,17 @@ datasets:
       files: 1
       size_bytes: 50762
     cleaned:
-      tables: [bfi_top_films_2023]
+      tables:
+        - bfi_top_films_2023_t01
+        - bfi_top_films_2023_t02
+        - bfi_top_films_2023_t03
+        - bfi_top_films_2023_t04
+        - bfi_top_films_2023_t05
+        - bfi_top_films_2023_t06
+        - bfi_top_films_2023_t07
+        - bfi_top_films_2023_t08
+        - bfi_top_films_2023_t09
+        - bfi_top_films_2023_t10
     categoria:
       - bilheteria
     procedencia: bfi
@@ -1974,7 +2471,9 @@ datasets:
       files: 1
       size_bytes: 23110
     cleaned:
-      tables: [bfi_uk_film_economy]
+      tables:
+        - bfi_uk_film_economy_t01
+        - bfi_uk_film_economy_t02
     categoria:
       - emprego_economia
     procedencia: bfi
@@ -1995,7 +2494,10 @@ datasets:
       files: 1
       size_bytes: 35964
     cleaned:
-      tables: [bfi_uk_film_market]
+      tables:
+        - bfi_uk_film_market_t01
+        - bfi_uk_film_market_t02
+        - bfi_uk_film_market_t03
     categoria:
       - bilheteria
       - distribuicao
@@ -2017,7 +2519,23 @@ datasets:
       files: 1
       size_bytes: 52629
     cleaned:
-      tables: [bfi_talentos_mundo]
+      tables:
+        - bfi_talentos_mundo_t01
+        - bfi_talentos_mundo_t02
+        - bfi_talentos_mundo_t03
+        - bfi_talentos_mundo_t04
+        - bfi_talentos_mundo_t05
+        - bfi_talentos_mundo_t06
+        - bfi_talentos_mundo_t07
+        - bfi_talentos_mundo_t08
+        - bfi_talentos_mundo_t09
+        - bfi_talentos_mundo_t10
+        - bfi_talentos_mundo_t11
+        - bfi_talentos_mundo_t12
+        - bfi_talentos_mundo_t13
+        - bfi_talentos_mundo_t14
+        - bfi_talentos_mundo_t15
+        - bfi_talentos_mundo_t16
     categoria:
       - internacional
     procedencia: bfi
@@ -2065,7 +2583,7 @@ datasets:
       path: ancine-atividades-economicas-agentes/
       format: csv
       files: 1
-      size_bytes: 19266691
+      size_bytes: 19720777
       url_origem: https://dados.gov.br/dados/conjuntos-dados/atividades-economicas-dos-agentes-regulares-registrados-na-ancine
     cleaned:
       tables:
@@ -2093,7 +2611,7 @@ datasets:
       path: ancine-produtoras-independentes/
       format: csv
       files: 1
-      size_bytes: 888790
+      size_bytes: 911752
       url_origem: https://dados.gov.br/dados/conjuntos-dados/produtoras-independentes-regulares-registradas-na-ancine
     cleaned:
       tables:
@@ -2123,7 +2641,7 @@ datasets:
       path: ancine-canais-programadoras/
       format: csv
       files: 1
-      size_bytes: 89840
+      size_bytes: 90676
       url_origem: https://dados.gov.br/dados/conjuntos-dados/canais-de-programacao-de-programadoras-ativos-credenciados-na-ancine
     cleaned:
       tables:
@@ -2182,7 +2700,7 @@ datasets:
       path: ancine-salas-exibicao-complexos/
       format: csv
       files: 1
-      size_bytes: 2228579
+      size_bytes: 2240802
       url_origem: https://dados.gov.br/dados/conjuntos-dados/salas-de-exibicao-e-complexos-registrados-na-ancine
     cleaned:
       tables:
@@ -2210,7 +2728,7 @@ datasets:
       path: ancine-obras-fomento-indireto/
       format: csv
       files: 1
-      size_bytes: 137073
+      size_bytes: 139742
       url_origem: https://dados.gov.br/dados/conjuntos-dados/obras-nao-publicitarias-brasileiras-com-fomento-indireto-aprovado-na-ancine-leis-de-incentivo-federa
     cleaned:
       tables:
@@ -2239,7 +2757,7 @@ datasets:
       path: ancine-obras-investimento-fsa/
       format: csv
       files: 1
-      size_bytes: 131885
+      size_bytes: 137871
       url_origem: https://dados.gov.br/dados/conjuntos-dados/obras-nao-publicitarias-brasileiras-com-investimento-do-fsa
     cleaned:
       tables:
@@ -2297,13 +2815,13 @@ datasets:
       path: ancine-obras-estrangeiras-roe/
       format: csv
       files: 13
-      size_bytes: 7158948
+      size_bytes: 7243655
       url_origem: https://dados.gov.br/dados/conjuntos-dados/obras-nao-publicitarias-estrangeiras-relacao-de-todos-os-roes-emitidos-excluindo-se-a-categoria-de-r
     cleaned:
       tables:
         - obras_estrangeiras_roe
       notes: |
-        Coletado em 2026-05-27 do dados.gov.br (Plano de Dados Abertos da ANCINE). Concatenado em uma unica tabela RIDAB.
+        Snapshot oficial atualizado em 2026-09-08 e concatenado em uma única tabela, com arquivo de origem preservado.
     categoria:
       - producao_obras
       - internacional
@@ -2385,7 +2903,7 @@ datasets:
       path: ancine-pais-origem-obras-estrangeiras/
       format: csv
       files: 1
-      size_bytes: 3832443
+      size_bytes: 3855197
       url_origem: https://dados.gov.br/dados/conjuntos-dados/pais-de-origem-de-obras-nao-publicitarias-estrangeiras-roe
     cleaned:
       tables:
@@ -2403,7 +2921,7 @@ datasets:
       Relatório diário de bilheteria por obra conforme reportado pelas distribuidoras ao SADIS/ANCINE. Granularidade muito maior que a bilheteria agregada anual.
     source_id: ancine
     status: ativo
-    coverage: —
+    coverage: 2014-01 a 2026-08
     tags:
       - brasil
       - ancine
@@ -2414,14 +2932,27 @@ datasets:
     raw:
       path: ancine-bilheteria-diaria-distribuidoras/
       format: csv
-      files: 149
-      size_bytes: 4818537050
+      files: 152
+      size_bytes: 4943806050
       url_origem: https://dados.gov.br/dados/conjuntos-dados/relatorio-de-bilheteria-diaria-de-obras-informadas-pelas-distribuidoras
     cleaned:
       tables:
+        - bilheteria_diaria_distribuidora_detalhe_2014
+        - bilheteria_diaria_distribuidora_detalhe_2015
+        - bilheteria_diaria_distribuidora_detalhe_2016
+        - bilheteria_diaria_distribuidora_detalhe_2017
+        - bilheteria_diaria_distribuidora_detalhe_2018
+        - bilheteria_diaria_distribuidora_detalhe_2019
+        - bilheteria_diaria_distribuidora_detalhe_2020
+        - bilheteria_diaria_distribuidora_detalhe_2021
+        - bilheteria_diaria_distribuidora_detalhe_2022
+        - bilheteria_diaria_distribuidora_detalhe_2023
+        - bilheteria_diaria_distribuidora_detalhe_2024
+        - bilheteria_diaria_distribuidora_detalhe_2025
+        - bilheteria_diaria_distribuidora_detalhe_2026
         - bilheteria_diaria_distribuidora_filme_ano
       notes: |
-        Raw (~4.8 GB) so no HF. No RIDAB publicamos agregados leves por filme x ano x CNPJ distribuidor.
+        Os 21.274.038 registros oficiais estão preservados em partições anuais detalhadas. Há também um agregado por filme x ano x CNPJ distribuidor. O campo registros_reportados conta linhas da fonte e não deve ser interpretado como número de sessões.
     categoria:
       - bilheteria
       - distribuicao
@@ -2444,7 +2975,7 @@ datasets:
       path: ancine-grupos-economicos/
       format: csv
       files: 1
-      size_bytes: 1079092
+      size_bytes: 1113931
       url_origem: https://dados.gov.br/dados/conjuntos-dados/relacao-de-grupos-economicos
     cleaned:
       tables:
@@ -2473,7 +3004,7 @@ datasets:
       path: ancine-crt-obras-nao-publicitarias/
       format: csv
       files: 25
-      size_bytes: 64306740
+      size_bytes: 64869345
       url_origem: https://dados.gov.br/dados/conjuntos-dados/crt-obras-nao-publicitarias-registradas
     cleaned:
       tables:
@@ -2481,7 +3012,7 @@ datasets:
         - crt_nao_publicitarias_pais_ano
         - crt_nao_publicitarias_requerente_ano
       notes: |
-        Coletado em 2026-05-27 do dados.gov.br (Plano de Dados Abertos da ANCINE). Tabela base + 2 agregados (por pais x tipo_obra x ano, por CNPJ requerente x ano).
+        Snapshot oficial atualizado em 2026-09-08. Tabela base + 2 agregados (por país x tipo de obra x ano e por CNPJ requerente x ano).
     categoria:
       - producao_obras
     procedencia: pda
@@ -2524,7 +3055,7 @@ datasets:
       Relatório diário de bilheteria por obra conforme reportado pelas exibidoras (salas de cinema) ao SADIS/ANCINE.
     source_id: ancine
     status: ativo
-    coverage: —
+    coverage: 2014-06 a 2026-08
     tags:
       - brasil
       - ancine
@@ -2535,16 +3066,29 @@ datasets:
     raw:
       path: ancine-bilheteria-diaria-exibidoras/
       format: csv
-      files: 635
-      size_bytes: 8417868063
+      files: 651
+      size_bytes: 8612718686
       url_origem: https://dados.gov.br/dados/conjuntos-dados/relatorio-de-bilheteria-diaria-de-obras-informadas-pelas-exibidoras
     cleaned:
       tables:
+        - bilheteria_diaria_exibidora_detalhe_2014
+        - bilheteria_diaria_exibidora_detalhe_2015
+        - bilheteria_diaria_exibidora_detalhe_2016
+        - bilheteria_diaria_exibidora_detalhe_2017
+        - bilheteria_diaria_exibidora_detalhe_2018
+        - bilheteria_diaria_exibidora_detalhe_2019
+        - bilheteria_diaria_exibidora_detalhe_2020
+        - bilheteria_diaria_exibidora_detalhe_2021
+        - bilheteria_diaria_exibidora_detalhe_2022
+        - bilheteria_diaria_exibidora_detalhe_2023
+        - bilheteria_diaria_exibidora_detalhe_2024
+        - bilheteria_diaria_exibidora_detalhe_2025
+        - bilheteria_diaria_exibidora_detalhe_2026
         - bilheteria_diaria_exibidora_filme_ano
         - bilheteria_diaria_municipio_filme_ano
         - bilheteria_diaria_exibidora_ano
       notes: |
-        Raw (~8.4 GB) so no HF. No RIDAB publicamos agregados leves: por filme x ano x CNPJ exibidor, por filme x ano x municipio, e panorama por exibidora x ano.
+        Os 37.672.799 registros oficiais estão preservados em partições anuais detalhadas. Há também agregados por filme x ano x CNPJ exibidor, por filme x ano x município e por exibidora x ano. O campo registros_reportados conta linhas da fonte e não deve ser interpretado como número de sessões. Os arquivos oficiais de 2014 e 2015 têm somente 248 e 448 linhas, respectivamente; a baixa cobertura é da própria publicação de origem.
     categoria:
       - bilheteria
       - salas_exibicao
@@ -2596,7 +3140,7 @@ datasets:
       path: ancine-prestacao-contas-processos/
       format: csv
       files: 1
-      size_bytes: 1188040
+      size_bytes: 1197948
       url_origem: https://dados.gov.br/dados/conjuntos-dados/relacao-de-processos-em-fase-de-prestacao-de-contas
     cleaned:
       tables:
@@ -2655,7 +3199,7 @@ datasets:
       path: ancine-salas-exibicao-evolucao/
       format: csv
       files: 1
-      size_bytes: 3994532
+      size_bytes: 3996490
       url_origem: https://dados.gov.br/dados/conjuntos-dados/salas-de-exibicao---evolucao-anual
     cleaned:
       tables:
@@ -2684,7 +3228,7 @@ datasets:
       path: ancine-lancamentos-distribuidoras/
       format: csv
       files: 1
-      size_bytes: 1014400
+      size_bytes: 1036777
       url_origem: https://dados.gov.br/dados/conjuntos-dados/lancamentos-comerciais-por-distribuidoras
     cleaned:
       tables:
@@ -2713,7 +3257,7 @@ datasets:
       path: ancine-agentes-economicos-estrangeiros/
       format: csv
       files: 1
-      size_bytes: 19591
+      size_bytes: 19755
       url_origem: https://dados.gov.br/dados/conjuntos-dados/agentes-economicos-estrangeiros
     cleaned:
       tables:
@@ -2742,7 +3286,7 @@ datasets:
       path: ancine-complexos-cinematograficos-evolucao/
       format: csv
       files: 1
-      size_bytes: 1145513
+      size_bytes: 1146273
       url_origem: https://dados.gov.br/dados/conjuntos-dados/complexos-cinematograficos---evolucao-anual
     cleaned:
       tables:

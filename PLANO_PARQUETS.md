@@ -1,4 +1,6 @@
-# Plano de Geração de Parquets — Sessões Codex
+# Plano histórico de geração de Parquets — Sessões Codex
+
+> Atualização de 2026-09-09: os tratamentos CNC descritos abaixo foram substituídos por `pipelines/transform/clean_cnc_split.py`, que publica cada aba factual como recurso independente e consolida somente abas anuais equivalentes. Consulte `docs/correcoes-auditoria/PROGRESSO.md` para o estado atual.
 
 > Execute a partir da **raiz do repositório** com o venv ativado:
 > `.venv\Scripts\python.exe pipelines\transform\SCRIPT.py`

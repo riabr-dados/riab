@@ -1,5 +1,5 @@
 table: bilheteria_diaria_exibidora_filme_ano
-description: "Bilheteria diaria agregada por filme + ano + CNPJ exibidor. Publico total, sessoes, complexos, municipios."
+description: "Bilheteria diaria agregada por filme + ano + CNPJ exibidor. Público total, registros reportados, complexos e municípios."
 columns:
   - name: cpb_roe
     type: string
@@ -33,10 +33,10 @@ columns:
     type: number
     nullable: true
     description: "Publico total"
-  - name: sessoes
+  - name: registros_reportados
     type: integer
     nullable: true
-    description: "Sessoes"
+    description: "Quantidade de linhas diárias recebidas da fonte; não equivale necessariamente ao número de sessões."
   - name: n_complexos
     type: integer
     nullable: true

@@ -1,0 +1,51 @@
+table: bfi_talentos_mundo_t02
+description: 'Table 2: Market share of UK qualifying films, 23 territories, new film releases, 2019-2023.'
+source_raw: bfi-statistical-yearbook-2023
+source_file: uk-films-talent-worldwide.ods
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo ODS oficial do BFI.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original no arquivo ODS.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela no BFI Statistical Yearbook.
+- name: year
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: year.'
+- name: worldwide_box_office_us_usd_billion
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: worldwide_box_office_us_usd_billion.'
+- name: uk_films_worldwide_box_office_us_usd_billion
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: uk_films_worldwide_box_office_us_usd_billion.'
+- name: uk_qualifying_share_percent
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: uk_qualifying_share_percent.'
+- name: uk_independent_films_share_percent
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: uk_independent_films_share_percent.'
+- name: other_uk_qualifying_films_share_percent
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: other_uk_qualifying_films_share_percent.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo ODS oficial.
+notes:
+- Uma saída corresponde a uma única aba factual do ODS; nenhuma aba T é empilhada com outra.

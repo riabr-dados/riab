@@ -1,0 +1,35 @@
+table: bfi_certificacao_obras_t04
+description: 'Table 4: Median budget per minute of HETV productions with final cultural test certification, 2019-2023.'
+source_raw: bfi-statistical-yearbook-2023
+source_file: screen-sector-certification.ods
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo ODS oficial do BFI.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original no arquivo ODS.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela no BFI Statistical Yearbook.
+- name: year
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: year.'
+- name: median_budget_per_minute_gbp
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: median_budget_per_minute_gbp.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo ODS oficial.
+notes:
+- Uma saída corresponde a uma única aba factual do ODS; nenhuma aba T é empilhada com outra.

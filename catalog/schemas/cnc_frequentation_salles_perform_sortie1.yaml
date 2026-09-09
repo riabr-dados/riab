@@ -1,0 +1,47 @@
+table: cnc_frequentation_salles_perform_sortie1
+description: Performance des films en première exclusivité en salles
+source_raw: cnc-frequentation-salles
+source_file: frequentation-salles.xlsx
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo oficial publicado pelo CNC.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original do arquivo CNC.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela.
+- name: entrees_millions
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: entrees_millions.'
+- name: top_10
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: top_10.'
+- name: top_20
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: top_20.'
+- name: top_30
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: top_30.'
+- name: top_100
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: top_100.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo oficial.
+notes:
+- Uma saída corresponde a uma tabela factual; abas temáticas diferentes não são empilhadas.

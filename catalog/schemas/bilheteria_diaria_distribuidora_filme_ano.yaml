@@ -33,7 +33,7 @@ columns:
     type: number
     nullable: true
     description: "Publico total"
-  - name: sessoes
+  - name: registros_reportados
     type: integer
     nullable: true
-    description: "Sessoes"
+    description: "Quantidade de linhas diárias recebidas da fonte; não equivale necessariamente ao número de sessões."

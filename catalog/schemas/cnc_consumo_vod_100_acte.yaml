@@ -1,0 +1,63 @@
+table: cnc_consumo_vod_100_acte
+description: Estimation 100% du marché de la VàD en location et en paiement à l'acte selon le support d'achat
+source_raw: cnc-consumo-vod
+source_file: consumo-menages-vod.xlsx
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo oficial publicado pelo CNC.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original do arquivo CNC.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela.
+- name: tvip
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: tvip.'
+- name: '155954678_005246'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 155954678_005246.'
+- name: '132217290_355836'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 132217290_355836.'
+- name: '145626906_843902'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 145626906_843902.'
+- name: '102699975_82209'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 102699975_82209.'
+- name: '107800000'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 107800000.'
+- name: '102604751'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 102604751.'
+- name: '98474208_258033'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 98474208_258033.'
+- name: '79469294_9403092'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 79469294_9403092.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo oficial.
+notes:
+- Uma saída corresponde a uma tabela factual; abas temáticas diferentes não são empilhadas.

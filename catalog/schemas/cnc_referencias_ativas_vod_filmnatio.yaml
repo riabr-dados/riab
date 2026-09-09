@@ -1,0 +1,63 @@
+table: cnc_referencias_ativas_vod_filmnatio
+description: Répartition des références actives de films selon la nationalité
+source_raw: cnc-referencias-ativas-vod
+source_file: referencias-ativas-vod.xlsx
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo oficial publicado pelo CNC.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original do arquivo CNC.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela.
+- name: codigo_ou_categoria
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: codigo_ou_categoria.'
+- name: '2018'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2018.'
+- name: '2019'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2019.'
+- name: '2020'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2020.'
+- name: '2021'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2021.'
+- name: '2022'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2022.'
+- name: '2023'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2023.'
+- name: '2024'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2024.'
+- name: '2025'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2025.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo oficial.
+notes:
+- Uma saída corresponde a uma tabela factual; abas temáticas diferentes não são empilhadas.

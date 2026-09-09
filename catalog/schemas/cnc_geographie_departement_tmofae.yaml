@@ -1,0 +1,127 @@
+table: cnc_geographie_departement_tmofae
+description: Taux d'occupation des fauteuils des établissements Art et Essai par département
+source_raw: cnc-geographie-cinema
+source_file: geographie-par-departement.xlsx
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo oficial publicado pelo CNC.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original do arquivo CNC.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela.
+- name: codigo_ou_categoria
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: codigo_ou_categoria.'
+- name: nome_ou_categoria
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: nome_ou_categoria.'
+- name: '2002'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2002.'
+- name: '2003'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2003.'
+- name: '2004'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2004.'
+- name: '2005'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2005.'
+- name: '2006'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2006.'
+- name: '2007'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2007.'
+- name: '2008'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2008.'
+- name: '2009'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2009.'
+- name: '2010'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2010.'
+- name: '2011'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2011.'
+- name: '2012'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2012.'
+- name: '2013'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2013.'
+- name: '2014'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2014.'
+- name: '2015'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2015.'
+- name: '2016'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2016.'
+- name: '2017'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2017.'
+- name: '2018'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2018.'
+- name: '2019'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2019.'
+- name: '2020'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2020.'
+- name: '2021'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2021.'
+- name: '2022'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2022.'
+- name: '2023'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2023.'
+- name: '2024'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2024.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo oficial.
+notes:
+- Uma saída corresponde a uma tabela factual; abas temáticas diferentes não são empilhadas.

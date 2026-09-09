@@ -1,0 +1,79 @@
+table: cnc_parc_cinematographique_etab_rms
+description: Etablissements selon le prix moyen d'entrée
+source_raw: cnc-parc-cinematographique
+source_file: parc-cinematographique.xlsx
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo oficial publicado pelo CNC.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original do arquivo CNC.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela.
+- name: codigo_ou_categoria
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: codigo_ou_categoria.'
+- name: moins_de_3_euros
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: moins_de_3_euros.'
+- name: de_3_a_4_euros
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_3_a_4_euros.'
+- name: de_4_a_4_5_euros
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_4_a_4_5_euros.'
+- name: de_4_5_a_5_euros
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_4_5_a_5_euros.'
+- name: de_5_a_5_5_euros
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_5_a_5_5_euros.'
+- name: de_5_5_a_6_euros
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_5_5_a_6_euros.'
+- name: de_6_a_6_5_euros
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_6_a_6_5_euros.'
+- name: de_6_5_a_7_euros
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_6_5_a_7_euros.'
+- name: de_7_a_7_5_euros
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_7_a_7_5_euros.'
+- name: de_7_5_a_8_euros
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_7_5_a_8_euros.'
+- name: 8_euros_et_plus
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 8_euros_et_plus.'
+- name: dimensao_13
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: dimensao_13.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo oficial.
+notes:
+- Uma saída corresponde a uma tabela factual; abas temáticas diferentes não são empilhadas.

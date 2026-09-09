@@ -12,6 +12,8 @@ Execute a partir da raiz: python pipelines/upload_hf.py
 import os
 import sys
 import glob
+import json
+import hashlib
 import yaml
 from pathlib import Path
 from huggingface_hub import HfApi, CommitOperationAdd
@@ -23,6 +25,33 @@ HF_TYPE = "dataset"
 CATALOG_PATH = "catalog/datasets.yaml"
 RAW_LOCAL    = "datasets"
 CLEANED_LOCAL = os.path.join("pipelines", "output", "cleaned")
+
+
+def download_operations(datasets: list) -> list:
+    """Recusar publicação incompleta ou manifesto desatualizado."""
+    manifest = json.loads(Path('catalog/downloads.json').read_text(encoding='utf-8'))['resources']
+    tables = {t if isinstance(t, str) else t['name']
+              for ds in datasets if not ds.get('hidden')
+              for t in ds.get('cleaned', {}).get('tables', [])}
+    missing = tables - set(manifest)
+    if missing:
+        raise ValueError(f'Downloads completos ainda não gerados: {sorted(missing)}')
+    ops = []
+    for table in sorted(tables):
+        item = manifest[table]
+        parquet = Path(CLEANED_LOCAL) / f'{table}.parquet'
+        with parquet.open('rb') as stream:
+            if hashlib.file_digest(stream, 'sha256').hexdigest() != item['parquet_sha256']:
+                raise ValueError(f'Regerar downloads após alteração de {table}')
+        for file in item['files']:
+            if Path(file['path']).name != file['path']:
+                raise ValueError('Caminho de download inválido')
+            path = Path('pipelines/output/downloads') / file['path']
+            with path.open('rb') as stream:
+                if hashlib.file_digest(stream, 'sha256').hexdigest() != file['sha256']:
+                    raise ValueError(f'Download alterado: {path}')
+            ops.append(CommitOperationAdd(path_in_repo=f'downloads/{path.name}', path_or_fileobj=str(path)))
+    return ops
 
 
 def get_hf_token() -> str | None:
@@ -86,7 +115,7 @@ def latest_snapshot(ds: dict) -> str | None:
 
 
 def build_operations(datasets: list) -> list:
-    ops = []
+    ops = download_operations(datasets)
 
     # 1. Dados brutos — um arquivo por dataset (snapshot mais recente)
     for ds in datasets:
@@ -98,7 +127,7 @@ def build_operations(datasets: list) -> list:
         raw_file = ds.get("raw", {}).get("file")
         if raw_file:
             candidates = [os.path.join(snap_dir, raw_file)]
-            candidates.extend(os.path.join(snap_dir, name) for name in ["datapackage.json", "source.txt"])
+            candidates.extend(os.path.join(snap_dir, name) for name in ["datapackage.json", "source.txt", "source.json"])
             files = [path for path in candidates if os.path.isfile(path)]
         else:
             files = [f for f in glob.glob(os.path.join(snap_dir, "**"), recursive=True)
@@ -112,8 +141,10 @@ def build_operations(datasets: list) -> list:
     # 2. Dados tratados: Parquet e CSV em pipelines/output/cleaned/
     if os.path.isdir(CLEANED_LOCAL):
         cleaned_files = []
-        for pattern in ("*.parquet", "*.csv"):
-            cleaned_files.extend(glob.glob(os.path.join(CLEANED_LOCAL, pattern)))
+        tables = {t if isinstance(t, str) else t['name'] for ds in datasets
+                  for t in ds.get('cleaned', {}).get('tables', [])}
+        cleaned_files = [os.path.join(CLEANED_LOCAL, f'{table}.parquet') for table in sorted(tables)
+                         if os.path.isfile(os.path.join(CLEANED_LOCAL, f'{table}.parquet'))]
 
         for local_path in sorted(cleaned_files):
             fname = os.path.basename(local_path)
@@ -126,6 +157,9 @@ def build_operations(datasets: list) -> list:
 
 
 def main():
+    datasets = load_catalog()
+    # Preparar e validar localmente antes de qualquer chamada com efeito externo.
+    ops = build_operations(datasets)
     token = get_hf_token()
     if not token:
         print("HF_TOKEN nao definido. Configure a variavel de ambiente.", file=sys.stderr)
@@ -146,9 +180,7 @@ def main():
             exist_ok=True,
         )
 
-    datasets = load_catalog()
     print(f"\nPreparando operacoes para {len(datasets)} datasets...")
-    ops = build_operations(datasets)
 
     if not ops:
         print("Nenhuma operacao gerada.")

@@ -1,0 +1,2191 @@
+version: 1
+resources:
+- dataset: cnc-audience-television
+  table: cnc_audience_television_dureeecoute1
+  file: audience-television.xlsx
+  sheet: DuréeEcoute1
+  title: Durée d'écoute quotidienne de la télévision selon la cible (lundi-dimanche, 3h-27h)
+  rows: 57
+  columns: 15
+  source_sha256: 82842541ec6c80adae8dfd3e4b55c685cb6907870261b35b19934fdfbdeecd98
+  snapshot: '2026-05-19'
+- dataset: cnc-audience-television
+  table: cnc_audience_television_dureeecoute2
+  file: audience-television.xlsx
+  sheet: DuréeEcoute2
+  title: Durée d'écoute quotidienne de la télévision par mois (4 ans et plus, lundi-dimanche, 3h-27h)
+  rows: 28
+  columns: 19
+  source_sha256: 82842541ec6c80adae8dfd3e4b55c685cb6907870261b35b19934fdfbdeecd98
+  snapshot: '2026-05-19'
+- dataset: cnc-audience-television
+  table: cnc_audience_television_partdaudience
+  file: audience-television.xlsx
+  sheet: PartdAudience
+  title: Parts d'audience des chaînes de télévision* (%)
+  rows: 37
+  columns: 35
+  source_sha256: 82842541ec6c80adae8dfd3e4b55c685cb6907870261b35b19934fdfbdeecd98
+  snapshot: '2026-05-19'
+- dataset: cnc-audience-television
+  table: cnc_audience_television_o_c
+  file: audience-television.xlsx
+  sheet: O&C
+  title: Structure de l'offre TV par genre de programmes¹ (%)
+  rows: 23
+  columns: 34
+  source_sha256: 82842541ec6c80adae8dfd3e4b55c685cb6907870261b35b19934fdfbdeecd98
+  snapshot: '2026-05-19'
+- dataset: cnc-audience-television
+  table: cnc_audience_television_topaudiences
+  file: audience-television.xlsx
+  sheet: TopAudiences
+  title: Les meilleures audiences des chaînes de télévision par genre
+  rows: 9
+  columns: 22
+  source_sha256: 82842541ec6c80adae8dfd3e4b55c685cb6907870261b35b19934fdfbdeecd98
+  snapshot: '2026-05-19'
+- dataset: cnc-consumo-vod
+  table: cnc_consumo_vod_ca_100_typeachat
+  file: consumo-menages-vod.xlsx
+  sheet: CA 100% TypeAchat
+  title: Estimation 100% du chiffre d'affaires de la VàD payante selon le type d'achat (M€)
+  rows: 5
+  columns: 22
+  source_sha256: b6baa5ba99958b71ac033e429cabc9de1f281117e4f4a58a6c759f4c2660d217
+  snapshot: '2026-05-19'
+- dataset: cnc-consumo-vod
+  table: cnc_consumo_vod_100_acte
+  file: consumo-menages-vod.xlsx
+  sheet: 100% Acte
+  title: Estimation 100% du marché de la VàD en location et en paiement à l'acte selon le support d'achat
+  rows: 28
+  columns: 14
+  source_sha256: b6baa5ba99958b71ac033e429cabc9de1f281117e4f4a58a6c759f4c2660d217
+  snapshot: '2026-05-19'
+- dataset: cnc-consumo-vod
+  table: cnc_consumo_vod_structuregenre
+  file: consumo-menages-vod.xlsx
+  sheet: StructureGenre
+  title: Structure du marché de la VàD (VOD+EST) selon le genre (%)
+  rows: 20
+  columns: 19
+  source_sha256: b6baa5ba99958b71ac033e429cabc9de1f281117e4f4a58a6c759f4c2660d217
+  snapshot: '2026-05-19'
+- dataset: cnc-consumo-vod
+  table: cnc_consumo_vod_structurenatiocinema
+  file: consumo-menages-vod.xlsx
+  sheet: StructureNatioCinema
+  title: Structure du chiffre d'affaires de la VàD (VOD+EST) selon la nationalité des films cinématographiques (%)
+  rows: 18
+  columns: 15
+  source_sha256: b6baa5ba99958b71ac033e429cabc9de1f281117e4f4a58a6c759f4c2660d217
+  snapshot: '2026-05-19'
+- dataset: cnc-consumo-vod
+  table: cnc_consumo_vod_poidstop
+  file: consumo-menages-vod.xlsx
+  sheet: PoidsTop
+  title: Poids des films cinématographiques les plus performants dans le total des transactions en paiement à l'acte (%)
+  rows: 19
+  columns: 10
+  source_sha256: b6baa5ba99958b71ac033e429cabc9de1f281117e4f4a58a6c759f4c2660d217
+  snapshot: '2026-05-19'
+- dataset: cnc-consumo-vod
+  table: cnc_consumo_vod_structuregenreav
+  file: consumo-menages-vod.xlsx
+  sheet: StructureGenreAV
+  title: Structure du marché de la VàD en paiement à l'acte selon le genre de programmes audiovisuels (%)
+  rows: 13
+  columns: 19
+  source_sha256: b6baa5ba99958b71ac033e429cabc9de1f281117e4f4a58a6c759f4c2660d217
+  snapshot: '2026-05-19'
+- dataset: cnc-consumo-vod
+  table: cnc_consumo_vod_ca_100_support
+  file: consumo-menages-vod.xlsx
+  sheet: CA 100% Support
+  title: Estimation 100% du chiffre d'affaires de la VàD payante selon le support d'achat (M€)
+  rows: 3
+  columns: 18
+  source_sha256: b6baa5ba99958b71ac033e429cabc9de1f281117e4f4a58a6c759f4c2660d217
+  snapshot: '2026-05-19'
+- dataset: cnc-distribution-salles
+  table: cnc_distribution_salles_echantillon
+  file: distribution-films-salles.xlsx
+  sheet: échantillon
+  title: Présentation de l'échantillon
+  rows: 18
+  columns: 22
+  source_sha256: 1f9cf64248c28b754dbf4a6de927699948c50ec3ae40122f04e0a89ad2a7c4d5
+  snapshot: '2026-05-19'
+- dataset: cnc-distribution-salles
+  table: cnc_distribution_salles_coutsdistrib
+  file: distribution-films-salles.xlsx
+  sheet: coûtsdistrib
+  title: Structure des coûts de distribution
+  rows: 19
+  columns: 22
+  source_sha256: 1f9cf64248c28b754dbf4a6de927699948c50ec3ae40122f04e0a89ad2a7c4d5
+  snapshot: '2026-05-19'
+- dataset: cnc-distribution-salles
+  table: cnc_distribution_salles_coutsdistrib_2
+  file: distribution-films-salles.xlsx
+  sheet: coûtsdistrib(2)
+  title: Structure des coûts de distribution
+  rows: 116
+  columns: 19
+  source_sha256: 1f9cf64248c28b754dbf4a6de927699948c50ec3ae40122f04e0a89ad2a7c4d5
+  snapshot: '2026-05-19'
+- dataset: cnc-distribution-salles
+  table: cnc_distribution_salles_vpf
+  file: distribution-films-salles.xlsx
+  sheet: VPF
+  title: Les contributions numériques
+  rows: 6
+  columns: 15
+  source_sha256: 1f9cf64248c28b754dbf4a6de927699948c50ec3ae40122f04e0a89ad2a7c4d5
+  snapshot: '2026-05-19'
+- dataset: cnc-distribution-salles
+  table: cnc_distribution_salles_genre
+  file: distribution-films-salles.xlsx
+  sheet: genre
+  title: Structure des coûts de distribution selon le genre des films
+  rows: 38
+  columns: 22
+  source_sha256: 1f9cf64248c28b754dbf4a6de927699948c50ec3ae40122f04e0a89ad2a7c4d5
+  snapshot: '2026-05-19'
+- dataset: cnc-distribution-salles
+  table: cnc_distribution_salles_ae
+  file: distribution-films-salles.xlsx
+  sheet: AE
+  title: Structure des coûts de distribution selon la recommandation des films
+  rows: 25
+  columns: 22
+  source_sha256: 1f9cf64248c28b754dbf4a6de927699948c50ec3ae40122f04e0a89ad2a7c4d5
+  snapshot: '2026-05-19'
+- dataset: cnc-distribution-salles
+  table: cnc_distribution_salles_combinaisonsortie
+  file: distribution-films-salles.xlsx
+  sheet: combinaisonsortie
+  title: Structure des coûts de distribution selon la combinaison de sortie
+  rows: 77
+  columns: 22
+  source_sha256: 1f9cf64248c28b754dbf4a6de927699948c50ec3ae40122f04e0a89ad2a7c4d5
+  snapshot: '2026-05-19'
+- dataset: cnc-distribution-salles
+  table: cnc_distribution_salles_coutprod
+  file: distribution-films-salles.xlsx
+  sheet: coûtprod
+  title: Structure des coûts de distribution selon le coût de production
+  rows: 77
+  columns: 22
+  source_sha256: 1f9cf64248c28b754dbf4a6de927699948c50ec3ae40122f04e0a89ad2a7c4d5
+  snapshot: '2026-05-19'
+- dataset: cnc-distribution-salles
+  table: cnc_distribution_salles_entrees
+  file: distribution-films-salles.xlsx
+  sheet: entrées
+  title: Structure des coûts de distribution selon le nombre d'entrées réalisées
+  rows: 64
+  columns: 22
+  source_sha256: 1f9cf64248c28b754dbf4a6de927699948c50ec3ae40122f04e0a89ad2a7c4d5
+  snapshot: '2026-05-19'
+- dataset: cnc-distribution-salles
+  table: cnc_distribution_salles_coutdef
+  file: distribution-films-salles.xlsx
+  sheet: coûtdéf
+  title: Coûts définitifs
+  rows: 16
+  columns: 22
+  source_sha256: 1f9cf64248c28b754dbf4a6de927699948c50ec3ae40122f04e0a89ad2a7c4d5
+  snapshot: '2026-05-19'
+- dataset: cnc-donnees-internationales
+  table: cnc_donnees_internationales_u_e
+  file: donnees-internationales-cinema.xlsx
+  sheet: U.E.
+  title: Le cinéma dans l'Union Européenne1
+  rows: 21
+  columns: 12
+  source_sha256: 5475a59fded1e3dae812c6fb516c43135d184abca8e8decd1bcd9248eeb48f4b
+  snapshot: '2026-05-19'
+- dataset: cnc-donnees-internationales
+  table: cnc_donnees_internationales_allemagne
+  file: donnees-internationales-cinema.xlsx
+  sheet: Allemagne
+  title: Le cinéma en Allemagne
+  rows: 9
+  columns: 26
+  source_sha256: 5475a59fded1e3dae812c6fb516c43135d184abca8e8decd1bcd9248eeb48f4b
+  snapshot: '2026-05-19'
+- dataset: cnc-donnees-internationales
+  table: cnc_donnees_internationales_espagne
+  file: donnees-internationales-cinema.xlsx
+  sheet: Espagne
+  title: Le cinéma en Espagne
+  rows: 9
+  columns: 26
+  source_sha256: 5475a59fded1e3dae812c6fb516c43135d184abca8e8decd1bcd9248eeb48f4b
+  snapshot: '2026-05-19'
+- dataset: cnc-donnees-internationales
+  table: cnc_donnees_internationales_italie
+  file: donnees-internationales-cinema.xlsx
+  sheet: Italie
+  title: Le cinéma en Italie
+  rows: 9
+  columns: 26
+  source_sha256: 5475a59fded1e3dae812c6fb516c43135d184abca8e8decd1bcd9248eeb48f4b
+  snapshot: '2026-05-19'
+- dataset: cnc-donnees-internationales
+  table: cnc_donnees_internationales_royaume_uni
+  file: donnees-internationales-cinema.xlsx
+  sheet: Royaume-Uni
+  title: Le cinéma au Royaume-Uni
+  rows: 9
+  columns: 26
+  source_sha256: 5475a59fded1e3dae812c6fb516c43135d184abca8e8decd1bcd9248eeb48f4b
+  snapshot: '2026-05-19'
+- dataset: cnc-donnees-internationales
+  table: cnc_donnees_internationales_russie
+  file: donnees-internationales-cinema.xlsx
+  sheet: Russie
+  title: Le cinéma en Russie
+  rows: 9
+  columns: 23
+  source_sha256: 5475a59fded1e3dae812c6fb516c43135d184abca8e8decd1bcd9248eeb48f4b
+  snapshot: '2026-05-19'
+- dataset: cnc-donnees-internationales
+  table: cnc_donnees_internationales_etats_unis
+  file: donnees-internationales-cinema.xlsx
+  sheet: Etats-Unis
+  title: Le cinéma aux Etats-Unis
+  rows: 7
+  columns: 26
+  source_sha256: 5475a59fded1e3dae812c6fb516c43135d184abca8e8decd1bcd9248eeb48f4b
+  snapshot: '2026-05-19'
+- dataset: cnc-donnees-internationales
+  table: cnc_donnees_internationales_mexique
+  file: donnees-internationales-cinema.xlsx
+  sheet: Mexique
+  title: Le cinéma au Mexique
+  rows: 9
+  columns: 26
+  source_sha256: 5475a59fded1e3dae812c6fb516c43135d184abca8e8decd1bcd9248eeb48f4b
+  snapshot: '2026-05-19'
+- dataset: cnc-donnees-internationales
+  table: cnc_donnees_internationales_japon
+  file: donnees-internationales-cinema.xlsx
+  sheet: Japon
+  title: Le cinéma au Japon
+  rows: 8
+  columns: 26
+  source_sha256: 5475a59fded1e3dae812c6fb516c43135d184abca8e8decd1bcd9248eeb48f4b
+  snapshot: '2026-05-19'
+- dataset: cnc-donnees-internationales
+  table: cnc_donnees_internationales_chine
+  file: donnees-internationales-cinema.xlsx
+  sheet: Chine
+  title: Le cinéma en Chine
+  rows: 8
+  columns: 22
+  source_sha256: 5475a59fded1e3dae812c6fb516c43135d184abca8e8decd1bcd9248eeb48f4b
+  snapshot: '2026-05-19'
+- dataset: cnc-etablissements
+  table: cnc_etablissements
+  file: etablissements-cinematographiques.xlsx
+  sheet: abas anuais
+  title: Estabelecimentos cinematográficos por ano
+  rows: 47250
+  columns: 20
+  source_sha256: 513a71e15ef574293fdc2178ebee7140aadcb11ecd20e0c7cd8bb8f231298383
+  snapshot: '2026-05-19'
+- dataset: cnc-exportacao-programas-audiovisuais
+  table: cnc_exportacao_programas_export
+  file: exportacao-programas-audiovisuais.xls
+  sheet: Export
+  title: Ventes de programmes audiovisuels français à l'étranger (M€) 1
+  rows: 33
+  columns: 7
+  source_sha256: ddfe852e09952249d4f798a210bc253cf86202bce6034bbd9b76d2629b0f5172
+  snapshot: '2026-05-19'
+- dataset: cnc-exportacao-programas-audiovisuais
+  table: cnc_exportacao_programas_genre
+  file: exportacao-programas-audiovisuais.xls
+  sheet: Genre
+  title: Ventes¹ de programmes audiovisuels à l'étranger selon le genre (M€)
+  rows: 9
+  columns: 32
+  source_sha256: ddfe852e09952249d4f798a210bc253cf86202bce6034bbd9b76d2629b0f5172
+  snapshot: '2026-05-19'
+- dataset: cnc-exportacao-programas-audiovisuais
+  table: cnc_exportacao_programas_geo
+  file: exportacao-programas-audiovisuais.xls
+  sheet: Géo
+  title: Ventes¹ de programmes audiovisuels par zone géographique (M€)
+  rows: 9
+  columns: 32
+  source_sha256: ddfe852e09952249d4f798a210bc253cf86202bce6034bbd9b76d2629b0f5172
+  snapshot: '2026-05-19'
+- dataset: cnc-exportacao-programas-audiovisuais
+  table: cnc_exportacao_programas_europeouest
+  file: exportacao-programas-audiovisuais.xls
+  sheet: EuropeOuest
+  title: Ventes de programmes audiovisuels en Europe de l'Ouest (M€)
+  rows: 13
+  columns: 32
+  source_sha256: ddfe852e09952249d4f798a210bc253cf86202bce6034bbd9b76d2629b0f5172
+  snapshot: '2026-05-19'
+- dataset: cnc-exportacao-programas-audiovisuais
+  table: cnc_exportacao_programas_europecent
+  file: exportacao-programas-audiovisuais.xls
+  sheet: EuropeCent
+  title: Ventes de programmes audiovisuels en Europe centrale et orientale (M€)
+  rows: 12
+  columns: 29
+  source_sha256: ddfe852e09952249d4f798a210bc253cf86202bce6034bbd9b76d2629b0f5172
+  snapshot: '2026-05-19'
+- dataset: cnc-exportacao-programas-audiovisuais
+  table: cnc_exportacao_programas_ameriquenord
+  file: exportacao-programas-audiovisuais.xls
+  sheet: AmériqueNord
+  title: Ventes de programmes audiovisuels en Amérique du Nord (M€)
+  rows: 4
+  columns: 29
+  source_sha256: ddfe852e09952249d4f798a210bc253cf86202bce6034bbd9b76d2629b0f5172
+  snapshot: '2026-05-19'
+- dataset: cnc-exportacao-programas-audiovisuais
+  table: cnc_exportacao_programas_asieoceanie
+  file: exportacao-programas-audiovisuais.xls
+  sheet: AsieOcéanie
+  title: Ventes de programmes audiovisuels en Asie / Océanie (M€)
+  rows: 11
+  columns: 29
+  source_sha256: ddfe852e09952249d4f798a210bc253cf86202bce6034bbd9b76d2629b0f5172
+  snapshot: '2026-05-19'
+- dataset: cnc-films-agrees
+  table: cnc_films_agrees
+  file: films-agrees-production.xlsx
+  sheet: abas anuais
+  title: Filmes aprovados para produção por ano
+  rows: 6144
+  columns: 23
+  source_sha256: c192b4528ddfdc984b1a489cfcffc0059f5a709a7df0a3de25d5b95cf18b77a0
+  snapshot: '2026-05-19'
+- dataset: cnc-films-million-entrees
+  table: cnc_films_million_entrees
+  file: films-plus-million-entrees.xlsx
+  sheet: abas anuais
+  title: Filmes com mais de um milhão de entradas por ano
+  rows: 1020
+  columns: 12
+  source_sha256: cbc2ecf23d684c89a8c678c908b390c5de7de1799b1802ab7c55deb53c470cd5
+  snapshot: '2026-05-19'
+- dataset: cnc-films-television
+  table: cnc_films_television_films
+  file: films-television.xls
+  sheet: Films
+  title: Ensemble des films
+  rows: 104
+  columns: 42
+  source_sha256: 4a28db103ea10e2d0df81115fda5489788940b583eeec621a869b3544ca23a55
+  snapshot: '2026-05-19'
+- dataset: cnc-films-television
+  table: cnc_films_television_diffusions
+  file: films-television.xls
+  sheet: Diffusions
+  title: Ensemble des films
+  rows: 104
+  columns: 42
+  source_sha256: 4a28db103ea10e2d0df81115fda5489788940b583eeec621a869b3544ca23a55
+  snapshot: '2026-05-19'
+- dataset: cnc-films-television
+  table: cnc_films_television_filmsinedits
+  file: films-television.xls
+  sheet: FilmsInédits
+  title: Films inédits
+  rows: 107
+  columns: 42
+  source_sha256: 4a28db103ea10e2d0df81115fda5489788940b583eeec621a869b3544ca23a55
+  snapshot: '2026-05-19'
+- dataset: cnc-films-television
+  table: cnc_films_television_filmspt
+  file: films-television.xls
+  sheet: FilmsPT
+  title: Films en première partie de soirée
+  rows: 104
+  columns: 42
+  source_sha256: 4a28db103ea10e2d0df81115fda5489788940b583eeec621a869b3544ca23a55
+  snapshot: '2026-05-19'
+- dataset: cnc-films-television
+  table: cnc_films_television_filmsptinedits
+  file: films-television.xls
+  sheet: FilmsPTInédits
+  title: Films inédits en première partie de soirée
+  rows: 104
+  columns: 42
+  source_sha256: 4a28db103ea10e2d0df81115fda5489788940b583eeec621a869b3544ca23a55
+  snapshot: '2026-05-19'
+- dataset: cnc-films-television
+  table: cnc_films_television_b_diff_tv
+  file: films-television.xls
+  sheet: B Diff TV
+  title: Nombre de diffusions des films sur les chaînes pratiquant la multidiffusion
+  rows: 92
+  columns: 22
+  source_sha256: 4a28db103ea10e2d0df81115fda5489788940b583eeec621a869b3544ca23a55
+  snapshot: '2026-05-19'
+- dataset: cnc-financement-television
+  table: cnc_financement_television_cap
+  file: financement-television.xls
+  sheet: cap
+  title: Montant de la contribution à l'audiovisuel public en France métropolitaine (ex-redevance) (€)
+  rows: 9
+  columns: 20
+  source_sha256: e6e46c2e7eabd58291aac437f58c875cc0b590dd90fb0c4e697544b1032af731
+  snapshot: '2026-05-19'
+- dataset: cnc-financement-television
+  table: cnc_financement_television_publicite
+  file: financement-television.xls
+  sheet: publicité
+  title: Recettes publicitaires nettes des chaînes de télévision (M€)
+  rows: 20
+  columns: 7
+  source_sha256: e6e46c2e7eabd58291aac437f58c875cc0b590dd90fb0c4e697544b1032af731
+  snapshot: '2026-05-19'
+- dataset: cnc-financement-television
+  table: cnc_financement_television_abonnement
+  file: financement-television.xls
+  sheet: abonnement
+  title: Recettes d'abonnement à Canal+ (M€)
+  rows: 21
+  columns: 7
+  source_sha256: e6e46c2e7eabd58291aac437f58c875cc0b590dd90fb0c4e697544b1032af731
+  snapshot: '2026-05-19'
+- dataset: cnc-frequentation-salles
+  table: cnc_frequentation_salles_freqcine
+  file: frequentation-salles.xlsx
+  sheet: freqciné
+  title: 'Fréquentation des salles de cinéma ( ensemble des programmes : long métrage, court métrage et hors film)'
+  rows: 88
+  columns: 10
+  source_sha256: 495eee2e1392ea2e956ff6db398de6fc912050dd8d634b29d029dfa8855dab5d
+  snapshot: '2026-05-19'
+- dataset: cnc-frequentation-salles
+  table: cnc_frequentation_salles_decompos
+  file: frequentation-salles.xlsx
+  sheet: décompos
+  title: Décomposition de la recette guichet
+  rows: 95
+  columns: 13
+  source_sha256: 495eee2e1392ea2e956ff6db398de6fc912050dd8d634b29d029dfa8855dab5d
+  snapshot: '2026-05-19'
+- dataset: cnc-frequentation-salles
+  table: cnc_frequentation_salles_mois
+  file: frequentation-salles.xlsx
+  sheet: mois
+  title: Fréquentation mensuelle
+  rows: 140
+  columns: 19
+  source_sha256: 495eee2e1392ea2e956ff6db398de6fc912050dd8d634b29d029dfa8855dab5d
+  snapshot: '2026-05-19'
+- dataset: cnc-frequentation-salles
+  table: cnc_frequentation_salles_semaine
+  file: frequentation-salles.xlsx
+  sheet: semaine
+  title: Fréquentation hebdomadaire
+  rows: 167
+  columns: 39
+  source_sha256: 495eee2e1392ea2e956ff6db398de6fc912050dd8d634b29d029dfa8855dab5d
+  snapshot: '2026-05-19'
+- dataset: cnc-frequentation-salles
+  table: cnc_frequentation_salles_jour
+  file: frequentation-salles.xlsx
+  sheet: jour
+  title: Fréquentation par jour nommé
+  rows: 88
+  columns: 14
+  source_sha256: 495eee2e1392ea2e956ff6db398de6fc912050dd8d634b29d029dfa8855dab5d
+  snapshot: '2026-05-19'
+- dataset: cnc-frequentation-salles
+  table: cnc_frequentation_salles_lm_cm_hf
+  file: frequentation-salles.xlsx
+  sheet: LM CM HF
+  title: Fréquentation des films de long métrage
+  rows: 68
+  columns: 10
+  source_sha256: 495eee2e1392ea2e956ff6db398de6fc912050dd8d634b29d029dfa8855dab5d
+  snapshot: '2026-05-19'
+- dataset: cnc-frequentation-salles
+  table: cnc_frequentation_salles_filmexpl_1979
+  file: frequentation-salles.xlsx
+  sheet: filmexpl<1979
+  title: Films en exploitation en salles de 1955 à 1979
+  rows: 63
+  columns: 10
+  source_sha256: 495eee2e1392ea2e956ff6db398de6fc912050dd8d634b29d029dfa8855dab5d
+  snapshot: '2026-05-19'
+- dataset: cnc-frequentation-salles
+  table: cnc_frequentation_salles_filmexpl
+  file: frequentation-salles.xlsx
+  sheet: filmexpl
+  title: Films en exploitation en salles à partir de 1980
+  rows: 175
+  columns: 11
+  source_sha256: 495eee2e1392ea2e956ff6db398de6fc912050dd8d634b29d029dfa8855dab5d
+  snapshot: '2026-05-19'
+- dataset: cnc-frequentation-salles
+  table: cnc_frequentation_salles_natio
+  file: frequentation-salles.xlsx
+  sheet: natio
+  title: Films en exploitation en salles selon la nationalité
+  rows: 139
+  columns: 38
+  source_sha256: 495eee2e1392ea2e956ff6db398de6fc912050dd8d634b29d029dfa8855dab5d
+  snapshot: '2026-05-19'
+- dataset: cnc-frequentation-salles
+  table: cnc_frequentation_salles_entrees
+  file: frequentation-salles.xlsx
+  sheet: entrées
+  title: Films en exploitation en salles selon leur nombre d'entrées
+  rows: 139
+  columns: 15
+  source_sha256: 495eee2e1392ea2e956ff6db398de6fc912050dd8d634b29d029dfa8855dab5d
+  snapshot: '2026-05-19'
+- dataset: cnc-frequentation-salles
+  table: cnc_frequentation_salles_perform
+  file: frequentation-salles.xlsx
+  sheet: perform
+  title: Performance des films en exploitation en salles
+  rows: 34
+  columns: 10
+  source_sha256: 495eee2e1392ea2e956ff6db398de6fc912050dd8d634b29d029dfa8855dab5d
+  snapshot: '2026-05-19'
+- dataset: cnc-frequentation-salles
+  table: cnc_frequentation_salles_entrees_ff
+  file: frequentation-salles.xlsx
+  sheet: entrées ff
+  title: Films français en exploitation en salles selon leur nombre d'entrées
+  rows: 139
+  columns: 14
+  source_sha256: 495eee2e1392ea2e956ff6db398de6fc912050dd8d634b29d029dfa8855dab5d
+  snapshot: '2026-05-19'
+- dataset: cnc-frequentation-salles
+  table: cnc_frequentation_salles_age
+  file: frequentation-salles.xlsx
+  sheet: age
+  title: Films en exploitation en salles selon leur âge*
+  rows: 139
+  columns: 17
+  source_sha256: 495eee2e1392ea2e956ff6db398de6fc912050dd8d634b29d029dfa8855dab5d
+  snapshot: '2026-05-19'
+- dataset: cnc-frequentation-salles
+  table: cnc_frequentation_salles_classae
+  file: frequentation-salles.xlsx
+  sheet: classAE
+  title: Films en exploitation en salles selon leur recommandation Art et Essai
+  rows: 139
+  columns: 9
+  source_sha256: 495eee2e1392ea2e956ff6db398de6fc912050dd8d634b29d029dfa8855dab5d
+  snapshot: '2026-05-19'
+- dataset: cnc-frequentation-salles
+  table: cnc_frequentation_salles_natio_sortie1
+  file: frequentation-salles.xlsx
+  sheet: natio sortie1
+  title: Films en première exclusivité en salles selon la nationalité
+  rows: 123
+  columns: 38
+  source_sha256: 495eee2e1392ea2e956ff6db398de6fc912050dd8d634b29d029dfa8855dab5d
+  snapshot: '2026-05-19'
+- dataset: cnc-frequentation-salles
+  table: cnc_frequentation_salles_entrees_sortie1
+  file: frequentation-salles.xlsx
+  sheet: entrées sortie1
+  title: Films en première exclusivité en salles selon leur nombre d'entrées
+  rows: 123
+  columns: 14
+  source_sha256: 495eee2e1392ea2e956ff6db398de6fc912050dd8d634b29d029dfa8855dab5d
+  snapshot: '2026-05-19'
+- dataset: cnc-frequentation-salles
+  table: cnc_frequentation_salles_genre_sortie1
+  file: frequentation-salles.xlsx
+  sheet: genre sortie1
+  title: Films en première exclusivité en salles selon leur genre
+  rows: 123
+  columns: 10
+  source_sha256: 495eee2e1392ea2e956ff6db398de6fc912050dd8d634b29d029dfa8855dab5d
+  snapshot: '2026-05-19'
+- dataset: cnc-frequentation-salles
+  table: cnc_frequentation_salles_perform_sortie1
+  file: frequentation-salles.xlsx
+  sheet: perform sortie1
+  title: Performance des films en première exclusivité en salles
+  rows: 30
+  columns: 10
+  source_sha256: 495eee2e1392ea2e956ff6db398de6fc912050dd8d634b29d029dfa8855dab5d
+  snapshot: '2026-05-19'
+- dataset: cnc-frequentation-salles
+  table: cnc_frequentation_salles_ae_sortie1
+  file: frequentation-salles.xlsx
+  sheet: AE sortie1
+  title: Films en première exclusivité en salles selon la recommandation Art et Essai
+  rows: 123
+  columns: 9
+  source_sha256: 495eee2e1392ea2e956ff6db398de6fc912050dd8d634b29d029dfa8855dab5d
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_commune_tranchepopulation
+  file: geographie-par-commune.xlsx
+  sheet: TranchePopulation
+  title: Equipement et résultats selon la taille des communes
+  rows: 107
+  columns: 35
+  source_sha256: e712f6ed08a80ecc1aa9425f28b9dd1c8d819e36f5f9490290cab04923e64114
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_commune_etablissements
+  file: geographie-par-commune.xlsx
+  sheet: établissements
+  title: Etablissements par commune de 50 000 habitants ou plus
+  rows: 136
+  columns: 40
+  source_sha256: e712f6ed08a80ecc1aa9425f28b9dd1c8d819e36f5f9490290cab04923e64114
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_commune_ecrans
+  file: geographie-par-commune.xlsx
+  sheet: écrans
+  title: Ecrans par commune de 50 000 habitants ou plus
+  rows: 136
+  columns: 72
+  source_sha256: e712f6ed08a80ecc1aa9425f28b9dd1c8d819e36f5f9490290cab04923e64114
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_commune_fauteuils
+  file: geographie-par-commune.xlsx
+  sheet: fauteuils
+  title: Fauteuils par commune de 50 000 habitants ou plus
+  rows: 136
+  columns: 72
+  source_sha256: e712f6ed08a80ecc1aa9425f28b9dd1c8d819e36f5f9490290cab04923e64114
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_commune_multiplexes
+  file: geographie-par-commune.xlsx
+  sheet: multiplexes
+  title: Multiplexes (8 écrans et plus) par commune de 50 000 habitants ou plus
+  rows: 136
+  columns: 36
+  source_sha256: e712f6ed08a80ecc1aa9425f28b9dd1c8d819e36f5f9490290cab04923e64114
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_commune_art_et_essai
+  file: geographie-par-commune.xlsx
+  sheet: Art et Essai
+  title: Etablissements Art et Essai par commune de 50 000 habitants ou plus
+  rows: 136
+  columns: 35
+  source_sha256: e712f6ed08a80ecc1aa9425f28b9dd1c8d819e36f5f9490290cab04923e64114
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_commune_seances
+  file: geographie-par-commune.xlsx
+  sheet: séances
+  title: Séances par commune de 50 000 habitants ou plus (milliers)
+  rows: 136
+  columns: 40
+  source_sha256: e712f6ed08a80ecc1aa9425f28b9dd1c8d819e36f5f9490290cab04923e64114
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_commune_entrees
+  file: geographie-par-commune.xlsx
+  sheet: entrées
+  title: Entrées par commune de 50 000 habitants ou plus (millions)
+  rows: 136
+  columns: 72
+  source_sha256: e712f6ed08a80ecc1aa9425f28b9dd1c8d819e36f5f9490290cab04923e64114
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_commune_recettes
+  file: geographie-par-commune.xlsx
+  sheet: recettes
+  title: Recettes guichets par commune de 50 000 habitants ou plus (M€)
+  rows: 136
+  columns: 72
+  source_sha256: e712f6ed08a80ecc1aa9425f28b9dd1c8d819e36f5f9490290cab04923e64114
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_commune_rme
+  file: geographie-par-commune.xlsx
+  sheet: RME
+  title: Recette moyenne par entrée par commune de 50 000 habitants ou plus (€)
+  rows: 136
+  columns: 72
+  source_sha256: e712f6ed08a80ecc1aa9425f28b9dd1c8d819e36f5f9490290cab04923e64114
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_commune_indice_de_frequentation
+  file: geographie-par-commune.xlsx
+  sheet: indice de fréquentation
+  title: Indice de fréquentation par commune de 50 000 habitants ou plus
+  rows: 136
+  columns: 72
+  source_sha256: e712f6ed08a80ecc1aa9425f28b9dd1c8d819e36f5f9490290cab04923e64114
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_commune_taux_d_occupation_des_fauteuils
+  file: geographie-par-commune.xlsx
+  sheet: taux d'occupation des fauteuils
+  title: Taux d'occupation des fauteuils par commune de 50 000 habitants ou plus
+  rows: 136
+  columns: 40
+  source_sha256: e712f6ed08a80ecc1aa9425f28b9dd1c8d819e36f5f9490290cab04923e64114
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_etablissements
+  file: geographie-par-departement.xlsx
+  sheet: établissements
+  title: Etablissements par département
+  rows: 97
+  columns: 66
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_ecrans
+  file: geographie-par-departement.xlsx
+  sheet: écrans
+  title: Ecrans par département
+  rows: 97
+  columns: 66
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_fauteuils
+  file: geographie-par-departement.xlsx
+  sheet: fauteuils
+  title: Fauteuils par département
+  rows: 97
+  columns: 66
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_multiplexes
+  file: geographie-par-departement.xlsx
+  sheet: multiplexes
+  title: Multiplexes (8 écrans et plus) par département
+  rows: 97
+  columns: 66
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_seances
+  file: geographie-par-departement.xlsx
+  sheet: séances
+  title: Séances par département (milliers)
+  rows: 97
+  columns: 66
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_entrees
+  file: geographie-par-departement.xlsx
+  sheet: entrées
+  title: Entrées par département (millions)
+  rows: 97
+  columns: 66
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_recettes
+  file: geographie-par-departement.xlsx
+  sheet: recettes
+  title: Recettes guichets par département (M€)
+  rows: 97
+  columns: 66
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_rme
+  file: geographie-par-departement.xlsx
+  sheet: RME
+  title: Recette moyenne par entrée par département (€)
+  rows: 97
+  columns: 66
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_indice_de_frequentation
+  file: geographie-par-departement.xlsx
+  sheet: indice de fréquentation
+  title: Indice de fréquentation par département
+  rows: 97
+  columns: 66
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_taux_d_occupation_des_fauteuils
+  file: geographie-par-departement.xlsx
+  sheet: taux d'occupation des fauteuils
+  title: Taux d'occupation des fauteuils par département
+  rows: 97
+  columns: 40
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_etabae
+  file: geographie-par-departement.xlsx
+  sheet: étabAE
+  title: Etablissements Art et Essai par département
+  rows: 97
+  columns: 30
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_ecransae
+  file: geographie-par-departement.xlsx
+  sheet: écransAE
+  title: Ecrans des établissements Art et Essai par département
+  rows: 97
+  columns: 30
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_fauteuilsae
+  file: geographie-par-departement.xlsx
+  sheet: fauteuilsAE
+  title: Fauteuils des établissements Art et Essai par département
+  rows: 97
+  columns: 30
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_seances_ae
+  file: geographie-par-departement.xlsx
+  sheet: séances AE
+  title: Séances des établissements Art et Essai par département (milliers)
+  rows: 97
+  columns: 30
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_entreesae
+  file: geographie-par-departement.xlsx
+  sheet: entréesAE
+  title: Entrées des établissements Art et Essai par département (millions)
+  rows: 97
+  columns: 30
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_recettesae
+  file: geographie-par-departement.xlsx
+  sheet: recettesAE
+  title: Recettes guichets des établissements Art et Essai par département (M€)
+  rows: 97
+  columns: 30
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_rmeae
+  file: geographie-par-departement.xlsx
+  sheet: RMEAE
+  title: Recette moyenne par entrée des établissements Art et Essai par département (€)
+  rows: 97
+  columns: 30
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_indice_de_frequentationae
+  file: geographie-par-departement.xlsx
+  sheet: indice de fréquentationAE
+  title: Indice de fréquentation des établissements Art et Essai par département
+  rows: 97
+  columns: 30
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_tmofae
+  file: geographie-par-departement.xlsx
+  sheet: tmofAE
+  title: Taux d'occupation des fauteuils des établissements Art et Essai par département
+  rows: 97
+  columns: 30
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_etabp
+  file: geographie-par-departement.xlsx
+  sheet: étabP
+  title: Etablissements à moins de 80 000 entrées annuelles par département
+  rows: 97
+  columns: 28
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_ecransp
+  file: geographie-par-departement.xlsx
+  sheet: écransP
+  title: Ecrans des établissements à moins de 80 000 entrées annuelles par département
+  rows: 97
+  columns: 28
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_fauteuilsp
+  file: geographie-par-departement.xlsx
+  sheet: fauteuilsP
+  title: Fauteuils des établissements à moins de 80 000 entrées annuelles par département
+  rows: 97
+  columns: 28
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_seancesp
+  file: geographie-par-departement.xlsx
+  sheet: séancesP
+  title: Séances des établissements à moins de 80 000 entrées annuelles par département (milliers)
+  rows: 97
+  columns: 28
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_entreesp
+  file: geographie-par-departement.xlsx
+  sheet: entréesP
+  title: Entrées des établissements à moins de 80 000 entrées annuelles par département (millions)
+  rows: 97
+  columns: 28
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_recettesp
+  file: geographie-par-departement.xlsx
+  sheet: recettesP
+  title: Recettes guichets des établissements à moins de 80 000 entrées annuelles par département (M€)
+  rows: 97
+  columns: 28
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_rmep
+  file: geographie-par-departement.xlsx
+  sheet: RMEP
+  title: Recette moyenne par entrée des établissements à moins de 80 000 entrées annuelles par département (€)
+  rows: 97
+  columns: 28
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_indice_de_frequentationp
+  file: geographie-par-departement.xlsx
+  sheet: indice de fréquentationP
+  title: Indice de fréquentation des établissements à moins de 80 000 entrées annuelles par département
+  rows: 97
+  columns: 28
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_tmofp
+  file: geographie-par-departement.xlsx
+  sheet: tmofP
+  title: Taux d'occupation des fauteuils des établissements à moins de 80 000 entrées annuelles par département
+  rows: 97
+  columns: 28
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_etabm
+  file: geographie-par-departement.xlsx
+  sheet: étabM
+  title: Etablissements de 80 000 à 450 000 entrées annuelles par département
+  rows: 97
+  columns: 28
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_ecransm
+  file: geographie-par-departement.xlsx
+  sheet: écransM
+  title: Ecrans des établissements de 80 000 à 450 000 entrées annuelles par département
+  rows: 97
+  columns: 28
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_fauteuilsm
+  file: geographie-par-departement.xlsx
+  sheet: fauteuilsM
+  title: Fauteuils des établissements de 80 000 à 450 000 entrées annuelles par département
+  rows: 97
+  columns: 28
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_seancesm
+  file: geographie-par-departement.xlsx
+  sheet: séancesM
+  title: Séances des établissements de 80 000 à 450 000 entrées annuelles par département (milliers)
+  rows: 97
+  columns: 28
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_entreesm
+  file: geographie-par-departement.xlsx
+  sheet: entréesM
+  title: Entrées des établissements de 80 000 à 450 000 entrées annuelles par département (millions)
+  rows: 97
+  columns: 28
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_recettesm
+  file: geographie-par-departement.xlsx
+  sheet: recettesM
+  title: Recettes guichets des établissements de 80 000 à 450 000 entrées annuelles par département (M€)
+  rows: 97
+  columns: 28
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_rmem
+  file: geographie-par-departement.xlsx
+  sheet: RMEM
+  title: Recette moyenne par entrée des établissements de 80 000 à 450 000 entrées annuelles par département (€)
+  rows: 97
+  columns: 28
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_indice_de_frequentationm
+  file: geographie-par-departement.xlsx
+  sheet: indice de fréquentationM
+  title: Indice de fréquentation des établissements de 80 000 à 450 000 entrées annuelles par département
+  rows: 97
+  columns: 28
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_tmofm
+  file: geographie-par-departement.xlsx
+  sheet: tmofM
+  title: Taux d'occupation des fauteuils des établissements de 80 000 à 450 000 entrées annuelles par département
+  rows: 97
+  columns: 28
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_etabg
+  file: geographie-par-departement.xlsx
+  sheet: étabG
+  title: Etablissements à 450 000 entrées annuelles ou plus par département
+  rows: 97
+  columns: 28
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_ecransg
+  file: geographie-par-departement.xlsx
+  sheet: écransG
+  title: Ecrans des établissements à 450 000 entrées annuelles ou plus par département
+  rows: 97
+  columns: 28
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_fauteuilsg
+  file: geographie-par-departement.xlsx
+  sheet: fauteuilsG
+  title: Fauteuils des établissements à 450 000 entrées annuelles ou plus par département
+  rows: 97
+  columns: 28
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_seancesg
+  file: geographie-par-departement.xlsx
+  sheet: séancesG
+  title: Séances des établissements à 450 000 entrées annuelles ou plus par département (milliers)
+  rows: 97
+  columns: 28
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_entreesg
+  file: geographie-par-departement.xlsx
+  sheet: entréesG
+  title: Entrées des établissements à 450 000 entrées annuelles ou plus par département (millions)
+  rows: 97
+  columns: 28
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_recettesg
+  file: geographie-par-departement.xlsx
+  sheet: recettesG
+  title: Recettes guichets des établissements à 450 000 entrées annuelles ou plus par département (M€)
+  rows: 97
+  columns: 28
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_rmeg
+  file: geographie-par-departement.xlsx
+  sheet: RMEG
+  title: Recette moyenne par entrée des établissements à 450 000 entrées annuelles ou plus par département (€)
+  rows: 97
+  columns: 28
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_indice_de_frequentationg
+  file: geographie-par-departement.xlsx
+  sheet: indice de fréquentationG
+  title: Indice de fréquentation des établissements à 450 000 entrées annuelles ou plus par département
+  rows: 97
+  columns: 28
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_departement_tmofg
+  file: geographie-par-departement.xlsx
+  sheet: tmofG
+  title: Taux d'occupation des fauteuils des établissements à 450 000 entrées annuelles ou plus par département
+  rows: 97
+  columns: 28
+  source_sha256: 8ca69e25fd354f4b046eb41051a49b6564847fd1330cacbc2b5df2b1aa3c1bc5
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_etablissements
+  file: geographie-par-region.xlsx
+  sheet: établissements
+  title: Etablissements par région
+  rows: 14
+  columns: 65
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_ecrans
+  file: geographie-par-region.xlsx
+  sheet: écrans
+  title: Ecrans par région
+  rows: 14
+  columns: 65
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_fauteuils
+  file: geographie-par-region.xlsx
+  sheet: fauteuils
+  title: Fauteuils par région
+  rows: 14
+  columns: 65
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_multiplexes
+  file: geographie-par-region.xlsx
+  sheet: multiplexes
+  title: Multiplexes (8 écrans et plus) par région
+  rows: 14
+  columns: 65
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_seances
+  file: geographie-par-region.xlsx
+  sheet: séances
+  title: Séances par région (milliers)
+  rows: 14
+  columns: 65
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_entrees
+  file: geographie-par-region.xlsx
+  sheet: entrées
+  title: Entrées par région (millions)
+  rows: 14
+  columns: 65
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_recettes
+  file: geographie-par-region.xlsx
+  sheet: recettes
+  title: Recettes guichets par région (M€)
+  rows: 14
+  columns: 65
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_rme
+  file: geographie-par-region.xlsx
+  sheet: RME
+  title: Recette moyenne par entrée par région (€)
+  rows: 14
+  columns: 65
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_indice_de_frequentation
+  file: geographie-par-region.xlsx
+  sheet: indice de fréquentation
+  title: Indice de fréquentation par région
+  rows: 14
+  columns: 65
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_taux_d_occupation_des_fauteuils
+  file: geographie-par-region.xlsx
+  sheet: taux d'occupation des fauteuils
+  title: Taux d'occupation des fauteuils par région
+  rows: 14
+  columns: 39
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_etabae
+  file: geographie-par-region.xlsx
+  sheet: étabAE
+  title: Etablissements Art et Essai par région
+  rows: 14
+  columns: 29
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_ecransae
+  file: geographie-par-region.xlsx
+  sheet: écransAE
+  title: Ecrans des établissements Art et Essai par région
+  rows: 14
+  columns: 29
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_fauteuilsae
+  file: geographie-par-region.xlsx
+  sheet: fauteuilsAE
+  title: Fauteuils des établissements Art et Essai par région
+  rows: 14
+  columns: 29
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_seances_ae
+  file: geographie-par-region.xlsx
+  sheet: séances AE
+  title: Séances des établissements Art et Essai par région (milliers)
+  rows: 14
+  columns: 29
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_entreesae
+  file: geographie-par-region.xlsx
+  sheet: entréesAE
+  title: Entrées des établissements Art et Essai par région (millions)
+  rows: 14
+  columns: 29
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_recettesae
+  file: geographie-par-region.xlsx
+  sheet: recettesAE
+  title: Recettes guichets des établissements Art et Essai par région (M€)
+  rows: 14
+  columns: 29
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_rmeae
+  file: geographie-par-region.xlsx
+  sheet: RMEAE
+  title: Recette moyenne par entrée des établissements Art et Essai par région (€)
+  rows: 14
+  columns: 29
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_indice_de_frequentationae
+  file: geographie-par-region.xlsx
+  sheet: indice de fréquentationAE
+  title: Indice de fréquentation des établissements Art et Essai par région
+  rows: 14
+  columns: 29
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_tmofae
+  file: geographie-par-region.xlsx
+  sheet: tmofAE
+  title: Taux d'occupation des fauteuils des établissements Art et Essai par région
+  rows: 14
+  columns: 29
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_etabp
+  file: geographie-par-region.xlsx
+  sheet: étabP
+  title: Etablissements à moins de 80 000 entrées annuelles par région
+  rows: 14
+  columns: 27
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_ecransp
+  file: geographie-par-region.xlsx
+  sheet: écransP
+  title: Ecrans des établissements à moins de 80 000 entrées annuelles par région
+  rows: 14
+  columns: 27
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_fauteuilsp
+  file: geographie-par-region.xlsx
+  sheet: fauteuilsP
+  title: Fauteuils des établissements à moins de 80 000 entrées annuelles par région
+  rows: 14
+  columns: 27
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_seancesp
+  file: geographie-par-region.xlsx
+  sheet: séancesP
+  title: Séances des établissements à moins de 80 000 entrées annuelles par région (milliers)
+  rows: 14
+  columns: 27
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_entreesp
+  file: geographie-par-region.xlsx
+  sheet: entréesP
+  title: Entrées des établissements à moins de 80 000 entrées annuelles par région (millions)
+  rows: 14
+  columns: 27
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_recettesp
+  file: geographie-par-region.xlsx
+  sheet: recettesP
+  title: Recettes guichets des établissements à moins de 80 000 entrées annuelles par région (M€)
+  rows: 14
+  columns: 27
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_rmep
+  file: geographie-par-region.xlsx
+  sheet: RMEP
+  title: Recette moyenne par entrée des établissements à moins de 80 000 entrées annuelles par région (€)
+  rows: 14
+  columns: 27
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_indice_de_frequentationp
+  file: geographie-par-region.xlsx
+  sheet: indice de fréquentationP
+  title: Indice de fréquentation des établissements à moins de 80 000 entrées annuelles par région
+  rows: 14
+  columns: 27
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_tmofp
+  file: geographie-par-region.xlsx
+  sheet: tmofP
+  title: Taux d'occupation des fauteuils des établissements à moins de 80 000 entrées annuelles par région
+  rows: 14
+  columns: 27
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_etabm
+  file: geographie-par-region.xlsx
+  sheet: étabM
+  title: Etablissements de 80 000 à 450 000 entrées annuelles par région
+  rows: 14
+  columns: 27
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_ecransm
+  file: geographie-par-region.xlsx
+  sheet: écransM
+  title: Ecrans des établissements de 80 000 à 450 000 entrées annuelles par région
+  rows: 14
+  columns: 27
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_fauteuilsm
+  file: geographie-par-region.xlsx
+  sheet: fauteuilsM
+  title: Fauteuils des établissements de 80 000 à 450 000 entrées annuelles par région
+  rows: 14
+  columns: 27
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_seancesm
+  file: geographie-par-region.xlsx
+  sheet: séancesM
+  title: Séances des établissements de 80 000 à 450 000 entrées annuelles par région (milliers)
+  rows: 14
+  columns: 27
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_entreesm
+  file: geographie-par-region.xlsx
+  sheet: entréesM
+  title: Entrées des établissements de 80 000 à 450 000 entrées annuelles par région (millions)
+  rows: 14
+  columns: 27
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_recettesm
+  file: geographie-par-region.xlsx
+  sheet: recettesM
+  title: Recettes guichets des établissements de 80 000 à 450 000 entrées annuelles par région (M€)
+  rows: 14
+  columns: 27
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_rmem
+  file: geographie-par-region.xlsx
+  sheet: RMEM
+  title: Recette moyenne par entrée des établissements de 80 000 à 450 000 entrées annuelles par région (€)
+  rows: 14
+  columns: 27
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_indice_de_frequentationm
+  file: geographie-par-region.xlsx
+  sheet: indice de fréquentationM
+  title: Indice de fréquentation des établissements de 80 000 à 450 000 entrées annuelles par région
+  rows: 14
+  columns: 27
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_tmofm
+  file: geographie-par-region.xlsx
+  sheet: tmofM
+  title: Taux d'occupation des fauteuils des établissements de 80 000 à 450 000 entrées annuelles par région
+  rows: 14
+  columns: 27
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_etabg
+  file: geographie-par-region.xlsx
+  sheet: étabG
+  title: Etablissements à 450 000 entrées annuelles ou plus par région
+  rows: 14
+  columns: 27
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_ecransg
+  file: geographie-par-region.xlsx
+  sheet: écransG
+  title: Ecrans des établissements à 450 000 entrées annuelles ou plus par région
+  rows: 14
+  columns: 27
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_fauteuilsg
+  file: geographie-par-region.xlsx
+  sheet: fauteuilsG
+  title: Fauteuils des établissements à 450 000 entrées annuelles ou plus par région
+  rows: 14
+  columns: 27
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_seancesg
+  file: geographie-par-region.xlsx
+  sheet: séancesG
+  title: Séances des établissements à 450 000 entrées annuelles ou plus par région (milliers)
+  rows: 14
+  columns: 27
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_entreesg
+  file: geographie-par-region.xlsx
+  sheet: entréesG
+  title: Entrées des établissements à 450 000 entrées annuelles ou plus par région (millions)
+  rows: 14
+  columns: 27
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_recettesg
+  file: geographie-par-region.xlsx
+  sheet: recettesG
+  title: Recettes guichets des établissements à 450 000 entrées annuelles ou plus par région (M€)
+  rows: 14
+  columns: 27
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_rmeg
+  file: geographie-par-region.xlsx
+  sheet: RMEG
+  title: Recette moyenne par entrée des établissements à 450 000 entrées annuelles ou plus par région (€)
+  rows: 14
+  columns: 27
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_indice_de_frequentationg
+  file: geographie-par-region.xlsx
+  sheet: indice de fréquentationG
+  title: Indice de fréquentation des établissements à 450 000 entrées annuelles ou plus par région
+  rows: 14
+  columns: 27
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_region_tmofg
+  file: geographie-par-region.xlsx
+  sheet: tmofG
+  title: Taux d'occupation des fauteuils des établissements à 450 000 entrées annuelles ou plus par région
+  rows: 14
+  columns: 27
+  source_sha256: fe86cf4df68440eccdd102c180e1b94bca2556a48afb1b73526a35c103af61b3
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_urbain_tranchepopulation
+  file: geographie-par-unite-urbaine.xlsx
+  sheet: TranchePopulation
+  title: Equipement et résultats selon la taille de l'unité urbaine
+  rows: 108
+  columns: 21
+  source_sha256: eac82ab973c04cddda7cdab41083fd17e349f57201894b8f72bda523090f58c8
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_urbain_tranchepopulationpetite
+  file: geographie-par-unite-urbaine.xlsx
+  sheet: TranchePopulationPetite
+  title: Equipement et résultats des établissements à moins de 80 000 entrées annuelles selon la taille de l'unité urbaine
+  rows: 98
+  columns: 21
+  source_sha256: eac82ab973c04cddda7cdab41083fd17e349f57201894b8f72bda523090f58c8
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_urbain_tranchepopulationmoyenne
+  file: geographie-par-unite-urbaine.xlsx
+  sheet: TranchePopulationMoyenne
+  title: Equipement et résultats des établissements de 80 000 à 450 000 entrées annuelles selon la taille de l'unité urbaine
+  rows: 98
+  columns: 21
+  source_sha256: eac82ab973c04cddda7cdab41083fd17e349f57201894b8f72bda523090f58c8
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_urbain_tranchepopulationgrande
+  file: geographie-par-unite-urbaine.xlsx
+  sheet: TranchePopulationGrande
+  title: Equipement et résultats des établissements à 450 000 entrées annuelles ou plus selon la taille de l'unité urbaine
+  rows: 98
+  columns: 21
+  source_sha256: eac82ab973c04cddda7cdab41083fd17e349f57201894b8f72bda523090f58c8
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_urbain_etablissements
+  file: geographie-par-unite-urbaine.xlsx
+  sheet: établissements
+  title: Etablissements par unité urbaine de 50 000 habitants ou plus
+  rows: 124
+  columns: 23
+  source_sha256: eac82ab973c04cddda7cdab41083fd17e349f57201894b8f72bda523090f58c8
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_urbain_ecrans
+  file: geographie-par-unite-urbaine.xlsx
+  sheet: écrans
+  title: Ecrans par unité urbaine de 50 000 habitants ou plus
+  rows: 124
+  columns: 23
+  source_sha256: eac82ab973c04cddda7cdab41083fd17e349f57201894b8f72bda523090f58c8
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_urbain_fauteuils
+  file: geographie-par-unite-urbaine.xlsx
+  sheet: fauteuils
+  title: Fauteuils par unité urbaine de 50 000 habitants ou plus
+  rows: 124
+  columns: 23
+  source_sha256: eac82ab973c04cddda7cdab41083fd17e349f57201894b8f72bda523090f58c8
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_urbain_multiplexes
+  file: geographie-par-unite-urbaine.xlsx
+  sheet: multiplexes
+  title: Multiplexes (établissements de 8 écrans et plus) par unité urbaine de 50 000 habitants ou plus
+  rows: 124
+  columns: 23
+  source_sha256: eac82ab973c04cddda7cdab41083fd17e349f57201894b8f72bda523090f58c8
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_urbain_seances
+  file: geographie-par-unite-urbaine.xlsx
+  sheet: séances
+  title: Séances par unité urbaine de 50 000 habitants ou plus (milliers)
+  rows: 124
+  columns: 23
+  source_sha256: eac82ab973c04cddda7cdab41083fd17e349f57201894b8f72bda523090f58c8
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_urbain_entrees
+  file: geographie-par-unite-urbaine.xlsx
+  sheet: entrées
+  title: Entrées par unité urbaine de 50 000 habitants ou plus (millions)
+  rows: 124
+  columns: 23
+  source_sha256: eac82ab973c04cddda7cdab41083fd17e349f57201894b8f72bda523090f58c8
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_urbain_recettes
+  file: geographie-par-unite-urbaine.xlsx
+  sheet: recettes
+  title: Recettes guichets par unité urbaine de 50 000 habitants ou plus (M€)
+  rows: 124
+  columns: 23
+  source_sha256: eac82ab973c04cddda7cdab41083fd17e349f57201894b8f72bda523090f58c8
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_urbain_rme
+  file: geographie-par-unite-urbaine.xlsx
+  sheet: RME
+  title: Recette moyenne par entrée par unité urbaine de 50 000 habitants ou plus (€)
+  rows: 124
+  columns: 23
+  source_sha256: eac82ab973c04cddda7cdab41083fd17e349f57201894b8f72bda523090f58c8
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_urbain_indice_de_frequentation
+  file: geographie-par-unite-urbaine.xlsx
+  sheet: indice de fréquentation
+  title: Indice de fréquentation par unité urbaine de 50 000 habitants ou plus
+  rows: 124
+  columns: 23
+  source_sha256: eac82ab973c04cddda7cdab41083fd17e349f57201894b8f72bda523090f58c8
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_urbain_taux_d_occupation_des_fauteuils
+  file: geographie-par-unite-urbaine.xlsx
+  sheet: taux d'occupation des fauteuils
+  title: Taux d'occupation des fauteuils par unité urbaine de 50 000 habitants ou plus
+  rows: 124
+  columns: 23
+  source_sha256: eac82ab973c04cddda7cdab41083fd17e349f57201894b8f72bda523090f58c8
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_urbain_tranchepopulationae
+  file: geographie-par-unite-urbaine.xlsx
+  sheet: TranchePopulationAE
+  title: Equipement et résultats des établissements Art et Essai selon la taille de l'unité urbaine
+  rows: 98
+  columns: 21
+  source_sha256: eac82ab973c04cddda7cdab41083fd17e349f57201894b8f72bda523090f58c8
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_urbain_etabae
+  file: geographie-par-unite-urbaine.xlsx
+  sheet: étabAE
+  title: Etablissements Art et Essai par unité urbaine de 50 000 habitants ou plus
+  rows: 124
+  columns: 23
+  source_sha256: eac82ab973c04cddda7cdab41083fd17e349f57201894b8f72bda523090f58c8
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_urbain_ecransae
+  file: geographie-par-unite-urbaine.xlsx
+  sheet: écransAE
+  title: Ecrans des établissements Art et Essai par unité urbaine de 50 000 habitants ou plus
+  rows: 124
+  columns: 23
+  source_sha256: eac82ab973c04cddda7cdab41083fd17e349f57201894b8f72bda523090f58c8
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_urbain_fauteuilsae
+  file: geographie-par-unite-urbaine.xlsx
+  sheet: fauteuilsAE
+  title: Fauteuils des établissements Art et Essai par unité urbaine de 50 000 habitants ou plus
+  rows: 124
+  columns: 23
+  source_sha256: eac82ab973c04cddda7cdab41083fd17e349f57201894b8f72bda523090f58c8
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_urbain_seances_ae
+  file: geographie-par-unite-urbaine.xlsx
+  sheet: séances AE
+  title: Séances des établissements Art et Essai par unité urbaine de 50 000 habitants ou plus (milliers)
+  rows: 124
+  columns: 23
+  source_sha256: eac82ab973c04cddda7cdab41083fd17e349f57201894b8f72bda523090f58c8
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_urbain_entreesae
+  file: geographie-par-unite-urbaine.xlsx
+  sheet: entréesAE
+  title: Entrées des établissements Art et Essai par unité urbaine de 50 000 habitants ou plus (millions)
+  rows: 124
+  columns: 23
+  source_sha256: eac82ab973c04cddda7cdab41083fd17e349f57201894b8f72bda523090f58c8
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_urbain_recettesae
+  file: geographie-par-unite-urbaine.xlsx
+  sheet: recettesAE
+  title: Recettes guichets des établissements Art et Essai par unité urbaine de 50 000 habitants ou plus (M€)
+  rows: 124
+  columns: 23
+  source_sha256: eac82ab973c04cddda7cdab41083fd17e349f57201894b8f72bda523090f58c8
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_urbain_rmeae
+  file: geographie-par-unite-urbaine.xlsx
+  sheet: RMEAE
+  title: Recette moyenne par entrée des établissements Art et Essai par unité urbaine de 50 000 habitants ou plus (€)
+  rows: 124
+  columns: 23
+  source_sha256: eac82ab973c04cddda7cdab41083fd17e349f57201894b8f72bda523090f58c8
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_urbain_indice_de_frequentationae
+  file: geographie-par-unite-urbaine.xlsx
+  sheet: indice de fréquentationAE
+  title: Indice de fréquentation des établissements Art et Essai par unité urbaine de 50 000 habitants ou plus
+  rows: 124
+  columns: 23
+  source_sha256: eac82ab973c04cddda7cdab41083fd17e349f57201894b8f72bda523090f58c8
+  snapshot: '2026-05-19'
+- dataset: cnc-geographie-cinema
+  table: cnc_geographie_urbain_tmofae
+  file: geographie-par-unite-urbaine.xlsx
+  sheet: tmofAE
+  title: Taux d'occupation des fauteuils des établissements Art et Essai par unité urbaine de 50 000 habitants ou plus
+  rows: 124
+  columns: 23
+  source_sha256: eac82ab973c04cddda7cdab41083fd17e349f57201894b8f72bda523090f58c8
+  snapshot: '2026-05-19'
+- dataset: cnc-parc-cinematographique
+  table: cnc_parc_cinematographique_parc
+  file: parc-cinematographique.xlsx
+  sheet: Parc
+  title: Parc cinématographique
+  rows: 56
+  columns: 9
+  source_sha256: a680191a89795465c34d61ecbccaa2a5299657616ee58fe80a13ff8e056729f3
+  snapshot: '2026-05-19'
+- dataset: cnc-parc-cinematographique
+  table: cnc_parc_cinematographique_paris
+  file: parc-cinematographique.xlsx
+  sheet: Paris
+  title: Parc cinématographique parisien
+  rows: 30
+  columns: 9
+  source_sha256: a680191a89795465c34d61ecbccaa2a5299657616ee58fe80a13ff8e056729f3
+  snapshot: '2026-05-19'
+- dataset: cnc-parc-cinematographique
+  table: cnc_parc_cinematographique_freq_geo
+  file: parc-cinematographique.xlsx
+  sheet: Freq géo
+  title: Entrées selon les zones géographiques (millions)
+  rows: 61
+  columns: 12
+  source_sha256: a680191a89795465c34d61ecbccaa2a5299657616ee58fe80a13ff8e056729f3
+  snapshot: '2026-05-19'
+- dataset: cnc-parc-cinematographique
+  table: cnc_parc_cinematographique_exploitants
+  file: parc-cinematographique.xlsx
+  sheet: exploitants
+  title: Principaux exploitants français
+  rows: 29
+  columns: 15
+  source_sha256: a680191a89795465c34d61ecbccaa2a5299657616ee58fe80a13ff8e056729f3
+  snapshot: '2026-05-19'
+- dataset: cnc-parc-cinematographique
+  table: cnc_parc_cinematographique_groupements
+  file: parc-cinematographique.xlsx
+  sheet: groupements
+  title: Groupements nationaux de programmation
+  rows: 25
+  columns: 17
+  source_sha256: a680191a89795465c34d61ecbccaa2a5299657616ee58fe80a13ff8e056729f3
+  snapshot: '2026-05-19'
+- dataset: cnc-parc-cinematographique
+  table: cnc_parc_cinematographique_etab_ecrans
+  file: parc-cinematographique.xlsx
+  sheet: etab-ecrans
+  title: Etablissements selon le nombre d'écrans
+  rows: 216
+  columns: 12
+  source_sha256: a680191a89795465c34d61ecbccaa2a5299657616ee58fe80a13ff8e056729f3
+  snapshot: '2026-05-19'
+- dataset: cnc-parc-cinematographique
+  table: cnc_parc_cinematographique_etab_fauteuils
+  file: parc-cinematographique.xlsx
+  sheet: etab-fauteuils
+  title: Etablissements selon le nombre de fauteuils (le périmètre se limite ici aux établissements fixes, les fauteuils n'étant
+    compatbilisés que pour ces établissements fixes et pas pour les itinérants)
+  rows: 217
+  columns: 14
+  source_sha256: a680191a89795465c34d61ecbccaa2a5299657616ee58fe80a13ff8e056729f3
+  snapshot: '2026-05-19'
+- dataset: cnc-parc-cinematographique
+  table: cnc_parc_cinematographique_etab_entrees
+  file: parc-cinematographique.xlsx
+  sheet: etab-entrées
+  title: Etablissements selon les entrées annuelles
+  rows: 217
+  columns: 17
+  source_sha256: a680191a89795465c34d61ecbccaa2a5299657616ee58fe80a13ff8e056729f3
+  snapshot: '2026-05-19'
+- dataset: cnc-parc-cinematographique
+  table: cnc_parc_cinematographique_etab_recettes
+  file: parc-cinematographique.xlsx
+  sheet: etab-recettes
+  title: Etablissements selon les recettes annuelles
+  rows: 217
+  columns: 16
+  source_sha256: a680191a89795465c34d61ecbccaa2a5299657616ee58fe80a13ff8e056729f3
+  snapshot: '2026-05-19'
+- dataset: cnc-parc-cinematographique
+  table: cnc_parc_cinematographique_etab_rms
+  file: parc-cinematographique.xlsx
+  sheet: etab-rms
+  title: Etablissements selon le prix moyen d'entrée
+  rows: 217
+  columns: 18
+  source_sha256: a680191a89795465c34d61ecbccaa2a5299657616ee58fe80a13ff8e056729f3
+  snapshot: '2026-05-19'
+- dataset: cnc-parc-cinematographique
+  table: cnc_parc_cinematographique_etab_perf
+  file: parc-cinematographique.xlsx
+  sheet: etab-perf
+  title: Performance des établissements
+  rows: 123
+  columns: 12
+  source_sha256: a680191a89795465c34d61ecbccaa2a5299657616ee58fe80a13ff8e056729f3
+  snapshot: '2026-05-19'
+- dataset: cnc-parc-cinematographique
+  table: cnc_parc_cinematographique_etab_ae
+  file: parc-cinematographique.xlsx
+  sheet: étab-AE
+  title: Etablissements classées Art et Essai
+  rows: 49
+  columns: 15
+  source_sha256: a680191a89795465c34d61ecbccaa2a5299657616ee58fe80a13ff8e056729f3
+  snapshot: '2026-05-19'
+- dataset: cnc-parc-cinematographique
+  table: cnc_parc_cinematographique_etab_aecat
+  file: parc-cinematographique.xlsx
+  sheet: étab-AECat
+  title: Etablissements classées Art et Essai selon la catégorie
+  rows: 174
+  columns: 12
+  source_sha256: a680191a89795465c34d61ecbccaa2a5299657616ee58fe80a13ff8e056729f3
+  snapshot: '2026-05-19'
+- dataset: cnc-parc-cinematographique
+  table: cnc_parc_cinematographique_etab_aelabel
+  file: parc-cinematographique.xlsx
+  sheet: étab-AELabel
+  title: Etablissements classées Art et Essai selon la catégorie
+  rows: 174
+  columns: 10
+  source_sha256: a680191a89795465c34d61ecbccaa2a5299657616ee58fe80a13ff8e056729f3
+  snapshot: '2026-05-19'
+- dataset: cnc-parc-cinematographique
+  table: cnc_parc_cinematographique_etab_entreesae
+  file: parc-cinematographique.xlsx
+  sheet: etab-entreesAE
+  title: Etablissements Art et Essai selon les entrées annuelles
+  rows: 174
+  columns: 15
+  source_sha256: a680191a89795465c34d61ecbccaa2a5299657616ee58fe80a13ff8e056729f3
+  snapshot: '2026-05-19'
+- dataset: cnc-parc-cinematographique
+  table: cnc_parc_cinematographique_ecran_fauteuils
+  file: parc-cinematographique.xlsx
+  sheet: ecran-fauteuils
+  title: Ecrans selon le nombre de fauteuils (le périmètre se limite ici aux établissements fixes, les fauteuils n'étant compatbilisés
+    que pour ces établissements fixes et pas pour les itinérants)
+  rows: 186
+  columns: 15
+  source_sha256: a680191a89795465c34d61ecbccaa2a5299657616ee58fe80a13ff8e056729f3
+  snapshot: '2026-05-19'
+- dataset: cnc-parc-cinematographique
+  table: cnc_parc_cinematographique_ecran_semaine
+  file: parc-cinematographique.xlsx
+  sheet: ecran-semaine
+  title: Ecrans selon le nombre de semaines d'exploitation
+  rows: 186
+  columns: 13
+  source_sha256: a680191a89795465c34d61ecbccaa2a5299657616ee58fe80a13ff8e056729f3
+  snapshot: '2026-05-19'
+- dataset: cnc-parc-cinematographique
+  table: cnc_parc_cinematographique_ecran_seahebdo
+  file: parc-cinematographique.xlsx
+  sheet: ecran-seahebdo
+  title: Ecrans selon le nombre hebdomadaire de séances
+  rows: 186
+  columns: 14
+  source_sha256: a680191a89795465c34d61ecbccaa2a5299657616ee58fe80a13ff8e056729f3
+  snapshot: '2026-05-19'
+- dataset: cnc-parc-cinematographique
+  table: cnc_parc_cinematographique_ecran_entrees
+  file: parc-cinematographique.xlsx
+  sheet: ecran-entrees
+  title: Ecrans selon les entrées annuelles
+  rows: 186
+  columns: 15
+  source_sha256: a680191a89795465c34d61ecbccaa2a5299657616ee58fe80a13ff8e056729f3
+  snapshot: '2026-05-19'
+- dataset: cnc-parc-cinematographique
+  table: cnc_parc_cinematographique_ecran_tmof
+  file: parc-cinematographique.xlsx
+  sheet: ecran-tmof
+  title: Ecrans selon le taux moyen d'occupation des fauteuils
+  rows: 186
+  columns: 14
+  source_sha256: a680191a89795465c34d61ecbccaa2a5299657616ee58fe80a13ff8e056729f3
+  snapshot: '2026-05-19'
+- dataset: cnc-parc-cinematographique
+  table: cnc_parc_cinematographique_ecran_recettes
+  file: parc-cinematographique.xlsx
+  sheet: ecran-recettes
+  title: Ecrans selon les recettes annuelles
+  rows: 186
+  columns: 14
+  source_sha256: a680191a89795465c34d61ecbccaa2a5299657616ee58fe80a13ff8e056729f3
+  snapshot: '2026-05-19'
+- dataset: cnc-parc-cinematographique
+  table: cnc_parc_cinematographique_ecran_rms
+  file: parc-cinematographique.xlsx
+  sheet: ecran-rms
+  title: Ecrans selon le prix moyen d'entrée
+  rows: 186
+  columns: 18
+  source_sha256: a680191a89795465c34d61ecbccaa2a5299657616ee58fe80a13ff8e056729f3
+  snapshot: '2026-05-19'
+- dataset: cnc-parc-cinematographique
+  table: cnc_parc_cinematographique_ecran_perf
+  file: parc-cinematographique.xlsx
+  sheet: ecran-perf
+  title: Performance des salles
+  rows: 154
+  columns: 13
+  source_sha256: a680191a89795465c34d61ecbccaa2a5299657616ee58fe80a13ff8e056729f3
+  snapshot: '2026-05-19'
+- dataset: cnc-public-films
+  table: cnc_public_films_nationalite
+  file: public-films.xlsx
+  sheet: nationalité
+  title: Public des films selon la nationalité
+  rows: 58
+  columns: 16
+  source_sha256: 62ee668b516c060d58078cd7a5f5c9283b153957cb2aefd1b75bd320dd562885
+  snapshot: '2026-05-19'
+- dataset: cnc-public-films
+  table: cnc_public_films_genre
+  file: public-films.xlsx
+  sheet: genre
+  title: Public des films selon le genre
+  rows: 58
+  columns: 16
+  source_sha256: 62ee668b516c060d58078cd7a5f5c9283b153957cb2aefd1b75bd320dd562885
+  snapshot: '2026-05-19'
+- dataset: cnc-public-films
+  table: cnc_public_films_entrees
+  file: public-films.xlsx
+  sheet: entrées
+  title: Public des films selon le nombre d'entrées
+  rows: 88
+  columns: 16
+  source_sha256: 62ee668b516c060d58078cd7a5f5c9283b153957cb2aefd1b75bd320dd562885
+  snapshot: '2026-05-19'
+- dataset: cnc-public-films
+  table: cnc_public_films_ae
+  file: public-films.xlsx
+  sheet: AE
+  title: Public des films selon la recommandation Art et Essai
+  rows: 28
+  columns: 16
+  source_sha256: 62ee668b516c060d58078cd7a5f5c9283b153957cb2aefd1b75bd320dd562885
+  snapshot: '2026-05-19'
+- dataset: cnc-public-films
+  table: cnc_public_films_3d
+  file: public-films.xlsx
+  sheet: 3D
+  title: Public des films selon le mode de projection
+  rows: 13
+  columns: 16
+  source_sha256: 62ee668b516c060d58078cd7a5f5c9283b153957cb2aefd1b75bd320dd562885
+  snapshot: '2026-05-19'
+- dataset: cnc-public-films
+  table: cnc_public_films_historique_2005_2015
+  file: public-films.xlsx
+  sheet: Historique 2005-2015
+  title: Public des films selon la nationalité
+  rows: 238
+  columns: 17
+  source_sha256: 62ee668b516c060d58078cd7a5f5c9283b153957cb2aefd1b75bd320dd562885
+  snapshot: '2026-05-19'
+- dataset: cnc-public-vod
+  table: cnc_public_vod_penetration
+  file: public-vod.xlsx
+  sheet: Pénétration
+  title: Taux de pénétration de la VàD payante selon le profil socio-démographique des consommateurs (%)
+  rows: 14
+  columns: 8
+  source_sha256: b238cc02e8fa17c811e3916e94b010535f9b19ead4bffb7ad45d436142c74887
+  snapshot: '2026-05-19'
+- dataset: cnc-public-vod
+  table: cnc_public_vod_profil
+  file: public-vod.xlsx
+  sheet: Profil
+  title: Profil socio-démographique des consommateurs de VàD payante (%)
+  rows: 14
+  columns: 8
+  source_sha256: b238cc02e8fa17c811e3916e94b010535f9b19ead4bffb7ad45d436142c74887
+  snapshot: '2026-05-19'
+- dataset: cnc-public-vod
+  table: cnc_public_vod_frequence
+  file: public-vod.xlsx
+  sheet: Fréquence
+  title: Fréquence de consommation de la VàD payante (%)
+  rows: 4
+  columns: 8
+  source_sha256: b238cc02e8fa17c811e3916e94b010535f9b19ead4bffb7ad45d436142c74887
+  snapshot: '2026-05-19'
+- dataset: cnc-public-vod
+  table: cnc_public_vod_media
+  file: public-vod.xlsx
+  sheet: Media
+  title: Pénétration de la VàD payante selon le média (%)
+  rows: 3
+  columns: 8
+  source_sha256: b238cc02e8fa17c811e3916e94b010535f9b19ead4bffb7ad45d436142c74887
+  snapshot: '2026-05-19'
+- dataset: cnc-public-vod
+  table: cnc_public_vod_mobile
+  file: public-vod.xlsx
+  sheet: Mobile
+  title: Pénétration de la VàD payante sur appareil mobile (%)
+  rows: 3
+  columns: 8
+  source_sha256: b238cc02e8fa17c811e3916e94b010535f9b19ead4bffb7ad45d436142c74887
+  snapshot: '2026-05-19'
+- dataset: cnc-public-vod
+  table: cnc_public_vod_modeconso
+  file: public-vod.xlsx
+  sheet: ModeConso
+  title: Mode de consommation de la VàD payante (%)
+  rows: 3
+  columns: 8
+  source_sha256: b238cc02e8fa17c811e3916e94b010535f9b19ead4bffb7ad45d436142c74887
+  snapshot: '2026-05-19'
+- dataset: cnc-public-vod
+  table: cnc_public_vod_service
+  file: public-vod.xlsx
+  sheet: Service
+  title: Part des utilisateurs ayant consommé de la VàD payante selon le service (%)
+  rows: 13
+  columns: 8
+  source_sha256: b238cc02e8fa17c811e3916e94b010535f9b19ead4bffb7ad45d436142c74887
+  snapshot: '2026-05-19'
+- dataset: cnc-referencias-ativas-vod
+  table: cnc_referencias_ativas_vod_conso
+  file: referencias-ativas-vod.xlsx
+  sheet: Conso
+  title: Nombre de références actives (film, audiovisuel et programmes pour adultes)
+  rows: 3
+  columns: 16
+  source_sha256: 6b1466fae58bd5b284304ec34586a3a780ebb783e0b3391a4d83bf0d4a740b97
+  snapshot: '2026-05-19'
+- dataset: cnc-referencias-ativas-vod
+  table: cnc_referencias_ativas_vod_programmeconso
+  file: referencias-ativas-vod.xlsx
+  sheet: ProgrammeConso
+  title: Répartition des références actives en location à l'acte selon le type de programme
+  rows: 13
+  columns: 16
+  source_sha256: 6b1466fae58bd5b284304ec34586a3a780ebb783e0b3391a4d83bf0d4a740b97
+  snapshot: '2026-05-19'
+- dataset: cnc-referencias-ativas-vod
+  table: cnc_referencias_ativas_vod_support
+  file: referencias-ativas-vod.xlsx
+  sheet: Support
+  title: Répartition de la consommation en valeur selon le support de consommation
+  rows: 9
+  columns: 14
+  source_sha256: 6b1466fae58bd5b284304ec34586a3a780ebb783e0b3391a4d83bf0d4a740b97
+  snapshot: '2026-05-19'
+- dataset: cnc-referencias-ativas-vod
+  table: cnc_referencias_ativas_vod_filmnatio
+  file: referencias-ativas-vod.xlsx
+  sheet: FilmNatio
+  title: Répartition des références actives de films selon la nationalité
+  rows: 5
+  columns: 14
+  source_sha256: 6b1466fae58bd5b284304ec34586a3a780ebb783e0b3391a4d83bf0d4a740b97
+  snapshot: '2026-05-19'
+- dataset: cnc-referencias-ativas-vod
+  table: cnc_referencias_ativas_vod_filmplateforme
+  file: referencias-ativas-vod.xlsx
+  sheet: FilmPlateForme
+  title: Répartition des références actives de films selon le nombre de services
+  rows: 6
+  columns: 14
+  source_sha256: 6b1466fae58bd5b284304ec34586a3a780ebb783e0b3391a4d83bf0d4a740b97
+  snapshot: '2026-05-19'
+- dataset: cnc-referencias-ativas-vod
+  table: cnc_referencias_ativas_vod_programmesupport_gfk
+  file: referencias-ativas-vod.xlsx
+  sheet: ProgrammeSupport (GfK)
+  title: série interrompue en 2019
+  rows: 9
+  columns: 10
+  source_sha256: 6b1466fae58bd5b284304ec34586a3a780ebb783e0b3391a4d83bf0d4a740b97
+  snapshot: '2026-05-19'
+- dataset: cnc-referencias-ativas-vod
+  table: cnc_referencias_ativas_vod_filmplateforme_gfk
+  file: referencias-ativas-vod.xlsx
+  sheet: FilmPlateForme (GfK)
+  title: série interrompue en 2019
+  rows: 11
+  columns: 10
+  source_sha256: 6b1466fae58bd5b284304ec34586a3a780ebb783e0b3391a4d83bf0d4a740b97
+  snapshot: '2026-05-19'
+- dataset: cnc-referencias-ativas-vod
+  table: cnc_referencias_ativas_vod_filmnatio_gfk
+  file: referencias-ativas-vod.xlsx
+  sheet: FilmNatio (GfK)
+  title: série interrompue en 2019
+  rows: 5
+  columns: 10
+  source_sha256: 6b1466fae58bd5b284304ec34586a3a780ebb783e0b3391a4d83bf0d4a740b97
+  snapshot: '2026-05-19'
+- dataset: cnc-referencias-ativas-vod
+  table: cnc_referencias_ativas_vod_filmnatiosupport_gfk
+  file: referencias-ativas-vod.xlsx
+  sheet: FilmNatioSupport (GfK)
+  title: série interrompue en 2019
+  rows: 10
+  columns: 10
+  source_sha256: 6b1466fae58bd5b284304ec34586a3a780ebb783e0b3391a4d83bf0d4a740b97
+  snapshot: '2026-05-19'

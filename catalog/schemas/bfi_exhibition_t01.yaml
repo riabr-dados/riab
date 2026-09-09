@@ -1,0 +1,67 @@
+table: bfi_exhibition_t01
+description: 'Table 1: Screens and admissions by ISBA TV region, 2023 (ranked by screens per 100,000 people).'
+source_raw: bfi-statistical-yearbook-2023
+source_file: exhibition.ods
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo ODS oficial do BFI.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original no arquivo ODS.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela no BFI Statistical Yearbook.
+- name: isba_tv_region
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: isba_tv_region.'
+- name: screens_per_100_000_people
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: screens_per_100_000_people.'
+- name: screens
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: screens.'
+- name: percent_of_total_screens
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: percent_of_total_screens.'
+- name: sites
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: sites.'
+- name: population_million
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: population_million.'
+- name: admissions_million
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: admissions_million.'
+- name: admissions_per_screen
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: admissions_per_screen.'
+- name: admissions_per_head_of_population
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: admissions_per_head_of_population.'
+- name: average_ticket_price_gbp
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: average_ticket_price_gbp.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo ODS oficial.
+notes:
+- Uma saída corresponde a uma única aba factual do ODS; nenhuma aba T é empilhada com outra.

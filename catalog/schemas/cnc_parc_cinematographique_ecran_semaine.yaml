@@ -1,0 +1,59 @@
+table: cnc_parc_cinematographique_ecran_semaine
+description: Ecrans selon le nombre de semaines d'exploitation
+source_raw: cnc-parc-cinematographique
+source_file: parc-cinematographique.xlsx
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo oficial publicado pelo CNC.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original do arquivo CNC.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela.
+- name: codigo_ou_categoria
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: codigo_ou_categoria.'
+- name: 1_a_9_semaines
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 1_a_9_semaines.'
+- name: 10_a_19_semaines
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 10_a_19_semaines.'
+- name: 20_a_29_semaines
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 20_a_29_semaines.'
+- name: 30_a_39_semaines
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 30_a_39_semaines.'
+- name: 40_a_49_semaines
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 40_a_49_semaines.'
+- name: 50_a_52_semaines
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 50_a_52_semaines.'
+- name: dimensao_8
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: dimensao_8.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo oficial.
+notes:
+- Uma saída corresponde a uma tabela factual; abas temáticas diferentes não são empilhadas.

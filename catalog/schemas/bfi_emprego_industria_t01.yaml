@@ -1,0 +1,47 @@
+table: bfi_emprego_industria_t01
+description: 'Table 1: Film industry workforce, 2023.'
+source_raw: bfi-statistical-yearbook-2023
+source_file: film-industry-employment.ods
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo ODS oficial do BFI.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original no arquivo ODS.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela no BFI Statistical Yearbook.
+- name: year
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: year.'
+- name: film_and_video_production
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: film_and_video_production.'
+- name: film_and_video_distribution
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: film_and_video_distribution.'
+- name: film_exhibition
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: film_exhibition.'
+- name: total
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: total.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo ODS oficial.
+notes:
+- Uma saída corresponde a uma única aba factual do ODS; nenhuma aba T é empilhada com outra.

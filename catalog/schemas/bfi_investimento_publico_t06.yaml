@@ -1,0 +1,35 @@
+table: bfi_investimento_publico_t06
+description: 'Table 6: Large awards (£250,000+) for film made by the BFI, 2023/24.'
+source_raw: bfi-statistical-yearbook-2023
+source_file: public-investment-in-film.ods
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo ODS oficial do BFI.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original no arquivo ODS.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela no BFI Statistical Yearbook.
+- name: project
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: project.'
+- name: total_value_of_awards_gbp
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: total_value_of_awards_gbp.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo ODS oficial.
+notes:
+- Uma saída corresponde a uma única aba factual do ODS; nenhuma aba T é empilhada com outra.

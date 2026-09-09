@@ -1,0 +1,43 @@
+table: bfi_emprego_industria_t03
+description: 'Table 3: London and South East employment as percentage of total, 2023.'
+source_raw: bfi-statistical-yearbook-2023
+source_file: film-industry-employment.ods
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo ODS oficial do BFI.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original no arquivo ODS.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela no BFI Statistical Yearbook.
+- name: sector
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: sector.'
+- name: total_uk_employment
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: total_uk_employment.'
+- name: london_and_south_east_employment
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: london_and_south_east_employment.'
+- name: london_and_south_east_as_percent_of_uk_total
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: london_and_south_east_as_percent_of_uk_total.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo ODS oficial.
+notes:
+- Uma saída corresponde a uma única aba factual do ODS; nenhuma aba T é empilhada com outra.

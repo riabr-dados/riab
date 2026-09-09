@@ -693,18 +693,17 @@ GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 40`;
     id: 'condecine-arrecadacao',
     cat: 'fomento',
     label: 'A conta do setor',
-    desc: 'Série histórica da arrecadação CONDECINE por tipo de taxa — a saúde financeira do fomento audiovisual ao longo dos anos.',
+    desc: 'Série anual da arrecadação bruta da CONDECINE por modalidade, antes do abatimento da DRU.',
     tables: [
       { name: 'condecine-arrecadacao', color: '#c8920a' },
     ],
     join: null, icon: 'R$',
     dims: [
       { label: 'Ano',            col: 'ano' },
-      { label: 'Tipo CONDECINE', col: 'recorte_nome' },
-      { label: 'Mês',            col: 'mes' },
+      { label: 'Tipo CONDECINE', col: 'tipo_condecine' },
     ],
     metrics: [
-      { label: 'Valor nominal (R$)', expr: 'SUM(valor_brl_nominal)', alias: 'valor_brl' },
+      { label: 'Valor nominal (R$)', expr: 'SUM(valor_nominal_brl)', alias: 'valor_brl' },
       { label: 'Registros',          expr: 'COUNT(*)',               alias: 'registros' },
     ],
     buildSQL: (dim, metric, search) => {
@@ -713,7 +712,7 @@ GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 40`;
         search ? `CAST(${dim.col} AS VARCHAR) ILIKE '%${esc(search)}%'` : null,
       ]);
       return `SELECT ${dim.col} AS dim, ${metric.expr} AS valor
-FROM condecine_arrecadacao
+FROM condecine_arrecadacao_bruta_anual
 ${where}
 GROUP BY 1 ORDER BY 1 ${dim.col === 'ano' || dim.col === 'mes' ? 'ASC' : 'DESC'} NULLS LAST LIMIT 60`;
     },
@@ -721,21 +720,18 @@ GROUP BY 1 ORDER BY 1 ${dim.col === 'ano' || dim.col === 'mes' ? 'ASC' : 'DESC'}
   {
     id: 'fluxos-fomento',
     cat: 'fomento',
-    label: 'Todos os mecanismos',
-    desc: 'FSA, editais, prêmios, renúncia e coprodução numa série temporal única — o quadro completo do fomento audiovisual.',
+    label: 'Valores captados/contratados',
+    desc: 'Valores anuais captados ou contratados por mecanismo de incentivo, sem misturar desembolso, arrecadação ou premiação.',
     tables: [
       { name: 'fluxos-fomento', color: '#c8920a' },
     ],
     join: null, icon: '$',
     dims: [
       { label: 'Ano',           col: 'ano' },
-      { label: 'Mecanismo',     col: 'mecanismo' },
-      { label: 'Tipo de fluxo', col: 'tipo_fluxo' },
-      { label: 'Fonte',         col: 'titulo_publicacao' },
+      { label: 'Mecanismo',     col: 'mecanismo_ou_programa' },
     ],
     metrics: [
-      { label: 'Valor BRL nominal', expr: 'SUM(valor_brl_nominal)', alias: 'valor_brl' },
-      { label: 'Valor original',    expr: 'SUM(valor_original)',    alias: 'valor_original' },
+      { label: 'Valor BRL nominal', expr: 'SUM(valor_nominal_brl)', alias: 'valor_brl' },
       { label: 'Registros',         expr: 'COUNT(*)',               alias: 'registros' },
     ],
     buildSQL: (dim, metric, search) => {
@@ -744,7 +740,7 @@ GROUP BY 1 ORDER BY 1 ${dim.col === 'ano' || dim.col === 'mes' ? 'ASC' : 'DESC'}
         search ? `CAST(${dim.col} AS VARCHAR) ILIKE '%${esc(search)}%'` : null,
       ]);
       return `SELECT ${dim.col} AS dim, ${metric.expr} AS valor
-FROM fomento_fluxos_financeiros
+FROM fomento_valores_captados_mecanismo
 ${where}
 GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 60`;
     },
@@ -776,8 +772,8 @@ Use APENAS estas tabelas (views DuckDB sobre arquivos Parquet no HuggingFace):
 - diretores_obras: Diretores. Colunas: cpb, diretor. Join com obras: cpb = obras.cpb
 - produtores_obras: Produtores. Colunas: cpb, produtor. Join com obras: cpb = obras.cpb
 - fomento_fsa: Projetos do FSA. Colunas: titulo_projeto, chamada_publica, razao_social_produtora, valor_contrato_brl, ano. Join com obras via título normalizado.
-- condecine_arrecadacao: Arrecadação CONDECINE. Colunas: ano, mes, recorte_nome, periodicidade, valor_brl_nominal
-- fomento_fluxos_financeiros: Fluxos financeiros. Colunas: ano, tipo_fluxo, mecanismo, moeda_original, valor_brl_nominal, valor_original
+- condecine_arrecadacao_bruta_anual: Arrecadação bruta CONDECINE. Colunas: ano, tipo_condecine, valor_nominal_brl
+- fomento_valores_captados_mecanismo: Valores captados/contratados por mecanismo. Colunas: ano, mecanismo_ou_programa, valor_nominal_brl
 - renuncia_fiscal: Renúncia fiscal (Lei do Audiovisual). Colunas: titulo_projeto, total_captado, ano. Join com obras via título normalizado.
 - fsa_atas_festivais: Festivais e premiações FSA. Colunas: titulo_obra, cpb, evento, pais_evento_extraido, tipo_pontuacao, pontos_evento, ano_chamada, evento_internacional_estimado
 - fsa_atas_resultados: Resultados do FSA. Colunas: titulo_obra, cpb, ano_chamada
@@ -1009,7 +1005,7 @@ const viewTable  = document.getElementById('view-table');
     // the Builder registers tables lazily as they get added to the trail.
     const eagerViews = [
       'obras','diretores_obras','produtores_obras','bilheteria_por_filme_ano',
-      'fomento_fsa','condecine_arrecadacao','fomento_fluxos_financeiros',
+      'fomento_fsa','condecine_arrecadacao_bruta_anual','fomento_valores_captados_mecanismo',
       'renuncia_fiscal','fsa_atas_festivais','fsa_atas_resultados',
       'embrafilme_exibicao_territorio_ano','bilheteria_europa',
     ];

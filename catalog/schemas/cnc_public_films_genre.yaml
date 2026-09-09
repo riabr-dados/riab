@@ -1,0 +1,71 @@
+table: cnc_public_films_genre
+description: Public des films selon le genre
+source_raw: cnc-public-films
+source_file: public-films.xlsx
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo oficial publicado pelo CNC.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original do arquivo CNC.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela.
+- name: femmes
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: femmes.'
+- name: '45_42021423296599'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 45_42021423296599.'
+- name: '44_60634318063456'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 44_60634318063456.'
+- name: '46_21429232698808'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 46_21429232698808.'
+- name: '47_80426500806726'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 47_80426500806726.'
+- name: '48_38477092230454'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 48_38477092230454.'
+- name: '46_37392041197692'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 46_37392041197692.'
+- name: '47_6444601203516'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 47_6444601203516.'
+- name: '46_26868994703952'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 46_26868994703952.'
+- name: '47_04121373869167'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 47_04121373869167.'
+- name: '45_602221101549354'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 45_602221101549354.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo oficial.
+notes:
+- Uma saída corresponde a uma tabela factual; abas temáticas diferentes não são empilhadas.

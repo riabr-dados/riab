@@ -1,0 +1,159 @@
+table: cnc_frequentation_salles_natio
+description: Films en exploitation en salles selon la nationalité
+source_raw: cnc-frequentation-salles
+source_file: frequentation-salles.xlsx
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo oficial publicado pelo CNC.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original do arquivo CNC.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela.
+- name: nombre_de_films
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: nombre_de_films.'
+- name: france
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: france.'
+- name: '1'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1.'
+- name: majoritaires
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: majoritaires.'
+- name: minoritaires
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: minoritaires.'
+- name: etats_unis
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: etats_unis.'
+- name: allemagne
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: allemagne.'
+- name: belgique
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: belgique.'
+- name: danemark
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: danemark.'
+- name: espagne
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: espagne.'
+- name: grande_bretagne
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: grande_bretagne.'
+- name: grece
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: grece.'
+- name: irlande
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: irlande.'
+- name: italie
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: italie.'
+- name: pays_bas
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: pays_bas.'
+- name: pologne
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: pologne.'
+- name: republique_tcheque
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: republique_tcheque.'
+- name: russie
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: russie.'
+- name: suede
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: suede.'
+- name: suisse
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: suisse.'
+- name: australie
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: australie.'
+- name: bresil
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: bresil.'
+- name: canada
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: canada.'
+- name: chine
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: chine.'
+- name: coree_du_sud
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: coree_du_sud.'
+- name: egypte
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: egypte.'
+- name: hong_kong
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: hong_kong.'
+- name: inde
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: inde.'
+- name: iran
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: iran.'
+- name: japon
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: japon.'
+- name: mexique
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: mexique.'
+- name: autres_nationalites
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: autres_nationalites.'
+- name: total
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: total.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo oficial.
+notes:
+- Uma saída corresponde a uma tabela factual; abas temáticas diferentes não são empilhadas.

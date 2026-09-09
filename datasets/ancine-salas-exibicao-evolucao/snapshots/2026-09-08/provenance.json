@@ -1,0 +1,14 @@
+{
+  "dataset": "ancine-salas-exibicao-evolucao",
+  "snapshot": "2026-09-08",
+  "source_url": "https://dados.gov.br/dados/conjuntos-dados/salas-de-exibicao---evolucao-anual",
+  "audit_evidence": "outputs/auditoria-pda-20260908/official/ancine-salas-exibicao-evolucao",
+  "recorded_at": "2026-09-09T17:11:24.705578+00:00",
+  "files": [
+    {
+      "name": "salas-de-exibicao-evolucao-anual.csv",
+      "bytes": 3996490,
+      "sha256": "59a7c4cebff0f1ca8471acccf71b273d3e30681597b5f1b34ee30830cee1f022"
+    }
+  ]
+}

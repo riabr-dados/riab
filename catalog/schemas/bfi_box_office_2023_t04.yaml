@@ -1,0 +1,43 @@
+table: bfi_box_office_2023_t04
+description: 'Table 4: UK box office trends, 2014-2023.'
+source_raw: bfi-statistical-yearbook-2023
+source_file: box-office-2023.ods
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo ODS oficial do BFI.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original no arquivo ODS.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela no BFI Statistical Yearbook.
+- name: year
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: year.'
+- name: box_office_gross_gbp_million
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: box_office_gross_gbp_million.'
+- name: percent_change_on_previous_year
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: percent_change_on_previous_year.'
+- name: percent_change_since_2014
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: percent_change_since_2014.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo ODS oficial.
+notes:
+- Uma saída corresponde a uma única aba factual do ODS; nenhuma aba T é empilhada com outra.

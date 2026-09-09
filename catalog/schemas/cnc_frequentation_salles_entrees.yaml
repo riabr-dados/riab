@@ -1,0 +1,67 @@
+table: cnc_frequentation_salles_entrees
+description: Films en exploitation en salles selon leur nombre d'entrées
+source_raw: cnc-frequentation-salles
+source_file: frequentation-salles.xlsx
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo oficial publicado pelo CNC.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original do arquivo CNC.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela.
+- name: nombre_de_films
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: nombre_de_films.'
+- name: plus_de_4_millions_d_entrees
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: plus_de_4_millions_d_entrees.'
+- name: de_2_a_4_millions_d_entrees
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_2_a_4_millions_d_entrees.'
+- name: de_1_a_2_millions_d_entrees
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_1_a_2_millions_d_entrees.'
+- name: de_500_000_a_1_million_d_entrees
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_500_000_a_1_million_d_entrees.'
+- name: de_200_000_a_500_000_entrees
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_200_000_a_500_000_entrees.'
+- name: de_100_000_a_200_000_entrees
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_100_000_a_200_000_entrees.'
+- name: de_50_000_a_100_000_entrees
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_50_000_a_100_000_entrees.'
+- name: moins_de_50_000_entrees
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: moins_de_50_000_entrees.'
+- name: total
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: total.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo oficial.
+notes:
+- Uma saída corresponde a uma tabela factual; abas temáticas diferentes não são empilhadas.

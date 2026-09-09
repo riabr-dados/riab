@@ -1,10 +1,6 @@
-# SPDX-License-Identifier: AGPL-3.0-or-later
-# Copyright (c) 2026 Contribuidores de dados-audiovisual-br (RIDAB)
-# Curated join registry between RIDAB datasets. Domain knowledge.
-# Ver catalog/LICENSE.
 version: 0.1.0
 _meta:
-  generated_at: '2026-05-27'
+  generated_at: '2026-09-09'
   description: 'Key registry: para cada tabela do RIDAB, declara que chaves canonicas ela expoe e por quais colunas. Usado pelo /transformar e
     /conexoes para sugerir junções automaticas.'
   how_to_use:
@@ -111,6 +107,16 @@ tables:
       - key: SALIC
         col: salic
         confidence: high
+  - table: aportes_por_investidor
+    _dataset: ancine-aportes-por-investidor
+    _country: BR
+    _source: ancine
+    _title: Aportes por Incentivador e Investidor
+    _columns_count: 12
+    exposes:
+      - key: ANO
+        col: ano
+        confidence: high
   - table: atividades_economicas_agentes_regulares
     _dataset: ancine-atividades-economicas-agentes
     _country: BR
@@ -125,84 +131,549 @@ tables:
       - key: REG_ANCINE
         col: registro_ancine
         confidence: high
-  - table: bfi_audiences
+  - table: bfi_audiences_t01
     _dataset: bfi-publicos-cinema
     _country: UK
     _source: bfi
     _title: Publicos do Cinema Britanico
-    _columns_count: 10
+    _columns_count: 12
     exposes: []
-  - table: bfi_box_office_2023
+  - table: bfi_box_office_2023_t01
     _dataset: bfi-bilheteria-2023
     _country: UK
     _source: bfi
     _title: Bilheteria do Reino Unido 2023
-    _columns_count: 14
+    _columns_count: 13
     exposes: []
-  - table: bfi_certificacao_obras
+  - table: bfi_box_office_2023_t02
+    _dataset: bfi-bilheteria-2023
+    _country: UK
+    _source: bfi
+    _title: Bilheteria do Reino Unido 2023
+    _columns_count: 13
+    exposes: []
+  - table: bfi_box_office_2023_t03
+    _dataset: bfi-bilheteria-2023
+    _country: UK
+    _source: bfi
+    _title: Bilheteria do Reino Unido 2023
+    _columns_count: 10
+    exposes: []
+  - table: bfi_box_office_2023_t04
+    _dataset: bfi-bilheteria-2023
+    _country: UK
+    _source: bfi
+    _title: Bilheteria do Reino Unido 2023
+    _columns_count: 9
+    exposes:
+      - key: ANO
+        col: year
+        confidence: high
+  - table: bfi_box_office_2023_t05
+    _dataset: bfi-bilheteria-2023
+    _country: UK
+    _source: bfi
+    _title: Bilheteria do Reino Unido 2023
+    _columns_count: 9
+    exposes:
+      - key: ANO
+        col: year
+        confidence: high
+  - table: bfi_box_office_2023_t06
+    _dataset: bfi-bilheteria-2023
+    _country: UK
+    _source: bfi
+    _title: Bilheteria do Reino Unido 2023
+    _columns_count: 11
+    exposes: []
+  - table: bfi_box_office_2023_t07
+    _dataset: bfi-bilheteria-2023
+    _country: UK
+    _source: bfi
+    _title: Bilheteria do Reino Unido 2023
+    _columns_count: 10
+    exposes: []
+  - table: bfi_box_office_2023_t08
+    _dataset: bfi-bilheteria-2023
+    _country: UK
+    _source: bfi
+    _title: Bilheteria do Reino Unido 2023
+    _columns_count: 13
+    exposes:
+      - key: ANO
+        col: year
+        confidence: high
+  - table: bfi_box_office_2023_t09
+    _dataset: bfi-bilheteria-2023
+    _country: UK
+    _source: bfi
+    _title: Bilheteria do Reino Unido 2023
+    _columns_count: 13
+    exposes:
+      - key: ANO
+        col: year
+        confidence: high
+  - table: bfi_certificacao_obras_t01
     _dataset: bfi-certificacao-obras
     _country: UK
     _source: bfi
     _title: Certificacao de Obras Britanicas (Screen Sector)
-    _columns_count: 18
+    _columns_count: 8
     exposes:
       - key: ANO
         col: year
         confidence: high
-  - table: bfi_emprego_industria
-    _dataset: bfi-emprego-industria
+  - table: bfi_certificacao_obras_t02
+    _dataset: bfi-certificacao-obras
     _country: UK
     _source: bfi
-    _title: Emprego na Industria Cinematografica Britanica
-    _columns_count: 20
-    exposes:
-      - key: ANO
-        col: year
-        confidence: high
-  - table: bfi_empresas_industria
-    _dataset: bfi-empresas-industria
-    _country: UK
-    _source: bfi
-    _title: Empresas da Industria Cinematografica Britanica
-    _columns_count: 37
+    _title: Certificacao de Obras Britanicas (Screen Sector)
+    _columns_count: 10
     exposes: []
-  - table: bfi_exhibition
-    _dataset: bfi-exibicao-cinematografica
+  - table: bfi_certificacao_obras_t03
+    _dataset: bfi-certificacao-obras
     _country: UK
     _source: bfi
-    _title: Exibicao Cinematografica no Reino Unido
-    _columns_count: 31
+    _title: Certificacao de Obras Britanicas (Screen Sector)
+    _columns_count: 10
+    exposes: []
+  - table: bfi_certificacao_obras_t04
+    _dataset: bfi-certificacao-obras
+    _country: UK
+    _source: bfi
+    _title: Certificacao de Obras Britanicas (Screen Sector)
+    _columns_count: 7
+    exposes:
+      - key: ANO
+        col: year
+        confidence: high
+  - table: bfi_certificacao_obras_t05
+    _dataset: bfi-certificacao-obras
+    _country: UK
+    _source: bfi
+    _title: Certificacao de Obras Britanicas (Screen Sector)
+    _columns_count: 11
+    exposes: []
+  - table: bfi_certificacao_obras_t06
+    _dataset: bfi-certificacao-obras
+    _country: UK
+    _source: bfi
+    _title: Certificacao de Obras Britanicas (Screen Sector)
+    _columns_count: 11
+    exposes: []
+  - table: bfi_certificacao_obras_t07
+    _dataset: bfi-certificacao-obras
+    _country: UK
+    _source: bfi
+    _title: Certificacao de Obras Britanicas (Screen Sector)
+    _columns_count: 11
+    exposes: []
+  - table: bfi_educacao_cinematografica_t01
+    _dataset: bfi-educacao-cinematografica
+    _country: UK
+    _source: bfi
+    _title: Educacao Cinematografica no Reino Unido
+    _columns_count: 12
     exposes:
       - key: PAIS
         col: nation_region
         confidence: medium
+  - table: bfi_educacao_cinematografica_t02
+    _dataset: bfi-educacao-cinematografica
+    _country: UK
+    _source: bfi
+    _title: Educacao Cinematografica no Reino Unido
+    _columns_count: 11
+    exposes:
+      - key: PAIS
+        col: nation_region
+        confidence: medium
+  - table: bfi_educacao_cinematografica_t03
+    _dataset: bfi-educacao-cinematografica
+    _country: UK
+    _source: bfi
+    _title: Educacao Cinematografica no Reino Unido
+    _columns_count: 8
+    exposes: []
+  - table: bfi_emprego_industria_t01
+    _dataset: bfi-emprego-industria
+    _country: UK
+    _source: bfi
+    _title: Emprego na Industria Cinematografica Britanica
+    _columns_count: 10
+    exposes:
+      - key: ANO
+        col: year
+        confidence: high
+  - table: bfi_emprego_industria_t02
+    _dataset: bfi-emprego-industria
+    _country: UK
+    _source: bfi
+    _title: Emprego na Industria Cinematografica Britanica
+    _columns_count: 9
+    exposes:
+      - key: ANO
+        col: year
+        confidence: high
+  - table: bfi_emprego_industria_t03
+    _dataset: bfi-emprego-industria
+    _country: UK
+    _source: bfi
+    _title: Emprego na Industria Cinematografica Britanica
+    _columns_count: 9
+    exposes: []
+  - table: bfi_emprego_industria_t04
+    _dataset: bfi-emprego-industria
+    _country: UK
+    _source: bfi
+    _title: Emprego na Industria Cinematografica Britanica
+    _columns_count: 10
+    exposes: []
+  - table: bfi_emprego_industria_t05
+    _dataset: bfi-emprego-industria
+    _country: UK
+    _source: bfi
+    _title: Emprego na Industria Cinematografica Britanica
+    _columns_count: 10
+    exposes: []
+  - table: bfi_emprego_industria_t06
+    _dataset: bfi-emprego-industria
+    _country: UK
+    _source: bfi
+    _title: Emprego na Industria Cinematografica Britanica
+    _columns_count: 10
+    exposes: []
+  - table: bfi_empresas_industria_t01
+    _dataset: bfi-empresas-industria
+    _country: UK
+    _source: bfi
+    _title: Empresas da Industria Cinematografica Britanica
+    _columns_count: 12
+    exposes: []
+  - table: bfi_empresas_industria_t02
+    _dataset: bfi-empresas-industria
+    _country: UK
+    _source: bfi
+    _title: Empresas da Industria Cinematografica Britanica
+    _columns_count: 12
+    exposes: []
+  - table: bfi_empresas_industria_t03
+    _dataset: bfi-empresas-industria
+    _country: UK
+    _source: bfi
+    _title: Empresas da Industria Cinematografica Britanica
+    _columns_count: 10
+    exposes: []
+  - table: bfi_empresas_industria_t04
+    _dataset: bfi-empresas-industria
+    _country: UK
+    _source: bfi
+    _title: Empresas da Industria Cinematografica Britanica
+    _columns_count: 10
+    exposes: []
+  - table: bfi_empresas_industria_t05
+    _dataset: bfi-empresas-industria
+    _country: UK
+    _source: bfi
+    _title: Empresas da Industria Cinematografica Britanica
+    _columns_count: 10
+    exposes: []
+  - table: bfi_empresas_industria_t06
+    _dataset: bfi-empresas-industria
+    _country: UK
+    _source: bfi
+    _title: Empresas da Industria Cinematografica Britanica
+    _columns_count: 10
+    exposes: []
+  - table: bfi_empresas_industria_t07
+    _dataset: bfi-empresas-industria
+    _country: UK
+    _source: bfi
+    _title: Empresas da Industria Cinematografica Britanica
+    _columns_count: 20
+    exposes: []
+  - table: bfi_empresas_industria_t08
+    _dataset: bfi-empresas-industria
+    _country: UK
+    _source: bfi
+    _title: Empresas da Industria Cinematografica Britanica
+    _columns_count: 20
+    exposes: []
+  - table: bfi_exhibition_t01
+    _dataset: bfi-exibicao-cinematografica
+    _country: UK
+    _source: bfi
+    _title: Exibicao Cinematografica no Reino Unido
+    _columns_count: 15
+    exposes: []
+  - table: bfi_exhibition_t02
+    _dataset: bfi-exibicao-cinematografica
+    _country: UK
+    _source: bfi
+    _title: Exibicao Cinematografica no Reino Unido
+    _columns_count: 12
+    exposes:
+      - key: PAIS
+        col: nation_region
+        confidence: medium
+  - table: bfi_exhibition_t03
+    _dataset: bfi-exibicao-cinematografica
+    _country: UK
+    _source: bfi
+    _title: Exibicao Cinematografica no Reino Unido
+    _columns_count: 10
+    exposes:
+      - key: PAIS
+        col: nation_region
+        confidence: medium
+  - table: bfi_exhibition_t04
+    _dataset: bfi-exibicao-cinematografica
+    _country: UK
+    _source: bfi
+    _title: Exibicao Cinematografica no Reino Unido
+    _columns_count: 9
+    exposes: []
+  - table: bfi_exhibition_t05
+    _dataset: bfi-exibicao-cinematografica
+    _country: UK
+    _source: bfi
+    _title: Exibicao Cinematografica no Reino Unido
+    _columns_count: 10
+    exposes: []
+  - table: bfi_exhibition_t06
+    _dataset: bfi-exibicao-cinematografica
+    _country: UK
+    _source: bfi
+    _title: Exibicao Cinematografica no Reino Unido
+    _columns_count: 12
+    exposes:
       - key: TITULO_OBRA
         col: title
         confidence: high
         normalize: titulo_norm
-  - table: bfi_filmes_televisao
+  - table: bfi_filmes_televisao_t01
     _dataset: bfi-filmes-televisao
     _country: UK
     _source: bfi
     _title: Filmes na Televisao Britanica
-    _columns_count: 34
+    _columns_count: 11
+    exposes: []
+  - table: bfi_filmes_televisao_t02
+    _dataset: bfi-filmes-televisao
+    _country: UK
+    _source: bfi
+    _title: Filmes na Televisao Britanica
+    _columns_count: 11
     exposes:
       - key: PAIS
         col: country
         confidence: high
-  - table: bfi_investimento_publico
+  - table: bfi_filmes_televisao_t03
+    _dataset: bfi-filmes-televisao
+    _country: UK
+    _source: bfi
+    _title: Filmes na Televisao Britanica
+    _columns_count: 11
+    exposes: []
+  - table: bfi_filmes_televisao_t04
+    _dataset: bfi-filmes-televisao
+    _country: UK
+    _source: bfi
+    _title: Filmes na Televisao Britanica
+    _columns_count: 11
+    exposes: []
+  - table: bfi_filmes_televisao_t05
+    _dataset: bfi-filmes-televisao
+    _country: UK
+    _source: bfi
+    _title: Filmes na Televisao Britanica
+    _columns_count: 11
+    exposes: []
+  - table: bfi_filmes_televisao_t06
+    _dataset: bfi-filmes-televisao
+    _country: UK
+    _source: bfi
+    _title: Filmes na Televisao Britanica
+    _columns_count: 11
+    exposes: []
+  - table: bfi_filmes_televisao_t07
+    _dataset: bfi-filmes-televisao
+    _country: UK
+    _source: bfi
+    _title: Filmes na Televisao Britanica
+    _columns_count: 11
+    exposes: []
+  - table: bfi_filmes_televisao_t08
+    _dataset: bfi-filmes-televisao
+    _country: UK
+    _source: bfi
+    _title: Filmes na Televisao Britanica
+    _columns_count: 16
+    exposes: []
+  - table: bfi_filmes_televisao_t09
+    _dataset: bfi-filmes-televisao
+    _country: UK
+    _source: bfi
+    _title: Filmes na Televisao Britanica
+    _columns_count: 16
+    exposes: []
+  - table: bfi_investimento_publico_t01
     _dataset: bfi-investimento-publico
     _country: UK
     _source: bfi
     _title: Investimento Publico no Cinema Britanico
-    _columns_count: 27
+    _columns_count: 12
     exposes: []
-  - table: bfi_talentos_mundo
+  - table: bfi_investimento_publico_t02
+    _dataset: bfi-investimento-publico
+    _country: UK
+    _source: bfi
+    _title: Investimento Publico no Cinema Britanico
+    _columns_count: 8
+    exposes: []
+  - table: bfi_investimento_publico_t03
+    _dataset: bfi-investimento-publico
+    _country: UK
+    _source: bfi
+    _title: Investimento Publico no Cinema Britanico
+    _columns_count: 12
+    exposes: []
+  - table: bfi_investimento_publico_t04
+    _dataset: bfi-investimento-publico
+    _country: UK
+    _source: bfi
+    _title: Investimento Publico no Cinema Britanico
+    _columns_count: 9
+    exposes: []
+  - table: bfi_investimento_publico_t05
+    _dataset: bfi-investimento-publico
+    _country: UK
+    _source: bfi
+    _title: Investimento Publico no Cinema Britanico
+    _columns_count: 8
+    exposes: []
+  - table: bfi_investimento_publico_t06
+    _dataset: bfi-investimento-publico
+    _country: UK
+    _source: bfi
+    _title: Investimento Publico no Cinema Britanico
+    _columns_count: 7
+    exposes: []
+  - table: bfi_investimento_publico_t07
+    _dataset: bfi-investimento-publico
+    _country: UK
+    _source: bfi
+    _title: Investimento Publico no Cinema Britanico
+    _columns_count: 9
+    exposes: []
+  - table: bfi_talentos_mundo_t01
     _dataset: bfi-talentos-britanicos-mundo
     _country: UK
     _source: bfi
     _title: Filmes Britanicos e Talentos no Mundo
-    _columns_count: 34
+    _columns_count: 7
+    exposes:
+      - key: ANO
+        col: year
+        confidence: high
+  - table: bfi_talentos_mundo_t02
+    _dataset: bfi-talentos-britanicos-mundo
+    _country: UK
+    _source: bfi
+    _title: Filmes Britanicos e Talentos no Mundo
+    _columns_count: 11
+    exposes:
+      - key: ANO
+        col: year
+        confidence: high
+  - table: bfi_talentos_mundo_t03
+    _dataset: bfi-talentos-britanicos-mundo
+    _country: UK
+    _source: bfi
+    _title: Filmes Britanicos e Talentos no Mundo
+    _columns_count: 10
+    exposes:
+      - key: TITULO_OBRA
+        col: title
+        confidence: high
+        normalize: titulo_norm
+  - table: bfi_talentos_mundo_t04
+    _dataset: bfi-talentos-britanicos-mundo
+    _country: UK
+    _source: bfi
+    _title: Filmes Britanicos e Talentos no Mundo
+    _columns_count: 10
+    exposes:
+      - key: TITULO_OBRA
+        col: title
+        confidence: high
+        normalize: titulo_norm
+  - table: bfi_talentos_mundo_t05
+    _dataset: bfi-talentos-britanicos-mundo
+    _country: UK
+    _source: bfi
+    _title: Filmes Britanicos e Talentos no Mundo
+    _columns_count: 9
+    exposes:
+      - key: ANO
+        col: year
+        confidence: high
+  - table: bfi_talentos_mundo_t06
+    _dataset: bfi-talentos-britanicos-mundo
+    _country: UK
+    _source: bfi
+    _title: Filmes Britanicos e Talentos no Mundo
+    _columns_count: 9
+    exposes:
+      - key: TITULO_OBRA
+        col: title
+        confidence: high
+        normalize: titulo_norm
+  - table: bfi_talentos_mundo_t07
+    _dataset: bfi-talentos-britanicos-mundo
+    _country: UK
+    _source: bfi
+    _title: Filmes Britanicos e Talentos no Mundo
+    _columns_count: 11
+    exposes: []
+  - table: bfi_talentos_mundo_t08
+    _dataset: bfi-talentos-britanicos-mundo
+    _country: UK
+    _source: bfi
+    _title: Filmes Britanicos e Talentos no Mundo
+    _columns_count: 10
+    exposes:
+      - key: TITULO_OBRA
+        col: title
+        confidence: high
+        normalize: titulo_norm
+  - table: bfi_talentos_mundo_t09
+    _dataset: bfi-talentos-britanicos-mundo
+    _country: UK
+    _source: bfi
+    _title: Filmes Britanicos e Talentos no Mundo
+    _columns_count: 11
+    exposes: []
+  - table: bfi_talentos_mundo_t10
+    _dataset: bfi-talentos-britanicos-mundo
+    _country: UK
+    _source: bfi
+    _title: Filmes Britanicos e Talentos no Mundo
+    _columns_count: 11
+    exposes: []
+  - table: bfi_talentos_mundo_t11
+    _dataset: bfi-talentos-britanicos-mundo
+    _country: UK
+    _source: bfi
+    _title: Filmes Britanicos e Talentos no Mundo
+    _columns_count: 11
+    exposes: []
+  - table: bfi_talentos_mundo_t12
+    _dataset: bfi-talentos-britanicos-mundo
+    _country: UK
+    _source: bfi
+    _title: Filmes Britanicos e Talentos no Mundo
+    _columns_count: 11
     exposes:
       - key: ANO
         col: year
@@ -211,55 +682,294 @@ tables:
         col: title
         confidence: high
         normalize: titulo_norm
-  - table: bfi_top_films_2023
+  - table: bfi_talentos_mundo_t13
+    _dataset: bfi-talentos-britanicos-mundo
+    _country: UK
+    _source: bfi
+    _title: Filmes Britanicos e Talentos no Mundo
+    _columns_count: 10
+    exposes:
+      - key: ANO
+        col: year
+        confidence: high
+      - key: TITULO_OBRA
+        col: title
+        confidence: high
+        normalize: titulo_norm
+  - table: bfi_talentos_mundo_t14
+    _dataset: bfi-talentos-britanicos-mundo
+    _country: UK
+    _source: bfi
+    _title: Filmes Britanicos e Talentos no Mundo
+    _columns_count: 10
+    exposes: []
+  - table: bfi_talentos_mundo_t15
+    _dataset: bfi-talentos-britanicos-mundo
+    _country: UK
+    _source: bfi
+    _title: Filmes Britanicos e Talentos no Mundo
+    _columns_count: 8
+    exposes:
+      - key: ANO
+        col: year
+        confidence: high
+  - table: bfi_talentos_mundo_t16
+    _dataset: bfi-talentos-britanicos-mundo
+    _country: UK
+    _source: bfi
+    _title: Filmes Britanicos e Talentos no Mundo
+    _columns_count: 9
+    exposes:
+      - key: TITULO_OBRA
+        col: title
+        confidence: high
+        normalize: titulo_norm
+  - table: bfi_top_films_2023_t01
+    _dataset: bfi-top-filmes-2023
+    _country: UK
+    _source: bfi
+    _title: Top Filmes no Reino Unido 2023
+    _columns_count: 12
+    exposes:
+      - key: TITULO_OBRA
+        col: title
+        confidence: high
+        normalize: titulo_norm
+  - table: bfi_top_films_2023_t02
+    _dataset: bfi-top-filmes-2023
+    _country: UK
+    _source: bfi
+    _title: Top Filmes no Reino Unido 2023
+    _columns_count: 12
+    exposes:
+      - key: TITULO_OBRA
+        col: title
+        confidence: high
+        normalize: titulo_norm
+  - table: bfi_top_films_2023_t03
+    _dataset: bfi-top-filmes-2023
+    _country: UK
+    _source: bfi
+    _title: Top Filmes no Reino Unido 2023
+    _columns_count: 12
+    exposes:
+      - key: TITULO_OBRA
+        col: title
+        confidence: high
+        normalize: titulo_norm
+  - table: bfi_top_films_2023_t04
+    _dataset: bfi-top-filmes-2023
+    _country: UK
+    _source: bfi
+    _title: Top Filmes no Reino Unido 2023
+    _columns_count: 11
+    exposes:
+      - key: TITULO_OBRA
+        col: title
+        confidence: high
+        normalize: titulo_norm
+  - table: bfi_top_films_2023_t05
     _dataset: bfi-top-filmes-2023
     _country: UK
     _source: bfi
     _title: Top Filmes no Reino Unido 2023
     _columns_count: 10
+    exposes: []
+  - table: bfi_top_films_2023_t06
+    _dataset: bfi-top-filmes-2023
+    _country: UK
+    _source: bfi
+    _title: Top Filmes no Reino Unido 2023
+    _columns_count: 11
     exposes:
       - key: TITULO_OBRA
         col: title
         confidence: high
         normalize: titulo_norm
-  - table: bfi_uk_film_economy
+  - table: bfi_top_films_2023_t07
+    _dataset: bfi-top-filmes-2023
+    _country: UK
+    _source: bfi
+    _title: Top Filmes no Reino Unido 2023
+    _columns_count: 11
+    exposes:
+      - key: TITULO_OBRA
+        col: title
+        confidence: high
+        normalize: titulo_norm
+  - table: bfi_top_films_2023_t08
+    _dataset: bfi-top-filmes-2023
+    _country: UK
+    _source: bfi
+    _title: Top Filmes no Reino Unido 2023
+    _columns_count: 11
+    exposes: []
+  - table: bfi_top_films_2023_t09
+    _dataset: bfi-top-filmes-2023
+    _country: UK
+    _source: bfi
+    _title: Top Filmes no Reino Unido 2023
+    _columns_count: 12
+    exposes:
+      - key: GENERO
+        col: genre
+        confidence: high
+  - table: bfi_top_films_2023_t10
+    _dataset: bfi-top-filmes-2023
+    _country: UK
+    _source: bfi
+    _title: Top Filmes no Reino Unido 2023
+    _columns_count: 11
+    exposes: []
+  - table: bfi_uk_film_economy_t01
     _dataset: bfi-economia-do-cinema
     _country: UK
     _source: bfi
     _title: Economia do Cinema Britanico
-    _columns_count: 10
+    _columns_count: 12
     exposes: []
-  - table: bfi_uk_film_market
+  - table: bfi_uk_film_economy_t02
+    _dataset: bfi-economia-do-cinema
+    _country: UK
+    _source: bfi
+    _title: Economia do Cinema Britanico
+    _columns_count: 12
+    exposes: []
+  - table: bfi_uk_film_market_t01
     _dataset: bfi-mercado-cinematografico
     _country: UK
     _source: bfi
     _title: Mercado Cinematografico do Reino Unido
-    _columns_count: 16
+    _columns_count: 12
+    exposes: []
+  - table: bfi_uk_film_market_t02
+    _dataset: bfi-mercado-cinematografico
+    _country: UK
+    _source: bfi
+    _title: Mercado Cinematografico do Reino Unido
+    _columns_count: 8
     exposes:
       - key: PAIS
         col: country
         confidence: high
-  - table: bfi_video_digital
+  - table: bfi_uk_film_market_t03
+    _dataset: bfi-mercado-cinematografico
+    _country: UK
+    _source: bfi
+    _title: Mercado Cinematografico do Reino Unido
+    _columns_count: 9
+    exposes:
+      - key: PAIS
+        col: country
+        confidence: high
+  - table: bfi_video_digital_t01
     _dataset: bfi-video-digital
     _country: UK
     _source: bfi
     _title: Filmes em Video Digital no Reino Unido
-    _columns_count: 19
+    _columns_count: 11
     exposes:
       - key: TITULO_OBRA
         col: title
         confidence: high
         normalize: titulo_norm
-  - table: bfi_video_fisico
+  - table: bfi_video_digital_t02
+    _dataset: bfi-video-digital
+    _country: UK
+    _source: bfi
+    _title: Filmes em Video Digital no Reino Unido
+    _columns_count: 11
+    exposes:
+      - key: TITULO_OBRA
+        col: title
+        confidence: high
+        normalize: titulo_norm
+  - table: bfi_video_digital_t03
+    _dataset: bfi-video-digital
+    _country: UK
+    _source: bfi
+    _title: Filmes em Video Digital no Reino Unido
+    _columns_count: 11
+    exposes:
+      - key: TITULO_OBRA
+        col: title
+        confidence: high
+        normalize: titulo_norm
+  - table: bfi_video_digital_t04
+    _dataset: bfi-video-digital
+    _country: UK
+    _source: bfi
+    _title: Filmes em Video Digital no Reino Unido
+    _columns_count: 9
+    exposes: []
+  - table: bfi_video_digital_t05
+    _dataset: bfi-video-digital
+    _country: UK
+    _source: bfi
+    _title: Filmes em Video Digital no Reino Unido
+    _columns_count: 10
+    exposes: []
+  - table: bfi_video_fisico_t01
+    _dataset: bfi-video-fisico
+    _country: UK
+    _source: bfi
+    _title: Filmes em Video Fisico no Reino Unido
+    _columns_count: 7
+    exposes:
+      - key: GENERO
+        col: genre
+        confidence: high
+  - table: bfi_video_fisico_t02
     _dataset: bfi-video-fisico
     _country: UK
     _source: bfi
     _title: Filmes em Video Fisico no Reino Unido
     _columns_count: 10
     exposes:
-      - key: GENERO
-        col: genre
+      - key: TITULO_OBRA
+        col: title
         confidence: high
+        normalize: titulo_norm
+  - table: bfi_video_fisico_t03
+    _dataset: bfi-video-fisico
+    _country: UK
+    _source: bfi
+    _title: Filmes em Video Fisico no Reino Unido
+    _columns_count: 10
+    exposes:
+      - key: TITULO_OBRA
+        col: title
+        confidence: high
+        normalize: titulo_norm
+  - table: bfi_video_fisico_t04
+    _dataset: bfi-video-fisico
+    _country: UK
+    _source: bfi
+    _title: Filmes em Video Fisico no Reino Unido
+    _columns_count: 10
+    exposes:
+      - key: TITULO_OBRA
+        col: title
+        confidence: high
+        normalize: titulo_norm
+  - table: bfi_video_fisico_t05
+    _dataset: bfi-video-fisico
+    _country: UK
+    _source: bfi
+    _title: Filmes em Video Fisico no Reino Unido
+    _columns_count: 10
+    exposes:
+      - key: TITULO_OBRA
+        col: title
+        confidence: high
+        normalize: titulo_norm
+  - table: bfi_video_fisico_t06
+    _dataset: bfi-video-fisico
+    _country: UK
+    _source: bfi
+    _title: Filmes em Video Fisico no Reino Unido
+    _columns_count: 10
+    exposes:
       - key: TITULO_OBRA
         col: title
         confidence: high
@@ -276,6 +986,279 @@ tables:
         confidence: high
       - key: TITULO_OBRA
         col: titulo
+        confidence: high
+        normalize: titulo_norm
+  - table: bilheteria_diaria_distribuidora_detalhe_2014
+    _dataset: ancine-bilheteria-diaria-distribuidoras
+    _country: BR
+    _source: ancine
+    _title: Bilheteria Diária — informações de Distribuidoras
+    _columns_count: 18
+    exposes:
+      - key: CNPJ
+        col: cnpj_distribuidora
+        confidence: high
+        normalize: digits_only
+      - key: CPB
+        col: cpb_roe
+        confidence: high
+      - key: PAIS
+        col: pais_obra
+        confidence: medium
+      - key: TITULO_OBRA
+        col: titulo_original
+        confidence: high
+        normalize: titulo_norm
+  - table: bilheteria_diaria_distribuidora_detalhe_2015
+    _dataset: ancine-bilheteria-diaria-distribuidoras
+    _country: BR
+    _source: ancine
+    _title: Bilheteria Diária — informações de Distribuidoras
+    _columns_count: 18
+    exposes:
+      - key: CNPJ
+        col: cnpj_distribuidora
+        confidence: high
+        normalize: digits_only
+      - key: CPB
+        col: cpb_roe
+        confidence: high
+      - key: PAIS
+        col: pais_obra
+        confidence: medium
+      - key: TITULO_OBRA
+        col: titulo_original
+        confidence: high
+        normalize: titulo_norm
+  - table: bilheteria_diaria_distribuidora_detalhe_2016
+    _dataset: ancine-bilheteria-diaria-distribuidoras
+    _country: BR
+    _source: ancine
+    _title: Bilheteria Diária — informações de Distribuidoras
+    _columns_count: 18
+    exposes:
+      - key: CNPJ
+        col: cnpj_distribuidora
+        confidence: high
+        normalize: digits_only
+      - key: CPB
+        col: cpb_roe
+        confidence: high
+      - key: PAIS
+        col: pais_obra
+        confidence: medium
+      - key: TITULO_OBRA
+        col: titulo_original
+        confidence: high
+        normalize: titulo_norm
+  - table: bilheteria_diaria_distribuidora_detalhe_2017
+    _dataset: ancine-bilheteria-diaria-distribuidoras
+    _country: BR
+    _source: ancine
+    _title: Bilheteria Diária — informações de Distribuidoras
+    _columns_count: 18
+    exposes:
+      - key: CNPJ
+        col: cnpj_distribuidora
+        confidence: high
+        normalize: digits_only
+      - key: CPB
+        col: cpb_roe
+        confidence: high
+      - key: PAIS
+        col: pais_obra
+        confidence: medium
+      - key: TITULO_OBRA
+        col: titulo_original
+        confidence: high
+        normalize: titulo_norm
+  - table: bilheteria_diaria_distribuidora_detalhe_2018
+    _dataset: ancine-bilheteria-diaria-distribuidoras
+    _country: BR
+    _source: ancine
+    _title: Bilheteria Diária — informações de Distribuidoras
+    _columns_count: 18
+    exposes:
+      - key: CNPJ
+        col: cnpj_distribuidora
+        confidence: high
+        normalize: digits_only
+      - key: CPB
+        col: cpb_roe
+        confidence: high
+      - key: PAIS
+        col: pais_obra
+        confidence: medium
+      - key: TITULO_OBRA
+        col: titulo_original
+        confidence: high
+        normalize: titulo_norm
+  - table: bilheteria_diaria_distribuidora_detalhe_2019
+    _dataset: ancine-bilheteria-diaria-distribuidoras
+    _country: BR
+    _source: ancine
+    _title: Bilheteria Diária — informações de Distribuidoras
+    _columns_count: 18
+    exposes:
+      - key: CNPJ
+        col: cnpj_distribuidora
+        confidence: high
+        normalize: digits_only
+      - key: CPB
+        col: cpb_roe
+        confidence: high
+      - key: PAIS
+        col: pais_obra
+        confidence: medium
+      - key: TITULO_OBRA
+        col: titulo_original
+        confidence: high
+        normalize: titulo_norm
+  - table: bilheteria_diaria_distribuidora_detalhe_2020
+    _dataset: ancine-bilheteria-diaria-distribuidoras
+    _country: BR
+    _source: ancine
+    _title: Bilheteria Diária — informações de Distribuidoras
+    _columns_count: 18
+    exposes:
+      - key: CNPJ
+        col: cnpj_distribuidora
+        confidence: high
+        normalize: digits_only
+      - key: CPB
+        col: cpb_roe
+        confidence: high
+      - key: PAIS
+        col: pais_obra
+        confidence: medium
+      - key: TITULO_OBRA
+        col: titulo_original
+        confidence: high
+        normalize: titulo_norm
+  - table: bilheteria_diaria_distribuidora_detalhe_2021
+    _dataset: ancine-bilheteria-diaria-distribuidoras
+    _country: BR
+    _source: ancine
+    _title: Bilheteria Diária — informações de Distribuidoras
+    _columns_count: 18
+    exposes:
+      - key: CNPJ
+        col: cnpj_distribuidora
+        confidence: high
+        normalize: digits_only
+      - key: CPB
+        col: cpb_roe
+        confidence: high
+      - key: PAIS
+        col: pais_obra
+        confidence: medium
+      - key: TITULO_OBRA
+        col: titulo_original
+        confidence: high
+        normalize: titulo_norm
+  - table: bilheteria_diaria_distribuidora_detalhe_2022
+    _dataset: ancine-bilheteria-diaria-distribuidoras
+    _country: BR
+    _source: ancine
+    _title: Bilheteria Diária — informações de Distribuidoras
+    _columns_count: 18
+    exposes:
+      - key: CNPJ
+        col: cnpj_distribuidora
+        confidence: high
+        normalize: digits_only
+      - key: CPB
+        col: cpb_roe
+        confidence: high
+      - key: PAIS
+        col: pais_obra
+        confidence: medium
+      - key: TITULO_OBRA
+        col: titulo_original
+        confidence: high
+        normalize: titulo_norm
+  - table: bilheteria_diaria_distribuidora_detalhe_2023
+    _dataset: ancine-bilheteria-diaria-distribuidoras
+    _country: BR
+    _source: ancine
+    _title: Bilheteria Diária — informações de Distribuidoras
+    _columns_count: 18
+    exposes:
+      - key: CNPJ
+        col: cnpj_distribuidora
+        confidence: high
+        normalize: digits_only
+      - key: CPB
+        col: cpb_roe
+        confidence: high
+      - key: PAIS
+        col: pais_obra
+        confidence: medium
+      - key: TITULO_OBRA
+        col: titulo_original
+        confidence: high
+        normalize: titulo_norm
+  - table: bilheteria_diaria_distribuidora_detalhe_2024
+    _dataset: ancine-bilheteria-diaria-distribuidoras
+    _country: BR
+    _source: ancine
+    _title: Bilheteria Diária — informações de Distribuidoras
+    _columns_count: 18
+    exposes:
+      - key: CNPJ
+        col: cnpj_distribuidora
+        confidence: high
+        normalize: digits_only
+      - key: CPB
+        col: cpb_roe
+        confidence: high
+      - key: PAIS
+        col: pais_obra
+        confidence: medium
+      - key: TITULO_OBRA
+        col: titulo_original
+        confidence: high
+        normalize: titulo_norm
+  - table: bilheteria_diaria_distribuidora_detalhe_2025
+    _dataset: ancine-bilheteria-diaria-distribuidoras
+    _country: BR
+    _source: ancine
+    _title: Bilheteria Diária — informações de Distribuidoras
+    _columns_count: 18
+    exposes:
+      - key: CNPJ
+        col: cnpj_distribuidora
+        confidence: high
+        normalize: digits_only
+      - key: CPB
+        col: cpb_roe
+        confidence: high
+      - key: PAIS
+        col: pais_obra
+        confidence: medium
+      - key: TITULO_OBRA
+        col: titulo_original
+        confidence: high
+        normalize: titulo_norm
+  - table: bilheteria_diaria_distribuidora_detalhe_2026
+    _dataset: ancine-bilheteria-diaria-distribuidoras
+    _country: BR
+    _source: ancine
+    _title: Bilheteria Diária — informações de Distribuidoras
+    _columns_count: 18
+    exposes:
+      - key: CNPJ
+        col: cnpj_distribuidora
+        confidence: high
+        normalize: digits_only
+      - key: CPB
+        col: cpb_roe
+        confidence: high
+      - key: PAIS
+        col: pais_obra
+        confidence: medium
+      - key: TITULO_OBRA
+        col: titulo_original
         confidence: high
         normalize: titulo_norm
   - table: bilheteria_diaria_distribuidora_filme_ano
@@ -322,6 +1305,279 @@ tables:
         normalize: digits_only
       - key: EXIBIDORA
         col: exibidora
+        confidence: high
+        normalize: titulo_norm
+  - table: bilheteria_diaria_exibidora_detalhe_2014
+    _dataset: ancine-bilheteria-diaria-exibidoras
+    _country: BR
+    _source: ancine
+    _title: Bilheteria Diária — informações de Exibidoras
+    _columns_count: 19
+    exposes:
+      - key: CNPJ
+        col: cnpj_exibidora
+        confidence: high
+        normalize: digits_only
+      - key: CPB
+        col: cpb_roe
+        confidence: high
+      - key: PAIS
+        col: pais_obra
+        confidence: medium
+      - key: TITULO_OBRA
+        col: titulo_original
+        confidence: high
+        normalize: titulo_norm
+  - table: bilheteria_diaria_exibidora_detalhe_2015
+    _dataset: ancine-bilheteria-diaria-exibidoras
+    _country: BR
+    _source: ancine
+    _title: Bilheteria Diária — informações de Exibidoras
+    _columns_count: 19
+    exposes:
+      - key: CNPJ
+        col: cnpj_exibidora
+        confidence: high
+        normalize: digits_only
+      - key: CPB
+        col: cpb_roe
+        confidence: high
+      - key: PAIS
+        col: pais_obra
+        confidence: medium
+      - key: TITULO_OBRA
+        col: titulo_original
+        confidence: high
+        normalize: titulo_norm
+  - table: bilheteria_diaria_exibidora_detalhe_2016
+    _dataset: ancine-bilheteria-diaria-exibidoras
+    _country: BR
+    _source: ancine
+    _title: Bilheteria Diária — informações de Exibidoras
+    _columns_count: 19
+    exposes:
+      - key: CNPJ
+        col: cnpj_exibidora
+        confidence: high
+        normalize: digits_only
+      - key: CPB
+        col: cpb_roe
+        confidence: high
+      - key: PAIS
+        col: pais_obra
+        confidence: medium
+      - key: TITULO_OBRA
+        col: titulo_original
+        confidence: high
+        normalize: titulo_norm
+  - table: bilheteria_diaria_exibidora_detalhe_2017
+    _dataset: ancine-bilheteria-diaria-exibidoras
+    _country: BR
+    _source: ancine
+    _title: Bilheteria Diária — informações de Exibidoras
+    _columns_count: 19
+    exposes:
+      - key: CNPJ
+        col: cnpj_exibidora
+        confidence: high
+        normalize: digits_only
+      - key: CPB
+        col: cpb_roe
+        confidence: high
+      - key: PAIS
+        col: pais_obra
+        confidence: medium
+      - key: TITULO_OBRA
+        col: titulo_original
+        confidence: high
+        normalize: titulo_norm
+  - table: bilheteria_diaria_exibidora_detalhe_2018
+    _dataset: ancine-bilheteria-diaria-exibidoras
+    _country: BR
+    _source: ancine
+    _title: Bilheteria Diária — informações de Exibidoras
+    _columns_count: 19
+    exposes:
+      - key: CNPJ
+        col: cnpj_exibidora
+        confidence: high
+        normalize: digits_only
+      - key: CPB
+        col: cpb_roe
+        confidence: high
+      - key: PAIS
+        col: pais_obra
+        confidence: medium
+      - key: TITULO_OBRA
+        col: titulo_original
+        confidence: high
+        normalize: titulo_norm
+  - table: bilheteria_diaria_exibidora_detalhe_2019
+    _dataset: ancine-bilheteria-diaria-exibidoras
+    _country: BR
+    _source: ancine
+    _title: Bilheteria Diária — informações de Exibidoras
+    _columns_count: 19
+    exposes:
+      - key: CNPJ
+        col: cnpj_exibidora
+        confidence: high
+        normalize: digits_only
+      - key: CPB
+        col: cpb_roe
+        confidence: high
+      - key: PAIS
+        col: pais_obra
+        confidence: medium
+      - key: TITULO_OBRA
+        col: titulo_original
+        confidence: high
+        normalize: titulo_norm
+  - table: bilheteria_diaria_exibidora_detalhe_2020
+    _dataset: ancine-bilheteria-diaria-exibidoras
+    _country: BR
+    _source: ancine
+    _title: Bilheteria Diária — informações de Exibidoras
+    _columns_count: 19
+    exposes:
+      - key: CNPJ
+        col: cnpj_exibidora
+        confidence: high
+        normalize: digits_only
+      - key: CPB
+        col: cpb_roe
+        confidence: high
+      - key: PAIS
+        col: pais_obra
+        confidence: medium
+      - key: TITULO_OBRA
+        col: titulo_original
+        confidence: high
+        normalize: titulo_norm
+  - table: bilheteria_diaria_exibidora_detalhe_2021
+    _dataset: ancine-bilheteria-diaria-exibidoras
+    _country: BR
+    _source: ancine
+    _title: Bilheteria Diária — informações de Exibidoras
+    _columns_count: 19
+    exposes:
+      - key: CNPJ
+        col: cnpj_exibidora
+        confidence: high
+        normalize: digits_only
+      - key: CPB
+        col: cpb_roe
+        confidence: high
+      - key: PAIS
+        col: pais_obra
+        confidence: medium
+      - key: TITULO_OBRA
+        col: titulo_original
+        confidence: high
+        normalize: titulo_norm
+  - table: bilheteria_diaria_exibidora_detalhe_2022
+    _dataset: ancine-bilheteria-diaria-exibidoras
+    _country: BR
+    _source: ancine
+    _title: Bilheteria Diária — informações de Exibidoras
+    _columns_count: 19
+    exposes:
+      - key: CNPJ
+        col: cnpj_exibidora
+        confidence: high
+        normalize: digits_only
+      - key: CPB
+        col: cpb_roe
+        confidence: high
+      - key: PAIS
+        col: pais_obra
+        confidence: medium
+      - key: TITULO_OBRA
+        col: titulo_original
+        confidence: high
+        normalize: titulo_norm
+  - table: bilheteria_diaria_exibidora_detalhe_2023
+    _dataset: ancine-bilheteria-diaria-exibidoras
+    _country: BR
+    _source: ancine
+    _title: Bilheteria Diária — informações de Exibidoras
+    _columns_count: 19
+    exposes:
+      - key: CNPJ
+        col: cnpj_exibidora
+        confidence: high
+        normalize: digits_only
+      - key: CPB
+        col: cpb_roe
+        confidence: high
+      - key: PAIS
+        col: pais_obra
+        confidence: medium
+      - key: TITULO_OBRA
+        col: titulo_original
+        confidence: high
+        normalize: titulo_norm
+  - table: bilheteria_diaria_exibidora_detalhe_2024
+    _dataset: ancine-bilheteria-diaria-exibidoras
+    _country: BR
+    _source: ancine
+    _title: Bilheteria Diária — informações de Exibidoras
+    _columns_count: 19
+    exposes:
+      - key: CNPJ
+        col: cnpj_exibidora
+        confidence: high
+        normalize: digits_only
+      - key: CPB
+        col: cpb_roe
+        confidence: high
+      - key: PAIS
+        col: pais_obra
+        confidence: medium
+      - key: TITULO_OBRA
+        col: titulo_original
+        confidence: high
+        normalize: titulo_norm
+  - table: bilheteria_diaria_exibidora_detalhe_2025
+    _dataset: ancine-bilheteria-diaria-exibidoras
+    _country: BR
+    _source: ancine
+    _title: Bilheteria Diária — informações de Exibidoras
+    _columns_count: 19
+    exposes:
+      - key: CNPJ
+        col: cnpj_exibidora
+        confidence: high
+        normalize: digits_only
+      - key: CPB
+        col: cpb_roe
+        confidence: high
+      - key: PAIS
+        col: pais_obra
+        confidence: medium
+      - key: TITULO_OBRA
+        col: titulo_original
+        confidence: high
+        normalize: titulo_norm
+  - table: bilheteria_diaria_exibidora_detalhe_2026
+    _dataset: ancine-bilheteria-diaria-exibidoras
+    _country: BR
+    _source: ancine
+    _title: Bilheteria Diária — informações de Exibidoras
+    _columns_count: 19
+    exposes:
+      - key: CNPJ
+        col: cnpj_exibidora
+        confidence: high
+        normalize: digits_only
+      - key: CPB
+        col: cpb_roe
+        confidence: high
+      - key: PAIS
+        col: pais_obra
+        confidence: medium
+      - key: TITULO_OBRA
+        col: titulo_original
         confidence: high
         normalize: titulo_norm
   - table: bilheteria_diaria_exibidora_filme_ano
@@ -549,12 +1805,36 @@ tables:
       - key: PAIS
         col: pais_programadora
         confidence: medium
+  - table: captacao_por_projeto
+    _dataset: ancine-captacao-por-projeto
+    _country: BR
+    _source: ancine
+    _title: Captação por Projeto Incentivado
+    _columns_count: 25
+    exposes:
+      - key: ANO
+        col: ano
+        confidence: high
+      - key: CNPJ
+        col: cnpj_proponente
+        confidence: high
+        normalize: digits_only
+      - key: CNPJ
+        col: cnpj_proponente_original
+        confidence: high
+        normalize: digits_only
+      - key: GENERO
+        col: genero
+        confidence: high
+      - key: SALIC
+        col: salic
+        confidence: high
   - table: captacao_por_projeto_investidor
     _dataset: ancine-captacao-por-projeto-investidor
     _country: BR
     _source: ancine
-    _title: Captacao por Projeto Incentivado e por Investidor
-    _columns_count: 20
+    _title: Captação por Projeto e Investidor
+    _columns_count: 27
     exposes:
       - key: ANO
         col: ano
@@ -564,49 +1844,253 @@ tables:
         confidence: high
         normalize: digits_only
       - key: CNPJ
+        col: cnpj_investidor_ou_contribuinte_original
+        confidence: high
+        normalize: digits_only
+      - key: CNPJ
         col: cnpj_proponente
+        confidence: high
+        normalize: digits_only
+      - key: CNPJ
+        col: cnpj_proponente_original
         confidence: high
         normalize: digits_only
       - key: SALIC
         col: salic
         confidence: high
-  - table: cnc_audience_television
+  - table: cnc_audience_television_dureeecoute1
     _dataset: cnc-audience-television
     _country: FR
     _source: cnc
     _title: Audiencia de Filmes na Televisao
-    _columns_count: 10
+    _columns_count: 15
     exposes: []
-  - table: cnc_consumo_vod
+  - table: cnc_audience_television_dureeecoute2
+    _dataset: cnc-audience-television
+    _country: FR
+    _source: cnc
+    _title: Audiencia de Filmes na Televisao
+    _columns_count: 19
+    exposes:
+      - key: ANO
+        col: annee
+        confidence: high
+  - table: cnc_audience_television_o_c
+    _dataset: cnc-audience-television
+    _country: FR
+    _source: cnc
+    _title: Audiencia de Filmes na Televisao
+    _columns_count: 34
+    exposes: []
+  - table: cnc_audience_television_partdaudience
+    _dataset: cnc-audience-television
+    _country: FR
+    _source: cnc
+    _title: Audiencia de Filmes na Televisao
+    _columns_count: 35
+    exposes: []
+  - table: cnc_audience_television_topaudiences
+    _dataset: cnc-audience-television
+    _country: FR
+    _source: cnc
+    _title: Audiencia de Filmes na Televisao
+    _columns_count: 22
+    exposes: []
+  - table: cnc_consumo_vod_100_acte
     _dataset: cnc-consumo-vod
     _country: FR
     _source: cnc
     _title: Consumo Domestico de VoD
-    _columns_count: 17
+    _columns_count: 14
     exposes: []
-  - table: cnc_distribution_salles
+  - table: cnc_consumo_vod_ca_100_support
+    _dataset: cnc-consumo-vod
+    _country: FR
+    _source: cnc
+    _title: Consumo Domestico de VoD
+    _columns_count: 18
+    exposes: []
+  - table: cnc_consumo_vod_ca_100_typeachat
+    _dataset: cnc-consumo-vod
+    _country: FR
+    _source: cnc
+    _title: Consumo Domestico de VoD
+    _columns_count: 22
+    exposes: []
+  - table: cnc_consumo_vod_poidstop
+    _dataset: cnc-consumo-vod
+    _country: FR
+    _source: cnc
+    _title: Consumo Domestico de VoD
+    _columns_count: 10
+    exposes: []
+  - table: cnc_consumo_vod_structuregenre
+    _dataset: cnc-consumo-vod
+    _country: FR
+    _source: cnc
+    _title: Consumo Domestico de VoD
+    _columns_count: 19
+    exposes: []
+  - table: cnc_consumo_vod_structuregenreav
+    _dataset: cnc-consumo-vod
+    _country: FR
+    _source: cnc
+    _title: Consumo Domestico de VoD
+    _columns_count: 19
+    exposes: []
+  - table: cnc_consumo_vod_structurenatiocinema
+    _dataset: cnc-consumo-vod
+    _country: FR
+    _source: cnc
+    _title: Consumo Domestico de VoD
+    _columns_count: 15
+    exposes: []
+  - table: cnc_distribution_salles_ae
     _dataset: cnc-distribution-salles
     _country: FR
     _source: cnc
     _title: Distribuicao de Filmes em Salas
-    _columns_count: 17
+    _columns_count: 22
     exposes: []
-  - table: cnc_donnees_internationales
+  - table: cnc_distribution_salles_combinaisonsortie
+    _dataset: cnc-distribution-salles
+    _country: FR
+    _source: cnc
+    _title: Distribuicao de Filmes em Salas
+    _columns_count: 22
+    exposes: []
+  - table: cnc_distribution_salles_coutdef
+    _dataset: cnc-distribution-salles
+    _country: FR
+    _source: cnc
+    _title: Distribuicao de Filmes em Salas
+    _columns_count: 22
+    exposes: []
+  - table: cnc_distribution_salles_coutprod
+    _dataset: cnc-distribution-salles
+    _country: FR
+    _source: cnc
+    _title: Distribuicao de Filmes em Salas
+    _columns_count: 22
+    exposes: []
+  - table: cnc_distribution_salles_coutsdistrib
+    _dataset: cnc-distribution-salles
+    _country: FR
+    _source: cnc
+    _title: Distribuicao de Filmes em Salas
+    _columns_count: 22
+    exposes: []
+  - table: cnc_distribution_salles_coutsdistrib_2
+    _dataset: cnc-distribution-salles
+    _country: FR
+    _source: cnc
+    _title: Distribuicao de Filmes em Salas
+    _columns_count: 19
+    exposes: []
+  - table: cnc_distribution_salles_echantillon
+    _dataset: cnc-distribution-salles
+    _country: FR
+    _source: cnc
+    _title: Distribuicao de Filmes em Salas
+    _columns_count: 22
+    exposes: []
+  - table: cnc_distribution_salles_entrees
+    _dataset: cnc-distribution-salles
+    _country: FR
+    _source: cnc
+    _title: Distribuicao de Filmes em Salas
+    _columns_count: 22
+    exposes: []
+  - table: cnc_distribution_salles_genre
+    _dataset: cnc-distribution-salles
+    _country: FR
+    _source: cnc
+    _title: Distribuicao de Filmes em Salas
+    _columns_count: 22
+    exposes: []
+  - table: cnc_distribution_salles_vpf
+    _dataset: cnc-distribution-salles
+    _country: FR
+    _source: cnc
+    _title: Distribuicao de Filmes em Salas
+    _columns_count: 15
+    exposes: []
+  - table: cnc_donnees_internationales_allemagne
     _dataset: cnc-donnees-internationales
     _country: FR
     _source: cnc
     _title: Dados Internacionais do Cinema
-    _columns_count: 28
-    exposes:
-      - key: PAIS
-        col: pays
-        confidence: medium
+    _columns_count: 26
+    exposes: []
+  - table: cnc_donnees_internationales_chine
+    _dataset: cnc-donnees-internationales
+    _country: FR
+    _source: cnc
+    _title: Dados Internacionais do Cinema
+    _columns_count: 22
+    exposes: []
+  - table: cnc_donnees_internationales_espagne
+    _dataset: cnc-donnees-internationales
+    _country: FR
+    _source: cnc
+    _title: Dados Internacionais do Cinema
+    _columns_count: 26
+    exposes: []
+  - table: cnc_donnees_internationales_etats_unis
+    _dataset: cnc-donnees-internationales
+    _country: FR
+    _source: cnc
+    _title: Dados Internacionais do Cinema
+    _columns_count: 26
+    exposes: []
+  - table: cnc_donnees_internationales_italie
+    _dataset: cnc-donnees-internationales
+    _country: FR
+    _source: cnc
+    _title: Dados Internacionais do Cinema
+    _columns_count: 26
+    exposes: []
+  - table: cnc_donnees_internationales_japon
+    _dataset: cnc-donnees-internationales
+    _country: FR
+    _source: cnc
+    _title: Dados Internacionais do Cinema
+    _columns_count: 26
+    exposes: []
+  - table: cnc_donnees_internationales_mexique
+    _dataset: cnc-donnees-internationales
+    _country: FR
+    _source: cnc
+    _title: Dados Internacionais do Cinema
+    _columns_count: 26
+    exposes: []
+  - table: cnc_donnees_internationales_royaume_uni
+    _dataset: cnc-donnees-internationales
+    _country: FR
+    _source: cnc
+    _title: Dados Internacionais do Cinema
+    _columns_count: 26
+    exposes: []
+  - table: cnc_donnees_internationales_russie
+    _dataset: cnc-donnees-internationales
+    _country: FR
+    _source: cnc
+    _title: Dados Internacionais do Cinema
+    _columns_count: 23
+    exposes: []
+  - table: cnc_donnees_internationales_u_e
+    _dataset: cnc-donnees-internationales
+    _country: FR
+    _source: cnc
+    _title: Dados Internacionais do Cinema
+    _columns_count: 12
+    exposes: []
   - table: cnc_etablissements
     _dataset: cnc-etablissements
     _country: FR
     _source: cnc
     _title: Estabelecimentos Cinematograficos
-    _columns_count: 16
+    _columns_count: 20
     exposes:
       - key: ANO
         col: ano
@@ -620,19 +2104,61 @@ tables:
       - key: MUNICIPIO
         col: commune
         confidence: medium
-  - table: cnc_exportacao_programas
+  - table: cnc_exportacao_programas_ameriquenord
     _dataset: cnc-exportacao-programas-audiovisuais
     _country: FR
     _source: cnc
     _title: Exportacao de Programas Audiovisuais
-    _columns_count: 30
+    _columns_count: 29
+    exposes: []
+  - table: cnc_exportacao_programas_asieoceanie
+    _dataset: cnc-exportacao-programas-audiovisuais
+    _country: FR
+    _source: cnc
+    _title: Exportacao de Programas Audiovisuais
+    _columns_count: 29
+    exposes: []
+  - table: cnc_exportacao_programas_europecent
+    _dataset: cnc-exportacao-programas-audiovisuais
+    _country: FR
+    _source: cnc
+    _title: Exportacao de Programas Audiovisuais
+    _columns_count: 29
+    exposes: []
+  - table: cnc_exportacao_programas_europeouest
+    _dataset: cnc-exportacao-programas-audiovisuais
+    _country: FR
+    _source: cnc
+    _title: Exportacao de Programas Audiovisuais
+    _columns_count: 32
+    exposes: []
+  - table: cnc_exportacao_programas_export
+    _dataset: cnc-exportacao-programas-audiovisuais
+    _country: FR
+    _source: cnc
+    _title: Exportacao de Programas Audiovisuais
+    _columns_count: 7
+    exposes: []
+  - table: cnc_exportacao_programas_genre
+    _dataset: cnc-exportacao-programas-audiovisuais
+    _country: FR
+    _source: cnc
+    _title: Exportacao de Programas Audiovisuais
+    _columns_count: 32
+    exposes: []
+  - table: cnc_exportacao_programas_geo
+    _dataset: cnc-exportacao-programas-audiovisuais
+    _country: FR
+    _source: cnc
+    _title: Exportacao de Programas Audiovisuais
+    _columns_count: 32
     exposes: []
   - table: cnc_films_agrees
     _dataset: cnc-films-agrees
     _country: FR
     _source: cnc
     _title: Filmes com Agrement (Producao e Distribuicao)
-    _columns_count: 19
+    _columns_count: 23
     exposes:
       - key: ANO
         col: ano
@@ -652,7 +2178,7 @@ tables:
     _country: FR
     _source: cnc
     _title: Filmes com Mais de 1 Milhao de Entradas
-    _columns_count: 7
+    _columns_count: 12
     exposes:
       - key: ANO
         col: ano
@@ -664,85 +2190,1427 @@ tables:
         col: titre
         confidence: medium
         normalize: titulo_norm
-  - table: cnc_films_television
+  - table: cnc_films_television_b_diff_tv
     _dataset: cnc-films-television
     _country: FR
     _source: cnc
     _title: Filmes na Televisao Francesa
-    _columns_count: 57
+    _columns_count: 22
     exposes: []
-  - table: cnc_financement_television
+  - table: cnc_films_television_diffusions
+    _dataset: cnc-films-television
+    _country: FR
+    _source: cnc
+    _title: Filmes na Televisao Francesa
+    _columns_count: 42
+    exposes: []
+  - table: cnc_films_television_films
+    _dataset: cnc-films-television
+    _country: FR
+    _source: cnc
+    _title: Filmes na Televisao Francesa
+    _columns_count: 42
+    exposes: []
+  - table: cnc_films_television_filmsinedits
+    _dataset: cnc-films-television
+    _country: FR
+    _source: cnc
+    _title: Filmes na Televisao Francesa
+    _columns_count: 42
+    exposes: []
+  - table: cnc_films_television_filmspt
+    _dataset: cnc-films-television
+    _country: FR
+    _source: cnc
+    _title: Filmes na Televisao Francesa
+    _columns_count: 42
+    exposes: []
+  - table: cnc_films_television_filmsptinedits
+    _dataset: cnc-films-television
+    _country: FR
+    _source: cnc
+    _title: Filmes na Televisao Francesa
+    _columns_count: 42
+    exposes: []
+  - table: cnc_financement_television_abonnement
     _dataset: cnc-financement-television
     _country: FR
     _source: cnc
     _title: Financiamento da Televisao Francesa
-    _columns_count: 17
+    _columns_count: 7
     exposes: []
-  - table: cnc_frequentation_salles
+  - table: cnc_financement_television_cap
+    _dataset: cnc-financement-television
+    _country: FR
+    _source: cnc
+    _title: Financiamento da Televisao Francesa
+    _columns_count: 20
+    exposes: []
+  - table: cnc_financement_television_publicite
+    _dataset: cnc-financement-television
+    _country: FR
+    _source: cnc
+    _title: Financiamento da Televisao Francesa
+    _columns_count: 7
+    exposes: []
+  - table: cnc_frequentation_salles_ae_sortie1
     _dataset: cnc-frequentation-salles
     _country: FR
     _source: cnc
     _title: Frequentacao de Salas
-    _columns_count: 5
+    _columns_count: 9
     exposes: []
-  - table: cnc_geographie_commune
+  - table: cnc_frequentation_salles_age
+    _dataset: cnc-frequentation-salles
+    _country: FR
+    _source: cnc
+    _title: Frequentacao de Salas
+    _columns_count: 17
+    exposes: []
+  - table: cnc_frequentation_salles_classae
+    _dataset: cnc-frequentation-salles
+    _country: FR
+    _source: cnc
+    _title: Frequentacao de Salas
+    _columns_count: 9
+    exposes: []
+  - table: cnc_frequentation_salles_decompos
+    _dataset: cnc-frequentation-salles
+    _country: FR
+    _source: cnc
+    _title: Frequentacao de Salas
+    _columns_count: 13
+    exposes: []
+  - table: cnc_frequentation_salles_entrees
+    _dataset: cnc-frequentation-salles
+    _country: FR
+    _source: cnc
+    _title: Frequentacao de Salas
+    _columns_count: 15
+    exposes: []
+  - table: cnc_frequentation_salles_entrees_ff
+    _dataset: cnc-frequentation-salles
+    _country: FR
+    _source: cnc
+    _title: Frequentacao de Salas
+    _columns_count: 14
+    exposes: []
+  - table: cnc_frequentation_salles_entrees_sortie1
+    _dataset: cnc-frequentation-salles
+    _country: FR
+    _source: cnc
+    _title: Frequentacao de Salas
+    _columns_count: 14
+    exposes: []
+  - table: cnc_frequentation_salles_filmexpl
+    _dataset: cnc-frequentation-salles
+    _country: FR
+    _source: cnc
+    _title: Frequentacao de Salas
+    _columns_count: 11
+    exposes: []
+  - table: cnc_frequentation_salles_filmexpl_1979
+    _dataset: cnc-frequentation-salles
+    _country: FR
+    _source: cnc
+    _title: Frequentacao de Salas
+    _columns_count: 10
+    exposes: []
+  - table: cnc_frequentation_salles_freqcine
+    _dataset: cnc-frequentation-salles
+    _country: FR
+    _source: cnc
+    _title: Frequentacao de Salas
+    _columns_count: 10
+    exposes: []
+  - table: cnc_frequentation_salles_genre_sortie1
+    _dataset: cnc-frequentation-salles
+    _country: FR
+    _source: cnc
+    _title: Frequentacao de Salas
+    _columns_count: 10
+    exposes: []
+  - table: cnc_frequentation_salles_jour
+    _dataset: cnc-frequentation-salles
+    _country: FR
+    _source: cnc
+    _title: Frequentacao de Salas
+    _columns_count: 14
+    exposes: []
+  - table: cnc_frequentation_salles_lm_cm_hf
+    _dataset: cnc-frequentation-salles
+    _country: FR
+    _source: cnc
+    _title: Frequentacao de Salas
+    _columns_count: 10
+    exposes: []
+  - table: cnc_frequentation_salles_mois
+    _dataset: cnc-frequentation-salles
+    _country: FR
+    _source: cnc
+    _title: Frequentacao de Salas
+    _columns_count: 19
+    exposes: []
+  - table: cnc_frequentation_salles_natio
+    _dataset: cnc-frequentation-salles
+    _country: FR
+    _source: cnc
+    _title: Frequentacao de Salas
+    _columns_count: 38
+    exposes:
+      - key: PAIS
+        col: autres_nationalites
+        confidence: medium
+  - table: cnc_frequentation_salles_natio_sortie1
+    _dataset: cnc-frequentation-salles
+    _country: FR
+    _source: cnc
+    _title: Frequentacao de Salas
+    _columns_count: 38
+    exposes:
+      - key: PAIS
+        col: autres_nationalites
+        confidence: medium
+  - table: cnc_frequentation_salles_perform
+    _dataset: cnc-frequentation-salles
+    _country: FR
+    _source: cnc
+    _title: Frequentacao de Salas
+    _columns_count: 10
+    exposes: []
+  - table: cnc_frequentation_salles_perform_sortie1
+    _dataset: cnc-frequentation-salles
+    _country: FR
+    _source: cnc
+    _title: Frequentacao de Salas
+    _columns_count: 10
+    exposes: []
+  - table: cnc_frequentation_salles_semaine
+    _dataset: cnc-frequentation-salles
+    _country: FR
+    _source: cnc
+    _title: Frequentacao de Salas
+    _columns_count: 39
+    exposes: []
+  - table: cnc_geographie_commune_art_et_essai
     _dataset: cnc-geographie-cinema
     _country: FR
     _source: cnc
     _title: Geografia do Cinema Frances
-    _columns_count: 123
+    _columns_count: 35
+    exposes: []
+  - table: cnc_geographie_commune_ecrans
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 72
+    exposes: []
+  - table: cnc_geographie_commune_entrees
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 72
+    exposes: []
+  - table: cnc_geographie_commune_etablissements
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 40
+    exposes: []
+  - table: cnc_geographie_commune_fauteuils
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 72
+    exposes: []
+  - table: cnc_geographie_commune_indice_de_frequentation
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 72
+    exposes: []
+  - table: cnc_geographie_commune_multiplexes
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 36
+    exposes: []
+  - table: cnc_geographie_commune_recettes
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 72
+    exposes: []
+  - table: cnc_geographie_commune_rme
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 72
+    exposes: []
+  - table: cnc_geographie_commune_seances
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 40
+    exposes: []
+  - table: cnc_geographie_commune_taux_d_occupation_des_fauteuils
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 40
+    exposes: []
+  - table: cnc_geographie_commune_tranchepopulation
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 35
     exposes:
       - key: MUNICIPIO
         col: communes_equipees
         confidence: medium
-  - table: cnc_geographie_departement
+  - table: cnc_geographie_departement_ecrans
     _dataset: cnc-geographie-cinema
     _country: FR
     _source: cnc
     _title: Geografia do Cinema Frances
-    _columns_count: 94
+    _columns_count: 66
     exposes: []
-  - table: cnc_geographie_region
+  - table: cnc_geographie_departement_ecransae
     _dataset: cnc-geographie-cinema
     _country: FR
     _source: cnc
     _title: Geografia do Cinema Frances
-    _columns_count: 93
+    _columns_count: 30
     exposes: []
-  - table: cnc_geographie_urbain
+  - table: cnc_geographie_departement_ecransg
     _dataset: cnc-geographie-cinema
     _country: FR
     _source: cnc
     _title: Geografia do Cinema Frances
-    _columns_count: 20
+    _columns_count: 28
     exposes: []
-  - table: cnc_parc_cinematographique
+  - table: cnc_geographie_departement_ecransm
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 28
+    exposes: []
+  - table: cnc_geographie_departement_ecransp
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 28
+    exposes: []
+  - table: cnc_geographie_departement_entrees
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 66
+    exposes: []
+  - table: cnc_geographie_departement_entreesae
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 30
+    exposes: []
+  - table: cnc_geographie_departement_entreesg
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 28
+    exposes: []
+  - table: cnc_geographie_departement_entreesm
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 28
+    exposes: []
+  - table: cnc_geographie_departement_entreesp
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 28
+    exposes: []
+  - table: cnc_geographie_departement_etabae
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 30
+    exposes: []
+  - table: cnc_geographie_departement_etabg
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 28
+    exposes: []
+  - table: cnc_geographie_departement_etablissements
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 66
+    exposes: []
+  - table: cnc_geographie_departement_etabm
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 28
+    exposes: []
+  - table: cnc_geographie_departement_etabp
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 28
+    exposes: []
+  - table: cnc_geographie_departement_fauteuils
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 66
+    exposes: []
+  - table: cnc_geographie_departement_fauteuilsae
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 30
+    exposes: []
+  - table: cnc_geographie_departement_fauteuilsg
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 28
+    exposes: []
+  - table: cnc_geographie_departement_fauteuilsm
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 28
+    exposes: []
+  - table: cnc_geographie_departement_fauteuilsp
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 28
+    exposes: []
+  - table: cnc_geographie_departement_indice_de_frequentation
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 66
+    exposes: []
+  - table: cnc_geographie_departement_indice_de_frequentationae
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 30
+    exposes: []
+  - table: cnc_geographie_departement_indice_de_frequentationg
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 28
+    exposes: []
+  - table: cnc_geographie_departement_indice_de_frequentationm
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 28
+    exposes: []
+  - table: cnc_geographie_departement_indice_de_frequentationp
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 28
+    exposes: []
+  - table: cnc_geographie_departement_multiplexes
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 66
+    exposes: []
+  - table: cnc_geographie_departement_recettes
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 66
+    exposes: []
+  - table: cnc_geographie_departement_recettesae
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 30
+    exposes: []
+  - table: cnc_geographie_departement_recettesg
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 28
+    exposes: []
+  - table: cnc_geographie_departement_recettesm
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 28
+    exposes: []
+  - table: cnc_geographie_departement_recettesp
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 28
+    exposes: []
+  - table: cnc_geographie_departement_rme
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 66
+    exposes: []
+  - table: cnc_geographie_departement_rmeae
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 30
+    exposes: []
+  - table: cnc_geographie_departement_rmeg
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 28
+    exposes: []
+  - table: cnc_geographie_departement_rmem
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 28
+    exposes: []
+  - table: cnc_geographie_departement_rmep
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 28
+    exposes: []
+  - table: cnc_geographie_departement_seances
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 66
+    exposes: []
+  - table: cnc_geographie_departement_seances_ae
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 30
+    exposes: []
+  - table: cnc_geographie_departement_seancesg
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 28
+    exposes: []
+  - table: cnc_geographie_departement_seancesm
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 28
+    exposes: []
+  - table: cnc_geographie_departement_seancesp
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 28
+    exposes: []
+  - table: cnc_geographie_departement_taux_d_occupation_des_fauteuils
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 40
+    exposes: []
+  - table: cnc_geographie_departement_tmofae
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 30
+    exposes: []
+  - table: cnc_geographie_departement_tmofg
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 28
+    exposes: []
+  - table: cnc_geographie_departement_tmofm
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 28
+    exposes: []
+  - table: cnc_geographie_departement_tmofp
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 28
+    exposes: []
+  - table: cnc_geographie_region_ecrans
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 65
+    exposes: []
+  - table: cnc_geographie_region_ecransae
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 29
+    exposes: []
+  - table: cnc_geographie_region_ecransg
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 27
+    exposes: []
+  - table: cnc_geographie_region_ecransm
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 27
+    exposes: []
+  - table: cnc_geographie_region_ecransp
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 27
+    exposes: []
+  - table: cnc_geographie_region_entrees
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 65
+    exposes: []
+  - table: cnc_geographie_region_entreesae
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 29
+    exposes: []
+  - table: cnc_geographie_region_entreesg
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 27
+    exposes: []
+  - table: cnc_geographie_region_entreesm
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 27
+    exposes: []
+  - table: cnc_geographie_region_entreesp
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 27
+    exposes: []
+  - table: cnc_geographie_region_etabae
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 29
+    exposes: []
+  - table: cnc_geographie_region_etabg
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 27
+    exposes: []
+  - table: cnc_geographie_region_etablissements
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 65
+    exposes: []
+  - table: cnc_geographie_region_etabm
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 27
+    exposes: []
+  - table: cnc_geographie_region_etabp
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 27
+    exposes: []
+  - table: cnc_geographie_region_fauteuils
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 65
+    exposes: []
+  - table: cnc_geographie_region_fauteuilsae
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 29
+    exposes: []
+  - table: cnc_geographie_region_fauteuilsg
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 27
+    exposes: []
+  - table: cnc_geographie_region_fauteuilsm
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 27
+    exposes: []
+  - table: cnc_geographie_region_fauteuilsp
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 27
+    exposes: []
+  - table: cnc_geographie_region_indice_de_frequentation
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 65
+    exposes: []
+  - table: cnc_geographie_region_indice_de_frequentationae
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 29
+    exposes: []
+  - table: cnc_geographie_region_indice_de_frequentationg
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 27
+    exposes: []
+  - table: cnc_geographie_region_indice_de_frequentationm
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 27
+    exposes: []
+  - table: cnc_geographie_region_indice_de_frequentationp
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 27
+    exposes: []
+  - table: cnc_geographie_region_multiplexes
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 65
+    exposes: []
+  - table: cnc_geographie_region_recettes
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 65
+    exposes: []
+  - table: cnc_geographie_region_recettesae
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 29
+    exposes: []
+  - table: cnc_geographie_region_recettesg
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 27
+    exposes: []
+  - table: cnc_geographie_region_recettesm
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 27
+    exposes: []
+  - table: cnc_geographie_region_recettesp
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 27
+    exposes: []
+  - table: cnc_geographie_region_rme
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 65
+    exposes: []
+  - table: cnc_geographie_region_rmeae
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 29
+    exposes: []
+  - table: cnc_geographie_region_rmeg
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 27
+    exposes: []
+  - table: cnc_geographie_region_rmem
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 27
+    exposes: []
+  - table: cnc_geographie_region_rmep
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 27
+    exposes: []
+  - table: cnc_geographie_region_seances
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 65
+    exposes: []
+  - table: cnc_geographie_region_seances_ae
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 29
+    exposes: []
+  - table: cnc_geographie_region_seancesg
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 27
+    exposes: []
+  - table: cnc_geographie_region_seancesm
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 27
+    exposes: []
+  - table: cnc_geographie_region_seancesp
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 27
+    exposes: []
+  - table: cnc_geographie_region_taux_d_occupation_des_fauteuils
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 39
+    exposes: []
+  - table: cnc_geographie_region_tmofae
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 29
+    exposes: []
+  - table: cnc_geographie_region_tmofg
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 27
+    exposes: []
+  - table: cnc_geographie_region_tmofm
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 27
+    exposes: []
+  - table: cnc_geographie_region_tmofp
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 27
+    exposes: []
+  - table: cnc_geographie_urbain_ecrans
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 23
+    exposes: []
+  - table: cnc_geographie_urbain_ecransae
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 23
+    exposes: []
+  - table: cnc_geographie_urbain_entrees
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 23
+    exposes: []
+  - table: cnc_geographie_urbain_entreesae
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 23
+    exposes: []
+  - table: cnc_geographie_urbain_etabae
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 23
+    exposes: []
+  - table: cnc_geographie_urbain_etablissements
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 23
+    exposes: []
+  - table: cnc_geographie_urbain_fauteuils
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 23
+    exposes: []
+  - table: cnc_geographie_urbain_fauteuilsae
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 23
+    exposes: []
+  - table: cnc_geographie_urbain_indice_de_frequentation
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 23
+    exposes: []
+  - table: cnc_geographie_urbain_indice_de_frequentationae
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 23
+    exposes: []
+  - table: cnc_geographie_urbain_multiplexes
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 23
+    exposes: []
+  - table: cnc_geographie_urbain_recettes
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 23
+    exposes: []
+  - table: cnc_geographie_urbain_recettesae
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 23
+    exposes: []
+  - table: cnc_geographie_urbain_rme
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 23
+    exposes: []
+  - table: cnc_geographie_urbain_rmeae
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 23
+    exposes: []
+  - table: cnc_geographie_urbain_seances
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 23
+    exposes: []
+  - table: cnc_geographie_urbain_seances_ae
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 23
+    exposes: []
+  - table: cnc_geographie_urbain_taux_d_occupation_des_fauteuils
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 23
+    exposes: []
+  - table: cnc_geographie_urbain_tmofae
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 23
+    exposes: []
+  - table: cnc_geographie_urbain_tranchepopulation
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 21
+    exposes: []
+  - table: cnc_geographie_urbain_tranchepopulationae
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 21
+    exposes: []
+  - table: cnc_geographie_urbain_tranchepopulationgrande
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 21
+    exposes: []
+  - table: cnc_geographie_urbain_tranchepopulationmoyenne
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 21
+    exposes: []
+  - table: cnc_geographie_urbain_tranchepopulationpetite
+    _dataset: cnc-geographie-cinema
+    _country: FR
+    _source: cnc
+    _title: Geografia do Cinema Frances
+    _columns_count: 21
+    exposes: []
+  - table: cnc_parc_cinematographique_ecran_entrees
     _dataset: cnc-parc-cinematographique
     _country: FR
     _source: cnc
     _title: Parque Cinematografico Frances
-    _columns_count: 4
+    _columns_count: 15
     exposes: []
-  - table: cnc_public_films
+  - table: cnc_parc_cinematographique_ecran_fauteuils
+    _dataset: cnc-parc-cinematographique
+    _country: FR
+    _source: cnc
+    _title: Parque Cinematografico Frances
+    _columns_count: 15
+    exposes: []
+  - table: cnc_parc_cinematographique_ecran_perf
+    _dataset: cnc-parc-cinematographique
+    _country: FR
+    _source: cnc
+    _title: Parque Cinematografico Frances
+    _columns_count: 13
+    exposes: []
+  - table: cnc_parc_cinematographique_ecran_recettes
+    _dataset: cnc-parc-cinematographique
+    _country: FR
+    _source: cnc
+    _title: Parque Cinematografico Frances
+    _columns_count: 14
+    exposes: []
+  - table: cnc_parc_cinematographique_ecran_rms
+    _dataset: cnc-parc-cinematographique
+    _country: FR
+    _source: cnc
+    _title: Parque Cinematografico Frances
+    _columns_count: 18
+    exposes: []
+  - table: cnc_parc_cinematographique_ecran_seahebdo
+    _dataset: cnc-parc-cinematographique
+    _country: FR
+    _source: cnc
+    _title: Parque Cinematografico Frances
+    _columns_count: 14
+    exposes: []
+  - table: cnc_parc_cinematographique_ecran_semaine
+    _dataset: cnc-parc-cinematographique
+    _country: FR
+    _source: cnc
+    _title: Parque Cinematografico Frances
+    _columns_count: 13
+    exposes: []
+  - table: cnc_parc_cinematographique_ecran_tmof
+    _dataset: cnc-parc-cinematographique
+    _country: FR
+    _source: cnc
+    _title: Parque Cinematografico Frances
+    _columns_count: 14
+    exposes: []
+  - table: cnc_parc_cinematographique_etab_ae
+    _dataset: cnc-parc-cinematographique
+    _country: FR
+    _source: cnc
+    _title: Parque Cinematografico Frances
+    _columns_count: 15
+    exposes: []
+  - table: cnc_parc_cinematographique_etab_aecat
+    _dataset: cnc-parc-cinematographique
+    _country: FR
+    _source: cnc
+    _title: Parque Cinematografico Frances
+    _columns_count: 12
+    exposes: []
+  - table: cnc_parc_cinematographique_etab_aelabel
+    _dataset: cnc-parc-cinematographique
+    _country: FR
+    _source: cnc
+    _title: Parque Cinematografico Frances
+    _columns_count: 10
+    exposes: []
+  - table: cnc_parc_cinematographique_etab_ecrans
+    _dataset: cnc-parc-cinematographique
+    _country: FR
+    _source: cnc
+    _title: Parque Cinematografico Frances
+    _columns_count: 12
+    exposes: []
+  - table: cnc_parc_cinematographique_etab_entrees
+    _dataset: cnc-parc-cinematographique
+    _country: FR
+    _source: cnc
+    _title: Parque Cinematografico Frances
+    _columns_count: 17
+    exposes: []
+  - table: cnc_parc_cinematographique_etab_entreesae
+    _dataset: cnc-parc-cinematographique
+    _country: FR
+    _source: cnc
+    _title: Parque Cinematografico Frances
+    _columns_count: 15
+    exposes: []
+  - table: cnc_parc_cinematographique_etab_fauteuils
+    _dataset: cnc-parc-cinematographique
+    _country: FR
+    _source: cnc
+    _title: Parque Cinematografico Frances
+    _columns_count: 14
+    exposes: []
+  - table: cnc_parc_cinematographique_etab_perf
+    _dataset: cnc-parc-cinematographique
+    _country: FR
+    _source: cnc
+    _title: Parque Cinematografico Frances
+    _columns_count: 12
+    exposes: []
+  - table: cnc_parc_cinematographique_etab_recettes
+    _dataset: cnc-parc-cinematographique
+    _country: FR
+    _source: cnc
+    _title: Parque Cinematografico Frances
+    _columns_count: 16
+    exposes: []
+  - table: cnc_parc_cinematographique_etab_rms
+    _dataset: cnc-parc-cinematographique
+    _country: FR
+    _source: cnc
+    _title: Parque Cinematografico Frances
+    _columns_count: 18
+    exposes: []
+  - table: cnc_parc_cinematographique_exploitants
+    _dataset: cnc-parc-cinematographique
+    _country: FR
+    _source: cnc
+    _title: Parque Cinematografico Frances
+    _columns_count: 15
+    exposes:
+      - key: MUNICIPIO
+        col: cineville
+        confidence: medium
+  - table: cnc_parc_cinematographique_freq_geo
+    _dataset: cnc-parc-cinematographique
+    _country: FR
+    _source: cnc
+    _title: Parque Cinematografico Frances
+    _columns_count: 12
+    exposes:
+      - key: MUNICIPIO
+        col: autres_communes_et_unites_urbaines_en_province
+        confidence: medium
+  - table: cnc_parc_cinematographique_groupements
+    _dataset: cnc-parc-cinematographique
+    _country: FR
+    _source: cnc
+    _title: Parque Cinematografico Frances
+    _columns_count: 17
+    exposes: []
+  - table: cnc_parc_cinematographique_parc
+    _dataset: cnc-parc-cinematographique
+    _country: FR
+    _source: cnc
+    _title: Parque Cinematografico Frances
+    _columns_count: 9
+    exposes: []
+  - table: cnc_parc_cinematographique_paris
+    _dataset: cnc-parc-cinematographique
+    _country: FR
+    _source: cnc
+    _title: Parque Cinematografico Frances
+    _columns_count: 9
+    exposes: []
+  - table: cnc_public_films_3d
     _dataset: cnc-public-films
     _country: FR
     _source: cnc
     _title: Perfil do Publico de Cinema
-    _columns_count: 11
+    _columns_count: 16
     exposes: []
-  - table: cnc_public_vod
+  - table: cnc_public_films_ae
+    _dataset: cnc-public-films
+    _country: FR
+    _source: cnc
+    _title: Perfil do Publico de Cinema
+    _columns_count: 16
+    exposes: []
+  - table: cnc_public_films_entrees
+    _dataset: cnc-public-films
+    _country: FR
+    _source: cnc
+    _title: Perfil do Publico de Cinema
+    _columns_count: 16
+    exposes: []
+  - table: cnc_public_films_genre
+    _dataset: cnc-public-films
+    _country: FR
+    _source: cnc
+    _title: Perfil do Publico de Cinema
+    _columns_count: 16
+    exposes: []
+  - table: cnc_public_films_historique_2005_2015
+    _dataset: cnc-public-films
+    _country: FR
+    _source: cnc
+    _title: Perfil do Publico de Cinema
+    _columns_count: 17
+    exposes: []
+  - table: cnc_public_films_nationalite
+    _dataset: cnc-public-films
+    _country: FR
+    _source: cnc
+    _title: Perfil do Publico de Cinema
+    _columns_count: 16
+    exposes: []
+  - table: cnc_public_vod_frequence
     _dataset: cnc-public-vod
     _country: FR
     _source: cnc
     _title: Publico de VoD na Franca
-    _columns_count: 3
+    _columns_count: 8
     exposes: []
-  - table: cnc_referencias_ativas_vod
+  - table: cnc_public_vod_media
+    _dataset: cnc-public-vod
+    _country: FR
+    _source: cnc
+    _title: Publico de VoD na Franca
+    _columns_count: 8
+    exposes: []
+  - table: cnc_public_vod_mobile
+    _dataset: cnc-public-vod
+    _country: FR
+    _source: cnc
+    _title: Publico de VoD na Franca
+    _columns_count: 8
+    exposes: []
+  - table: cnc_public_vod_modeconso
+    _dataset: cnc-public-vod
+    _country: FR
+    _source: cnc
+    _title: Publico de VoD na Franca
+    _columns_count: 8
+    exposes: []
+  - table: cnc_public_vod_penetration
+    _dataset: cnc-public-vod
+    _country: FR
+    _source: cnc
+    _title: Publico de VoD na Franca
+    _columns_count: 8
+    exposes: []
+  - table: cnc_public_vod_profil
+    _dataset: cnc-public-vod
+    _country: FR
+    _source: cnc
+    _title: Publico de VoD na Franca
+    _columns_count: 8
+    exposes: []
+  - table: cnc_public_vod_service
+    _dataset: cnc-public-vod
+    _country: FR
+    _source: cnc
+    _title: Publico de VoD na Franca
+    _columns_count: 8
+    exposes: []
+  - table: cnc_referencias_ativas_vod_conso
     _dataset: cnc-referencias-ativas-vod
     _country: FR
     _source: cnc
     _title: Referencias Ativas em VoD
-    _columns_count: 11
+    _columns_count: 16
+    exposes: []
+  - table: cnc_referencias_ativas_vod_filmnatio
+    _dataset: cnc-referencias-ativas-vod
+    _country: FR
+    _source: cnc
+    _title: Referencias Ativas em VoD
+    _columns_count: 14
+    exposes: []
+  - table: cnc_referencias_ativas_vod_filmnatio_gfk
+    _dataset: cnc-referencias-ativas-vod
+    _country: FR
+    _source: cnc
+    _title: Referencias Ativas em VoD
+    _columns_count: 10
+    exposes: []
+  - table: cnc_referencias_ativas_vod_filmnatiosupport_gfk
+    _dataset: cnc-referencias-ativas-vod
+    _country: FR
+    _source: cnc
+    _title: Referencias Ativas em VoD
+    _columns_count: 10
+    exposes: []
+  - table: cnc_referencias_ativas_vod_filmplateforme
+    _dataset: cnc-referencias-ativas-vod
+    _country: FR
+    _source: cnc
+    _title: Referencias Ativas em VoD
+    _columns_count: 14
+    exposes: []
+  - table: cnc_referencias_ativas_vod_filmplateforme_gfk
+    _dataset: cnc-referencias-ativas-vod
+    _country: FR
+    _source: cnc
+    _title: Referencias Ativas em VoD
+    _columns_count: 10
+    exposes: []
+  - table: cnc_referencias_ativas_vod_programmeconso
+    _dataset: cnc-referencias-ativas-vod
+    _country: FR
+    _source: cnc
+    _title: Referencias Ativas em VoD
+    _columns_count: 16
+    exposes: []
+  - table: cnc_referencias_ativas_vod_programmesupport_gfk
+    _dataset: cnc-referencias-ativas-vod
+    _country: FR
+    _source: cnc
+    _title: Referencias Ativas em VoD
+    _columns_count: 10
+    exposes: []
+  - table: cnc_referencias_ativas_vod_support
+    _dataset: cnc-referencias-ativas-vod
+    _country: FR
+    _source: cnc
+    _title: Referencias Ativas em VoD
+    _columns_count: 14
     exposes: []
   - table: cnc_visas_exploitation
     _dataset: cnc-visas-exploitation
@@ -792,20 +3660,6 @@ tables:
       - key: ANO
         col: ano
         confidence: high
-  - table: comex_bens_audiovisuais_fontes
-    _dataset: br-comex-bens-audiovisuais
-    _country: BR
-    _source: mdic
-    _title: Comex Bens Audiovisuais - Fonte MDIC
-    _columns_count: 17
-    exposes:
-      - key: ANO
-        col: ano_referencia
-        confidence: high
-      - key: TITULO_OBRA
-        col: titulo
-        confidence: high
-        normalize: titulo_norm
   - table: complexos_cinematograficos_evolucao
     _dataset: ancine-complexos-cinematograficos-evolucao
     _country: BR
@@ -825,36 +3679,105 @@ tables:
       - key: UF
         col: uf
         confidence: high
-  - table: condecine_arrecadacao
-    _dataset: ancine-condecine-arrecadacao
+  - table: condecine_arrecadacao_bruta_anual
+    _dataset: ancine-condecine-arrecadacao-bruta
     _country: BR
     _source: ancine
-    _title: CONDECINE - Arrecadacao
-    _columns_count: 15
+    _title: CONDECINE - Arrecadacao Bruta
+    _columns_count: 8
     exposes:
       - key: ANO
         col: ano
         confidence: high
-  - table: condecine_recolhimento
-    _dataset: ancine-condecine-recolhimento
+  - table: condecine_arrecadacao_bruta_mensal
+    _dataset: ancine-condecine-arrecadacao-bruta
     _country: BR
     _source: ancine
-    _title: CONDECINE - Recolhimento por Mecanismo e Contribuinte
-    _columns_count: 20
+    _title: CONDECINE - Arrecadacao Bruta
+    _columns_count: 9
     exposes:
       - key: ANO
         col: ano
         confidence: high
-      - key: CNPJ
-        col: cnpj_investidor_ou_contribuinte
+  - table: condecine_arrecadacao_pos_dru_anual
+    _dataset: ancine-condecine-arrecadacao-pos-dru
+    _country: BR
+    _source: ancine
+    _title: CONDECINE - Arrecadacao apos DRU
+    _columns_count: 8
+    exposes:
+      - key: ANO
+        col: ano
         confidence: high
-        normalize: digits_only
-      - key: CNPJ
-        col: cnpj_proponente
+  - table: condecine_arrecadacao_pos_dru_mensal
+    _dataset: ancine-condecine-arrecadacao-pos-dru
+    _country: BR
+    _source: ancine
+    _title: CONDECINE - Arrecadacao apos DRU
+    _columns_count: 9
+    exposes:
+      - key: ANO
+        col: ano
         confidence: high
-        normalize: digits_only
-      - key: SALIC
-        col: salic
+  - table: condecine_creditos_remessas_exterior
+    _dataset: ancine-condecine-creditos-remessas
+    _country: BR
+    _source: ancine
+    _title: CONDECINE - Creditos e Remessas ao Exterior
+    _columns_count: 8
+    exposes:
+      - key: ANO
+        col: ano
+        confidence: high
+  - table: condecine_recolhimento_distribuidoras_art3
+    _dataset: ancine-condecine-distribuidoras-art3
+    _country: BR
+    _source: ancine
+    _title: CONDECINE - Distribuidoras (Art. 3º)
+    _columns_count: 9
+    exposes:
+      - key: ANO
+        col: ano
+        confidence: high
+  - table: condecine_recolhimento_empresas_art3a
+    _dataset: ancine-condecine-empresas-art3a
+    _country: BR
+    _source: ancine
+    _title: CONDECINE - Empresas Remetentes (Art. 3º-A)
+    _columns_count: 9
+    exposes:
+      - key: ANO
+        col: ano
+        confidence: high
+  - table: condecine_recolhimento_mecanismo
+    _dataset: ancine-condecine-recolhimento-mecanismo
+    _country: BR
+    _source: ancine
+    _title: CONDECINE - Recolhimento Anual por Mecanismo
+    _columns_count: 8
+    exposes:
+      - key: ANO
+        col: ano
+        confidence: high
+  - table: condecine_recolhimento_mensal
+    _dataset: ancine-condecine-recolhimento-mensal
+    _country: BR
+    _source: ancine
+    _title: CONDECINE - Recolhimento Mensal por Mecanismo
+    _columns_count: 9
+    exposes:
+      - key: ANO
+        col: ano
+        confidence: high
+  - table: condecine_recolhimento_programadoras_art39
+    _dataset: ancine-condecine-programadoras-art39
+    _country: BR
+    _source: ancine
+    _title: CONDECINE - Programadoras Estrangeiras (Art. 39)
+    _columns_count: 8
+    exposes:
+      - key: ANO
+        col: ano
         confidence: high
   - table: coproducao_internacional_projetos
     _dataset: ancine-coproducao-internacional-projetos
@@ -1038,6 +3961,16 @@ tables:
       - key: ANO
         col: ano
         confidence: high
+  - table: deflator_ipca
+    _dataset: ibge-deflator-ipca
+    _country: BR
+    _source: ibge
+    _title: Deflator IPCA
+    _columns_count: 3
+    exposes:
+      - key: ANO
+        col: ano
+        confidence: high
   - table: diretores_obras
     _dataset: ancine-diretores-obras
     _country: BR
@@ -1154,26 +4087,15 @@ tables:
       - key: SALIC
         col: salic
         confidence: high
-  - table: fomento_fluxos_financeiros
-    _dataset: ancine-fomento-fluxos-financeiros
+  - table: fomento_editais_programas_premios
+    _dataset: ancine-fomento-editais-programas-premios
     _country: BR
     _source: ancine
-    _title: Fomento - Series Historicas Agregadas (OCA)
-    _columns_count: 20
+    _title: Fomento - Editais, Programas e Premios
+    _columns_count: 9
     exposes:
       - key: ANO
         col: ano
-        confidence: high
-      - key: CNPJ
-        col: cnpj_investidor_ou_contribuinte
-        confidence: high
-        normalize: digits_only
-      - key: CNPJ
-        col: cnpj_proponente
-        confidence: high
-        normalize: digits_only
-      - key: SALIC
-        col: salic
         confidence: high
   - table: fomento_fsa
     _dataset: ancine-fsa-projetos
@@ -1204,6 +4126,33 @@ tables:
         col: razao_social_produtora
         confidence: high
         normalize: titulo_norm
+  - table: fomento_valores_captados_mecanismo
+    _dataset: ancine-fomento-valores-captados
+    _country: BR
+    _source: ancine
+    _title: Valores Captados/Contratados por Mecanismo
+    _columns_count: 8
+    exposes:
+      - key: ANO
+        col: ano
+        confidence: high
+  - table: fomento_valores_liberados_mecanismo
+    _dataset: ancine-fomento-valores-liberados
+    _country: BR
+    _source: ancine
+    _title: Fomento - Valores Liberados por Mecanismo
+    _columns_count: 8
+    exposes:
+      - key: ANO
+        col: ano
+        confidence: high
+  - table: fsa_arrecadacao_anual
+    _dataset: ancine-fsa-arrecadacao
+    _country: BR
+    _source: ancine
+    _title: FSA - Arrecadacao Anual
+    _columns_count: 9
+    exposes: []
   - table: fsa_atas_festivais
     _dataset: ancine-festivais-fsa
     _country: BR
@@ -1225,6 +4174,38 @@ tables:
         col: titulo_obra
         confidence: high
         normalize: titulo_norm
+  - table: fsa_atas_resultados
+    _dataset: ancine-atas-fsa
+    _country: BR
+    _source: ancine
+    _title: Atas Oficiais FSA
+    _columns_count: 15
+    exposes:
+      - key: CNPJ
+        col: cnpj_beneficiario
+        confidence: high
+        normalize: digits_only
+      - key: CPB
+        col: cpb
+        confidence: high
+      - key: TITULO_OBRA
+        col: titulo_obra
+        confidence: high
+        normalize: titulo_norm
+  - table: fsa_desembolsos
+    _dataset: ancine-fsa-desembolsos
+    _country: BR
+    _source: ancine
+    _title: FSA - Desembolsos
+    _columns_count: 9
+    exposes: []
+  - table: fsa_editais_lancados
+    _dataset: ancine-fsa-editais-lancados
+    _country: BR
+    _source: ancine
+    _title: FSA - Editais Lancados
+    _columns_count: 9
+    exposes: []
   - table: fsa_investimento_contratados
     _dataset: ancine-fsa-investimento-contratados
     _country: BR
@@ -2311,16 +5292,6 @@ bridges:
     _origin: auto-detected
   - tables:
       - apoio_festivais_internacionais
-      - condecine_recolhimento
-    via_keys:
-      - SALIC
-      - CNPJ
-      - ANO
-    top_key: SALIC
-    weight: 14
-    _origin: auto-detected
-  - tables:
-      - apoio_festivais_internacionais
       - coproducao_internacional_projetos
     via_keys:
       - SALIC
@@ -2332,16 +5303,6 @@ bridges:
   - tables:
       - apoio_festivais_internacionais
       - filmes_lancados_captacao
-    via_keys:
-      - SALIC
-      - CNPJ
-      - ANO
-    top_key: SALIC
-    weight: 14
-    _origin: auto-detected
-  - tables:
-      - apoio_festivais_internacionais
-      - fomento_fluxos_financeiros
     via_keys:
       - SALIC
       - CNPJ
@@ -2461,16 +5422,6 @@ bridges:
     _origin: auto-detected
   - tables:
       - captacao_por_projeto_investidor
-      - condecine_recolhimento
-    via_keys:
-      - SALIC
-      - CNPJ
-      - ANO
-    top_key: SALIC
-    weight: 14
-    _origin: auto-detected
-  - tables:
-      - captacao_por_projeto_investidor
       - coproducao_internacional_projetos
     via_keys:
       - SALIC
@@ -2482,16 +5433,6 @@ bridges:
   - tables:
       - captacao_por_projeto_investidor
       - filmes_lancados_captacao
-    via_keys:
-      - SALIC
-      - CNPJ
-      - ANO
-    top_key: SALIC
-    weight: 14
-    _origin: auto-detected
-  - tables:
-      - captacao_por_projeto_investidor
-      - fomento_fluxos_financeiros
     via_keys:
       - SALIC
       - CNPJ
@@ -2520,68 +5461,8 @@ bridges:
     weight: 14
     _origin: auto-detected
   - tables:
-      - condecine_recolhimento
-      - coproducao_internacional_projetos
-    via_keys:
-      - SALIC
-      - CNPJ
-      - ANO
-    top_key: SALIC
-    weight: 14
-    _origin: auto-detected
-  - tables:
-      - condecine_recolhimento
-      - filmes_lancados_captacao
-    via_keys:
-      - SALIC
-      - CNPJ
-      - ANO
-    top_key: SALIC
-    weight: 14
-    _origin: auto-detected
-  - tables:
-      - condecine_recolhimento
-      - fomento_fluxos_financeiros
-    via_keys:
-      - SALIC
-      - CNPJ
-      - ANO
-    top_key: SALIC
-    weight: 14
-    _origin: auto-detected
-  - tables:
-      - condecine_recolhimento
-      - ibermedia_projetos
-    via_keys:
-      - SALIC
-      - CNPJ
-      - ANO
-    top_key: SALIC
-    weight: 14
-    _origin: auto-detected
-  - tables:
-      - condecine_recolhimento
-      - premio_adicional_renda
-    via_keys:
-      - SALIC
-      - CNPJ
-      - ANO
-    top_key: SALIC
-    weight: 14
-    _origin: auto-detected
-  - tables:
       - coproducao_internacional_projetos
       - filmes_lancados_captacao
-    via_keys:
-      - SALIC
-      - CNPJ
-      - ANO
-    top_key: SALIC
-    weight: 14
-    _origin: auto-detected
-  - tables:
-      - coproducao_internacional_projetos
-      - fomento_fluxos_financeiros
     via_keys:
       - SALIC
       - CNPJ
@@ -2683,16 +5564,6 @@ bridges:
     _origin: auto-detected
   - tables:
       - filmes_lancados_captacao
-      - fomento_fluxos_financeiros
-    via_keys:
-      - SALIC
-      - CNPJ
-      - ANO
-    top_key: SALIC
-    weight: 14
-    _origin: auto-detected
-  - tables:
-      - filmes_lancados_captacao
       - ibermedia_projetos
     via_keys:
       - SALIC
@@ -2703,26 +5574,6 @@ bridges:
     _origin: auto-detected
   - tables:
       - filmes_lancados_captacao
-      - premio_adicional_renda
-    via_keys:
-      - SALIC
-      - CNPJ
-      - ANO
-    top_key: SALIC
-    weight: 14
-    _origin: auto-detected
-  - tables:
-      - fomento_fluxos_financeiros
-      - ibermedia_projetos
-    via_keys:
-      - SALIC
-      - CNPJ
-      - ANO
-    top_key: SALIC
-    weight: 14
-    _origin: auto-detected
-  - tables:
-      - fomento_fluxos_financeiros
       - premio_adicional_renda
     via_keys:
       - SALIC
@@ -2911,24 +5762,6 @@ bridges:
     weight: 13
     _origin: auto-detected
   - tables:
-      - condecine_recolhimento
-      - prestacao_contas_processos
-    via_keys:
-      - SALIC
-      - CNPJ
-    top_key: SALIC
-    weight: 13
-    _origin: auto-detected
-  - tables:
-      - condecine_recolhimento
-      - renuncia_fiscal
-    via_keys:
-      - SALIC
-      - CNPJ
-    top_key: SALIC
-    weight: 13
-    _origin: auto-detected
-  - tables:
       - coproducao_internacional_projetos
       - prestacao_contas_processos
     via_keys:
@@ -3012,24 +5845,6 @@ bridges:
     _origin: auto-detected
   - tables:
       - filmes_lancados_captacao
-      - renuncia_fiscal
-    via_keys:
-      - SALIC
-      - CNPJ
-    top_key: SALIC
-    weight: 13
-    _origin: auto-detected
-  - tables:
-      - fomento_fluxos_financeiros
-      - prestacao_contas_processos
-    via_keys:
-      - SALIC
-      - CNPJ
-    top_key: SALIC
-    weight: 13
-    _origin: auto-detected
-  - tables:
-      - fomento_fluxos_financeiros
       - renuncia_fiscal
     via_keys:
       - SALIC
@@ -3886,14 +6701,6 @@ bridges:
     weight: 8
     _origin: auto-detected
   - tables:
-      - condecine_recolhimento
-      - obras_fomento_indireto
-    via_keys:
-      - SALIC
-    top_key: SALIC
-    weight: 8
-    _origin: auto-detected
-  - tables:
       - coproducao_internacional_projetos
       - obras_fomento_indireto
     via_keys:
@@ -3903,14 +6710,6 @@ bridges:
     _origin: auto-detected
   - tables:
       - filmes_lancados_captacao
-      - obras_fomento_indireto
-    via_keys:
-      - SALIC
-    top_key: SALIC
-    weight: 8
-    _origin: auto-detected
-  - tables:
-      - fomento_fluxos_financeiros
       - obras_fomento_indireto
     via_keys:
       - SALIC
@@ -4297,26 +7096,6 @@ bridges:
     weight: 6
     _origin: auto-detected
   - tables:
-      - bfi_video_fisico
-      - brasil_no_mundo_obras_franca_cnc
-    via_keys:
-      - TITULO_OBRA
-      - GENERO
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 6
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - cnc_films_agrees
-    via_keys:
-      - TITULO_OBRA
-      - GENERO
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 6
-    _origin: auto-detected
-  - tables:
       - bilheteria_diaria_distribuidora_filme_ano
       - bilheteria_diaria_exibidora_ano
     via_keys:
@@ -4354,15 +7133,6 @@ bridges:
     _origin: auto-detected
   - tables:
       - bilheteria_diaria_distribuidora_filme_ano
-      - condecine_recolhimento
-    via_keys:
-      - CNPJ
-      - ANO
-    top_key: CNPJ
-    weight: 6
-    _origin: auto-detected
-  - tables:
-      - bilheteria_diaria_distribuidora_filme_ano
       - coproducao_internacional_projetos
     via_keys:
       - CNPJ
@@ -4400,15 +7170,6 @@ bridges:
   - tables:
       - bilheteria_diaria_distribuidora_filme_ano
       - filmes_lancados_captacao
-    via_keys:
-      - CNPJ
-      - ANO
-    top_key: CNPJ
-    weight: 6
-    _origin: auto-detected
-  - tables:
-      - bilheteria_diaria_distribuidora_filme_ano
-      - fomento_fluxos_financeiros
     via_keys:
       - CNPJ
       - ANO
@@ -4444,15 +7205,6 @@ bridges:
     _origin: auto-detected
   - tables:
       - bilheteria_diaria_exibidora_ano
-      - condecine_recolhimento
-    via_keys:
-      - CNPJ
-      - ANO
-    top_key: CNPJ
-    weight: 6
-    _origin: auto-detected
-  - tables:
-      - bilheteria_diaria_exibidora_ano
       - coproducao_internacional_projetos
     via_keys:
       - CNPJ
@@ -4490,15 +7242,6 @@ bridges:
   - tables:
       - bilheteria_diaria_exibidora_ano
       - filmes_lancados_captacao
-    via_keys:
-      - CNPJ
-      - ANO
-    top_key: CNPJ
-    weight: 6
-    _origin: auto-detected
-  - tables:
-      - bilheteria_diaria_exibidora_ano
-      - fomento_fluxos_financeiros
     via_keys:
       - CNPJ
       - ANO
@@ -4552,15 +7295,6 @@ bridges:
     _origin: auto-detected
   - tables:
       - bilheteria_diaria_exibidora_filme_ano
-      - condecine_recolhimento
-    via_keys:
-      - CNPJ
-      - ANO
-    top_key: CNPJ
-    weight: 6
-    _origin: auto-detected
-  - tables:
-      - bilheteria_diaria_exibidora_filme_ano
       - coproducao_internacional_projetos
     via_keys:
       - CNPJ
@@ -4598,15 +7332,6 @@ bridges:
   - tables:
       - bilheteria_diaria_exibidora_filme_ano
       - filmes_lancados_captacao
-    via_keys:
-      - CNPJ
-      - ANO
-    top_key: CNPJ
-    weight: 6
-    _origin: auto-detected
-  - tables:
-      - bilheteria_diaria_exibidora_filme_ano
-      - fomento_fluxos_financeiros
     via_keys:
       - CNPJ
       - ANO
@@ -4766,33 +7491,6 @@ bridges:
     weight: 6
     _origin: auto-detected
   - tables:
-      - condecine_recolhimento
-      - crt_nao_publicitarias_requerente_ano
-    via_keys:
-      - CNPJ
-      - ANO
-    top_key: CNPJ
-    weight: 6
-    _origin: auto-detected
-  - tables:
-      - condecine_recolhimento
-      - crt_publicitarias_agencia_ano
-    via_keys:
-      - CNPJ
-      - ANO
-    top_key: CNPJ
-    weight: 6
-    _origin: auto-detected
-  - tables:
-      - condecine_recolhimento
-      - crt_publicitarias_anunciante_ano
-    via_keys:
-      - CNPJ
-      - ANO
-    top_key: CNPJ
-    weight: 6
-    _origin: auto-detected
-  - tables:
       - coproducao_internacional_projetos
       - crt_nao_publicitarias_requerente_ano
     via_keys:
@@ -4840,15 +7538,6 @@ bridges:
   - tables:
       - crt_nao_publicitarias_requerente_ano
       - filmes_lancados_captacao
-    via_keys:
-      - CNPJ
-      - ANO
-    top_key: CNPJ
-    weight: 6
-    _origin: auto-detected
-  - tables:
-      - crt_nao_publicitarias_requerente_ano
-      - fomento_fluxos_financeiros
     via_keys:
       - CNPJ
       - ANO
@@ -4913,15 +7602,6 @@ bridges:
     _origin: auto-detected
   - tables:
       - crt_publicitarias_agencia_ano
-      - fomento_fluxos_financeiros
-    via_keys:
-      - CNPJ
-      - ANO
-    top_key: CNPJ
-    weight: 6
-    _origin: auto-detected
-  - tables:
-      - crt_publicitarias_agencia_ano
       - ibermedia_projetos
     via_keys:
       - CNPJ
@@ -4941,15 +7621,6 @@ bridges:
   - tables:
       - crt_publicitarias_anunciante_ano
       - filmes_lancados_captacao
-    via_keys:
-      - CNPJ
-      - ANO
-    top_key: CNPJ
-    weight: 6
-    _origin: auto-detected
-  - tables:
-      - crt_publicitarias_anunciante_ano
-      - fomento_fluxos_financeiros
     via_keys:
       - CNPJ
       - ANO
@@ -4994,15 +7665,6 @@ bridges:
     _origin: auto-detected
   - tables:
       - acau_apoios
-      - bfi_video_fisico
-    via_keys:
-      - TITULO_OBRA
-      - GENERO
-    top_key: TITULO_OBRA
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - acau_apoios
       - brasil_no_mundo_obras_franca_cnc
     via_keys:
       - TITULO_OBRA
@@ -5106,14 +7768,6 @@ bridges:
     _origin: auto-detected
   - tables:
       - agentes_economicos
-      - condecine_recolhimento
-    via_keys:
-      - CNPJ
-    top_key: CNPJ
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - agentes_economicos
       - coproducao_internacional_projetos
     via_keys:
       - CNPJ
@@ -5139,14 +7793,6 @@ bridges:
   - tables:
       - agentes_economicos
       - filmes_lancados_captacao
-    via_keys:
-      - CNPJ
-    top_key: CNPJ
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - agentes_economicos
-      - fomento_fluxos_financeiros
     via_keys:
       - CNPJ
     top_key: CNPJ
@@ -5266,14 +7912,6 @@ bridges:
     _origin: auto-detected
   - tables:
       - agentes_economicos_estrangeiros
-      - condecine_recolhimento
-    via_keys:
-      - CNPJ
-    top_key: CNPJ
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - agentes_economicos_estrangeiros
       - coproducao_internacional_projetos
     via_keys:
       - CNPJ
@@ -5307,14 +7945,6 @@ bridges:
   - tables:
       - agentes_economicos_estrangeiros
       - filmes_lancados_captacao
-    via_keys:
-      - CNPJ
-    top_key: CNPJ
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - agentes_economicos_estrangeiros
-      - fomento_fluxos_financeiros
     via_keys:
       - CNPJ
     top_key: CNPJ
@@ -5586,14 +8216,6 @@ bridges:
     _origin: auto-detected
   - tables:
       - atividades_economicas_agentes_regulares
-      - condecine_recolhimento
-    via_keys:
-      - CNPJ
-    top_key: CNPJ
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - atividades_economicas_agentes_regulares
       - coproducao_internacional_projetos
     via_keys:
       - CNPJ
@@ -5627,14 +8249,6 @@ bridges:
   - tables:
       - atividades_economicas_agentes_regulares
       - filmes_lancados_captacao
-    via_keys:
-      - CNPJ
-    top_key: CNPJ
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - atividades_economicas_agentes_regulares
-      - fomento_fluxos_financeiros
     via_keys:
       - CNPJ
     top_key: CNPJ
@@ -5734,66 +8348,6 @@ bridges:
     via_keys:
       - CNPJ
     top_key: CNPJ
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - bilheteria_diaria_distribuidora_filme_ano
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-      - ANO
-    top_key: TITULO_OBRA
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - bilheteria_diaria_exibidora_filme_ano
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-      - ANO
-    top_key: TITULO_OBRA
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - bilheteria_por_filme_ano
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-      - ANO
-    top_key: TITULO_OBRA
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - brasil_no_mundo_obras_franca_cnc
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-      - ANO
-    top_key: TITULO_OBRA
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - cnc_films_agrees
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-      - ANO
-    top_key: TITULO_OBRA
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - cnc_films_million_entrees
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-      - ANO
-    top_key: TITULO_OBRA
     weight: 5
     _origin: auto-detected
   - tables:
@@ -6104,14 +8658,6 @@ bridges:
     _origin: auto-detected
   - tables:
       - canais_distribuicao_obrigatoria
-      - condecine_recolhimento
-    via_keys:
-      - CNPJ
-    top_key: CNPJ
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - canais_distribuicao_obrigatoria
       - coproducao_internacional_projetos
     via_keys:
       - CNPJ
@@ -6145,14 +8691,6 @@ bridges:
   - tables:
       - canais_distribuicao_obrigatoria
       - filmes_lancados_captacao
-    via_keys:
-      - CNPJ
-    top_key: CNPJ
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - canais_distribuicao_obrigatoria
-      - fomento_fluxos_financeiros
     via_keys:
       - CNPJ
     top_key: CNPJ
@@ -6256,14 +8794,6 @@ bridges:
     _origin: auto-detected
   - tables:
       - canais_programadoras_ativos
-      - condecine_recolhimento
-    via_keys:
-      - CNPJ
-    top_key: CNPJ
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - canais_programadoras_ativos
       - coproducao_internacional_projetos
     via_keys:
       - CNPJ
@@ -6297,14 +8827,6 @@ bridges:
   - tables:
       - canais_programadoras_ativos
       - filmes_lancados_captacao
-    via_keys:
-      - CNPJ
-    top_key: CNPJ
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - canais_programadoras_ativos
-      - fomento_fluxos_financeiros
     via_keys:
       - CNPJ
     top_key: CNPJ
@@ -6505,102 +9027,6 @@ bridges:
     weight: 5
     _origin: auto-detected
   - tables:
-      - condecine_recolhimento
-      - crt_obras_nao_publicitarias
-    via_keys:
-      - CNPJ
-    top_key: CNPJ
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - condecine_recolhimento
-      - crt_obras_publicitarias
-    via_keys:
-      - CNPJ
-    top_key: CNPJ
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - condecine_recolhimento
-      - fomento_fsa
-    via_keys:
-      - CNPJ
-    top_key: CNPJ
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - condecine_recolhimento
-      - fsa_atas_festivais
-    via_keys:
-      - CNPJ
-    top_key: CNPJ
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - condecine_recolhimento
-      - fsa_investimento_contratados
-    via_keys:
-      - CNPJ
-    top_key: CNPJ
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - condecine_recolhimento
-      - grupos_economicos
-    via_keys:
-      - CNPJ
-    top_key: CNPJ
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - condecine_recolhimento
-      - lancamentos_distribuidoras
-    via_keys:
-      - CNPJ
-    top_key: CNPJ
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - condecine_recolhimento
-      - obras
-    via_keys:
-      - CNPJ
-    top_key: CNPJ
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - condecine_recolhimento
-      - obras_estrangeiras_roe
-    via_keys:
-      - CNPJ
-    top_key: CNPJ
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - condecine_recolhimento
-      - produtoras_independentes
-    via_keys:
-      - CNPJ
-    top_key: CNPJ
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - condecine_recolhimento
-      - produtores_obras
-    via_keys:
-      - CNPJ
-    top_key: CNPJ
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - condecine_recolhimento
-      - salas_exibicao_complexos
-    via_keys:
-      - CNPJ
-    top_key: CNPJ
-    weight: 5
-    _origin: auto-detected
-  - tables:
       - coproducao_internacional_projetos
       - crt_obras_nao_publicitarias
     via_keys:
@@ -6771,14 +9197,6 @@ bridges:
   - tables:
       - crt_obras_nao_publicitarias
       - filmes_lancados_captacao
-    via_keys:
-      - CNPJ
-    top_key: CNPJ
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - crt_obras_nao_publicitarias
-      - fomento_fluxos_financeiros
     via_keys:
       - CNPJ
     top_key: CNPJ
@@ -6843,14 +9261,6 @@ bridges:
   - tables:
       - crt_obras_publicitarias
       - filmes_lancados_captacao
-    via_keys:
-      - CNPJ
-    top_key: CNPJ
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - crt_obras_publicitarias
-      - fomento_fluxos_financeiros
     via_keys:
       - CNPJ
     top_key: CNPJ
@@ -7171,86 +9581,6 @@ bridges:
     _origin: auto-detected
   - tables:
       - filmes_lancados_captacao
-      - salas_exibicao_complexos
-    via_keys:
-      - CNPJ
-    top_key: CNPJ
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - fomento_fluxos_financeiros
-      - fomento_fsa
-    via_keys:
-      - CNPJ
-    top_key: CNPJ
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - fomento_fluxos_financeiros
-      - fsa_atas_festivais
-    via_keys:
-      - CNPJ
-    top_key: CNPJ
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - fomento_fluxos_financeiros
-      - fsa_investimento_contratados
-    via_keys:
-      - CNPJ
-    top_key: CNPJ
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - fomento_fluxos_financeiros
-      - grupos_economicos
-    via_keys:
-      - CNPJ
-    top_key: CNPJ
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - fomento_fluxos_financeiros
-      - lancamentos_distribuidoras
-    via_keys:
-      - CNPJ
-    top_key: CNPJ
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - fomento_fluxos_financeiros
-      - obras
-    via_keys:
-      - CNPJ
-    top_key: CNPJ
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - fomento_fluxos_financeiros
-      - obras_estrangeiras_roe
-    via_keys:
-      - CNPJ
-    top_key: CNPJ
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - fomento_fluxos_financeiros
-      - produtoras_independentes
-    via_keys:
-      - CNPJ
-    top_key: CNPJ
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - fomento_fluxos_financeiros
-      - produtores_obras
-    via_keys:
-      - CNPJ
-    top_key: CNPJ
-    weight: 5
-    _origin: auto-detected
-  - tables:
-      - fomento_fluxos_financeiros
       - salas_exibicao_complexos
     via_keys:
       - CNPJ
@@ -7806,933 +10136,6 @@ bridges:
     weight: 4
     _origin: auto-detected
   - tables:
-      - bfi_exhibition
-      - bfi_talentos_mundo
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - bfi_top_films_2023
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - bfi_video_digital
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - bfi_video_fisico
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - bilheteria_diaria_distribuidora_filme_ano
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - bilheteria_diaria_exibidora_filme_ano
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - bilheteria_por_filme_ano
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - brasil_no_mundo_bilheteria_europa
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - brasil_no_mundo_obras_franca_cnc
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - brasil_no_mundo_vod_europa
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - cnc_films_agrees
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - cnc_films_million_entrees
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - cnc_visas_exploitation
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - crt_obras_nao_publicitarias
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - crt_obras_publicitarias
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - diretores_obras
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - filmagem_estrangeira
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - fsa_atas_festivais
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - lancamentos_distribuidoras
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - pais_origem_obras_br
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - pais_origem_obras_estrangeiras
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - produtores_obras
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - vod_europa
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - bfi_top_films_2023
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - bfi_video_digital
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - bfi_video_fisico
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - bilheteria_consolidada_br
-    via_keys:
-      - TITULO_OBRA
-      - ANO
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - brasil_no_mundo_bilheteria_europa
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - brasil_no_mundo_vod_europa
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - cnc_visas_exploitation
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - comercio_exterior_servicos_audiovisuais_fontes
-    via_keys:
-      - TITULO_OBRA
-      - ANO
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - comex_bens_audiovisuais_fontes
-    via_keys:
-      - TITULO_OBRA
-      - ANO
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - crt_obras_nao_publicitarias
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - crt_obras_publicitarias
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - diretores_obras
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - diversidade_audiovisual_fontes
-    via_keys:
-      - TITULO_OBRA
-      - ANO
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - filmagem_estrangeira
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - fsa_atas_festivais
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - lancamentos_distribuidoras
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - pais_origem_obras_br
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - pais_origem_obras_estrangeiras
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - pib_audiovisual_fontes
-    via_keys:
-      - TITULO_OBRA
-      - ANO
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - produtores_obras
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - rais_emprego_audiovisual_fontes
-    via_keys:
-      - TITULO_OBRA
-      - ANO
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - vod_europa
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - bfi_video_digital
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - bfi_video_fisico
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - bilheteria_diaria_distribuidora_filme_ano
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - bilheteria_diaria_exibidora_filme_ano
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - bilheteria_por_filme_ano
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - brasil_no_mundo_bilheteria_europa
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - brasil_no_mundo_obras_franca_cnc
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - brasil_no_mundo_vod_europa
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - cnc_films_agrees
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - cnc_films_million_entrees
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - cnc_visas_exploitation
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - crt_obras_nao_publicitarias
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - crt_obras_publicitarias
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - diretores_obras
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - filmagem_estrangeira
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - fsa_atas_festivais
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - lancamentos_distribuidoras
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - pais_origem_obras_br
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - pais_origem_obras_estrangeiras
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - produtores_obras
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - vod_europa
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - bfi_video_fisico
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - bilheteria_diaria_distribuidora_filme_ano
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - bilheteria_diaria_exibidora_filme_ano
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - bilheteria_por_filme_ano
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - brasil_no_mundo_bilheteria_europa
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - brasil_no_mundo_obras_franca_cnc
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - brasil_no_mundo_vod_europa
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - cnc_films_agrees
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - cnc_films_million_entrees
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - cnc_visas_exploitation
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - crt_obras_nao_publicitarias
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - crt_obras_publicitarias
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - diretores_obras
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - filmagem_estrangeira
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - fsa_atas_festivais
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - lancamentos_distribuidoras
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - pais_origem_obras_br
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - pais_origem_obras_estrangeiras
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - produtores_obras
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - vod_europa
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - bilheteria_diaria_distribuidora_filme_ano
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - bilheteria_diaria_exibidora_filme_ano
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - bilheteria_por_filme_ano
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - brasil_no_mundo_bilheteria_europa
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - brasil_no_mundo_vod_europa
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - cnc_films_million_entrees
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - cnc_visas_exploitation
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - crt_obras_nao_publicitarias
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - crt_obras_publicitarias
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - diretores_obras
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - filmagem_estrangeira
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - fsa_atas_festivais
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - lancamentos_distribuidoras
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - pais_origem_obras_br
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - pais_origem_obras_estrangeiras
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - produtores_obras
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - vod_europa
-    via_keys:
-      - TITULO_OBRA
-      - PAIS
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
       - bilheteria_consolidada_br
       - bilheteria_diaria_distribuidora_filme_ano
     via_keys:
@@ -8789,15 +10192,6 @@ bridges:
   - tables:
       - bilheteria_consolidada_br
       - comercio_exterior_servicos_audiovisuais_fontes
-    via_keys:
-      - TITULO_OBRA
-      - ANO
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bilheteria_consolidada_br
-      - comex_bens_audiovisuais_fontes
     via_keys:
       - TITULO_OBRA
       - ANO
@@ -8861,15 +10255,6 @@ bridges:
   - tables:
       - bilheteria_diaria_distribuidora_filme_ano
       - comercio_exterior_servicos_audiovisuais_fontes
-    via_keys:
-      - TITULO_OBRA
-      - ANO
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bilheteria_diaria_distribuidora_filme_ano
-      - comex_bens_audiovisuais_fontes
     via_keys:
       - TITULO_OBRA
       - ANO
@@ -8951,15 +10336,6 @@ bridges:
   - tables:
       - bilheteria_diaria_exibidora_filme_ano
       - comercio_exterior_servicos_audiovisuais_fontes
-    via_keys:
-      - TITULO_OBRA
-      - ANO
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bilheteria_diaria_exibidora_filme_ano
-      - comex_bens_audiovisuais_fontes
     via_keys:
       - TITULO_OBRA
       - ANO
@@ -9076,15 +10452,6 @@ bridges:
     _origin: auto-detected
   - tables:
       - bilheteria_por_filme_ano
-      - comex_bens_audiovisuais_fontes
-    via_keys:
-      - TITULO_OBRA
-      - ANO
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - bilheteria_por_filme_ano
       - crt_obras_publicitarias
     via_keys:
       - TITULO_OBRA
@@ -9321,15 +10688,6 @@ bridges:
     _origin: auto-detected
   - tables:
       - brasil_no_mundo_obras_franca_cnc
-      - comex_bens_audiovisuais_fontes
-    via_keys:
-      - TITULO_OBRA
-      - ANO
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - brasil_no_mundo_obras_franca_cnc
       - crt_obras_nao_publicitarias
     via_keys:
       - TITULO_OBRA
@@ -9582,15 +10940,6 @@ bridges:
     _origin: auto-detected
   - tables:
       - cnc_films_agrees
-      - comex_bens_audiovisuais_fontes
-    via_keys:
-      - TITULO_OBRA
-      - ANO
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - cnc_films_agrees
       - crt_obras_nao_publicitarias
     via_keys:
       - TITULO_OBRA
@@ -9718,15 +11067,6 @@ bridges:
   - tables:
       - cnc_films_million_entrees
       - comercio_exterior_servicos_audiovisuais_fontes
-    via_keys:
-      - TITULO_OBRA
-      - ANO
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - cnc_films_million_entrees
-      - comex_bens_audiovisuais_fontes
     via_keys:
       - TITULO_OBRA
       - ANO
@@ -9942,15 +11282,6 @@ bridges:
     _origin: auto-detected
   - tables:
       - comercio_exterior_servicos_audiovisuais_fontes
-      - comex_bens_audiovisuais_fontes
-    via_keys:
-      - TITULO_OBRA
-      - ANO
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - comercio_exterior_servicos_audiovisuais_fontes
       - diversidade_audiovisual_fontes
     via_keys:
       - TITULO_OBRA
@@ -9969,33 +11300,6 @@ bridges:
     _origin: auto-detected
   - tables:
       - comercio_exterior_servicos_audiovisuais_fontes
-      - rais_emprego_audiovisual_fontes
-    via_keys:
-      - TITULO_OBRA
-      - ANO
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - comex_bens_audiovisuais_fontes
-      - diversidade_audiovisual_fontes
-    via_keys:
-      - TITULO_OBRA
-      - ANO
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - comex_bens_audiovisuais_fontes
-      - pib_audiovisual_fontes
-    via_keys:
-      - TITULO_OBRA
-      - ANO
-    top_key: TITULO_OBRA
-    weight: 4
-    _origin: auto-detected
-  - tables:
-      - comex_bens_audiovisuais_fontes
       - rais_emprego_audiovisual_fontes
     via_keys:
       - TITULO_OBRA
@@ -10299,38 +11603,6 @@ bridges:
     _origin: auto-detected
   - tables:
       - acau_apoios
-      - bfi_exhibition
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - acau_apoios
-      - bfi_talentos_mundo
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - acau_apoios
-      - bfi_top_films_2023
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - acau_apoios
-      - bfi_video_digital
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - acau_apoios
       - bilheteria_consolidada_br
     via_keys:
       - TITULO_OBRA
@@ -10404,14 +11676,6 @@ bridges:
   - tables:
       - acau_apoios
       - comercio_exterior_servicos_audiovisuais_fontes
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - acau_apoios
-      - comex_bens_audiovisuais_fontes
     via_keys:
       - TITULO_OBRA
     top_key: TITULO_OBRA
@@ -10524,487 +11788,6 @@ bridges:
   - tables:
       - acau_apoios
       - vod_europa
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - bilheteria_consolidada_br
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - bilheteria_europa
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - comercio_exterior_servicos_audiovisuais_fontes
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - comex_bens_audiovisuais_fontes
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - diretores_obras_estrangeiras
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - diversidade_audiovisual_fontes
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - obras
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - obras_estrangeiras_roe
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - obras_fomento_indireto
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - obras_investimento_fsa_pda
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - pib_audiovisual_fontes
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - produtores_obras_estrangeiras
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - rais_emprego_audiovisual_fontes
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - bilheteria_europa
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - diretores_obras_estrangeiras
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - obras
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - obras_estrangeiras_roe
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - obras_fomento_indireto
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - obras_investimento_fsa_pda
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - produtores_obras_estrangeiras
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - bilheteria_consolidada_br
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - bilheteria_europa
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - comercio_exterior_servicos_audiovisuais_fontes
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - comex_bens_audiovisuais_fontes
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - diretores_obras_estrangeiras
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - diversidade_audiovisual_fontes
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - obras
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - obras_estrangeiras_roe
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - obras_fomento_indireto
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - obras_investimento_fsa_pda
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - pib_audiovisual_fontes
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - produtores_obras_estrangeiras
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - rais_emprego_audiovisual_fontes
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - bilheteria_consolidada_br
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - bilheteria_europa
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - comercio_exterior_servicos_audiovisuais_fontes
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - comex_bens_audiovisuais_fontes
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - diretores_obras_estrangeiras
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - diversidade_audiovisual_fontes
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - obras
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - obras_estrangeiras_roe
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - obras_fomento_indireto
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - obras_investimento_fsa_pda
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - pib_audiovisual_fontes
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - produtores_obras_estrangeiras
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - rais_emprego_audiovisual_fontes
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - bilheteria_consolidada_br
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - bilheteria_europa
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - brasil_no_mundo_mencoes_outros_paises
-    via_keys:
-      - GENERO
-      - PAIS
-    top_key: GENERO
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - comercio_exterior_servicos_audiovisuais_fontes
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - comex_bens_audiovisuais_fontes
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - diretores_obras_estrangeiras
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - diversidade_audiovisual_fontes
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - obras
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - obras_estrangeiras_roe
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - obras_fomento_indireto
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - obras_investimento_fsa_pda
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - pib_audiovisual_fontes
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - produtores_obras_estrangeiras
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - rais_emprego_audiovisual_fontes
     via_keys:
       - TITULO_OBRA
     top_key: TITULO_OBRA
@@ -11198,15 +11981,6 @@ bridges:
     _origin: auto-detected
   - tables:
       - bilheteria_diaria_exibidora_ano
-      - cnc_geographie_commune
-    via_keys:
-      - MUNICIPIO
-      - ANO
-    top_key: MUNICIPIO
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bilheteria_diaria_exibidora_ano
       - complexos_cinematograficos_evolucao
     via_keys:
       - MUNICIPIO
@@ -11234,15 +12008,6 @@ bridges:
   - tables:
       - bilheteria_diaria_exibidora_filme_ano
       - cnc_etablissements
-    via_keys:
-      - MUNICIPIO
-      - ANO
-    top_key: MUNICIPIO
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bilheteria_diaria_exibidora_filme_ano
-      - cnc_geographie_commune
     via_keys:
       - MUNICIPIO
       - ANO
@@ -11279,15 +12044,6 @@ bridges:
   - tables:
       - bilheteria_diaria_municipio_filme_ano
       - cnc_etablissements
-    via_keys:
-      - MUNICIPIO
-      - ANO
-    top_key: MUNICIPIO
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bilheteria_diaria_municipio_filme_ano
-      - cnc_geographie_commune
     via_keys:
       - MUNICIPIO
       - ANO
@@ -11389,14 +12145,6 @@ bridges:
   - tables:
       - bilheteria_europa
       - comercio_exterior_servicos_audiovisuais_fontes
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - bilheteria_europa
-      - comex_bens_audiovisuais_fontes
     via_keys:
       - TITULO_OBRA
     top_key: TITULO_OBRA
@@ -11602,14 +12350,6 @@ bridges:
   - tables:
       - brasil_no_mundo_bilheteria_europa
       - comercio_exterior_servicos_audiovisuais_fontes
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - brasil_no_mundo_bilheteria_europa
-      - comex_bens_audiovisuais_fontes
     via_keys:
       - TITULO_OBRA
     top_key: TITULO_OBRA
@@ -11779,14 +12519,6 @@ bridges:
     _origin: auto-detected
   - tables:
       - brasil_no_mundo_vod_europa
-      - comex_bens_audiovisuais_fontes
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - brasil_no_mundo_vod_europa
       - diretores_obras_estrangeiras
     via_keys:
       - TITULO_OBRA
@@ -11868,15 +12600,6 @@ bridges:
     _origin: auto-detected
   - tables:
       - cnc_etablissements
-      - cnc_geographie_commune
-    via_keys:
-      - MUNICIPIO
-      - ANO
-    top_key: MUNICIPIO
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - cnc_etablissements
       - complexos_cinematograficos_evolucao
     via_keys:
       - MUNICIPIO
@@ -11984,32 +12707,6 @@ bridges:
   - tables:
       - cnc_films_million_entrees
       - produtores_obras_estrangeiras
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - cnc_geographie_commune
-      - complexos_cinematograficos_evolucao
-    via_keys:
-      - MUNICIPIO
-      - ANO
-    top_key: MUNICIPIO
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - cnc_geographie_commune
-      - salas_exibicao_evolucao
-    via_keys:
-      - MUNICIPIO
-      - ANO
-    top_key: MUNICIPIO
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - cnc_visas_exploitation
-      - comercio_exterior_servicos_audiovisuais_fontes
     via_keys:
       - TITULO_OBRA
     top_key: TITULO_OBRA
@@ -12017,7 +12714,7 @@ bridges:
     _origin: auto-detected
   - tables:
       - cnc_visas_exploitation
-      - comex_bens_audiovisuais_fontes
+      - comercio_exterior_servicos_audiovisuais_fontes
     via_keys:
       - TITULO_OBRA
     top_key: TITULO_OBRA
@@ -12217,134 +12914,6 @@ bridges:
     _origin: auto-detected
   - tables:
       - comercio_exterior_servicos_audiovisuais_fontes
-      - vod_europa
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - comex_bens_audiovisuais_fontes
-      - crt_obras_nao_publicitarias
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - comex_bens_audiovisuais_fontes
-      - crt_obras_publicitarias
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - comex_bens_audiovisuais_fontes
-      - diretores_obras
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - comex_bens_audiovisuais_fontes
-      - diretores_obras_estrangeiras
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - comex_bens_audiovisuais_fontes
-      - filmagem_estrangeira
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - comex_bens_audiovisuais_fontes
-      - fsa_atas_festivais
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - comex_bens_audiovisuais_fontes
-      - lancamentos_distribuidoras
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - comex_bens_audiovisuais_fontes
-      - obras
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - comex_bens_audiovisuais_fontes
-      - obras_estrangeiras_roe
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - comex_bens_audiovisuais_fontes
-      - obras_fomento_indireto
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - comex_bens_audiovisuais_fontes
-      - obras_investimento_fsa_pda
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - comex_bens_audiovisuais_fontes
-      - pais_origem_obras_br
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - comex_bens_audiovisuais_fontes
-      - pais_origem_obras_estrangeiras
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - comex_bens_audiovisuais_fontes
-      - produtores_obras
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - comex_bens_audiovisuais_fontes
-      - produtores_obras_estrangeiras
-    via_keys:
-      - TITULO_OBRA
-    top_key: TITULO_OBRA
-    weight: 3
-    _origin: auto-detected
-  - tables:
-      - comex_bens_audiovisuais_fontes
       - vod_europa
     via_keys:
       - TITULO_OBRA
@@ -13226,14 +13795,6 @@ bridges:
     _origin: auto-detected
   - tables:
       - agentes_economicos
-      - cnc_geographie_commune
-    via_keys:
-      - MUNICIPIO
-    top_key: MUNICIPIO
-    weight: 2
-    _origin: auto-detected
-  - tables:
-      - agentes_economicos
       - embrafilme_exibicao_territorio_ano
     via_keys:
       - UF
@@ -13257,185 +13818,6 @@ bridges:
     weight: 2
     _origin: auto-detected
   - tables:
-      - bfi_filmes_televisao
-      - bfi_talentos_mundo
-    via_keys:
-      - PAIS
-      - ANO
-    top_key: PAIS
-    weight: 2
-    _origin: auto-detected
-  - tables:
-      - bfi_filmes_televisao
-      - bilheteria_diaria_distribuidora_filme_ano
-    via_keys:
-      - PAIS
-      - ANO
-    top_key: PAIS
-    weight: 2
-    _origin: auto-detected
-  - tables:
-      - bfi_filmes_televisao
-      - bilheteria_diaria_exibidora_filme_ano
-    via_keys:
-      - PAIS
-      - ANO
-    top_key: PAIS
-    weight: 2
-    _origin: auto-detected
-  - tables:
-      - bfi_filmes_televisao
-      - bilheteria_diaria_municipio_filme_ano
-    via_keys:
-      - PAIS
-      - ANO
-    top_key: PAIS
-    weight: 2
-    _origin: auto-detected
-  - tables:
-      - bfi_filmes_televisao
-      - bilheteria_por_filme_ano
-    via_keys:
-      - PAIS
-      - ANO
-    top_key: PAIS
-    weight: 2
-    _origin: auto-detected
-  - tables:
-      - bfi_filmes_televisao
-      - brasil_no_mundo_indice
-    via_keys:
-      - PAIS
-      - ANO
-    top_key: PAIS
-    weight: 2
-    _origin: auto-detected
-  - tables:
-      - bfi_filmes_televisao
-      - brasil_no_mundo_mencoes_outros_paises
-    via_keys:
-      - PAIS
-      - ANO
-    top_key: PAIS
-    weight: 2
-    _origin: auto-detected
-  - tables:
-      - bfi_filmes_televisao
-      - brasil_no_mundo_mercado_bfi
-    via_keys:
-      - PAIS
-      - ANO
-    top_key: PAIS
-    weight: 2
-    _origin: auto-detected
-  - tables:
-      - bfi_filmes_televisao
-      - brasil_no_mundo_obras_franca_cnc
-    via_keys:
-      - PAIS
-      - ANO
-    top_key: PAIS
-    weight: 2
-    _origin: auto-detected
-  - tables:
-      - bfi_filmes_televisao
-      - cnc_donnees_internationales
-    via_keys:
-      - PAIS
-      - ANO
-    top_key: PAIS
-    weight: 2
-    _origin: auto-detected
-  - tables:
-      - bfi_filmes_televisao
-      - cnc_films_agrees
-    via_keys:
-      - PAIS
-      - ANO
-    top_key: PAIS
-    weight: 2
-    _origin: auto-detected
-  - tables:
-      - bfi_filmes_televisao
-      - cnc_films_million_entrees
-    via_keys:
-      - PAIS
-      - ANO
-    top_key: PAIS
-    weight: 2
-    _origin: auto-detected
-  - tables:
-      - bfi_filmes_televisao
-      - crt_nao_publicitarias_pais_ano
-    via_keys:
-      - PAIS
-      - ANO
-    top_key: PAIS
-    weight: 2
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - bilheteria_diaria_municipio_filme_ano
-    via_keys:
-      - PAIS
-      - ANO
-    top_key: PAIS
-    weight: 2
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - brasil_no_mundo_indice
-    via_keys:
-      - PAIS
-      - ANO
-    top_key: PAIS
-    weight: 2
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - brasil_no_mundo_mencoes_outros_paises
-    via_keys:
-      - PAIS
-      - ANO
-    top_key: PAIS
-    weight: 2
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - brasil_no_mundo_mercado_bfi
-    via_keys:
-      - PAIS
-      - ANO
-    top_key: PAIS
-    weight: 2
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - cnc_donnees_internationales
-    via_keys:
-      - PAIS
-      - ANO
-    top_key: PAIS
-    weight: 2
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - crt_nao_publicitarias_pais_ano
-    via_keys:
-      - PAIS
-      - ANO
-    top_key: PAIS
-    weight: 2
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - cnc_etablissements
-    via_keys:
-      - GENERO
-    top_key: GENERO
-    weight: 2
-    _origin: auto-detected
-  - tables:
       - bilheteria_diaria_distribuidora_filme_ano
       - brasil_no_mundo_indice
     via_keys:
@@ -13456,15 +13838,6 @@ bridges:
   - tables:
       - bilheteria_diaria_distribuidora_filme_ano
       - brasil_no_mundo_mercado_bfi
-    via_keys:
-      - PAIS
-      - ANO
-    top_key: PAIS
-    weight: 2
-    _origin: auto-detected
-  - tables:
-      - bilheteria_diaria_distribuidora_filme_ano
-      - cnc_donnees_internationales
     via_keys:
       - PAIS
       - ANO
@@ -13501,15 +13874,6 @@ bridges:
   - tables:
       - bilheteria_diaria_exibidora_filme_ano
       - brasil_no_mundo_mercado_bfi
-    via_keys:
-      - PAIS
-      - ANO
-    top_key: PAIS
-    weight: 2
-    _origin: auto-detected
-  - tables:
-      - bilheteria_diaria_exibidora_filme_ano
-      - cnc_donnees_internationales
     via_keys:
       - PAIS
       - ANO
@@ -13555,15 +13919,6 @@ bridges:
   - tables:
       - bilheteria_diaria_municipio_filme_ano
       - brasil_no_mundo_obras_franca_cnc
-    via_keys:
-      - PAIS
-      - ANO
-    top_key: PAIS
-    weight: 2
-    _origin: auto-detected
-  - tables:
-      - bilheteria_diaria_municipio_filme_ano
-      - cnc_donnees_internationales
     via_keys:
       - PAIS
       - ANO
@@ -13690,15 +14045,6 @@ bridges:
     _origin: auto-detected
   - tables:
       - bilheteria_por_filme_ano
-      - cnc_donnees_internationales
-    via_keys:
-      - PAIS
-      - ANO
-    top_key: PAIS
-    weight: 2
-    _origin: auto-detected
-  - tables:
-      - bilheteria_por_filme_ano
       - crt_nao_publicitarias_pais_ano
     via_keys:
       - PAIS
@@ -13727,15 +14073,6 @@ bridges:
   - tables:
       - brasil_no_mundo_indice
       - brasil_no_mundo_obras_franca_cnc
-    via_keys:
-      - PAIS
-      - ANO
-    top_key: PAIS
-    weight: 2
-    _origin: auto-detected
-  - tables:
-      - brasil_no_mundo_indice
-      - cnc_donnees_internationales
     via_keys:
       - PAIS
       - ANO
@@ -13780,15 +14117,6 @@ bridges:
     _origin: auto-detected
   - tables:
       - brasil_no_mundo_mencoes_outros_paises
-      - cnc_donnees_internationales
-    via_keys:
-      - PAIS
-      - ANO
-    top_key: PAIS
-    weight: 2
-    _origin: auto-detected
-  - tables:
-      - brasil_no_mundo_mencoes_outros_paises
       - cnc_films_million_entrees
     via_keys:
       - PAIS
@@ -13808,15 +14136,6 @@ bridges:
   - tables:
       - brasil_no_mundo_mercado_bfi
       - brasil_no_mundo_obras_franca_cnc
-    via_keys:
-      - PAIS
-      - ANO
-    top_key: PAIS
-    weight: 2
-    _origin: auto-detected
-  - tables:
-      - brasil_no_mundo_mercado_bfi
-      - cnc_donnees_internationales
     via_keys:
       - PAIS
       - ANO
@@ -13852,42 +14171,6 @@ bridges:
     _origin: auto-detected
   - tables:
       - brasil_no_mundo_obras_franca_cnc
-      - cnc_donnees_internationales
-    via_keys:
-      - PAIS
-      - ANO
-    top_key: PAIS
-    weight: 2
-    _origin: auto-detected
-  - tables:
-      - brasil_no_mundo_obras_franca_cnc
-      - crt_nao_publicitarias_pais_ano
-    via_keys:
-      - PAIS
-      - ANO
-    top_key: PAIS
-    weight: 2
-    _origin: auto-detected
-  - tables:
-      - cnc_donnees_internationales
-      - cnc_films_agrees
-    via_keys:
-      - PAIS
-      - ANO
-    top_key: PAIS
-    weight: 2
-    _origin: auto-detected
-  - tables:
-      - cnc_donnees_internationales
-      - cnc_films_million_entrees
-    via_keys:
-      - PAIS
-      - ANO
-    top_key: PAIS
-    weight: 2
-    _origin: auto-detected
-  - tables:
-      - cnc_donnees_internationales
       - crt_nao_publicitarias_pais_ano
     via_keys:
       - PAIS
@@ -13959,54 +14242,6 @@ bridges:
       - PAIS
       - ANO
     top_key: PAIS
-    weight: 2
-    _origin: auto-detected
-  - tables:
-      - cnc_geographie_commune
-      - crt_obras_nao_publicitarias
-    via_keys:
-      - MUNICIPIO
-    top_key: MUNICIPIO
-    weight: 2
-    _origin: auto-detected
-  - tables:
-      - cnc_geographie_commune
-      - crt_obras_publicitarias
-    via_keys:
-      - MUNICIPIO
-    top_key: MUNICIPIO
-    weight: 2
-    _origin: auto-detected
-  - tables:
-      - cnc_geographie_commune
-      - obras
-    via_keys:
-      - MUNICIPIO
-    top_key: MUNICIPIO
-    weight: 2
-    _origin: auto-detected
-  - tables:
-      - cnc_geographie_commune
-      - produtoras_independentes
-    via_keys:
-      - MUNICIPIO
-    top_key: MUNICIPIO
-    weight: 2
-    _origin: auto-detected
-  - tables:
-      - cnc_geographie_commune
-      - renuncia_fiscal
-    via_keys:
-      - MUNICIPIO
-    top_key: MUNICIPIO
-    weight: 2
-    _origin: auto-detected
-  - tables:
-      - cnc_geographie_commune
-      - salas_exibicao_complexos
-    via_keys:
-      - MUNICIPIO
-    top_key: MUNICIPIO
     weight: 2
     _origin: auto-detected
   - tables:
@@ -14202,686 +14437,6 @@ bridges:
     weight: 2
     _origin: auto-detected
   - tables:
-      - bfi_exhibition
-      - bfi_filmes_televisao
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - bfi_uk_film_market
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - bilheteria_diaria_municipio_filme_ano
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - brasil_no_mundo_indice
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - brasil_no_mundo_mencoes_outros_paises
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - brasil_no_mundo_mercado_bfi
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - canais_distribuicao_obrigatoria
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - canais_programadoras_ativos
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - cnc_donnees_internationales
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_exhibition
-      - crt_nao_publicitarias_pais_ano
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_filmes_televisao
-      - bfi_top_films_2023
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_filmes_televisao
-      - bfi_uk_film_market
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_filmes_televisao
-      - bfi_video_digital
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_filmes_televisao
-      - bfi_video_fisico
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_filmes_televisao
-      - brasil_no_mundo_bilheteria_europa
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_filmes_televisao
-      - brasil_no_mundo_vod_europa
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_filmes_televisao
-      - canais_distribuicao_obrigatoria
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_filmes_televisao
-      - canais_programadoras_ativos
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_filmes_televisao
-      - cnc_visas_exploitation
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_filmes_televisao
-      - crt_obras_nao_publicitarias
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_filmes_televisao
-      - crt_obras_publicitarias
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_filmes_televisao
-      - diretores_obras
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_filmes_televisao
-      - filmagem_estrangeira
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_filmes_televisao
-      - fsa_atas_festivais
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_filmes_televisao
-      - lancamentos_distribuidoras
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_filmes_televisao
-      - pais_origem_obras_br
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_filmes_televisao
-      - pais_origem_obras_estrangeiras
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_filmes_televisao
-      - produtores_obras
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_filmes_televisao
-      - vod_europa
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - bfi_uk_film_market
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - canais_distribuicao_obrigatoria
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_talentos_mundo
-      - canais_programadoras_ativos
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - bfi_uk_film_market
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - bilheteria_diaria_municipio_filme_ano
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - brasil_no_mundo_indice
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - brasil_no_mundo_mencoes_outros_paises
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - brasil_no_mundo_mercado_bfi
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - canais_distribuicao_obrigatoria
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - canais_programadoras_ativos
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - cnc_donnees_internationales
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_top_films_2023
-      - crt_nao_publicitarias_pais_ano
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_uk_film_market
-      - bfi_video_digital
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_uk_film_market
-      - bfi_video_fisico
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_uk_film_market
-      - bilheteria_diaria_distribuidora_filme_ano
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_uk_film_market
-      - bilheteria_diaria_exibidora_filme_ano
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_uk_film_market
-      - bilheteria_diaria_municipio_filme_ano
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_uk_film_market
-      - bilheteria_por_filme_ano
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_uk_film_market
-      - brasil_no_mundo_bilheteria_europa
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_uk_film_market
-      - brasil_no_mundo_indice
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_uk_film_market
-      - brasil_no_mundo_mencoes_outros_paises
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_uk_film_market
-      - brasil_no_mundo_mercado_bfi
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_uk_film_market
-      - brasil_no_mundo_obras_franca_cnc
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_uk_film_market
-      - brasil_no_mundo_vod_europa
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_uk_film_market
-      - canais_distribuicao_obrigatoria
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_uk_film_market
-      - canais_programadoras_ativos
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_uk_film_market
-      - cnc_donnees_internationales
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_uk_film_market
-      - cnc_films_agrees
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_uk_film_market
-      - cnc_films_million_entrees
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_uk_film_market
-      - cnc_visas_exploitation
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_uk_film_market
-      - crt_nao_publicitarias_pais_ano
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_uk_film_market
-      - crt_obras_nao_publicitarias
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_uk_film_market
-      - crt_obras_publicitarias
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_uk_film_market
-      - diretores_obras
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_uk_film_market
-      - filmagem_estrangeira
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_uk_film_market
-      - fsa_atas_festivais
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_uk_film_market
-      - lancamentos_distribuidoras
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_uk_film_market
-      - pais_origem_obras_br
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_uk_film_market
-      - pais_origem_obras_estrangeiras
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_uk_film_market
-      - produtores_obras
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_uk_film_market
-      - vod_europa
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - bilheteria_diaria_municipio_filme_ano
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - brasil_no_mundo_indice
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - brasil_no_mundo_mencoes_outros_paises
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - brasil_no_mundo_mercado_bfi
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - canais_distribuicao_obrigatoria
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - canais_programadoras_ativos
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - cnc_donnees_internationales
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_video_digital
-      - crt_nao_publicitarias_pais_ano
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - bilheteria_diaria_municipio_filme_ano
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - brasil_no_mundo_indice
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - brasil_no_mundo_mercado_bfi
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - canais_distribuicao_obrigatoria
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - canais_programadoras_ativos
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - cnc_donnees_internationales
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - bfi_video_fisico
-      - crt_nao_publicitarias_pais_ano
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
       - bilheteria_diaria_municipio_filme_ano
       - brasil_no_mundo_bilheteria_europa
     via_keys:
@@ -14980,14 +14535,6 @@ bridges:
   - tables:
       - brasil_no_mundo_bilheteria_europa
       - canais_programadoras_ativos
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - brasil_no_mundo_bilheteria_europa
-      - cnc_donnees_internationales
     via_keys:
       - PAIS
     top_key: PAIS
@@ -15371,23 +14918,7 @@ bridges:
     _origin: auto-detected
   - tables:
       - brasil_no_mundo_vod_europa
-      - cnc_donnees_internationales
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - brasil_no_mundo_vod_europa
       - crt_nao_publicitarias_pais_ano
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - canais_distribuicao_obrigatoria
-      - cnc_donnees_internationales
     via_keys:
       - PAIS
     top_key: PAIS
@@ -15467,14 +14998,6 @@ bridges:
     _origin: auto-detected
   - tables:
       - canais_programadoras_ativos
-      - cnc_donnees_internationales
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - canais_programadoras_ativos
       - cnc_films_agrees
     via_keys:
       - PAIS
@@ -15539,94 +15062,6 @@ bridges:
     _origin: auto-detected
   - tables:
       - canais_programadoras_ativos
-      - vod_europa
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - cnc_donnees_internationales
-      - cnc_visas_exploitation
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - cnc_donnees_internationales
-      - crt_obras_nao_publicitarias
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - cnc_donnees_internationales
-      - crt_obras_publicitarias
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - cnc_donnees_internationales
-      - diretores_obras
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - cnc_donnees_internationales
-      - filmagem_estrangeira
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - cnc_donnees_internationales
-      - fsa_atas_festivais
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - cnc_donnees_internationales
-      - lancamentos_distribuidoras
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - cnc_donnees_internationales
-      - pais_origem_obras_br
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - cnc_donnees_internationales
-      - pais_origem_obras_estrangeiras
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - cnc_donnees_internationales
-      - produtores_obras
-    via_keys:
-      - PAIS
-    top_key: PAIS
-    weight: 1
-    _origin: auto-detected
-  - tables:
-      - cnc_donnees_internationales
       - vod_europa
     via_keys:
       - PAIS

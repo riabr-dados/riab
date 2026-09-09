@@ -1,0 +1,295 @@
+table: cnc_geographie_commune_recettes
+description: Recettes guichets par commune de 50 000 habitants ou plus (M€)
+source_raw: cnc-geographie-cinema
+source_file: geographie-par-commune.xlsx
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo oficial publicado pelo CNC.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original do arquivo CNC.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela.
+- name: codigo_ou_categoria
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: codigo_ou_categoria.'
+- name: nome_ou_categoria
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: nome_ou_categoria.'
+- name: '1960'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1960.'
+- name: '1961'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1961.'
+- name: '1962'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1962.'
+- name: '1963'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1963.'
+- name: '1964'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1964.'
+- name: '1965'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1965.'
+- name: '1966'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1966.'
+- name: '1967'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1967.'
+- name: '1968'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1968.'
+- name: '1969'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1969.'
+- name: '1970'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1970.'
+- name: '1971'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1971.'
+- name: '1972'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1972.'
+- name: '1973'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1973.'
+- name: '1974'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1974.'
+- name: '1975'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1975.'
+- name: '1976'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1976.'
+- name: '1977'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1977.'
+- name: '1978'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1978.'
+- name: '1979'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1979.'
+- name: '1980'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1980.'
+- name: '1981'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1981.'
+- name: '1982'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1982.'
+- name: '1983'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1983.'
+- name: '1984'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1984.'
+- name: '1985'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1985.'
+- name: '1986'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1986.'
+- name: '1987'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1987.'
+- name: '1988'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1988.'
+- name: '1989'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1989.'
+- name: '1990'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1990.'
+- name: '1991'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1991.'
+- name: '1992'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1992.'
+- name: '1993'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1993.'
+- name: '1994'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1994.'
+- name: '1995'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1995.'
+- name: '1996'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1996.'
+- name: '1997'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1997.'
+- name: '1998'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1998.'
+- name: '1999'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 1999.'
+- name: '2000'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2000.'
+- name: '2001'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2001.'
+- name: '2002'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2002.'
+- name: '2003'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2003.'
+- name: '2004'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2004.'
+- name: '2005'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2005.'
+- name: '2006'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2006.'
+- name: '2007'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2007.'
+- name: '2008'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2008.'
+- name: '2009'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2009.'
+- name: '2010'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2010.'
+- name: '2011'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2011.'
+- name: '2012'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2012.'
+- name: '2013'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2013.'
+- name: '2014'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2014.'
+- name: '2015'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2015.'
+- name: '2016'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2016.'
+- name: '2017'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2017.'
+- name: '2018'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2018.'
+- name: '2019'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2019.'
+- name: '2020'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2020.'
+- name: '2021'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2021.'
+- name: '2022'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2022.'
+- name: '2023'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2023.'
+- name: '2024'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2024.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo oficial.
+notes:
+- Uma saída corresponde a uma tabela factual; abas temáticas diferentes não são empilhadas.

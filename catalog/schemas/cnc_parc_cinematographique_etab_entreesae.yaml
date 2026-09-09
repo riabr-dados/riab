@@ -1,0 +1,67 @@
+table: cnc_parc_cinematographique_etab_entreesae
+description: Etablissements Art et Essai selon les entrées annuelles
+source_raw: cnc-parc-cinematographique
+source_file: parc-cinematographique.xlsx
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo oficial publicado pelo CNC.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original do arquivo CNC.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela.
+- name: etablissements
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: etablissements.'
+- name: moins_de_5_000
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: moins_de_5_000.'
+- name: 5_a_10_000
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 5_a_10_000.'
+- name: 10_a_15_000
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 10_a_15_000.'
+- name: 15_a_20_000
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 15_a_20_000.'
+- name: 20_a_30_000
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 20_a_30_000.'
+- name: 30_a_50_000
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 30_a_50_000.'
+- name: 50_a_100_000
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 50_a_100_000.'
+- name: 100_000_et_plus
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 100_000_et_plus.'
+- name: total
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: total.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo oficial.
+notes:
+- Uma saída corresponde a uma tabela factual; abas temáticas diferentes não são empilhadas.

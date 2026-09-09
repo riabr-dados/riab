@@ -29,58 +29,58 @@ columns:
     description: "Mecanismo principal de captacao"
     nullable: true
   - name: captado_art1
-    type: float64
+    type: decimal128(38,2)
     description: "Valor captado pelo Art. 1"
   - name: captado_art1a
-    type: float64
+    type: decimal128(38,2)
     description: "Valor captado pelo Art. 1-A"
   - name: captado_art3
-    type: float64
+    type: decimal128(38,2)
     description: "Valor captado pelo Art. 3"
   - name: captado_art3a
-    type: float64
+    type: decimal128(38,2)
     description: "Valor captado pelo Art. 3-A"
   - name: captado_art18
-    type: float64
+    type: decimal128(38,2)
     description: "Valor captado pelo Art. 18"
   - name: captado_art25
-    type: float64
+    type: decimal128(38,2)
     description: "Valor captado pelo Art. 25"
   - name: captado_art39
-    type: float64
+    type: decimal128(38,2)
     description: "Valor captado pelo Art. 39"
   - name: captado_funcines
-    type: float64
+    type: decimal128(38,2)
     description: "Valor captado via FUNCINES"
   - name: captado_edital_ancine
-    type: float64
+    type: decimal128(38,2)
     description: "Valor captado por edital ANCINE"
   - name: captado_par
-    type: float64
+    type: decimal128(38,2)
     description: "Valor captado em PAR"
   - name: captado_paq
-    type: float64
+    type: decimal128(38,2)
     description: "Valor captado em PAQ"
   - name: captado_outros_editais
-    type: float64
+    type: decimal128(38,2)
     description: "Valor captado por outros editais"
   - name: captado_lei_estadual
-    type: float64
+    type: decimal128(38,2)
     description: "Valor captado por lei estadual"
   - name: captado_lei_municipal
-    type: float64
+    type: decimal128(38,2)
     description: "Valor captado por lei municipal"
   - name: captado_outras_fontes
-    type: float64
+    type: decimal128(38,2)
     description: "Valor captado por outras fontes"
   - name: captado_contrapartida
-    type: float64
+    type: decimal128(38,2)
     description: "Valor captado como contrapartida"
   - name: captado_conversao
-    type: float64
+    type: decimal128(38,2)
     description: "Valor captado por conversao"
   - name: total_captado
-    type: float64
+    type: decimal128(38,2)
     description: "Valor total captado em reais"
   - name: proponente
     type: string

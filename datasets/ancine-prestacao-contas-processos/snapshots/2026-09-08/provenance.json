@@ -1,0 +1,14 @@
+{
+  "dataset": "ancine-prestacao-contas-processos",
+  "snapshot": "2026-09-08",
+  "source_url": "https://dados.gov.br/dados/conjuntos-dados/relacao-de-processos-em-fase-de-prestacao-de-contas",
+  "audit_evidence": "outputs/auditoria-pda-20260908/official/ancine-prestacao-contas-processos",
+  "recorded_at": "2026-09-09T17:11:24.645915+00:00",
+  "files": [
+    {
+      "name": "processos-em-prestacao-de-contas.csv",
+      "bytes": 1197948,
+      "sha256": "46dbb7b3fb2e479b848199447cee7dfeb357cfca78dbef5b4e01c546203e560a"
+    }
+  ]
+}

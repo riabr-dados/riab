@@ -29,6 +29,9 @@ df = pd.read_csv(
     encoding="latin1",
     sep=None,
     engine="python",
+    dtype=str,
+    keep_default_na=False,
+    na_values=[""],
 )
 
 df.columns = [c.lower().strip() for c in df.columns]
@@ -36,7 +39,7 @@ df.columns = [c.lower().strip() for c in df.columns]
 # Corrige mojibake (fonte UTF-8 lida como latin-1)
 for col in df.columns:
     df[col] = df[col].apply(lambda x: fix_encoding(x).strip() if isinstance(x, str) else None)
-    df[col] = df[col].replace({"": None, "nan": None})
+    df[col] = df[col].replace({"": None})
 
 out = OUT / "diretores_obras.parquet"
 df.to_parquet(out, index=False)

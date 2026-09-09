@@ -1,0 +1,55 @@
+table: cnc_parc_cinematographique_etab_ecrans
+description: Etablissements selon le nombre d'écrans
+source_raw: cnc-parc-cinematographique
+source_file: parc-cinematographique.xlsx
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo oficial publicado pelo CNC.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original do arquivo CNC.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela.
+- name: etablissements
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: etablissements.'
+- name: un_ecran
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: un_ecran.'
+- name: 2_a_3_ecrans
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 2_a_3_ecrans.'
+- name: 4_a_7_ecrans
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 4_a_7_ecrans.'
+- name: 8_a_11_ecrans
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 8_a_11_ecrans.'
+- name: 12_ecrans_et_plus
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 12_ecrans_et_plus.'
+- name: total
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: total.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo oficial.
+notes:
+- Uma saída corresponde a uma tabela factual; abas temáticas diferentes não são empilhadas.

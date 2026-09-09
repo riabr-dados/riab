@@ -1,0 +1,43 @@
+table: cnc_frequentation_salles_ae_sortie1
+description: Films en première exclusivité en salles selon la recommandation Art et Essai
+source_raw: cnc-frequentation-salles
+source_file: frequentation-salles.xlsx
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo oficial publicado pelo CNC.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original do arquivo CNC.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela.
+- name: nombre_de_films
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: nombre_de_films.'
+- name: art_et_essai
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: art_et_essai.'
+- name: non_art_et_essai
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: non_art_et_essai.'
+- name: total
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: total.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo oficial.
+notes:
+- Uma saída corresponde a uma tabela factual; abas temáticas diferentes não são empilhadas.

@@ -2,10 +2,9 @@
 import Base from "../../layouts/Base.astro";
 import CodeSnippet from "../../components/CodeSnippet.astro";
 import DataExplorer from "../../components/DataExplorer.astro";
-import { existsSync } from "fs";
-import { resolve } from "path";
-import { getDatasets, getDataset, buildSchemaContext, getTableSchema } from "../../lib/catalog.js";
-import { duckdbSnippet, pandasSnippet, rSnippet, cliSnippet, cleanedUrl } from "../../lib/hf.js";
+import ResourceDownloads from "../../components/ResourceDownloads.astro";
+import { getDatasets, getDataset, buildSchemaContext, getTableSchema, getDownloads } from "../../lib/catalog.js";
+import { duckdbSnippet, pandasSnippet, rSnippet, cliSnippet, cleanedUrl, rawUrl } from "../../lib/hf.js";
 
 export async function getStaticPaths() {
   const datasets = getDatasets();
@@ -26,6 +25,10 @@ const dataTables = tables.filter((t) => !t.endsWith("_fontes"));
 const documentationTables = tables.filter((t) => t.endsWith("_fontes"));
 const primaryTable = dataTables[0] ?? tables[0] ?? null;
 const rawFolder = (ds.raw?.path ?? `${ds.slug}/`).replace(/^raw\//, "").replace(/\/$/, "");
+const isDerived = ["derived", "derivado"].includes(ds.raw?.format?.toLowerCase());
+const derivationSources = (ds.raw?.sources ?? [])
+  .map((sourceSlug) => allDatasets.find((dataset) => dataset.slug === sourceSlug))
+  .filter(Boolean);
 
 const COUNTRY_FLAG = { BR: "🇧🇷", FR: "🇫🇷", AR: "🇦🇷", UK: "🇬🇧", UY: "🇺🇾", EU: "🇪🇺" };
 const country = ds.source?.country ?? "";
@@ -35,10 +38,6 @@ function fmtBytes(b) {
   if (!b) return "";
   if (b < 1048576) return `${Math.round(b / 1024)} KB`;
   return `${(b / 1048576).toFixed(1)} MB`;
-}
-
-function hasCleanedCsv(table) {
-  return existsSync(resolve(`../pipelines/output/cleaned/${table}.csv`));
 }
 
 function resourceLabel(table) {
@@ -554,7 +553,7 @@ const resourceConfigs = dataTables.map((table) => {
     table,
     label: resourceLabel(table),
     description: schema?.description?.trim() ?? table,
-    csvAvailable: hasCleanedCsv(table),
+    downloads: getDownloads(table),
     defaultQuery: DEFAULT_QUERIES[table] ?? `SELECT * FROM ${table} LIMIT 100`,
     crossQueries: CROSS_QUERIES[table] ?? [],
     schemaContext: buildSchemaContext(table),
@@ -565,7 +564,7 @@ const documentationConfigs = documentationTables.map((table) => ({
   table,
   label: resourceLabel(table),
   description: "Inventario de fontes, PDFs e URLs oficiais usados na reconstrucao.",
-  csvAvailable: hasCleanedCsv(table),
+  downloads: getDownloads(table),
 }));
 
 const primaryResource =
@@ -641,7 +640,6 @@ const schemaContext = primaryResource?.schemaContext ?? "";
       <section class="ds-section">
         <h2 class="ds-section__title">// Recursos de Dados</h2>
         <p class="ds-section__desc">
-          Este dataset reune recursos factuais da mesma metodologia ANCINE em diferentes granularidades.
           Escolha o recurso que quer explorar ou baixar sem precisar escrever SQL.
         </p>
         <div class="resource-grid">
@@ -655,19 +653,8 @@ const schemaContext = primaryResource?.schemaContext ?? "";
               <div class="resource-card__actions">
                 <button class="btn-outline btn-sm js-open-resource" data-table={resource.table}>Explorar</button>
                 <a class="btn-outline btn-sm" href={cleanedUrl(resource.table)} target="_blank" rel="noopener">Parquet</a>
-                {resource.csvAvailable && (
-                  <a
-                    class="btn-outline btn-sm"
-                    href={cleanedUrl(resource.table, "csv")}
-                    target="_blank"
-                    rel="noopener"
-                    data-force-download
-                    download={`${resource.table}.csv`}
-                  >
-                    CSV
-                  </a>
-                )}
               </div>
+              <ResourceDownloads downloads={resource.downloads} />
             </article>
           ))}
         </div>
@@ -731,18 +718,7 @@ const schemaContext = primaryResource?.schemaContext ?? "";
                   <a class="btn-outline btn-sm" href={cleanedUrl(resource.table)} target="_blank" rel="noopener">
                     {resource.label} Parquet
                   </a>
-                  {resource.csvAvailable && (
-                    <a
-                      class="btn-outline btn-sm"
-                      href={cleanedUrl(resource.table, "csv")}
-                      target="_blank"
-                      rel="noopener"
-                      data-force-download
-                      download={`${resource.table}.csv`}
-                    >
-                      {resource.label} CSV
-                    </a>
-                  )}
+                  <ResourceDownloads downloads={resource.downloads} />
                 </>
               ))}
             </div>
@@ -794,12 +770,12 @@ const schemaContext = primaryResource?.schemaContext ?? "";
           <button class="stab stab--active" data-tab="duckdb">DuckDB</button>
           <button class="stab" data-tab="pandas">pandas</button>
           <button class="stab" data-tab="r">R</button>
-          <button class="stab" data-tab="cli">CLI</button>
+          {!isDerived && <button class="stab" data-tab="cli">CLI</button>}
         </div>
         <div id="tab-duckdb"><CodeSnippet code={duckdbSnippet(primaryTable)} lang="python" /></div>
         <div id="tab-pandas" class="hidden"><CodeSnippet code={pandasSnippet(primaryTable)} lang="python" /></div>
         <div id="tab-r" class="hidden"><CodeSnippet code={rSnippet(primaryTable)} lang="r" /></div>
-        <div id="tab-cli" class="hidden"><CodeSnippet code={cliSnippet(rawFolder)} lang="bash" /></div>
+        {!isDerived && <div id="tab-cli" class="hidden"><CodeSnippet code={cliSnippet(rawFolder)} lang="bash" /></div>}
       </section>
     )}
 
@@ -807,7 +783,9 @@ const schemaContext = primaryResource?.schemaContext ?? "";
     <section class="ds-section">
       <h2 class="ds-section__title">// Dados Brutos</h2>
       <p class="ds-section__desc">
-        Arquivos originais intocados, hospedados no Hugging Face.
+        {isDerived
+          ? "Tabela calculada a partir dos conjuntos relacionados abaixo."
+          : "Arquivos originais preservados e hospedados no Hugging Face."}
       </p>
       <div class="raw-info">
         <div class="raw-info__item">
@@ -826,17 +804,26 @@ const schemaContext = primaryResource?.schemaContext ?? "";
             <code>{ds.raw.delimiter}</code>
           </div>
         )}
-        <div class="raw-info__item">
+        {!isDerived && <div class="raw-info__item">
           <span class="raw-info__label">Pasta no HF</span>
           <code>raw/{rawFolder}/</code>
-        </div>
+        </div>}
+        {isDerived && ds.raw?.script && <div class="raw-info__item">
+          <span class="raw-info__label">Transformação</span>
+          <code>{ds.raw.script}</code>
+        </div>}
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
-        <a class="btn-outline btn-sm"
+        {ds.raw?.file && (
+          <a class="btn-outline btn-sm" href={rawUrl(rawFolder, ds.raw.file)} download={ds.raw.file}>
+            Baixar arquivo original ({ds.raw.format})
+          </a>
+        )}
+        {!isDerived && <a class="btn-outline btn-sm"
            href={`https://huggingface.co/datasets/riabr-dados/riab/tree/main/raw/${rawFolder}`}
            target="_blank" rel="noopener">
           Ver arquivos no HF
-        </a>
+        </a>}
         {ds.source?.url && (
           <a class="btn-outline btn-sm"
              href={ds.source?.data_portal ?? ds.source?.url}
@@ -845,6 +832,16 @@ const schemaContext = primaryResource?.schemaContext ?? "";
           </a>
         )}
       </div>
+      {isDerived && derivationSources.length > 0 && (
+        <div class="related-list" style="margin-top:12px">
+          {derivationSources.map((source) => (
+            <a class="related-item" href={`${import.meta.env.BASE_URL}datasets/${source.slug}/`}>
+              <span class="related-item__title">{source.title}</span>
+              <span class="related-item__source">Fonte da derivação</span>
+            </a>
+          ))}
+        </div>
+      )}
     </section>
 
     {/* RELACIONADOS */}

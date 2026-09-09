@@ -1,64 +1,99 @@
 table: cnc_films_agrees
-description: >
-  Filmes aprovados para apoio a producao e distribuicao pelo CNC via sistema de agrement.
-
+description: Filmes aprovados para produção por ano
 source_raw: cnc-films-agrees
-
+source_file: films-agrees-production.xlsx
 columns:
-  - name: ano
-    type: int64
-    description: ""
-  - name: sheet
-    type: string
-    description: ""
-  - name: visa
-    type: int64
-    description: ""
-  - name: titre
-    type: string
-    description: ""
-  - name: realisateur
-    type: string
-    description: ""
-  - name: producteurs
-    type: string
-    description: ""
-  - name: devis
-    type: number
-    description: ""
-  - name: genre
-    type: string
-    description: ""
-  - name: eof
-    type: string
-    description: ""
-  - name: rang
-    type: string
-    description: ""
-  - name: bonus_parite
-    type: string
-    description: ""
-  - name: asr
-    type: string
-    description: ""
-  - name: payant
-    type: string
-    description: ""
-  - name: clair
-    type: string
-    description: ""
-  - name: sofica
-    type: string
-    description: ""
-  - name: credit_d_impot
-    type: string
-    description: ""
-  - name: aide_regionale
-    type: string
-    description: ""
-  - name: nationalite
-    type: string
-    description: ""
-  - name: payante
-    type: string
-    description: ""
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo oficial publicado pelo CNC.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original do arquivo CNC.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela.
+- name: ano
+  type: int64
+  nullable: true
+  description: Ano representado pela aba anual original.
+- name: visa
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: visa.'
+- name: titre
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: titre.'
+- name: realisateur
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: realisateur.'
+- name: producteurs
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: producteurs.'
+- name: devis
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: devis.'
+- name: genre
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: genre.'
+- name: eof
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: eof.'
+- name: rang
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: rang.'
+- name: bonus_parite
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: bonus_parite.'
+- name: asr
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: asr.'
+- name: payant
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: payant.'
+- name: clair
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: clair.'
+- name: sofica
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: sofica.'
+- name: credit_d_impot
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: credit_d_impot.'
+- name: aide_regionale
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: aide_regionale.'
+- name: nationalite
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: nationalite.'
+- name: payante
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: payante.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo oficial.
+notes:
+- Uma saída corresponde a uma tabela factual; abas temáticas diferentes não são empilhadas.

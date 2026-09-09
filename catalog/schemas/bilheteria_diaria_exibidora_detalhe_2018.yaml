@@ -1,0 +1,83 @@
+table: bilheteria_diaria_exibidora_detalhe_2018
+description: Bilheteria diária informada por exibidoras em 2018; uma linha por registro da fonte.
+source_raw: ancine-bilheteria-diaria-exibidoras
+columns:
+- name: data_exibicao
+  type: date32[day]
+  nullable: true
+  description: Data da exibição informada à ANCINE.
+- name: sessao
+  type: timestamp[ms]
+  nullable: true
+  description: Data e horário da sessão informada pela exibidora.
+- name: titulo_original
+  type: string
+  nullable: true
+  description: 'Campo oficial normalizado: titulo_original.'
+- name: titulo_brasil
+  type: string
+  nullable: true
+  description: 'Campo oficial normalizado: titulo_brasil.'
+- name: cpb_roe
+  type: string
+  nullable: true
+  description: Identificador CPB ou ROE da obra.
+- name: audio
+  type: string
+  nullable: true
+  description: 'Campo oficial normalizado: audio.'
+- name: legendada
+  type: string
+  nullable: true
+  description: 'Campo oficial normalizado: legendada.'
+- name: pais_obra
+  type: string
+  nullable: true
+  description: 'Campo oficial normalizado: pais_obra.'
+- name: registro_sala
+  type: string
+  nullable: true
+  description: 'Campo oficial normalizado: registro_sala.'
+- name: nome_sala
+  type: string
+  nullable: true
+  description: 'Campo oficial normalizado: nome_sala.'
+- name: publico
+  type: int64
+  nullable: true
+  description: Público informado na linha da fonte.
+- name: registro_grupo_exibidor
+  type: string
+  nullable: true
+  description: 'Campo oficial normalizado: registro_grupo_exibidor.'
+- name: registro_exibidor
+  type: string
+  nullable: true
+  description: 'Campo oficial normalizado: registro_exibidor.'
+- name: registro_complexo
+  type: string
+  nullable: true
+  description: 'Campo oficial normalizado: registro_complexo.'
+- name: municipio_sala_complexo
+  type: string
+  nullable: true
+  description: 'Campo oficial normalizado: municipio_sala_complexo.'
+- name: uf_sala_complexo
+  type: string
+  nullable: true
+  description: 'Campo oficial normalizado: uf_sala_complexo.'
+- name: razao_social_exibidora
+  type: string
+  nullable: true
+  description: 'Campo oficial normalizado: razao_social_exibidora.'
+- name: cnpj_exibidora
+  type: string
+  nullable: true
+  description: 'Campo oficial normalizado: cnpj_exibidora.'
+- name: arquivo_origem
+  type: string
+  nullable: true
+  description: Arquivo CSV oficial do qual a linha foi lida.
+notes:
+- Partição anual detalhada; não contém agregados.
+- Os textos foram decodificados como UTF-8 e os campos originais foram preservados.

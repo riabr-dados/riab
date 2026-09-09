@@ -1,0 +1,47 @@
+table: cnc_referencias_ativas_vod_programmesupport_gfk
+description: série interrompue en 2019
+source_raw: cnc-referencias-ativas-vod
+source_file: referencias-ativas-vod.xlsx
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo oficial publicado pelo CNC.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original do arquivo CNC.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela.
+- name: codigo_ou_categoria
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: codigo_ou_categoria.'
+- name: '0'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 0.'
+- name: dimensao_3
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: dimensao_3.'
+- name: dimensao_4
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: dimensao_4.'
+- name: '0_2'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 0_2.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo oficial.
+notes:
+- Uma saída corresponde a uma tabela factual; abas temáticas diferentes não são empilhadas.

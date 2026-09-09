@@ -1,0 +1,79 @@
+table: bilheteria_diaria_distribuidora_detalhe_2018
+description: Bilheteria diária informada por distribuidoras em 2018; uma linha por registro da fonte.
+source_raw: ancine-bilheteria-diaria-distribuidoras
+columns:
+- name: data_exibicao
+  type: date32[day]
+  nullable: true
+  description: Data da exibição informada à ANCINE.
+- name: titulo_original
+  type: string
+  nullable: true
+  description: 'Campo oficial normalizado: titulo_original.'
+- name: titulo_brasil
+  type: string
+  nullable: true
+  description: 'Campo oficial normalizado: titulo_brasil.'
+- name: cpb_roe
+  type: string
+  nullable: true
+  description: Identificador CPB ou ROE da obra.
+- name: pais_obra
+  type: string
+  nullable: true
+  description: 'Campo oficial normalizado: pais_obra.'
+- name: registro_sala
+  type: string
+  nullable: true
+  description: 'Campo oficial normalizado: registro_sala.'
+- name: nome_sala
+  type: string
+  nullable: true
+  description: 'Campo oficial normalizado: nome_sala.'
+- name: publico
+  type: int64
+  nullable: true
+  description: Público informado na linha da fonte.
+- name: registro_grupo_exibidor
+  type: string
+  nullable: true
+  description: 'Campo oficial normalizado: registro_grupo_exibidor.'
+- name: registro_exibidor
+  type: string
+  nullable: true
+  description: 'Campo oficial normalizado: registro_exibidor.'
+- name: registro_complexo
+  type: string
+  nullable: true
+  description: 'Campo oficial normalizado: registro_complexo.'
+- name: municipio_sala_complexo
+  type: string
+  nullable: true
+  description: 'Campo oficial normalizado: municipio_sala_complexo.'
+- name: uf_sala_complexo
+  type: string
+  nullable: true
+  description: 'Campo oficial normalizado: uf_sala_complexo.'
+- name: razao_social_distribuidora
+  type: string
+  nullable: true
+  description: 'Campo oficial normalizado: razao_social_distribuidora.'
+- name: cnpj_distribuidora
+  type: string
+  nullable: true
+  description: 'Campo oficial normalizado: cnpj_distribuidora.'
+- name: nr_protocolo_envio
+  type: string
+  nullable: true
+  description: 'Campo oficial normalizado: nr_protocolo_envio.'
+- name: data_hora_envio_protocolo
+  type: string
+  nullable: true
+  description: 'Campo oficial normalizado: data_hora_envio_protocolo.'
+- name: arquivo_origem
+  type: string
+  nullable: true
+  description: Arquivo CSV oficial do qual a linha foi lida.
+notes:
+- Partição anual detalhada; não contém agregados.
+- Os textos foram decodificados como UTF-8 e os campos originais foram preservados.

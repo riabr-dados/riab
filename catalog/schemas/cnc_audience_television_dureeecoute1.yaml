@@ -1,0 +1,67 @@
+table: cnc_audience_television_dureeecoute1
+description: Durée d'écoute quotidienne de la télévision selon la cible (lundi-dimanche, 3h-27h)
+source_raw: cnc-audience-television
+source_file: audience-television.xlsx
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo oficial publicado pelo CNC.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original do arquivo CNC.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela.
+- name: codigo_ou_categoria
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: codigo_ou_categoria.'
+- name: 4_ans_et_plus
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 4_ans_et_plus.'
+- name: femmes_responsables_des_achats_15_49_ans
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: femmes_responsables_des_achats_15_49_ans.'
+- name: foyer
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: foyer.'
+- name: dimensao_5
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: dimensao_5.'
+- name: dimensao_6
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: dimensao_6.'
+- name: dimensao_7
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: dimensao_7.'
+- name: dimensao_8
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: dimensao_8.'
+- name: dimensao_9
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: dimensao_9.'
+- name: dimensao_10
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: dimensao_10.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo oficial.
+notes:
+- Uma saída corresponde a uma tabela factual; abas temáticas diferentes não são empilhadas.

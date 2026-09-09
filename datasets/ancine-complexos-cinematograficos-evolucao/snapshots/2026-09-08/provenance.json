@@ -1,0 +1,14 @@
+{
+  "dataset": "ancine-complexos-cinematograficos-evolucao",
+  "snapshot": "2026-09-08",
+  "source_url": "https://dados.gov.br/dados/conjuntos-dados/complexos-cinematograficos---evolucao-anual",
+  "audit_evidence": "outputs/auditoria-pda-20260908/official/ancine-complexos-cinematograficos-evolucao",
+  "recorded_at": "2026-09-09T17:11:24.812951+00:00",
+  "files": [
+    {
+      "name": "complexos-cinematograficos-evolucao-anual.csv",
+      "bytes": 1146273,
+      "sha256": "1c0ae7ecd2b68f37e7514dc51b6ae20063c992a853fa730d92f9c569accee1b1"
+    }
+  ]
+}

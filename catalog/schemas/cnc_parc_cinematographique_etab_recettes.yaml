@@ -1,0 +1,71 @@
+table: cnc_parc_cinematographique_etab_recettes
+description: Etablissements selon les recettes annuelles
+source_raw: cnc-parc-cinematographique
+source_file: parc-cinematographique.xlsx
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo oficial publicado pelo CNC.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original do arquivo CNC.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela.
+- name: codigo_ou_categoria
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: codigo_ou_categoria.'
+- name: moins_de_15000_euros
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: moins_de_15000_euros.'
+- name: de_15_a_30_000_euros
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_15_a_30_000_euros.'
+- name: de_30_a_75_000_euros
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_30_a_75_000_euros.'
+- name: de_75_a_150_000_euros
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_75_a_150_000_euros.'
+- name: de_150_a_300_000_euros
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_150_a_300_000_euros.'
+- name: de_300_a_750_000_euros
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_300_a_750_000_euros.'
+- name: de_750_000_a_1_5_m
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_750_000_a_1_5_m.'
+- name: de_1_5_a_3_m
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_1_5_a_3_m.'
+- name: 3_m_et_plus
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 3_m_et_plus.'
+- name: dimensao_11
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: dimensao_11.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo oficial.
+notes:
+- Uma saída corresponde a uma tabela factual; abas temáticas diferentes não são empilhadas.

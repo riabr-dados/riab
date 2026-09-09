@@ -45,7 +45,7 @@ def read_csv_safe(path: Path) -> pd.DataFrame:
     last_err = None
     for enc in ("utf-8-sig", "latin1", "cp1252"):
         try:
-            return pd.read_csv(path, encoding=enc, sep=None, engine="python", dtype=str)
+            return pd.read_csv(path, encoding=enc, sep=None, engine="python", dtype=str, keep_default_na=False, na_values=[""])
         except Exception as exc:
             last_err = exc
     raise RuntimeError(f"Falha ao ler {path}: {last_err}")
@@ -55,8 +55,7 @@ def process_dataset(slug: str, table: str) -> None:
     snap = latest_snapshot(RAW / slug)
     csvs = sorted(p for p in snap.glob("*.csv") if p.stat().st_size > 0)
     if not csvs:
-        print(f"[SKIP] {slug} — sem CSV em {snap}")
-        return
+        raise FileNotFoundError(f'{slug}: sem CSV em {snap}')
 
     print(f"[{slug}] {len(csvs)} arquivo(s) — gerando {table}.parquet")
     frames = []
@@ -77,6 +76,7 @@ def process_dataset(slug: str, table: str) -> None:
 
 def main() -> None:
     only = set(sys.argv[1:])
+    failures = []
     for slug, table in DATASETS.items():
         if only and slug not in only and table not in only:
             continue
@@ -84,6 +84,9 @@ def main() -> None:
             process_dataset(slug, table)
         except Exception as exc:
             print(f"[ERRO] {slug}: {exc}", file=sys.stderr)
+            failures.append(slug)
+    if failures:
+        raise SystemExit(f'Falha nos conjuntos: {", ".join(failures)}')
 
 
 if __name__ == "__main__":

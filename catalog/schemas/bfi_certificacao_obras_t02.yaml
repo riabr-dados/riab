@@ -1,0 +1,47 @@
+table: bfi_certificacao_obras_t02
+description: 'Table 2: Films with final cultural test certification, distribution by budget band, 2014-2023.'
+source_raw: bfi-statistical-yearbook-2023
+source_file: screen-sector-certification.ods
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo ODS oficial do BFI.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original no arquivo ODS.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela no BFI Statistical Yearbook.
+- name: budget_band
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: budget_band.'
+- name: number_of_films
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: number_of_films.'
+- name: percent_of_all_films
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: percent_of_all_films.'
+- name: aggregate_budget_gbp_million
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: aggregate_budget_gbp_million.'
+- name: percent_of_total_aggregate_budget
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: percent_of_total_aggregate_budget.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo ODS oficial.
+notes:
+- Uma saída corresponde a uma única aba factual do ODS; nenhuma aba T é empilhada com outra.

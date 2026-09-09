@@ -1,28 +1,55 @@
 table: cnc_films_million_entrees
-description: >
-  Todos os filmes que ultrapassaram 1 milhao de espectadores na Franca, com total de admissoes, distribuidora e data de estreia.
-
+description: Filmes com mais de um milhão de entradas por ano
 source_raw: cnc-films-million-entrees
-
+source_file: films-plus-million-entrees.xlsx
 columns:
-  - name: rang
-    type: number
-    description: ""
-  - name: titre
-    type: string
-    description: ""
-  - name: nationalite
-    type: string
-    description: ""
-  - name: sortie
-    type: datetime
-    description: ""
-  - name: entrees_millions
-    type: int64
-    description: ""
-  - name: ano
-    type: int64
-    description: ""
-  - name: unnamed_0
-    type: number
-    description: ""
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo oficial publicado pelo CNC.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original do arquivo CNC.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela.
+- name: ano
+  type: int64
+  nullable: true
+  description: Ano representado pela aba anual original.
+- name: rang
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: rang.'
+- name: titre
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: titre.'
+- name: nationalite
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: nationalite.'
+- name: sortie
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: sortie.'
+- name: entrees_millions
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: entrees_millions.'
+- name: codigo_ou_categoria
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: codigo_ou_categoria.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo oficial.
+notes:
+- Uma saída corresponde a uma tabela factual; abas temáticas diferentes não são empilhadas.

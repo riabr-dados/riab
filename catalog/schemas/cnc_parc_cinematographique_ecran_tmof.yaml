@@ -1,0 +1,63 @@
+table: cnc_parc_cinematographique_ecran_tmof
+description: Ecrans selon le taux moyen d'occupation des fauteuils
+source_raw: cnc-parc-cinematographique
+source_file: parc-cinematographique.xlsx
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo oficial publicado pelo CNC.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original do arquivo CNC.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela.
+- name: codigo_ou_categoria
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: codigo_ou_categoria.'
+- name: moins_de_10
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: moins_de_10.'
+- name: de_10_a_15
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_10_a_15.'
+- name: de_15_a_20
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_15_a_20.'
+- name: de_20_a_25
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_20_a_25.'
+- name: de_25_a_30
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_25_a_30.'
+- name: de_30_a_50
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_30_a_50.'
+- name: plus_de_50
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: plus_de_50.'
+- name: dimensao_9
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: dimensao_9.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo oficial.
+notes:
+- Uma saída corresponde a uma tabela factual; abas temáticas diferentes não são empilhadas.

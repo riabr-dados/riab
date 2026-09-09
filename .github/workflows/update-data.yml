@@ -4,11 +4,6 @@ on:
   schedule:
     - cron: "0 6 * * 1"   # toda segunda-feira as 06:00 UTC
   workflow_dispatch:
-    inputs:
-      dataset:
-        description: "Slug do dataset (deixe vazio para todos)"
-        required: false
-        default: ""
 
 jobs:
   update:
@@ -25,8 +20,21 @@ jobs:
       - name: Instalar dependencias Python
         run: pip install -r pipelines/requirements.txt
 
+      - name: Baixar bilheteria diaria oficial
+        run: python pipelines/fetch_bilheteria_diaria.py
+
       - name: Transformar para Parquet
         run: python pipelines/transform/run_all.py
+
+      - name: Tratar bilheteria diaria detalhada e agregados
+        run: |
+          python pipelines/transform/clean_bilheteria_diaria.py
+          python pipelines/transform/aggregate_bilheteria_diaria.py
+
+      - name: Gerar e validar downloads publicos
+        run: |
+          python pipelines/build_downloads.py
+          python -m pytest -q
 
       - name: Publicar no Hugging Face
         run: python pipelines/upload_hf.py

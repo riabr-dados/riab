@@ -8,6 +8,16 @@ import yaml from "js-yaml";
 
 const CATALOG_PATH = resolve("../catalog/datasets.yaml");
 const SOURCES_PATH = resolve("../catalog/sources.yaml");
+const DOWNLOADS_PATH = resolve("../catalog/downloads.json");
+
+export function getDownloads(table) {
+  try {
+    return JSON.parse(readFileSync(DOWNLOADS_PATH, 'utf-8')).resources[table] ?? null;
+  } catch (error) {
+    if (error.code === 'ENOENT') return null;
+    throw error;
+  }
+}
 
 function loadCatalog() {
   const raw = readFileSync(CATALOG_PATH, "utf-8");

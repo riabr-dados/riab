@@ -1,0 +1,67 @@
+table: cnc_parc_cinematographique_ecran_entrees
+description: Ecrans selon les entrées annuelles
+source_raw: cnc-parc-cinematographique
+source_file: parc-cinematographique.xlsx
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo oficial publicado pelo CNC.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original do arquivo CNC.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela.
+- name: codigo_ou_categoria
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: codigo_ou_categoria.'
+- name: moins_de_5000_entrees
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: moins_de_5000_entrees.'
+- name: de_5_a_10_000_entrees
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_5_a_10_000_entrees.'
+- name: de_10_a_15_000_entrees
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_10_a_15_000_entrees.'
+- name: de_15_a_20_000_entrees
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_15_a_20_000_entrees.'
+- name: de_20_a_30_000_entrees
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_20_a_30_000_entrees.'
+- name: de_30_a_50_000_entrees
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_30_a_50_000_entrees.'
+- name: de_50_a_100_000_entrees
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_50_a_100_000_entrees.'
+- name: plus_de_100_000_entrees
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: plus_de_100_000_entrees.'
+- name: dimensao_10
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: dimensao_10.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo oficial.
+notes:
+- Uma saída corresponde a uma tabela factual; abas temáticas diferentes não são empilhadas.

@@ -1,0 +1,63 @@
+table: cnc_parc_cinematographique_ecran_seahebdo
+description: Ecrans selon le nombre hebdomadaire de séances
+source_raw: cnc-parc-cinematographique
+source_file: parc-cinematographique.xlsx
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo oficial publicado pelo CNC.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original do arquivo CNC.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela.
+- name: codigo_ou_categoria
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: codigo_ou_categoria.'
+- name: moins_d_une_seance
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: moins_d_une_seance.'
+- name: 1_a_7_seances
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 1_a_7_seances.'
+- name: 7_a_14_seances
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 7_a_14_seances.'
+- name: 14_a_21_seances
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 14_a_21_seances.'
+- name: 21_a_28_seances
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 21_a_28_seances.'
+- name: 28_a_35_seances
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 28_a_35_seances.'
+- name: 35_seances_et_plus
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 35_seances_et_plus.'
+- name: dimensao_9
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: dimensao_9.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo oficial.
+notes:
+- Uma saída corresponde a uma tabela factual; abas temáticas diferentes não são empilhadas.

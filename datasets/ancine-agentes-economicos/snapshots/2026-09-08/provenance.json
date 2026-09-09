@@ -1,0 +1,14 @@
+{
+  "dataset": "ancine-agentes-economicos",
+  "snapshot": "2026-09-08",
+  "source_url": "https://dados.gov.br/dataset?q=ancine+agentes",
+  "audit_evidence": "outputs/auditoria-pda-20260908/official/ancine-agentes-economicos",
+  "recorded_at": "2026-09-09T17:11:24.051395+00:00",
+  "files": [
+    {
+      "name": "agentes-economicos-regulares.csv",
+      "bytes": 3187490,
+      "sha256": "b217d189ef63c2076da52faf5ca18a50b6a37aa70bd0821bf7c1389f3245b9cf"
+    }
+  ]
+}

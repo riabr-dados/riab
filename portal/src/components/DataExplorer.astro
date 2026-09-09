@@ -61,9 +61,11 @@ const initialResource =
     </div>
     <div class="explorer__actions">
       <button class="ex-btn" id="btn-run" disabled>Executar</button>
-      <button class="ex-btn ex-btn--outline" id="btn-export" disabled>Exportar CSV</button>
+      <button class="ex-btn ex-btn--outline" id="btn-export" disabled>Exportar resultado da consulta (CSV)</button>
     </div>
   </div>
+
+  <p class="ex-export-help">A exportação contém somente as linhas retornadas pela consulta, inclusive seu LIMIT. Para obter todos os dados, use os downloads completos em Recursos de Dados.</p>
 
   <div class="explorer__nl" id="ex-nl">
     <div class="nl-header">
@@ -151,7 +153,7 @@ let lastRows = [];
 let lastCols = [];
 
 function parquetUrlFor(table) {
-  return resourceMap.get(table)?.parquetUrl ?? currentResource?.parquetUrl ?? "";
+  return resourceMap.get(table)?.parquetUrl ?? `https://huggingface.co/datasets/riabr-dados/riab/resolve/main/cleaned/${encodeURIComponent(table)}.parquet`;
 }
 
 function currentQueryFallback(table) {
@@ -213,6 +215,11 @@ function setCurrentResource(table, options = {}) {
   if (!resource) return;
   const { replaceQuery = true, run = false } = options;
   currentResource = resource;
+  lastRows = [];
+  lastCols = [];
+  btnExport.disabled = true;
+  result.textContent = 'Execute a consulta para ver este recurso.';
+  foot.style.display = 'none';
   syncResourceButtons();
   renderCrosses();
   if (replaceQuery || !editor.value.trim()) {
@@ -241,7 +248,7 @@ async function initDuckDB() {
 
     setStatusReady();
     btnRun.disabled = false;
-    btnExport.disabled = false;
+    btnExport.disabled = true;
     if (btnGen) btnGen.disabled = false;
   } catch (error) {
     statusDot.className = "ex-dot ex-dot--err";
@@ -254,6 +261,9 @@ async function runQuery(sql) {
   result.innerHTML = `<div class="ex-placeholder ex-loading">Executando...</div>`;
   foot.style.display = "none";
   btnRun.disabled = true;
+  btnExport.disabled = true;
+  lastRows = [];
+  lastCols = [];
 
   const t0 = performance.now();
   try {
@@ -271,11 +281,16 @@ async function runQuery(sql) {
     lastRows = response.toArray().map((row) => lastCols.map((column) => row[column]));
 
     renderTable(lastCols, lastRows, elapsed);
+    btnExport.disabled = lastRows.length === 0;
   } catch (error) {
     result.innerHTML = `<div class="ex-error">${error.message}</div>`;
   } finally {
     btnRun.disabled = false;
   }
+}
+
+function escapeHTML(value) {
+  return String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
 function renderTable(columns, rows, elapsed) {
@@ -287,21 +302,21 @@ function renderTable(columns, rows, elapsed) {
   const maxDisplay = 500;
   const displayRows = rows.slice(0, maxDisplay);
 
-  const thead = `<thead><tr>${columns.map((column) => `<th>${column}</th>`).join("")}</tr></thead>`;
+  const thead = `<thead><tr>${columns.map((column) => `<th>${escapeHTML(column)}</th>`).join("")}</tr></thead>`;
   const tbody = `<tbody>${displayRows
     .map(
       (row) =>
         `<tr>${row
           .map((value) => {
             const text = value == null ? "" : String(value);
-            return `<td title="${text.replace(/"/g, "&quot;")}">${text.length > 60 ? `${text.slice(0, 60)}...` : text}</td>`;
+            return `<td title="${escapeHTML(text)}">${escapeHTML(text.length > 60 ? `${text.slice(0, 60)}...` : text)}</td>`;
           })
           .join("")}</tr>`,
     )
     .join("")}</tbody>`;
 
   result.innerHTML = `<div class="ex-table-wrap"><table class="ex-table">${thead}${tbody}</table></div>`;
-  rowcount.textContent = `${rows.length.toLocaleString("pt-BR")} linhas${rows.length > maxDisplay ? ` (exibindo ${maxDisplay})` : ""}`;
+  rowcount.textContent = `${rows.length.toLocaleString("pt-BR")} linhas retornadas pela consulta${rows.length > maxDisplay ? ` (exibindo ${maxDisplay})` : ""}`;
   timeEl.textContent = `${elapsed}s`;
   foot.style.display = "flex";
 }
@@ -310,7 +325,7 @@ function exportCSV() {
   if (!lastRows.length || !currentResource) return;
   const escape = (value) => {
     const text = value == null ? "" : String(value);
-    return text.includes(",") || text.includes('"') || text.includes("\n")
+    return text.includes(",") || text.includes('"') || text.includes("\n") || text.includes("\r")
       ? `"${text.replace(/"/g, '""')}"`
       : text;
   };
@@ -318,8 +333,9 @@ function exportCSV() {
   const blob = new Blob(["\uFEFF" + lines.join("\n")], { type: "text/csv;charset=utf-8;" });
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
-  link.download = `${currentResource.table}.csv`;
+  link.download = `${currentResource.table}_resultado_consulta.csv`;
   link.click();
+  setTimeout(() => URL.revokeObjectURL(link.href), 1000);
 }
 
 const LS_KEY = "riab_anthropic_key";

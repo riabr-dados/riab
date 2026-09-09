@@ -1,0 +1,110 @@
+table: captacao_por_projeto
+description: Valores captados por projeto e ano, de 2002 a julho de 2020, com proponente, identificação, tipo, gênero
+  e valores por mecanismo. Total anual é uma coluna separada dos componentes.
+source_raw: ancine-captacao-por-projeto-investidor
+grain: 'Uma linha por linha factual da planilha; chave técnica: hash_arquivo, fonte_aba, linha_origem.'
+columns:
+- name: linha_origem
+  type: int64
+  nullable: false
+  description: Número da linha na planilha original, começando em 1.
+- name: ano
+  type: int64
+  nullable: false
+  description: Ano de captação; extraído do ano ou da data original.
+- name: ano_captacao_original
+  type: string
+  nullable: false
+  description: Conteúdo original da coluna intitulada Ano de captação.
+- name: salic
+  type: string
+  nullable: false
+  description: Código SALIC preservado como texto.
+- name: titulo_projeto
+  type: string
+  nullable: false
+  description: Nome do projeto na fonte.
+- name: cnpj_proponente
+  type: string
+  nullable: true
+  description: CNPJ sem pontuação, completado à esquerda até 14 dígitos; não comprova validade cadastral.
+- name: proponente
+  type: string
+  nullable: false
+  description: Nome do proponente.
+- name: uf_proponente
+  type: string
+  nullable: false
+  description: Uf proponente, conforme a fonte.
+- name: tipo_ou_segmento
+  type: string
+  nullable: false
+  description: Tipo ou segmento, conforme a fonte.
+- name: genero
+  type: string
+  nullable: false
+  description: Genero, conforme a fonte.
+- name: captado_lei_rouanet
+  type: string
+  nullable: false
+  description: Valor nominal em BRL do mecanismo lei_rouanet.
+- name: captado_art1
+  type: string
+  nullable: false
+  description: Valor nominal em BRL do mecanismo art1.
+- name: captado_art1a
+  type: string
+  nullable: false
+  description: Valor nominal em BRL do mecanismo art1a.
+- name: captado_art3
+  type: string
+  nullable: false
+  description: Valor nominal em BRL do mecanismo art3.
+- name: captado_art3a
+  type: string
+  nullable: false
+  description: Valor nominal em BRL do mecanismo art3a.
+- name: captado_art39
+  type: string
+  nullable: false
+  description: Valor nominal em BRL do mecanismo art39.
+- name: captado_funcines
+  type: string
+  nullable: false
+  description: Valor nominal em BRL do mecanismo funcines.
+- name: total_captado_no_ano
+  type: string
+  nullable: false
+  description: Total anual informado na origem; não somar novamente aos componentes.
+- name: cnpj_proponente_original
+  type: string
+  nullable: false
+  description: Texto original, sem normalização de identificadores.
+- name: moeda
+  type: str
+  nullable: false
+  description: BRL, valores nominais.
+- name: fonte_arquivo
+  type: str
+  nullable: false
+  description: Nome do arquivo original.
+- name: fonte_aba
+  type: str
+  nullable: false
+  description: Nome da aba original.
+- name: fonte_url
+  type: str
+  nullable: false
+  description: Endereço oficial do arquivo.
+- name: hash_arquivo
+  type: str
+  nullable: false
+  description: SHA-256 do original.
+- name: data_coleta
+  type: str
+  nullable: false
+  description: Data do snapshot local.
+notes:
+- CNPJ original preserva inclusive a indicação Empresa Estrangeira.
+- Valores não são arredondados; podem conter frações de centavo publicadas pela fonte.
+- 'Schema revisado: o recurso legado que misturava três fontes foi substituído por três recursos separados.'

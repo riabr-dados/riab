@@ -1,0 +1,67 @@
+table: cnc_parc_cinematographique_etab_ae
+description: Etablissements classées Art et Essai
+source_raw: cnc-parc-cinematographique
+source_file: parc-cinematographique.xlsx
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo oficial publicado pelo CNC.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original do arquivo CNC.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela.
+- name: codigo_ou_categoria
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: codigo_ou_categoria.'
+- name: etablissements
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: etablissements.'
+- name: ecrans
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: ecrans.'
+- name: fauteuils
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: fauteuils.'
+- name: seances_milliers
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: seances_milliers.'
+- name: entrees_millions
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: entrees_millions.'
+- name: recettes_guichets_m
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: recettes_guichets_m.'
+- name: recette_moyenne_par_entree
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: recette_moyenne_par_entree.'
+- name: entrees_moyennes_par_etablissement
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: entrees_moyennes_par_etablissement.'
+- name: occupation_des_fauteuils
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: occupation_des_fauteuils.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo oficial.
+notes:
+- Uma saída corresponde a uma tabela factual; abas temáticas diferentes não são empilhadas.

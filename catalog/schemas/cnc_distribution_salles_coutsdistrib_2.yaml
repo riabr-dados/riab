@@ -1,0 +1,83 @@
+table: cnc_distribution_salles_coutsdistrib_2
+description: Structure des coûts de distribution
+source_raw: cnc-distribution-salles
+source_file: distribution-films-salles.xlsx
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo oficial publicado pelo CNC.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original do arquivo CNC.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela.
+- name: codigo_ou_categoria
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: codigo_ou_categoria.'
+- name: '2007'
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 2007.'
+- name: '2008'
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 2008.'
+- name: '2009'
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 2009.'
+- name: '2010'
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 2010.'
+- name: '2011'
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 2011.'
+- name: '2012'
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 2012.'
+- name: '2013'
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 2013.'
+- name: '2014'
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 2014.'
+- name: '2015'
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 2015.'
+- name: '2016'
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 2016.'
+- name: '2017'
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 2017.'
+- name: '2018'
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 2018.'
+- name: '2019'
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 2019.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo oficial.
+notes:
+- Uma saída corresponde a uma tabela factual; abas temáticas diferentes não são empilhadas.

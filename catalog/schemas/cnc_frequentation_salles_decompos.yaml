@@ -1,0 +1,59 @@
+table: cnc_frequentation_salles_decompos
+description: Décomposition de la recette guichet
+source_raw: cnc-frequentation-salles
+source_file: frequentation-salles.xlsx
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo oficial publicado pelo CNC.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original do arquivo CNC.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela.
+- name: en_m_courants
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: en_m_courants.'
+- name: t_s_a
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: t_s_a.'
+- name: t_v_a
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: t_v_a.'
+- name: remuneration_distributeurs_2
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: remuneration_distributeurs_2.'
+- name: remuneration_exploitants3
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: remuneration_exploitants3.'
+- name: sacem1
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: sacem1.'
+- name: total
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: total.'
+- name: dimensao_9
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: dimensao_9.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo oficial.
+notes:
+- Uma saída corresponde a uma tabela factual; abas temáticas diferentes não são empilhadas.

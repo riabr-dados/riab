@@ -131,6 +131,8 @@ def main():
         grafo = json.loads(GRAFO.read_text(encoding="utf-8"))
         for e in grafo["edges"]:
             d = e["data"]
+            if d["source"] not in tables_cols or d["target"] not in tables_cols:
+                continue
             bridges.append({
                 "tables": [d["source"], d["target"]],
                 "via_keys": d["keys"],
@@ -143,7 +145,7 @@ def main():
     out = {
         "version": "0.1.0",
         "_meta": {
-            "generated_at": "2026-05-27",
+            "generated_at": "2026-09-09",
             "description": (
                 "Key registry: para cada tabela do RIDAB, declara que chaves canonicas ela expoe "
                 "e por quais colunas. Usado pelo /transformar e /conexoes para sugerir junções automaticas."

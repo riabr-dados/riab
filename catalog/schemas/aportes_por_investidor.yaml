@@ -1,0 +1,58 @@
+table: aportes_por_investidor
+description: Valores aportados por incentivador/investidor, ano e mecanismo de incentivo. Preserva o nome do investidor
+  e a precisão numérica da origem. Esta fonte não fornece CNPJ.
+source_raw: ancine-captacao-por-projeto-investidor
+grain: 'Uma linha por linha factual da planilha; chave técnica: hash_arquivo, fonte_aba, linha_origem.'
+columns:
+- name: linha_origem
+  type: int64
+  nullable: false
+  description: Número da linha na planilha original, começando em 1.
+- name: ano
+  type: int64
+  nullable: false
+  description: Ano de captação; extraído do ano ou da data original.
+- name: ano_captacao_original
+  type: string
+  nullable: false
+  description: Conteúdo original da coluna intitulada Ano de captação.
+- name: nome_investidor
+  type: string
+  nullable: false
+  description: Nome do incentivador/investidor na fonte.
+- name: mecanismo_de_incentivo
+  type: string
+  nullable: false
+  description: Mecanismo de incentivo, conforme a fonte.
+- name: valor_aportado
+  type: string
+  nullable: false
+  description: Valor nominal em BRL do mecanismo valor_aportado.
+- name: moeda
+  type: str
+  nullable: false
+  description: BRL, valores nominais.
+- name: fonte_arquivo
+  type: str
+  nullable: false
+  description: Nome do arquivo original.
+- name: fonte_aba
+  type: str
+  nullable: false
+  description: Nome da aba original.
+- name: fonte_url
+  type: str
+  nullable: false
+  description: Endereço oficial do arquivo.
+- name: hash_arquivo
+  type: str
+  nullable: false
+  description: SHA-256 do original.
+- name: data_coleta
+  type: str
+  nullable: false
+  description: Data do snapshot local.
+notes:
+- CNPJ original preserva inclusive a indicação Empresa Estrangeira.
+- Valores não são arredondados; podem conter frações de centavo publicadas pela fonte.
+- 'Schema revisado: o recurso legado que misturava três fontes foi substituído por três recursos separados.'

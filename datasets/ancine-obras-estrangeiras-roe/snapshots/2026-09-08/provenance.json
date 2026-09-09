@@ -1,0 +1,74 @@
+{
+  "dataset": "ancine-obras-estrangeiras-roe",
+  "snapshot": "2026-09-08",
+  "source_url": "https://dados.gov.br/dados/conjuntos-dados/obras-nao-publicitarias-estrangeiras-relacao-de-todos-os-roes-emitidos-excluindo-se-a-categoria-de-r",
+  "audit_evidence": "outputs/auditoria-pda-20260908/official/ancine-obras-estrangeiras-roe",
+  "recorded_at": "2026-09-09T17:38:15.182658+00:00",
+  "files": [
+    {
+      "name": "obras-nao-pub-estrangeiras-2014.csv",
+      "bytes": 989047,
+      "sha256": "b9ced23d145c33ed74f2b9bddfcc40065bd86d63a8687ade66a4dae99343b4aa"
+    },
+    {
+      "name": "obras-nao-pub-estrangeiras-2015.csv",
+      "bytes": 1154125,
+      "sha256": "752035a686a32ddcd88c334022ee1d33957436d93206b308ba1c2a5f1a7f8cf8"
+    },
+    {
+      "name": "obras-nao-pub-estrangeiras-2016.csv",
+      "bytes": 834332,
+      "sha256": "e0ac1d71faae2281754c98ced061b93a4f2f1e36331546669abb3821df7fd7ce"
+    },
+    {
+      "name": "obras-nao-pub-estrangeiras-2017.csv",
+      "bytes": 573497,
+      "sha256": "528230fd2b1790112c3cc0dce1332c5e25620ebb4bb8e31326967e6b79ed899d"
+    },
+    {
+      "name": "obras-nao-pub-estrangeiras-2018.csv",
+      "bytes": 564753,
+      "sha256": "e9a96c10fcdc76c765a332ed458ef139f8da740da49a67dc1f5a6eb6841bc31a"
+    },
+    {
+      "name": "obras-nao-pub-estrangeiras-2019.csv",
+      "bytes": 556511,
+      "sha256": "e36ddae12c25d2ffc76d645ced7fe4fbc851c0edb93feb5e3bf85d436ca46414"
+    },
+    {
+      "name": "obras-nao-pub-estrangeiras-2020.csv",
+      "bytes": 544748,
+      "sha256": "d75767b734c18707f5db5723875e4cbcda22bd53e3b3d525bd0309aed77e4539"
+    },
+    {
+      "name": "obras-nao-pub-estrangeiras-2021.csv",
+      "bytes": 444332,
+      "sha256": "bf55c054d466b8cc96541a090d501f3d75b8ce2ebb7897b50d7ce8073dbe78db"
+    },
+    {
+      "name": "obras-nao-pub-estrangeiras-2022.csv",
+      "bytes": 385105,
+      "sha256": "60d824d8bd843ea9833b875df0e23bf550d2f5c4d0bac519a5b1a242b2ead970"
+    },
+    {
+      "name": "obras-nao-pub-estrangeiras-2023.csv",
+      "bytes": 379352,
+      "sha256": "48ac8ca693fe9f04fcf8ad0ba79a03e904a282cdc3230a6c3ad0f469a01cd6c8"
+    },
+    {
+      "name": "obras-nao-pub-estrangeiras-2024.csv",
+      "bytes": 325899,
+      "sha256": "b8a03f5e0bc05391439ffca9f637a227158d6529cfc0309a91fc296f621094d0"
+    },
+    {
+      "name": "obras-nao-pub-estrangeiras-2025.csv",
+      "bytes": 313840,
+      "sha256": "e3bd15c59426d594fdde252dace8900c2324ce2e13f54e5ce4676ac87ad1600d"
+    },
+    {
+      "name": "obras-nao-pub-estrangeiras-2026.csv",
+      "bytes": 178114,
+      "sha256": "408afa5f83e1c4b74b6cb448c08753c8e59ecaedc089b220c4b1e4f4300a2a7c"
+    }
+  ]
+}

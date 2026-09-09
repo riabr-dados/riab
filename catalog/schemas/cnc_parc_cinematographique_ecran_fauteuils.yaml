@@ -1,0 +1,68 @@
+table: cnc_parc_cinematographique_ecran_fauteuils
+description: Ecrans selon le nombre de fauteuils (le périmètre se limite ici aux établissements fixes, les fauteuils
+  n'étant compatbilisés que pour ces établissements fixes et pas pour les itinérants)
+source_raw: cnc-parc-cinematographique
+source_file: parc-cinematographique.xlsx
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo oficial publicado pelo CNC.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original do arquivo CNC.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela.
+- name: codigo_ou_categoria
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: codigo_ou_categoria.'
+- name: moins_de_100_fauteuils
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: moins_de_100_fauteuils.'
+- name: de_100_a_200_fauteuils
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_100_a_200_fauteuils.'
+- name: de_200_a_300_fauteuils
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_200_a_300_fauteuils.'
+- name: de_300_a_400_fauteuils
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_300_a_400_fauteuils.'
+- name: de_400_a_500_fauteuils
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_400_a_500_fauteuils.'
+- name: de_500_a_700_fauteuils
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_500_a_700_fauteuils.'
+- name: de_700_a_1_000_fauteuils
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: de_700_a_1_000_fauteuils.'
+- name: plus_de_1_000_fauteuils
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: plus_de_1_000_fauteuils.'
+- name: dimensao_10
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: dimensao_10.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo oficial.
+notes:
+- Uma saída corresponde a uma tabela factual; abas temáticas diferentes não são empilhadas.

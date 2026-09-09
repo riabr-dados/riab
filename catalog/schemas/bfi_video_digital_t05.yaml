@@ -1,0 +1,47 @@
+table: bfi_video_digital_t05
+description: 'Table 5: Share of top 500 films on UK''s leading SVoD platforms by period of release, 2023.'
+source_raw: bfi-statistical-yearbook-2023
+source_file: film-on-digital-video.ods
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo ODS oficial do BFI.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original no arquivo ODS.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela no BFI Statistical Yearbook.
+- name: period_of_release
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: period_of_release.'
+- name: netflix_percent_films_276
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: netflix_percent_films_276.'
+- name: amazon_prime_video_percent_films_41
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: amazon_prime_video_percent_films_41.'
+- name: disney_percent_films_177
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: disney_percent_films_177.'
+- name: total_percent_films_500
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: total_percent_films_500.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo ODS oficial.
+notes:
+- Uma saída corresponde a uma única aba factual do ODS; nenhuma aba T é empilhada com outra.

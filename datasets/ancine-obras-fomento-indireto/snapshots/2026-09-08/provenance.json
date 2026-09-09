@@ -1,0 +1,14 @@
+{
+  "dataset": "ancine-obras-fomento-indireto",
+  "snapshot": "2026-09-08",
+  "source_url": "https://dados.gov.br/dados/conjuntos-dados/obras-nao-publicitarias-brasileiras-com-fomento-indireto-aprovado-na-ancine-leis-de-incentivo-federa",
+  "audit_evidence": "outputs/auditoria-pda-20260908/official/ancine-obras-fomento-indireto",
+  "recorded_at": "2026-09-09T17:11:24.430170+00:00",
+  "files": [
+    {
+      "name": "obras-nao-pub-brasileiras-fomento-indireto.csv",
+      "bytes": 139742,
+      "sha256": "4d1313c0125042f5e1d7cd01a1180bac7dc54766b3f1d97dc785451bb0552cb8"
+    }
+  ]
+}

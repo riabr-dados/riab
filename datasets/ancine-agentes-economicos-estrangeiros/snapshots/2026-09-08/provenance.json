@@ -1,0 +1,14 @@
+{
+  "dataset": "ancine-agentes-economicos-estrangeiros",
+  "snapshot": "2026-09-08",
+  "source_url": "https://dados.gov.br/dados/conjuntos-dados/agentes-economicos-estrangeiros",
+  "audit_evidence": "outputs/auditoria-pda-20260908/official/ancine-agentes-economicos-estrangeiros",
+  "recorded_at": "2026-09-09T17:11:24.777724+00:00",
+  "files": [
+    {
+      "name": "agentes-economicos-estrangeiros-regulares.csv",
+      "bytes": 19755,
+      "sha256": "44a4d45dec17e150a1b84517317b137ae58b287b5816c11e4dd959dec38d4857"
+    }
+  ]
+}

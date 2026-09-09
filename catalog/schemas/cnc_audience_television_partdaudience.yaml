@@ -1,0 +1,147 @@
+table: cnc_audience_television_partdaudience
+description: Parts d'audience des chaînes de télévision* (%)
+source_raw: cnc-audience-television
+source_file: audience-television.xlsx
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo oficial publicado pelo CNC.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original do arquivo CNC.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela.
+- name: codigo_ou_categoria
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: codigo_ou_categoria.'
+- name: tf1
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: tf1.'
+- name: france_2
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: france_2.'
+- name: france_3
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: france_3.'
+- name: canal
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: canal.'
+- name: la_5
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: la_5.'
+- name: france_5
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: france_5.'
+- name: m6
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: m6.'
+- name: arte
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: arte.'
+- name: c8
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: c8.'
+- name: w9
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: w9.'
+- name: tmc
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: tmc.'
+- name: tfx
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: tfx.'
+- name: nrj12
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: nrj12.'
+- name: france_4
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: france_4.'
+- name: bfmtv
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: bfmtv.'
+- name: cnews
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: cnews.'
+- name: cstar
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: cstar.'
+- name: gulli
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: gulli.'
+- name: france_o
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: france_o.'
+- name: tf1_series_films
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: tf1_series_films.'
+- name: l_equipe
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: l_equipe.'
+- name: 6ter
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 6ter.'
+- name: rmc_story
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: rmc_story.'
+- name: rmc_decouverte
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: rmc_decouverte.'
+- name: cherie_25_rmc_life
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: cherie_25_rmc_life.'
+- name: lci
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: lci.'
+- name: franceinfo
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: franceinfo.'
+- name: t18
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: t18.'
+- name: novo19
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: novo19.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo oficial.
+notes:
+- Uma saída corresponde a uma tabela factual; abas temáticas diferentes não são empilhadas.

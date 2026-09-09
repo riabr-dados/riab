@@ -1,0 +1,25 @@
+---
+import { downloadUrl } from '../lib/hf.js';
+const { downloads } = Astro.props;
+const csvs = downloads?.files.filter(f => f.format === 'csv') ?? [];
+---
+{downloads && (
+  <div class="resource-downloads">
+    <p>{downloads.rows.toLocaleString('pt-BR')} registros na tabela completa.</p>
+    <div class="resource-downloads__links">
+      {downloads.files.map((file) => (
+        <a class="btn-outline btn-sm" href={downloadUrl(file.path)} download={file.path}>
+          {file.format.toUpperCase()}{file.compression === 'gzip' ? '.GZ' : ''}{file.format === 'csv' && csvs.length > 1 ? ` · parte ${csvs.indexOf(file) + 1}/${csvs.length}` : ' completo'}
+          {' · '}{(file.bytes / 1048576).toFixed(1)} MB
+        </a>
+      ))}
+    </div>
+    {csvs.length > 1 && <p>Baixe todas as partes para obter a tabela inteira. Arquivos CSV.GZ podem ser abertos após descompactação.</p>}
+    {downloads.xlsx_note && <p>{downloads.xlsx_note}</p>}
+  </div>
+)}
+<style>
+  .resource-downloads { margin-top: 12px; }
+  .resource-downloads p { font-size: 0.85rem; margin: 8px 0; }
+  .resource-downloads__links { display: flex; flex-wrap: wrap; gap: 8px; }
+</style>

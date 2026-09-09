@@ -25,11 +25,15 @@ sources:
     license: open-government-licence
 
   - id: incaa
-    name: "INCAA - Instituto Nacional de Cine y Artes Audiovisuales"
+    name: "SINCA / Datos Argentina - Sector audiovisual"
     country: AR
-    url: https://www.argentina.gob.ar/incaa
-    data_portal: https://datos.gob.ar/
+    url: https://www.sinca.gob.ar/
+    data_portal: https://portal-andino.datos.gob.ar/dataset/cultura-sector-audiovisual
     license: datos-abiertos-ar
+    notes: >
+      Series publicadas pelo SINCA com dados produzidos por INCAA, SICA e ENACOM,
+      conforme o recurso. O host de arquivos bloqueou a comparacao binaria automatizada
+      em 09/09/2026, mas metadados, esquemas e coberturas foram conferidos no portal oficial.
 
   - id: acau
     name: "ACAU - Agencia del Cine y el Audiovisual del Uruguay"

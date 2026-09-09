@@ -1,0 +1,44 @@
+table: fsa_editais_lancados
+description: Valores de editais lançados pelo Fundo Setorial do Audiovisual.
+source_raw: ancine-fsa-editais-lancados
+columns:
+- name: periodo
+  type: large_string
+  nullable: true
+  description: Período textual exatamente como publicado.
+- name: ano_inicio
+  type: int64
+  nullable: true
+  description: Primeiro ano do período.
+- name: ano_fim
+  type: int64
+  nullable: true
+  description: Último ano do período.
+- name: valor_nominal_brl
+  type: decimal
+  nullable: true
+  description: Valor nominal em reais correntes do período.
+- name: linha_origem
+  type: int64
+  nullable: true
+  description: Número da linha no arquivo oficial, começando em 1.
+- name: fonte_arquivo
+  type: large_string
+  nullable: true
+  description: Nome do arquivo oficial usado na extração.
+- name: fonte_url
+  type: large_string
+  nullable: true
+  description: URL oficial do arquivo de origem.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo bruto.
+- name: data_coleta
+  type: large_string
+  nullable: true
+  description: Data do snapshot local da fonte.
+notes:
+- Cada recurso contém uma única medida e granularidade.
+- Linhas de total da planilha não são duplicadas na tabela factual.
+- Valores são decimais; ausências permanecem nulas e não são convertidas em zero.

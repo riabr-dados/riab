@@ -1,0 +1,14 @@
+{
+  "dataset": "ancine-atividades-economicas-agentes",
+  "snapshot": "2026-09-08",
+  "source_url": "https://dados.gov.br/dados/conjuntos-dados/atividades-economicas-dos-agentes-regulares-registrados-na-ancine",
+  "audit_evidence": "outputs/auditoria-pda-20260908/official/ancine-atividades-economicas-agentes",
+  "recorded_at": "2026-09-09T17:11:24.236845+00:00",
+  "files": [
+    {
+      "name": "atividades-economicas-agentes-regulares.csv",
+      "bytes": 19720777,
+      "sha256": "db0c0789261e423c2d8c5e7a0f80fdd52ead1cddb4ddebf6fc3eb70e632c6b8e"
+    }
+  ]
+}

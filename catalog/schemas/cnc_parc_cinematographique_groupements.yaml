@@ -1,0 +1,75 @@
+table: cnc_parc_cinematographique_groupements
+description: Groupements nationaux de programmation
+source_raw: cnc-parc-cinematographique
+source_file: parc-cinematographique.xlsx
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo oficial publicado pelo CNC.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original do arquivo CNC.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela.
+- name: nombre_d_ecrans
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: nombre_d_ecrans.'
+- name: agora
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: agora.'
+- name: cinediffusion
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: cinediffusion.'
+- name: cinemas_gaumont_pathe
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: cinemas_gaumont_pathe.'
+- name: exanthus
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: exanthus.'
+- name: les_films_de_la_rochelle
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: les_films_de_la_rochelle.'
+- name: gpci
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: gpci.'
+- name: mc4
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: mc4.'
+- name: micromegas
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: micromegas.'
+- name: noe_cinema
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: noe_cinema.'
+- name: ugc
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: ugc.'
+- name: veo_sagec_cine_32
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: veo_sagec_cine_32.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo oficial.
+notes:
+- Uma saída corresponde a uma tabela factual; abas temáticas diferentes não são empilhadas.

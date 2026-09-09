@@ -1,0 +1,83 @@
+table: cnc_consumo_vod_structuregenreav
+description: Structure du marché de la VàD en paiement à l'acte selon le genre de programmes audiovisuels (%)
+source_raw: cnc-consumo-vod
+source_file: consumo-menages-vod.xlsx
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo oficial publicado pelo CNC.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original do arquivo CNC.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela.
+- name: documentaire
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: documentaire.'
+- name: '10_099946617878942'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 10_099946617878942.'
+- name: '14_276880938722543'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 14_276880938722543.'
+- name: '12_31166102464029'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 12_31166102464029.'
+- name: '8_087762067458485'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 8_087762067458485.'
+- name: '9_038631833766'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 9_038631833766.'
+- name: '7_60936173971529'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 7_60936173971529.'
+- name: '7_53495121068101'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 7_53495121068101.'
+- name: '6_659271440905321'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 6_659271440905321.'
+- name: '5_3134590748893'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 5_3134590748893.'
+- name: '5_29399152399944'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 5_29399152399944.'
+- name: '6_2207208034524095'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 6_2207208034524095.'
+- name: '7_5'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 7_5.'
+- name: '6_5'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 6_5.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo oficial.
+notes:
+- Uma saída corresponde a uma tabela factual; abas temáticas diferentes não são empilhadas.

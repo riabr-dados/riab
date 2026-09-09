@@ -35,8 +35,8 @@
       "offline",
       "descontinuado"
     ],
-    "last_checked": "2026-05-19",
-    "notes": "Snapshot resultante de busca por país de produção = Brasil."
+    "last_checked": "2026-09-09",
+    "notes": "A fonte oficial permanece ativa em https://lumiere.obs.coe.int/search. O snapshot tem 200 filmes, mas não registra paginação e todos os parâmetros necessários para demonstrar completude."
   },
   "collection": {
     "method": "manual",

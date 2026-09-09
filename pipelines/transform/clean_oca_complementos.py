@@ -447,14 +447,11 @@ SLUGS_FLUX = [
 ]
 
 TABLE_NAMES_FLUX = {
-    "ancine_fomento_fluxos_financeiros":        "fomento_fluxos_financeiros",
-    "ancine_condecine_recolhimento":            "condecine_recolhimento",
     "ancine_ibermedia_projetos":                "ibermedia_projetos",
     "ancine_coproducao_internacional_projetos": "coproducao_internacional_projetos",
     "ancine_apoio_festivais_internacionais":    "apoio_festivais_internacionais",
     "ancine_premio_adicional_renda":            "premio_adicional_renda",
     "ancine_filmes_lancados_captacao":          "filmes_lancados_captacao",
-    "ancine_captacao_por_projeto_investidor":   "captacao_por_projeto_investidor",
 }
 
 
@@ -841,7 +838,6 @@ def main() -> int:
     inventory = download_inventory_files(inventory, slugs=slugs_to_download)
     write_inventory(inventory)
 
-    write_clean(build_condecine(inventory), "condecine_arrecadacao")
     for slug, table_name in TABLE_NAMES_FLUX.items():
         write_clean(build_flux_for_slug(inventory, slug), table_name)
     write_clean(build_embrafilme(inventory), "embrafilme_exibicao_territorio_ano")

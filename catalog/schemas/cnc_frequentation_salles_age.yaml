@@ -1,0 +1,75 @@
+table: cnc_frequentation_salles_age
+description: Films en exploitation en salles selon leur âge*
+source_raw: cnc-frequentation-salles
+source_file: frequentation-salles.xlsx
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo oficial publicado pelo CNC.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original do arquivo CNC.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela.
+- name: nombre_de_films
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: nombre_de_films.'
+- name: sortis_dans_l_annee
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: sortis_dans_l_annee.'
+- name: sortis_l_annee_precedente
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: sortis_l_annee_precedente.'
+- name: 2_ans
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 2_ans.'
+- name: 3_ou_4_ans
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 3_ou_4_ans.'
+- name: entre_5_et_9_ans
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: entre_5_et_9_ans.'
+- name: entre_10_et_19_ans
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: entre_10_et_19_ans.'
+- name: entre_20_et_29_ans
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: entre_20_et_29_ans.'
+- name: entre_30_et_39_ans
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: entre_30_et_39_ans.'
+- name: 40_ans_et_plus
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 40_ans_et_plus.'
+- name: festival_et_avant_premieres
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: festival_et_avant_premieres.'
+- name: total
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: total.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo oficial.
+notes:
+- Uma saída corresponde a uma tabela factual; abas temáticas diferentes não são empilhadas.

@@ -1,0 +1,14 @@
+{
+  "dataset": "ancine-grupos-economicos",
+  "snapshot": "2026-09-08",
+  "source_url": "https://dados.gov.br/dados/conjuntos-dados/relacao-de-grupos-economicos",
+  "audit_evidence": "outputs/auditoria-pda-20260908/official/ancine-grupos-economicos",
+  "recorded_at": "2026-09-09T17:11:24.565782+00:00",
+  "files": [
+    {
+      "name": "relacao-grupos-economicos.csv",
+      "bytes": 1113931,
+      "sha256": "06fc45b9ed285bf7cdda5620a52879a07de410ea73ccecfea65f15fa32261cb2"
+    }
+  ]
+}

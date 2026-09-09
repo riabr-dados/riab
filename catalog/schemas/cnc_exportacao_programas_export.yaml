@@ -1,0 +1,35 @@
+table: cnc_exportacao_programas_export
+description: Ventes de programmes audiovisuels français à l'étranger (M€) 1
+source_raw: cnc-exportacao-programas-audiovisuais
+source_file: exportacao-programas-audiovisuais.xls
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo oficial publicado pelo CNC.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original do arquivo CNC.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela.
+- name: '1991_0'
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 1991_0.'
+- name: '44_5'
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: 44_5.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo oficial.
+notes:
+- Uma saída corresponde a uma tabela factual; abas temáticas diferentes não são empilhadas.

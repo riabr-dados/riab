@@ -1,0 +1,10 @@
+{
+  "collected_at": "2026-09-08",
+  "source_url": "https://dados.ancine.gov.br/dados-abertos/bilheteria-diaria-obras-por-distribuidoras-csv.zip",
+  "archive": "bilheteria-diaria-obras-por-distribuidoras-csv.zip",
+  "sha256": "015622809f261eac582e04b2d419a7a70d988f73a179b33ce2cc6cbfb0ab7873",
+  "archive_bytes": 486672077,
+  "expanded_bytes": 4943806050,
+  "csv_files": 152,
+  "rows": 21274038
+}

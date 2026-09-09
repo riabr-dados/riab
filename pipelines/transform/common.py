@@ -152,7 +152,9 @@ def _bfi_columns(raw: pd.DataFrame, header_row: int) -> list[str]:
             parts.append(value)
         if not parts:
             parts.append("categoria" if index == 1 else f"coluna_{index}")
-        columns.append(" ".join(str(part).strip() for part in parts))
+        column = " ".join(str(part).strip() for part in parts)
+        column = column.replace("%", " percent ").replace("£", " gbp ").replace("$", " usd ")
+        columns.append(column)
     return columns
 
 
@@ -168,6 +170,7 @@ def read_bfi_sheet(xls: pd.ExcelFile, sheet: str) -> pd.DataFrame:
     columns = _bfi_columns(raw, header_row)
     df = raw.iloc[header_row + 1:].copy()
     df.columns = columns
+    df = df.replace(r"^\s*$", pd.NA, regex=True)
     df = df.dropna(how="all").dropna(axis=1, how="all")
 
     keep_rows = []

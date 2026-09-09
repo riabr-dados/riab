@@ -32,6 +32,8 @@ manifesto_unpacked/
 MANIFESTO_RIDAB_01.docx
 outputs/.drafts/
 outputs/.plans/
+# Evidencias e downloads integrais da auditoria; progresso versionado em docs/.
+outputs/auditoria-pda-20260908/
 
 # Ferramentas e caches locais
 .claude/

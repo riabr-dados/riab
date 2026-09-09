@@ -1,0 +1,48 @@
+table: bfi_exhibition_t05
+description: 'Table 5: Number and box office takings of event cinema releases in the UK and Republic of Ireland
+  by type of event, 2023 (ranked by gross box office).'
+source_raw: bfi-statistical-yearbook-2023
+source_file: exhibition.ods
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo ODS oficial do BFI.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original no arquivo ODS.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela no BFI Statistical Yearbook.
+- name: type_of_event
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: type_of_event.'
+- name: number_of_events
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: number_of_events.'
+- name: percent_of_events
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: percent_of_events.'
+- name: gross_box_office_gbp_million
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: gross_box_office_gbp_million.'
+- name: percent_of_gross_box_office
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: percent_of_gross_box_office.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo ODS oficial.
+notes:
+- Uma saída corresponde a uma única aba factual do ODS; nenhuma aba T é empilhada com outra.

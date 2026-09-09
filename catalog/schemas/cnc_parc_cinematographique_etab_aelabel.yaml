@@ -1,0 +1,47 @@
+table: cnc_parc_cinematographique_etab_aelabel
+description: Etablissements classées Art et Essai selon la catégorie
+source_raw: cnc-parc-cinematographique
+source_file: parc-cinematographique.xlsx
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo oficial publicado pelo CNC.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original do arquivo CNC.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela.
+- name: etablissements
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: etablissements.'
+- name: rd
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: rd.'
+- name: jp
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: jp.'
+- name: pr
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: pr.'
+- name: label
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: label.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo oficial.
+notes:
+- Uma saída corresponde a uma tabela factual; abas temáticas diferentes não são empilhadas.

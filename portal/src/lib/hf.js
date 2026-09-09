@@ -8,7 +8,11 @@ const HF_REPO = "riab";
 const HF_BASE = `https://huggingface.co/datasets/${HF_ORG}/${HF_REPO}/resolve/main`;
 
 export function rawUrl(slug, filename) {
-  return `${HF_BASE}/raw/${slug}/${filename}`;
+  return `${HF_BASE}/raw/${slug}/${filename.split('/').map(encodeURIComponent).join('/')}`;
+}
+
+export function downloadUrl(filename) {
+  return `${HF_BASE}/downloads/${encodeURIComponent(filename)}?download=true`;
 }
 
 export function cleanedUrl(table, format = "parquet") {

@@ -1,0 +1,55 @@
+table: cnc_donnees_internationales_u_e
+description: Le cinéma dans l'Union Européenne1
+source_raw: cnc-donnees-internationales
+source_file: donnees-internationales-cinema.xlsx
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo oficial publicado pelo CNC.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original do arquivo CNC.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela.
+- name: codigo_ou_categoria
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: codigo_ou_categoria.'
+- name: longs_metrages_produits2_3
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: longs_metrages_produits2_3.'
+- name: ecrans2
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: ecrans2.'
+- name: entrees2_millions
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: entrees2_millions.'
+- name: indice_de_frequentation2
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: indice_de_frequentation2.'
+- name: part_du_film_europeen_4_5
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: part_du_film_europeen_4_5.'
+- name: part_du_film_americain_5
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: part_du_film_americain_5.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo oficial.
+notes:
+- Uma saída corresponde a uma tabela factual; abas temáticas diferentes não são empilhadas.

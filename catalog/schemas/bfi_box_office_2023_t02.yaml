@@ -1,0 +1,59 @@
+table: bfi_box_office_2023_t02
+description: 'Table 2: Monthly UK cinema admissions (millions), 2019-2023.'
+source_raw: bfi-statistical-yearbook-2023
+source_file: box-office-2023.ods
+columns:
+- name: arquivo
+  type: large_string
+  nullable: true
+  description: Arquivo ODS oficial do BFI.
+- name: sheet
+  type: large_string
+  nullable: true
+  description: Aba original no arquivo ODS.
+- name: titulo_tabela
+  type: large_string
+  nullable: true
+  description: Título original da tabela no BFI Statistical Yearbook.
+- name: month
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: month.'
+- name: '2019_0'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2019_0.'
+- name: '2020_0'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2020_0.'
+- name: '2021_0'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2021_0.'
+- name: '2022_0'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2022_0.'
+- name: '2023_0'
+  type: double
+  nullable: true
+  description: 'Campo original normalizado: 2023_0.'
+- name: percent_change_on_2022
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: percent_change_on_2022.'
+- name: percent_change_on_2019
+  type: large_string
+  nullable: true
+  description: 'Campo original normalizado: percent_change_on_2019.'
+- name: snapshot_data
+  type: large_string
+  nullable: true
+  description: Data do snapshot local.
+- name: hash_arquivo
+  type: large_string
+  nullable: true
+  description: SHA-256 do arquivo ODS oficial.
+notes:
+- Uma saída corresponde a uma única aba factual do ODS; nenhuma aba T é empilhada com outra.
