@@ -1,6 +1,6 @@
 # Progresso da reforma de experiência do portal
 
-Base: `main` em `a5134af`. Execução: `codex/portal-ux`. Publicação não iniciada.
+Base: `main` em `a5134af`. Execução: `codex/portal-ux`. Publicado no `main` em 2026-09-10 (fast-forward; deploy do GitHub Pages).
 
 ## Entrega concluída
 
@@ -33,4 +33,10 @@ A consolidação não removeu a área avançada antes de existir equivalência i
 
 Chamadas reais de IA dependem das credenciais do usuário e ficaram fora das evidências. Se a CDN do DuckDB estiver indisponível, o estado e o catálogo continuam visíveis, mas a consulta remota depende do restabelecimento da rede.
 
-Nenhum push e nenhuma atualização do Hugging Face foram feitos. Esta reforma altera interface, documentação e pequenas prévias derivadas; não altera os Parquets publicados.
+Nenhuma atualização do Hugging Face foi feita. Esta reforma altera interface, documentação e pequenas prévias derivadas; não altera os Parquets publicados.
+
+## Revisão antes da publicação (2026-09-10)
+
+- Corrigido `ReferenceError: BUILDER_KEY_COLORS` ao abrir `/analisar/?table=…` (vindo de dataset, Brasil no Mundo ou redirecionamento de `/transformar/`): a constante passou a ser declarada antes da seleção inicial pela URL. Verificado no navegador sem erro de console.
+- `outputs/proposta-portal-ux/` (protótipo, capturas e logs locais) entrou no `.gitignore`.
+- Pendência conhecida, anterior a esta reforma: `tests/test_pda_updated_snapshots.py` falha no Windows porque `core.autocrlf=true` converte os CSVs para CRLF e altera o sha256. Solução sugerida: `.gitattributes` com `*.csv -text`.

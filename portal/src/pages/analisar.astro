@@ -1034,6 +1034,14 @@ function markBuilderDirty(message = 'A montagem mudou. Execute o relatório para
   statusEl.textContent = message;
 }
 
+const BUILDER_KEY_COLORS = {
+  CPB:'#dc2626',CRT:'#ea580c',ROE:'#f59e0b',SALIC:'#7c3aed',CONTRATO:'#9333ea',
+  PROCESSO:'#a855f7',REG_ANCINE:'#0891b2',CNPJ:'#0284c7',CPF:'#0ea5e9',
+  CNAE:'#14b8a6',GRUPO_ECON:'#10b981',PRODUTORA:'#84cc16',DISTRIBUIDORA:'#65a30d',
+  EXIBIDORA:'#4d7c0f',TITULO_OBRA:'#e11d48',MUNICIPIO:'#94a3b8',UF:'#64748b',
+  GENERO:'#a78bfa',CLASSIFICACAO:'#8b5cf6',PAIS:'#cbd5e1',ANO:'#94a3b8',
+};
+
 // Mostra a seleção vinda do dataset imediatamente. A engine e as colunas
 // carregam depois, sem fazer a interface parecer vazia durante a rede fria.
 if (hasRequestedTable) addToTrail(requestedTable);
@@ -1453,14 +1461,7 @@ btnCsv.addEventListener('click', async () => {
 // ── REPORT BUILDER ─────────────────────────────────────────────
 //  Three-column UI: catalog (left) · trail (center) · aggregation (right)
 //  Driven by BUILDER_DATA (loaded from joins.yaml at build time).
-
-const BUILDER_KEY_COLORS = {
-  CPB:'#dc2626',CRT:'#ea580c',ROE:'#f59e0b',SALIC:'#7c3aed',CONTRATO:'#9333ea',
-  PROCESSO:'#a855f7',REG_ANCINE:'#0891b2',CNPJ:'#0284c7',CPF:'#0ea5e9',
-  CNAE:'#14b8a6',GRUPO_ECON:'#10b981',PRODUTORA:'#84cc16',DISTRIBUIDORA:'#65a30d',
-  EXIBIDORA:'#4d7c0f',TITULO_OBRA:'#e11d48',MUNICIPIO:'#94a3b8',UF:'#64748b',
-  GENERO:'#a78bfa',CLASSIFICACAO:'#8b5cf6',PAIS:'#cbd5e1',ANO:'#94a3b8',
-};
+//  BUILDER_KEY_COLORS fica declarado antes do INIT (usado já na seleção vinda da URL).
 
 // Descrição regulatória das chaves — usada no popover de hover do diagrama
 const KEY_REGULATION = {

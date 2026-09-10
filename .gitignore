@@ -34,6 +34,8 @@ outputs/.drafts/
 outputs/.plans/
 # Evidencias e downloads integrais da auditoria; progresso versionado em docs/.
 outputs/auditoria-pda-20260908/
+# Protótipos, capturas e logs locais da reforma de UX do portal.
+outputs/proposta-portal-ux/
 
 # Ferramentas e caches locais
 .claude/
