@@ -1,7 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import DatasetCard from "../components/DatasetCard.astro";
-import { getDatasets, getCatalogStats, getDownloads, getLatestSnapshotDate } from "../lib/catalog.js";
+import { getDatasets, getCatalogStats, getDownloads, getLatestSnapshotDate, getTableLabel } from "../lib/catalog.js";
 
 const datasets = getDatasets();
 const stats = getCatalogStats(datasets);
@@ -56,8 +56,8 @@ const SECTIONS = [
     num: "01",
     href: "datasets/",
     label: "Datasets",
-    desc: `Catálogo de ${stats.total_datasets} datasets com ${stats.total_tabelas} tabelas tratadas de fontes oficiais de ${stats.total_paises} países — ANCINE, CNC, BFI, INCAA, ACAU, Lumière, IBGE.`,
-    tag: `${stats.total_datasets} datasets · ${stats.total_tabelas} tabelas · ${stats.total_paises} países`,
+    desc: `Catálogo de ${stats.total_datasets} datasets com ${stats.total_tabelas} tabelas tratadas de ${stats.total_paises} origens geográficas — ANCINE, CNC, BFI, INCAA, ACAU, Lumière, IBGE.`,
+    tag: `${stats.total_datasets} datasets · ${stats.total_tabelas} tabelas · ${stats.total_paises} origens`,
     featured: true,
   },
   {
@@ -71,22 +71,14 @@ const SECTIONS = [
   },
   {
     num: "03",
-    href: "explorar/",
-    label: "Explorar",
-    desc: "Consulte qualquer dataset via SQL ou em português natural, direto no navegador — sem instalar nada, sem cadastro.",
-    tag: "DuckDB-WASM · IA em português",
+    href: "analisar/",
+    label: "Analisar",
+    desc: "Consulte uma tabela, conecte outras quando sua pergunta precisar e veja o resultado em tabela ou gráfico.",
+    tag: "Montagem visual · SQL · relações",
     featured: false,
   },
   {
     num: "04",
-    href: "transformar/",
-    label: "Transformar",
-    desc: "Metodologia aberta de integração, limpeza e normalização dos dados.",
-    tag: "Scripts reproduzíveis · documentados",
-    featured: false,
-  },
-  {
-    num: "05",
     href: "mural/",
     label: "Mural",
     desc: "Análises e trabalhos produzidos com os dados do RIDAB. O debate sobre o audiovisual brasileiro baseado em evidências.",
@@ -94,15 +86,15 @@ const SECTIONS = [
     featured: false,
   },
   {
-    num: "06",
+    num: "05",
     href: "consulta/",
-    label: "Docs",
+    label: "Guia",
     desc: "Guia de uso, schema completo de colunas e acesso programático via Python, R ou DuckDB.",
     tag: "CSV · Parquet · API",
     featured: false,
   },
   {
-    num: "07",
+    num: "06",
     href: "sobre/",
     label: "Sobre",
     desc: "Manifesto, princípios e governança do projeto. Por que o RIDAB existe e o que busca.",
@@ -143,7 +135,7 @@ const base = import.meta.env.BASE_URL;
     <span class="hero-ey__sep"></span>
     <span>{stats.total_tabelas} tabelas</span>
     <span class="hero-ey__sep"></span>
-    <span>{stats.total_paises} países</span>
+    <span>{stats.total_paises} origens</span>
     <span class="hero-ey__sep"></span>
     <span>{stats.total_fontes} fontes</span>
   </p>
@@ -160,7 +152,7 @@ const base = import.meta.env.BASE_URL;
       </h1>
       <p class="hero-desc">
         {stats.total_datasets} datasets com {stats.total_tabelas} tabelas tratadas de fontes oficiais — ANCINE, CNC, BFI, INCAA, ACAU, Lumière, IBGE.
-        Consulte, cruze e exporte direto do navegador. Sem instalar nada, sem cadastro, sem custo.
+        Consulte, cruze e exporte direto do navegador. Sem instalar nada e sem cadastro.
       </p>
     </div>
 
@@ -194,7 +186,7 @@ const base = import.meta.env.BASE_URL;
   </div>
   <div class="stat stat--fr">
     <div class="stat-v">{stats.total_paises}</div>
-    <div class="stat-l">Países</div>
+    <div class="stat-l">Origens geográficas</div>
   </div>
   <div class="stat stat--red">
     <div class="stat-v">{stats.total_tabelas}</div>
@@ -280,7 +272,7 @@ const base = import.meta.env.BASE_URL;
 <section class="home-section">
   <div class="sec-label">Catálogo completo</div>
   <h2 class="sec-title">{stats.total_datasets} datasets.</h2>
-  <p class="sec-sub">Filtre por país ou busque pelo nome.</p>
+  <p class="sec-sub">Filtre por origem geográfica ou busque pelo nome.</p>
 
   <div class="catalog__filters" id="filters">
     {COUNTRIES.map((c) => (
@@ -296,7 +288,7 @@ const base = import.meta.env.BASE_URL;
       <div
         data-country={ds.source?.country ?? ""}
         data-tags={(ds.tags ?? []).join(" ")}
-        data-title={ds.title.toLowerCase()}
+        data-title={`${ds.title} ${(ds.cleaned?.tables ?? []).map((table) => { const name = typeof table === "string" ? table : table.name; return `${name} ${getTableLabel(name, ds)}`; }).join(" ")}`.toLowerCase()}
       >
         <DatasetCard ds={ds} />
       </div>
@@ -366,13 +358,13 @@ obras <span class="co">|&gt;</span> <span class="cf">count</span>(tipo_obra, sor
 <section class="home-section viz-section">
   <div class="sec-label">Os dados em números</div>
   <h2 class="sec-title">O que está disponível.</h2>
-  <p class="sec-sub">Distribuição do acervo por país de origem e destaques do catálogo.</p>
+  <p class="sec-sub">Distribuição do acervo por origem geográfica e destaques do catálogo.</p>
 
   <div class="viz-grid">
 
     <!-- Gráfico: datasets por país -->
     <div class="viz-card">
-      <div class="viz-card__title">Datasets por país de origem</div>
+      <div class="viz-card__title">Datasets por origem geográfica</div>
       <div class="viz-bar-chart">
         {byCountry.map(c => (
           <div class="vbc-row">
@@ -391,33 +383,24 @@ obras <span class="co">|&gt;</span> <span class="cf">count</span>(tipo_obra, sor
 
     <!-- Cobertura temporal -->
     <div class="viz-card">
-      <div class="viz-card__title">Cobertura temporal</div>
+      <div class="viz-card__title">Cobertura temporal por fonte</div>
       <div class="viz-timeline">
         <div class="vtl-labels">
-          <span>1945</span>
-          <span>1970</span>
-          <span>1995</span>
+          <span>1937</span>
+          <span>1967</span>
+          <span>1997</span>
           <span>2026</span>
         </div>
-        <div class="vtl-track">
-          <!-- CNC França: 1945-2025 -->
-          <div class="vtl-bar vtl-bar--fr" style="left:0%;width:98.8%" title="França · CNC · 1945–2025"></div>
-          <!-- Lumière: 1996-2026 -->
-          <div class="vtl-bar vtl-bar--eu" style="left:63%;width:37%" title="Europa · Lumière · 1996–2026"></div>
-          <!-- Série histórica nacional: 1971-2024 -->
-          <div class="vtl-bar vtl-bar--brhist" style="left:32.1%;width:65.4%" title="Brasil · série histórica complementar · 1971–2024"></div>
-          <!-- ANCINE: 2002-2026 -->
-          <div class="vtl-bar vtl-bar--br" style="left:70.1%;width:29.9%" title="Brasil · ANCINE · 2002–2026"></div>
-          <!-- FSA: 2008-2023 -->
-          <div class="vtl-bar vtl-bar--br2" style="left:78%;width:18.5%" title="Brasil · FSA · 2008–2023"></div>
+        <div class="vtl-rows">
+          <div class="vtl-row"><span>CNC</span><div class="vtl-track"><i class="vtl-bar vtl-bar--fr" style="left:9%;width:89.9%" title="França · CNC · 1945–2025"></i></div></div>
+          <div class="vtl-row"><span>IBGE</span><div class="vtl-track"><i class="vtl-bar vtl-bar--ibge" style="left:38.2%;width:15.7%" title="Brasil · IBGE · anos selecionados entre 1971 e 1985"></i></div></div>
+          <div class="vtl-row"><span>Embrafilme</span><div class="vtl-track"><i class="vtl-bar vtl-bar--embra" style="left:50.6%;width:5.6%" title="Brasil · Embrafilme · 1982–1987"></i></div></div>
+          <div class="vtl-row"><span>OCA</span><div class="vtl-track"><i class="vtl-bar vtl-bar--oca" style="left:65.2%;width:32.6%" title="Brasil · OCA · 1995–2024"></i></div></div>
+          <div class="vtl-row"><span>Lumière</span><div class="vtl-track"><i class="vtl-bar vtl-bar--eu" style="left:66.3%;width:33.7%" title="Europa · Lumière · 1996–2026"></i></div></div>
+          <div class="vtl-row"><span>ANCINE</span><div class="vtl-track"><i class="vtl-bar vtl-bar--br" style="left:73%;width:27%" title="Brasil · ANCINE · 2002–2026"></i></div></div>
+          <div class="vtl-row"><span>FSA</span><div class="vtl-track"><i class="vtl-bar vtl-bar--br2" style="left:79.8%;width:16.9%" title="Brasil · FSA · 2008–2023"></i></div></div>
         </div>
-        <div class="vtl-legend">
-          <span class="vtl-leg vtl-leg--fr">França · CNC</span>
-          <span class="vtl-leg vtl-leg--eu">Europa · Lumière</span>
-          <span class="vtl-leg vtl-leg--brhist">Brasil · série histórica</span>
-          <span class="vtl-leg vtl-leg--br">Brasil · ANCINE</span>
-          <span class="vtl-leg vtl-leg--br2">Brasil · FSA</span>
-        </div>
+        <p class="vtl-note">As barras indicam o intervalo coberto por cada fonte. O IBGE reúne anos selecionados, e não uma série anual contínua.</p>
       </div>
     </div>
 
@@ -912,52 +895,24 @@ pre.code-block {
   color: var(--dim);
   letter-spacing: .06em;
 }
+.vtl-rows { display: grid; gap: 7px; }
+.vtl-row { display: grid; grid-template-columns: 66px 1fr; gap: 8px; align-items: center; }
+.vtl-row > span { font-family: var(--font-m); font-size: 8px; color: var(--muted); text-align: right; }
 .vtl-track {
   position: relative;
-  height: 88px;
+  height: 11px;
   background: var(--bg2);
-  border-radius: 4px;
+  border-radius: 2px;
   overflow: hidden;
 }
 .vtl-bar {
   position: absolute;
-  height: 11px;
-  border-radius: 3px;
+  inset-block: 0;
+  border-radius: 2px;
   opacity: .75;
 }
-.vtl-bar--fr  { background: var(--fr); top: 6px; }
-.vtl-bar--eu  { background: var(--eu); top: 22px; opacity: .6; }
-.vtl-bar--brhist { background: var(--br); top: 38px; opacity: .45; }
-.vtl-bar--br  { background: var(--br); top: 54px; }
-.vtl-bar--br2 { background: var(--br); top: 70px; opacity: .65; }
-.vtl-legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 4px;
-}
-.vtl-leg {
-  font-family: var(--font-m);
-  font-size: 8.5px;
-  color: var(--muted);
-  letter-spacing: .06em;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-.vtl-leg::before {
-  content: '';
-  display: inline-block;
-  width: 12px;
-  height: 4px;
-  border-radius: 99px;
-  opacity: .8;
-}
-.vtl-leg--fr::before  { background: var(--fr); }
-.vtl-leg--eu::before  { background: var(--eu); }
-.vtl-leg--brhist::before { background: var(--br); opacity: .45; }
-.vtl-leg--br::before  { background: var(--br); }
-.vtl-leg--br2::before { background: var(--br); opacity: .4; }
+.vtl-bar--fr { background: var(--fr); }.vtl-bar--eu { background: var(--eu); }.vtl-bar--ibge { background: repeating-linear-gradient(90deg,var(--br) 0 4px,transparent 4px 7px); }.vtl-bar--embra { background: var(--gold); }.vtl-bar--oca { background: var(--br); opacity:.5 }.vtl-bar--br { background: var(--br); }.vtl-bar--br2 { background: var(--br); opacity:.7 }
+.vtl-note { margin:5px 0 0 74px; color:var(--dim); font-size:9px; line-height:1.45; }
 
 /* Highlights */
 .viz-highlights {

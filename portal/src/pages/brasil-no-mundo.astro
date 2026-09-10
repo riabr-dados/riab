@@ -1,443 +1,114 @@
 ---
 import Base from "../layouts/Base.astro";
-import CodeSnippet from "../components/CodeSnippet.astro";
 import { cleanedUrl } from "../lib/hf.js";
+import { getBrasilStories } from "../lib/presentation.js";
 
 const base = import.meta.env.BASE_URL;
-
-const tables = [
-  {
-    table: "brasil_no_mundo_indice",
-    label: "Indice unificado",
-    rows: "717",
-    desc: "Uma linha por achado, com tipo de aparicao, nivel de evidencia e tabela de detalhe.",
-  },
-  {
-    table: "brasil_no_mundo_obras_franca_cnc",
-    label: "Obras na Franca",
-    rows: "185",
-    desc: "Visas e agrements do CNC com nacionalidade ou coproducao brasileira.",
-  },
-  {
-    table: "brasil_no_mundo_bilheteria_europa",
-    label: "Bilheteria Europa",
-    rows: "200",
-    desc: "Filmes com producao BR e admissoes acumuladas em salas europeias.",
-  },
-  {
-    table: "brasil_no_mundo_vod_europa",
-    label: "VOD Europa",
-    rows: "320",
-    desc: "Presenca agregada por titulo em catalogos europeus de VOD.",
-  },
-  {
-    table: "brasil_no_mundo_mercado_bfi",
-    label: "Mercado BFI",
-    rows: "14",
-    desc: "Indicadores em que o Brasil aparece como mercado ou territorio.",
-  },
-  {
-    table: "brasil_no_mundo_mencoes_outros_paises",
-    label: "Mencoes pontuais",
-    rows: "1",
-    desc: "Mencoes textuais que nao comprovam origem brasileira da obra.",
-  },
-];
-
-const evidence = [
-  {
-    key: "forte",
-    title: "Obra brasileira explicita",
-    desc: "Campos de nacionalidade, pais de producao ou flag de Brasil indicam participacao brasileira.",
-    count: "705 achados",
-  },
-  {
-    key: "coprod",
-    title: "Coproducao brasileira",
-    desc: "A fonte informa composicao de nacionalidade e, quando possivel, percentual brasileiro.",
-    count: "39 no CNC",
-  },
-  {
-    key: "mercado",
-    title: "Mercado Brasil",
-    desc: "Brasil aparece como territorio economico, nao como origem de obra.",
-    count: "14 indicadores",
-  },
-  {
-    key: "fraco",
-    title: "Mencao textual",
-    desc: "Brasil aparece em titulo ou texto, mas a linha exige leitura humana.",
-    count: "1 registro",
-  },
-];
-
-const sql = `SELECT
-  pais_fonte,
-  instituicao,
-  tipo_aparicao,
-  nivel_evidencia,
-  COUNT(*) AS achados
-FROM 'hf://datasets/riabr-dados/riab/cleaned/brasil_no_mundo_indice.parquet'
-GROUP BY 1, 2, 3, 4
-ORDER BY achados DESC;`;
+const stories = getBrasilStories();
+const sectionLabels = { cinema: "Circulação de obras", coproducoes: "Coproduções e registros", mercado: "Brasil como mercado" };
+const formatValue = (value, story) => story.unit.includes("milhões")
+  ? new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 1 }).format(value)
+  : new Intl.NumberFormat("pt-BR").format(value);
+const linePoints = (story) => {
+  const values = story.rows.map((row) => Number(row.value));
+  const min = Math.min(...values); const max = Math.max(...values); const span = max - min || 1;
+  return story.rows.map((row, index) => ({ ...row, x: 52 + index * (616 / Math.max(story.rows.length - 1, 1)), y: 246 - ((Number(row.value) - min) / span) * 174 }));
+};
 ---
 
-<Base
-  title="Brasil no Mundo"
-  description="Secao derivada do RIDAB sobre aparicoes do audiovisual brasileiro em bases internacionais."
->
-  <div class="bnm-page">
+<Base title="Brasil no Mundo" description="Curadoria de evidências sobre obras brasileiras, coproduções e o mercado brasileiro em fontes internacionais.">
+  <main class="bnm-page">
     <section class="bnm-hero">
-      <div class="bnm-hero__copy">
-        <p class="sec-label">Brasil no Mundo</p>
-        <h1>O Brasil visto pelos dados do mundo.</h1>
-        <p>
-          Uma camada derivada e auditavel que separa filmes brasileiros,
-          coproducoes, mercado Brasil e simples mencoes textuais em bases
-          internacionais.
-        </p>
-        <div class="bnm-actions">
-          <a class="btn-primary" href={`${base}datasets/brasil-no-mundo/`}>Explorar dataset</a>
-          <a
-            class="btn-ghost"
-            href={cleanedUrl("brasil_no_mundo_indice", "csv")}
-            target="_blank"
-            rel="noopener"
-            data-force-download
-            download="brasil_no_mundo_indice.csv"
-          >Baixar indice CSV</a>
-          <a class="btn-ghost" href={cleanedUrl("brasil_no_mundo_indice")} target="_blank" rel="noopener">Baixar indice Parquet</a>
-        </div>
+      <div>
+        <p class="eyebrow">Brasil no Mundo</p>
+        <h1>O que as fontes internacionais dizem sobre o audiovisual brasileiro?</h1>
+        <p class="bnm-lead">Esta curadoria parte de perguntas concretas. Cada resposta mostra a fonte, a unidade e o limite da comparação, com acesso direto à tabela usada.</p>
       </div>
-      <div class="bnm-hero__panel">
-        <div class="bnm-stat">
-          <span>717</span>
-          <strong>achados indexados</strong>
-        </div>
-        <div class="bnm-stat">
-          <span>185</span>
-          <strong>linhas CNC Franca</strong>
-        </div>
-        <div class="bnm-stat">
-          <span>520</span>
-          <strong>registros Europa</strong>
-        </div>
-        <div class="bnm-stat">
-          <span>14</span>
-          <strong>indicadores BFI</strong>
-        </div>
-      </div>
+      <aside class="bnm-key" aria-label="Como interpretar esta seção">
+        <span>Três leituras diferentes</span>
+        <ol>
+          <li><strong>Obra brasileira</strong> circulando fora do país</li>
+          <li><strong>Coprodução</strong> registrada por outra instituição</li>
+          <li><strong>Brasil</strong> observado como mercado consumidor</li>
+        </ol>
+      </aside>
     </section>
 
-    <section class="bnm-section">
-      <div class="sec-label">Mapa de evidencia</div>
-      <h2 class="sec-title">Nem toda aparicao significa a mesma coisa.</h2>
-      <p class="sec-sub">
-        A secao usa categorias explicitas para evitar misturar obra brasileira,
-        coproducao, mercado consumidor e mencao casual.
-      </p>
+    <section class="bnm-stories" aria-labelledby="stories-title">
+      <div class="bnm-section-head">
+        <div><p class="eyebrow">Leituras guiadas</p><h2 id="stories-title">Escolha uma pergunta para começar.</h2></div>
+        <p>Os gráficos são gerados a partir das tabelas publicadas e podem ser refeitos no Analisar.</p>
+      </div>
 
-      <div class="bnm-evidence">
-        {evidence.map((item) => (
-          <article class={`bnm-evidence__item bnm-evidence__item--${item.key}`}>
-            <span>{item.count}</span>
-            <h3>{item.title}</h3>
-            <p>{item.desc}</p>
-          </article>
+      <div class="bnm-tabs" role="tablist" aria-label="Leituras sobre o Brasil no mundo">
+        {stories.map((story, index) => (
+          <button id={`tab-${story.id}`} class="bnm-tab" type="button" role="tab" aria-selected={index === 0 ? "true" : "false"} aria-controls={`story-${story.id}`} data-story-tab={story.id}>
+            <span>0{index + 1}</span>{sectionLabels[story.section] ?? story.section}
+          </button>
         ))}
       </div>
-    </section>
 
-    <section class="bnm-section bnm-section--tight">
-      <div class="sec-label">Tabelas derivadas</div>
-      <h2 class="sec-title">Pequenas por desenho.</h2>
-      <p class="sec-sub">
-        Cada tabela preserva a origem e o nivel de evidencia, para que a leitura
-        seja transparente e reprodutivel.
-      </p>
-
-      <div class="bnm-table-grid">
-        {tables.map((item) => (
-          <article class="bnm-table">
-            <div class="bnm-table__head">
-              <span>{item.rows} linhas</span>
-              <strong>{item.label}</strong>
-            </div>
-            <p>{item.desc}</p>
-            <div class="bnm-table__footer">
-              <code>{item.table}</code>
-              <div class="bnm-table__downloads" aria-label={`Baixar ${item.label}`}>
-                <a
-                  href={cleanedUrl(item.table, "csv")}
-                  target="_blank"
-                  rel="noopener"
-                  title={`Baixar ${item.table}.csv`}
-                  data-force-download
-                  download={`${item.table}.csv`}
-                >CSV</a>
-                <a href={cleanedUrl(item.table)} target="_blank" rel="noopener" title={`Baixar ${item.table}.parquet`}>Parquet</a>
+      {stories.map((story, index) => {
+        const max = Math.max(...story.rows.map((row) => Number(row.value)), 1);
+        const points = story.view === "line" ? linePoints(story) : [];
+        return (
+          <article id={`story-${story.id}`} class="bnm-story" role="tabpanel" aria-labelledby={`tab-${story.id}`} hidden={index !== 0} data-story-panel={story.id}>
+            <div class="bnm-story-copy">
+              <p class="eyebrow">{sectionLabels[story.section]}</p><h3>{story.title}</h3>
+              <dl><div><dt>Fonte</dt><dd>{story.source}</dd></div><div><dt>Unidade</dt><dd>{story.unit}</dd></div></dl>
+              <p class="bnm-note"><strong>Leia com cuidado.</strong> {story.note}</p>
+              <div class="bnm-actions">
+                <a class="btn-primary" href={`${base}analisar/?table=${story.table}&story=${story.id}`}>Refazer no Analisar</a>
+                <a class="btn-ghost" href={cleanedUrl(story.table, "csv")} data-force-download download={`${story.table}.csv`}>Baixar CSV</a>
               </div>
             </div>
+            <div class="bnm-chart" aria-label={`${story.title} — ${story.unit}`}>
+              {story.view === "bar" ? (
+                <div class="bnm-bars">{story.rows.map((row) => (
+                  <div class="bnm-bar-row"><div class="bnm-bar-label"><span>{row.label}</span><strong>{formatValue(row.value, story)}</strong></div><div class="bnm-bar-track"><i style={`width:${Math.max(3, (Number(row.value) / max) * 100)}%`}></i></div></div>
+                ))}</div>
+              ) : (
+                <div class="bnm-line-wrap"><svg class="bnm-line" viewBox="0 0 720 300" role="img" aria-label={`${story.title}. ${story.unit}.`}>
+                  <line x1="52" y1="246" x2="668" y2="246" class="axis"/><polyline points={points.map((point) => `${point.x},${point.y}`).join(" ")} class="trend"/>
+                  {points.map((point) => <g><circle cx={point.x} cy={point.y} r="7"/><text x={point.x} y={point.y - 18} class="value">{formatValue(point.value, story)}</text><text x={point.x} y="276" class="label">{point.label}</text></g>)}
+                </svg></div>
+              )}
+              <details><summary>Ver valores em tabela</summary><table><thead><tr><th>Categoria</th><th>{story.unit}</th></tr></thead><tbody>{story.rows.map((row) => <tr><td>{row.label}</td><td>{formatValue(row.value, story)}</td></tr>)}</tbody></table></details>
+            </div>
           </article>
-        ))}
-      </div>
+        );
+      })}
     </section>
 
-    <section class="bnm-section">
-      <div class="bnm-split">
-        <div>
-          <div class="sec-label">Consulta pronta</div>
-          <h2 class="sec-title">Comece pelo indice.</h2>
-          <p class="sec-sub">
-            O indice e a porta de entrada: conte por fonte, filtre por tipo de
-            aparicao e depois abra a tabela detalhada.
-          </p>
-        </div>
-        <CodeSnippet code={sql} lang="sql" label="DuckDB / SQL" />
-      </div>
+    <section class="bnm-method">
+      <div><p class="eyebrow">Critério editorial</p><h2>Presença internacional não é uma métrica única.</h2></div>
+      <p>O portal separa evidência de circulação, registro de coprodução e indicador de mercado. Assim, uma menção ao Brasil não vira automaticamente evidência de uma obra brasileira no exterior.</p>
+      <a href={`${base}datasets/brasil-no-mundo/`}>Ver as tabelas e a proveniência →</a>
     </section>
-  </div>
+  </main>
 </Base>
 
+<script>
+  const activateStory = (id) => {
+    document.querySelectorAll('[data-story-tab]').forEach((tab) => { const active = tab.dataset.storyTab === id; tab.setAttribute('aria-selected', String(active)); tab.tabIndex = active ? 0 : -1; });
+    document.querySelectorAll('[data-story-panel]').forEach((panel) => { panel.hidden = panel.dataset.storyPanel !== id; });
+  };
+  document.querySelectorAll('[data-story-tab]').forEach((tab) => {
+    tab.addEventListener('click', () => activateStory(tab.dataset.storyTab));
+    tab.addEventListener('keydown', (event) => { if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return; const tabs = [...document.querySelectorAll('[data-story-tab]')]; const next = (tabs.indexOf(tab) + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length; tabs[next].focus(); activateStory(tabs[next].dataset.storyTab); });
+  });
+</script>
+
 <style>
-  .bnm-page {
-    padding-bottom: 84px;
-  }
-
-  .bnm-hero {
-    min-height: calc(100vh - 84px);
-    display: grid;
-    grid-template-columns: minmax(0, 1.05fr) minmax(320px, .75fr);
-    gap: clamp(28px, 6vw, 92px);
-    align-items: center;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .bnm-hero h1 {
-    font-family: var(--font-d);
-    font-variation-settings: 'opsz' 16,'wdth' 88,'wght' 760;
-    font-size: clamp(48px, 8vw, 112px);
-    line-height: .9;
-    letter-spacing: -.02em;
-    max-width: 900px;
-    margin-bottom: 26px;
-  }
-
-  .bnm-hero__copy > p:not(.sec-label) {
-    max-width: 680px;
-    color: var(--muted);
-    font-size: clamp(16px, 2vw, 21px);
-    line-height: 1.45;
-  }
-
-  .bnm-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 30px;
-  }
-
-  .bnm-hero__panel {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    border: 1px solid var(--border2);
-    background: var(--surface);
-    box-shadow: var(--sh-lg);
-  }
-
-  .bnm-stat {
-    min-height: 150px;
-    padding: 24px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .bnm-stat:nth-child(odd) {
-    border-right: 1px solid var(--border);
-  }
-
-  .bnm-stat:nth-child(n + 3) {
-    border-bottom: 0;
-  }
-
-  .bnm-stat span {
-    display: block;
-    font-family: var(--font-d);
-    font-variation-settings: 'opsz' 14,'wdth' 90,'wght' 760;
-    font-size: clamp(34px, 5vw, 62px);
-    line-height: 1;
-    color: var(--br);
-  }
-
-  .bnm-stat strong {
-    display: block;
-    margin-top: 12px;
-    color: var(--muted);
-    font-family: var(--font-m);
-    font-size: 10px;
-    font-weight: 400;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-  }
-
-  .bnm-section {
-    padding: 82px 0;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .bnm-section--tight {
-    padding-top: 68px;
-  }
-
-  .bnm-evidence,
-  .bnm-table-grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-  }
-
-  .bnm-evidence__item,
-  .bnm-table {
-    background: var(--surface);
-    min-height: 210px;
-    padding: 24px;
-    color: var(--text);
-  }
-
-  .bnm-evidence__item span,
-  .bnm-table__head span {
-    display: block;
-    font-family: var(--font-m);
-    font-size: 10px;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    color: var(--br);
-    margin-bottom: 18px;
-  }
-
-  .bnm-evidence__item h3,
-  .bnm-table__head strong {
-    display: block;
-    font-family: var(--font-d);
-    font-variation-settings: 'opsz' 14,'wdth' 92,'wght' 700;
-    font-size: 22px;
-    line-height: 1.05;
-    margin-bottom: 14px;
-  }
-
-  .bnm-evidence__item p,
-  .bnm-table p {
-    color: var(--muted);
-    font-size: 13px;
-    line-height: 1.55;
-  }
-
-  .bnm-table {
-    min-height: 238px;
-    display: flex;
-    flex-direction: column;
-    transition: background .15s, transform .15s;
-  }
-
-  .bnm-table:hover {
-    background: var(--surface2);
-    transform: translateY(-2px);
-  }
-
-  .bnm-table__footer {
-    margin-top: auto;
-    padding-top: 24px;
-  }
-
-  .bnm-table code {
-    display: block;
-    color: var(--dim);
-    font-family: var(--font-m);
-    font-size: 10px;
-    overflow-wrap: anywhere;
-  }
-
-  .bnm-table__downloads {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 12px;
-  }
-
-  .bnm-table__downloads a {
-    display: inline-flex;
-    align-items: center;
-    min-height: 32px;
-    padding: 0 10px;
-    border: 1px solid var(--border2);
-    color: var(--text);
-    background: var(--paper);
-    font-family: var(--font-m);
-    font-size: 10px;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    text-decoration: none;
-  }
-
-  .bnm-table__downloads a:hover {
-    border-color: var(--br);
-    color: var(--br);
-    text-decoration: none;
-  }
-
-  .bnm-table-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .bnm-split {
-    display: grid;
-    grid-template-columns: minmax(280px, .7fr) minmax(0, 1fr);
-    gap: 42px;
-    align-items: start;
-  }
-
-  .bnm-split :global(.snippet) {
-    margin: 0;
-  }
-
-  @media (max-width: 980px) {
-    .bnm-hero,
-    .bnm-split {
-      grid-template-columns: 1fr;
-    }
-
-    .bnm-hero {
-      padding: 64px 0;
-      min-height: auto;
-    }
-
-    .bnm-evidence,
-    .bnm-table-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-
-  @media (max-width: 640px) {
-    .bnm-hero h1 {
-      font-size: 52px;
-    }
-
-    .bnm-hero__panel,
-    .bnm-evidence,
-    .bnm-table-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .bnm-stat,
-    .bnm-stat:nth-child(odd),
-    .bnm-stat:nth-child(n + 3) {
-      border-right: 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .bnm-stat:last-child {
-      border-bottom: 0;
-    }
-  }
+  .bnm-page{padding-bottom:80px}.bnm-hero{min-height:72vh;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(300px,.55fr);gap:clamp(30px,7vw,110px);align-items:center;border-bottom:1px solid var(--border)}
+  .eyebrow{font:10px var(--font-m);letter-spacing:.16em;text-transform:uppercase;color:var(--br);margin-bottom:18px}.bnm-hero h1{font-family:var(--font-d);font-variation-settings:'opsz' 16,'wdth' 88,'wght' 760;font-size:clamp(46px,7vw,96px);line-height:.92;letter-spacing:-.025em;max-width:1050px}.bnm-lead{font-size:clamp(17px,2vw,21px);line-height:1.5;color:var(--muted);max-width:760px;margin-top:28px}
+  .bnm-key{background:var(--surface);border:1px solid var(--border2);padding:30px;box-shadow:var(--sh-lg)}.bnm-key>span{font:10px var(--font-m);text-transform:uppercase;letter-spacing:.12em;color:var(--dim)}.bnm-key ol{margin:24px 0 0;padding:0;list-style:none;counter-reset:item}.bnm-key li{counter-increment:item;padding:18px 0 18px 38px;border-top:1px solid var(--border);position:relative;line-height:1.4}.bnm-key li:before{content:counter(item,decimal-leading-zero);position:absolute;left:0;color:var(--br);font:10px var(--font-m)}
+  .bnm-stories{padding:82px 0}.bnm-section-head{display:grid;grid-template-columns:1fr minmax(260px,420px);gap:40px;align-items:end;margin-bottom:34px}.bnm-section-head h2,.bnm-method h2{font-family:var(--font-d);font-variation-settings:'opsz' 14,'wdth' 92,'wght' 720;font-size:clamp(34px,5vw,64px);line-height:.98}.bnm-section-head>p,.bnm-method>p{color:var(--muted);line-height:1.55}
+  .bnm-tabs{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--border2);background:var(--border);gap:1px}.bnm-tab{appearance:none;border:0;background:var(--surface);color:var(--muted);padding:20px;text-align:left;font:600 13px var(--font-b);cursor:pointer}.bnm-tab span{display:block;color:var(--dim);font:9px var(--font-m);margin-bottom:7px}.bnm-tab[aria-selected=true]{background:var(--br);color:white}.bnm-tab[aria-selected=true] span{color:#bfe4cd}.bnm-tab:focus-visible{outline:3px solid var(--text);outline-offset:2px}
+  .bnm-story{display:grid;grid-template-columns:minmax(280px,.65fr) minmax(0,1.2fr);border:1px solid var(--border2);border-top:0;background:var(--surface);min-height:520px}.bnm-story[hidden]{display:none}.bnm-story-copy{padding:clamp(28px,5vw,58px);border-right:1px solid var(--border)}.bnm-story-copy h3{font-family:var(--font-d);font-variation-settings:'opsz' 14,'wdth' 94,'wght' 700;font-size:clamp(30px,4vw,52px);line-height:1.02}.bnm-story dl{margin:34px 0}.bnm-story dl div{padding:13px 0;border-top:1px solid var(--border)}.bnm-story dt{font:9px var(--font-m);text-transform:uppercase;letter-spacing:.12em;color:var(--dim)}.bnm-story dd{margin:5px 0 0;line-height:1.4}.bnm-note{background:var(--paper);border-left:3px solid var(--gold);padding:15px;line-height:1.5;color:var(--muted);font-size:13px}.bnm-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+  .bnm-chart{padding:clamp(26px,5vw,56px);align-self:center;min-width:0}.bnm-bars{display:grid;gap:23px}.bnm-bar-label{display:flex;justify-content:space-between;gap:20px;margin-bottom:8px;font-size:13px}.bnm-bar-label strong{font-family:var(--font-m);color:var(--br)}.bnm-bar-track{height:18px;background:var(--paper);overflow:hidden}.bnm-bar-track i{display:block;height:100%;background:var(--br);transform-origin:left;animation:grow .55s ease both}@keyframes grow{from{transform:scaleX(0)}}.bnm-line-wrap{overflow-x:auto}.bnm-line{display:block;min-width:620px;width:100%;height:auto}.bnm-line .axis{stroke:var(--border2)}.bnm-line .trend{fill:none;stroke:var(--blue);stroke-width:5;stroke-linejoin:round}.bnm-line circle{fill:var(--surface);stroke:var(--blue);stroke-width:4}.bnm-line text{font-family:var(--font-m);text-anchor:middle}.bnm-line .value{font-size:12px;fill:var(--text)}.bnm-line .label{font-size:11px;fill:var(--muted)}details{margin-top:26px;border-top:1px solid var(--border);padding-top:14px}summary{cursor:pointer;font:10px var(--font-m);text-transform:uppercase;letter-spacing:.08em;color:var(--br)}table{width:100%;border-collapse:collapse;margin-top:15px;font-size:12px}th,td{text-align:left;padding:8px;border-bottom:1px solid var(--border)}th:last-child,td:last-child{text-align:right}
+  .bnm-method{border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:70px 0;display:grid;grid-template-columns:1fr 1fr;gap:30px 70px;align-items:start}.bnm-method a{grid-column:2;color:var(--br);font-weight:650}
+  @media(max-width:900px){.bnm-hero,.bnm-story,.bnm-section-head,.bnm-method{grid-template-columns:1fr}.bnm-hero{padding:60px 0}.bnm-key{margin-bottom:50px}.bnm-story-copy{border-right:0;border-bottom:1px solid var(--border)}.bnm-method a{grid-column:1}}
+  @media(max-width:620px){.bnm-tabs{grid-template-columns:1fr}.bnm-tab{padding:14px 18px}.bnm-story{min-height:0}.bnm-chart{padding:24px 16px}.bnm-hero h1{font-size:46px}}
+  @media(prefers-reduced-motion:reduce){.bnm-bar-track i{animation:none}}
 </style>

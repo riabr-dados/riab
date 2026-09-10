@@ -76,16 +76,18 @@ obras |>
 ];
 ---
 
-<Base title="Docs" description="Tecnologias, metodologia de transformação e guia de acesso aos dados do RIDAB.">
+<Base title="Guia" description="Escolha uma tarefa, consulte a metodologia e acesse os dados do RIDAB por interface ou código.">
   <div class="page-inner page-inner--narrow">
 
     <!-- ─── ANCHOR NAV ─────────────────────────────────────────── -->
     <nav class="docs-nav">
+      <a href="#comecar" class="docs-nav-a">Comece por uma tarefa</a>
+      <span class="docs-nav-sep">·</span>
+      <a href="#acesso" class="docs-nav-a">Acessar por código</a>
+      <span class="docs-nav-sep">·</span>
       <a href="#tecnologias" class="docs-nav-a">Tecnologias do portal</a>
       <span class="docs-nav-sep">·</span>
       <a href="#metodologia" class="docs-nav-a">Metodologia de transformação</a>
-      <span class="docs-nav-sep">·</span>
-      <a href="#acesso" class="docs-nav-a">Como acessar os dados</a>
     </nav>
 
     <!-- ─── INTRO MANIFESTO ─────────────────────────────────────── -->
@@ -95,11 +97,23 @@ obras |>
         <p>
           "O PDA oferece uma quantidade inacreditável de dados. Acontece que até justamente por isso
           navegar por esses dados não é nada trivial. Então uma parte significativa desse esforço é a
-          existência das abas Explorar e Transformar — ali tentei documentar e disponibilizar uma
+          existência do ambiente Analisar — ali tentei documentar e disponibilizar uma
           metodologia de integração, limpeza e normalização dos dados. É uma receita de bolo de quem
           trabalha com esses dados há 12 anos."
         </p>
         <a href={`${base}sobre/`} class="docs-manifesto-link">Leia o manifesto completo →</a>
+      </div>
+    </section>
+
+    <section class="doc-section guide-start" id="comecar">
+      <p class="guide-eyebrow">Guia de uso</p>
+      <h1 class="page-title">O que você quer fazer?</h1>
+      <p class="page-sub">Comece pela tarefa. A explicação técnica e a metodologia continuam disponíveis logo abaixo.</p>
+      <div class="guide-paths">
+        <a href={`${base}datasets/`}><span>01</span><strong>Encontrar e baixar uma tabela</strong><p>Busque pelo tema, veja quantas tabelas o dataset contém e escolha CSV, XLSX ou Parquet.</p></a>
+        <a href={`${base}analisar/`}><span>02</span><strong>Consultar ou cruzar dados</strong><p>Selecione campos, filtros, medidas e uma chave de conexão; veja o diagnóstico antes de interpretar somas.</p></a>
+        <a href={`${base}brasil-no-mundo/`}><span>03</span><strong>Entender o Brasil em fontes externas</strong><p>Parta de uma pergunta editorial e abra a tabela usada para refazer a leitura.</p></a>
+        <a href="#acesso"><span>04</span><strong>Usar os arquivos no meu código</strong><p>Copie exemplos para DuckDB, Python, R ou a CLI do Hugging Face.</p></a>
       </div>
     </section>
 
@@ -194,7 +208,7 @@ obras |>
           <div class="tech-card-badge tech-card-badge--yellow">HuggingFace</div>
           <div class="tech-card-title">Hugging Face Datasets</div>
           <p class="tech-card-desc">
-            Plataforma de hospedagem gratuita para datasets de pesquisa e ML —
+            Plataforma de hospedagem para datasets de pesquisa e ML —
             o <strong>equivalente ao GitHub, mas para dados</strong>.
             Suporta HTTP range requests (essencial para o DuckDB), CDN global, versionamento e download público.
           </p>
@@ -211,7 +225,7 @@ obras |>
           <div class="tech-card-title">Portal estático (Astro)</div>
           <p class="tech-card-desc">
             O portal é compilado pelo <strong>Astro</strong> (gerador de sites estáticos) e
-            publicado como HTML/CSS/JS puro via GitHub Pages — sem servidor, sem custo de compute.
+            publicado como HTML/CSS/JS puro via GitHub Pages, com processamento local no navegador.
             A cada commit no <code>main</code>, um GitHub Action compila e publica automaticamente.
           </p>
           <ul class="tech-card-list">
@@ -398,8 +412,8 @@ INNER JOIN bilheteria_por_filme_ano b
       <!-- Diagrama link -->
       <div class="meta-aside">
         <strong>Diagrama interativo de relações.</strong> O grafo completo de conexões entre todas
-        as tabelas — por chave e tipo de join — está disponível como aba interativa em Transformar.
-        <br><a href={`${base}transformar/`} style="color:var(--br);font-weight:600;margin-top:4px;display:inline-block">Transformar → Diagrama de relações →</a>
+        as tabelas — por chave e tipo de conexão — está disponível no ambiente Analisar.
+        <br><a href={`${base}analisar/`} style="color:var(--br);font-weight:600;margin-top:4px;display:inline-block">Abrir o diagrama de relações →</a>
       </div>
 
     </section>
@@ -703,11 +717,13 @@ INNER JOIN bilheteria_por_filme_ano b
 }
 .btn-outline:hover { background: var(--br); color: #fff; text-decoration: none; }
 
+.guide-start{padding-top:58px}.guide-eyebrow{font:10px var(--font-m);letter-spacing:.14em;text-transform:uppercase;color:var(--br);margin-bottom:14px}.guide-paths{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--border2);border:1px solid var(--border2);margin-top:30px}.guide-paths a{display:flex;flex-direction:column;gap:10px;min-height:190px;padding:25px;background:var(--surface);text-decoration:none;color:var(--text);transition:background .15s}.guide-paths a:hover{background:var(--bg2);text-decoration:none}.guide-paths span{font:10px var(--font-m);color:var(--br)}.guide-paths strong{font-family:var(--font-d);font-size:23px;line-height:1.05}.guide-paths p{font-size:13px;line-height:1.55;color:var(--muted)}
 @media (max-width: 768px) {
   .tech-flow { flex-direction: column; }
   .tflow-arr { transform: rotate(90deg); height: 32px; padding: 0; }
   .cascade-step { flex-direction: column; }
   .cascade-n { width: 100%; padding: 10px 14px 0; border-right: none; border-bottom: 1px solid var(--border); }
   .tech-cards { grid-template-columns: 1fr; }
+  .guide-paths { grid-template-columns:1fr; }
 }
 </style>

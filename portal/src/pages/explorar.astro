@@ -1,6 +1,6 @@
 ﻿---
 import Base from "../layouts/Base.astro";
-import { getDatasets } from "../lib/catalog.js";
+import { getDatasets, getTableLabel, getTableSchema } from "../lib/catalog.js";
 
 const HF_BASE = "https://huggingface.co/datasets/riabr-dados/riab/resolve/main/cleaned";
 
@@ -33,7 +33,13 @@ for (const ds of datasets) {
   for (const t of rawTables) {
     const id = typeof t === "string" ? t : t.name;
     const parquet = typeof t === "string" ? `${t}.parquet` : (t.parquet ?? `${id}.parquet`);
-    groupMap[country].tables.push({ id, parquet: `${HF_BASE}/${parquet}`, label: ds.title, desc: shortDesc(ds) });
+    groupMap[country].tables.push({
+      id,
+      parquet: `${HF_BASE}/${parquet}`,
+      label: getTableLabel(id, ds),
+      desc: getTableSchema(id)?.description?.trim() ?? shortDesc(ds),
+      dataset: ds.title,
+    });
   }
 }
 
@@ -185,7 +191,7 @@ const featuredJson   = JSON.stringify(FEATURED);
 
     <!-- NL bar -->
     <div class="nl-bar">
-      <div class="nl-badge">IA GRATUITA</div>
+      <div class="nl-badge">Pergunte em português</div>
       <textarea class="nl-input" id="nl-input" rows="1"
         placeholder="Pergunte em português — ex: Quais estados produziram mais filmes nos últimos 5 anos?"></textarea>
       <button class="nl-btn" id="btn-gen">&#10022; Gerar</button>
@@ -230,6 +236,7 @@ const featuredJson   = JSON.stringify(FEATURED);
 import * as duckdb from "https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.29.0/+esm";
 
 const { parquetMap, tables, featured } = window.__RIDAB__;
+const requestedTable = new URLSearchParams(window.location.search).get('table');
 
 // ── DOM ────────────────────────────────────────────────────────
 const dot             = document.getElementById("ex-dot");
@@ -340,6 +347,7 @@ async function initDuckDB() {
         sc.appendChild(btn);
       });
     }
+    if (requestedTable && parquetMap[requestedTable]) await loadTable(requestedTable);
   } catch (e) {
     dot.className = "sdot sdot--err";
     statusEl.textContent = "Erro ao carregar: " + e.message;
@@ -694,7 +702,7 @@ function getGeminiKey() {
   let k = sessionStorage.getItem(LS_KEY);
   if (!k) {
     k = prompt(
-      "Chave gratuita da Google AI Studio:\naistudio.google.com/apikey\n\nSera usada diretamente no seu navegador e fica salva apenas nesta sessao.",""
+      "Chave da Google AI Studio:\naistudio.google.com/apikey\n\nSera usada diretamente no seu navegador e fica salva apenas nesta sessao.",""
     );
     if (k) sessionStorage.setItem(LS_KEY, k.trim());
   }

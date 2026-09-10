@@ -1,0 +1,3940 @@
+---
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (c) 2026 Contribuidores de dados-audiovisual-br (RIDAB)
+// Parte do portal interativo do RIDAB. Ver portal/LICENSE.
+
+import Base from "../layouts/Base.astro";
+import { getDatasets, getTableLabel, getTableSchema } from "../lib/catalog.js";
+import { getRegistry } from "../lib/joins.js";
+
+const base = import.meta.env.BASE_URL;
+const HF = "https://huggingface.co/datasets/riabr-dados/riab/resolve/main/cleaned";
+
+// Build BUILDER_CATALOG: every visible table with its dataset metadata
+const datasets = getDatasets();
+const joinsRegistry = getRegistry();
+const tablesByName = Object.fromEntries(joinsRegistry.tables.map((t) => [t.table, t]));
+
+const BUILDER_CATALOG = [];
+const seenBuilderTables = new Set();
+for (const ds of datasets) {
+  const tables = ds.cleaned?.tables ?? [];
+  for (const t of tables) {
+    const name = typeof t === "string" ? t : t.name;
+    if (seenBuilderTables.has(name)) continue;
+    seenBuilderTables.add(name);
+    const reg = tablesByName[name];
+    const exposes = reg?.exposes ?? [];
+    BUILDER_CATALOG.push({
+      table: name,
+      title: getTableLabel(name, ds),
+      dataset_title: ds.title,
+      description: getTableSchema(name)?.description?.trim() ?? ds.description?.trim() ?? "",
+      slug: ds.slug,
+      country: ds.source?.country ?? "??",
+      source_id: ds.source_id,
+      source_label: ds.source?.label ?? ds.source_id ?? "—",
+      categoria: ds.categoria ?? [],
+      keys: [...new Set(exposes.map((e) => e.key))],
+      key_cols: exposes.reduce((acc, e) => {
+        (acc[e.key] ??= []).push({ col: e.col, normalize: e.normalize ?? null });
+        return acc;
+      }, {}),
+    });
+  }
+}
+
+const BUILDER_BRIDGES = joinsRegistry.bridges.map((b) => ({
+  tables: b.tables,
+  via_keys: b.via_keys,
+  top_key: b.top_key,
+  weight: b.weight,
+}));
+
+const KEY_GLOSSARY = joinsRegistry._meta?.key_glossary ?? {};
+const BUILDER_DATA_JSON = JSON.stringify({ catalog: BUILDER_CATALOG, bridges: BUILDER_BRIDGES, keyGlossary: KEY_GLOSSARY });
+---
+
+<Base
+  title="Analisar · Consultar e conectar tabelas"
+  description="Consulte uma tabela ou conecte várias bases do audiovisual diretamente no navegador."
+>
+
+<div class="tf">
+
+  <!-- STATUS BAR -->
+  <div class="tf-bar">
+    <span class="tf-ey">RIDAB · ANALISAR</span>
+    <div class="tf-status-row">
+      <span class="tdot" id="tf-dot"></span>
+      <span id="tf-status">Iniciando DuckDB…</span>
+    </div>
+  </div>
+
+  <!-- DOCS LINK -->
+  <a class="tf-doclink" href={`${base}consulta/#metodologia`}>
+    <span class="tf-doclink-text">Como as bases são conectadas: normalização de título, joins em cascata e deflação IPCA</span>
+    <span class="tf-doclink-arr">Ler documentação →</span>
+  </a>
+
+  <!-- MODE TABS -->
+  <div class="mode-tabs">
+    <button class="mtab mtab--active" id="mtab-builder">⊕ Construir cruzamento</button>
+    <button class="mtab" id="mtab-conexoes">⊞ Conexões prontas</button>
+    <button class="mtab" id="mtab-diagrama">⊚ Diagrama de relações</button>
+    <a class="mtab mtab--link" id="mtab-explorar" href={`${base}explorar/${Astro.url.search}`}>☷ Explorar campos</a>
+  </div>
+
+  <!-- ── PANEL: CONEXÕES ─────────────────────────────────────── -->
+  <div id="panel-conexoes" style="display:none">
+
+    <!-- ── CAIXA DE IA ─────────────────────────────────────── -->
+    <div class="nl-box">
+      <div class="nl-box-head">
+        <div class="nl-box-title">
+          <span class="nl-sparkle">✦</span>
+          <span>Relatório via linguagem natural</span>
+        </div>
+        <p class="nl-box-sub">Descreva o que quer analisar — a IA gera o SQL e executa nos dados do RIDAB diretamente no navegador</p>
+      </div>
+      <div class="nl-providers" id="nl-providers">
+        <span class="nl-providers-label">Modelo:</span>
+        <button class="nl-pvr nl-pvr--active" data-provider="gemini">Gemini Flash</button>
+        <button class="nl-pvr" data-provider="anthropic">Claude</button>
+        <button class="nl-pvr" data-provider="openai">GPT-4o</button>
+      </div>
+      <div class="nl-form">
+        <input class="nl-apikey" type="password" id="nl-apikey" placeholder="API key — AIzaSy… (Gemini) · sk-ant-… (Claude) · sk-… (OpenAI)" />
+        <textarea class="nl-textarea" id="nl-query" rows="2" placeholder="Ex: Top 10 diretores com mais obras desde 2010 · Quanto o FSA investiu por estado? · Filmes brasileiros com maior bilheteria na Europa"></textarea>
+        <div class="nl-form-footer">
+          <span class="nl-hint" id="nl-hint">Use uma chave do provedor escolhido. Ela fica somente nesta sessão do navegador.</span>
+          <button class="nl-run-btn" id="nl-run">↵ Analisar</button>
+        </div>
+      </div>
+      <div class="nl-result" id="nl-result" style="display:none"></div>
+    </div>
+
+    <div class="cr-section">
+      <div class="cr-intro">
+        <h2 class="cr-h">Conexões prontas para explorar</h2>
+        <p class="cr-sub">Cada card liga duas ou mais bases. Clique para ver os dados imediatamente.</p>
+      </div>
+      <div class="cr-grid" id="cr-grid"></div>
+    </div>
+  </div>
+
+  <!-- ── PANEL: BUILDER ──────────────────────────────────────── -->
+  <div id="panel-builder">
+    <div class="bldr">
+
+      <!-- COLUNA 1: catálogo -->
+      <aside class="bldr-cat">
+        <div class="bldr-h">Tabelas disponíveis</div>
+        <input type="text" class="bldr-search" id="bldr-search" placeholder="buscar (ex.: bilheteria, fsa, BFI)" />
+        <div class="bldr-cat-filters">
+          <span class="bldr-mini-label">com chave:</span>
+          <div class="bldr-key-filters" id="bldr-key-filters"></div>
+        </div>
+        <div class="bldr-cat-filters">
+          <span class="bldr-mini-label">país:</span>
+          <div class="bldr-country-filters" id="bldr-country-filters"></div>
+        </div>
+        <div class="bldr-cat-list" id="bldr-cat-list"></div>
+      </aside>
+
+      <!-- COLUNA 2: trilha -->
+      <section class="bldr-trail">
+        <div class="bldr-h bldr-h--actions">
+          <span>Montagem do relatório</span>
+          <span class="bldr-recipe-actions">
+            <button type="button" id="bldr-save">Salvar</button>
+            <button type="button" id="bldr-download-recipe">Baixar receita</button>
+            <label>Importar<input id="bldr-import-recipe" type="file" accept="application/json,.json" /></label>
+          </span>
+        </div>
+        <div class="bldr-save-status" id="bldr-save-status" aria-live="polite"></div>
+        <div class="bldr-trail-list" id="bldr-trail-list">
+          <p class="bldr-empty">Clique num dataset à esquerda para começar. O Construtor vai sugerir automaticamente a chave de junção entre os datasets escolhidos.</p>
+        </div>
+        <div class="bldr-trail-warnings" id="bldr-trail-warnings"></div>
+      </section>
+
+      <!-- COLUNA 3: agregação -->
+      <aside class="bldr-agg" id="bldr-agg-pane" style="display:none">
+        <div class="bldr-h">Agregação</div>
+
+        <div class="bldr-agg-block">
+          <label class="bldr-mini-label">Colunas a mostrar</label>
+          <div class="bldr-gb-chips" id="bldr-gb-chips"></div>
+          <select class="bldr-select" id="bldr-gb-add">
+            <option value="">+ adicionar coluna</option>
+          </select>
+          <span class="bldr-help" id="bldr-gb-help">Sem métricas embaixo: vira <code>SELECT</code> cru das colunas. Com métricas: viram chaves do <code>GROUP BY</code>.</span>
+        </div>
+
+        <div class="bldr-agg-block">
+          <label class="bldr-mini-label">Métricas <span class="bldr-mini-hint">(opcional)</span></label>
+          <div class="bldr-metrics" id="bldr-metrics"></div>
+          <button class="bldr-add-metric" id="bldr-add-metric">+ adicionar métrica</button>
+        </div>
+
+        <div class="bldr-agg-block">
+          <label class="bldr-mini-label">Filtros</label>
+          <div id="bldr-filter-rows"></div>
+          <button class="bldr-add-metric" id="bldr-add-filter">+ adicionar filtro</button>
+        </div>
+
+        <div class="bldr-agg-block">
+          <label class="bldr-mini-label">Limite</label>
+          <div class="fl-limit-chips" id="bldr-limit-chips">
+            <button class="lchip" data-n="25">25</button>
+            <button class="lchip lchip--active" data-n="100">100</button>
+            <button class="lchip" data-n="500">500</button>
+            <button class="lchip" data-n="2000">2 k</button>
+            <button class="lchip" data-n="0">tudo</button>
+          </div>
+        </div>
+
+        <button class="fl-run-btn" id="bldr-run">▶ Executar relatório</button>
+      </aside>
+
+    </div>
+  </div>
+
+  <!-- ── PANEL: DIAGRAMA ──────────────────────────────────────── -->
+  <div id="panel-diagrama" style="display:none">
+    <div class="diag-layout">
+      <aside class="diag-sidebar">
+        <div class="diag-sb-section">
+          <div class="diag-sb-title">Chaves de junção</div>
+          <div id="diag-key-filters" class="diag-sb-chips"></div>
+        </div>
+        <div class="diag-sb-section">
+          <div class="diag-sb-title">País / origem</div>
+          <div id="diag-country-filters" class="diag-sb-chips"></div>
+        </div>
+        <p class="diag-sb-hint">Clique num nó para destacar suas conexões.<br>Arraste para reorganizar.</p>
+      </aside>
+      <div class="diag-main">
+        <div class="diag-head">
+          <span class="diag-title">Diagrama de relações por chave canônica</span>
+          <span class="diag-sub">Cada nó é uma tabela · cada aresta é uma chave de junção</span>
+        </div>
+        <div class="diag-body">
+          <svg id="diag-svg" class="diag-svg">
+            <g id="diag-zoom">
+              <g id="diag-clusters"></g>
+              <g id="diag-edges"></g>
+              <g id="diag-nodes"></g>
+            </g>
+          </svg>
+          <div class="diag-zoom-ctl">
+            <button class="diag-zb" id="diag-zoom-in" title="Mais zoom">+</button>
+            <button class="diag-zb" id="diag-zoom-out" title="Menos zoom">−</button>
+            <button class="diag-zb" id="diag-zoom-reset" title="Reorganizar">⟲</button>
+          </div>
+          <div class="diag-tooltip" id="diag-tooltip"></div>
+          <div class="diag-keypop" id="diag-keypop" style="display:none"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SHARED RESULT AREA ─────────────────────────────────── -->
+  <div class="res-area" id="res-area" style="display:none">
+
+    <!-- Refinement bar (conexoes mode only) -->
+    <div class="ref-bar" id="ref-bar" style="display:none">
+      <div class="ref-group">
+        <label class="ref-label" for="ref-dim">Agrupar por</label>
+        <select class="ref-select" id="ref-dim"></select>
+      </div>
+      <div class="ref-group" id="ref-metric-group">
+        <label class="ref-label" for="ref-metric">Mostrar</label>
+        <select class="ref-select" id="ref-metric"></select>
+      </div>
+      <div class="ref-group ref-group--search">
+        <label class="ref-label" for="ref-search">Buscar</label>
+        <input class="ref-input" id="ref-search" type="text" placeholder="filtrar resultados…">
+      </div>
+      <button class="ref-run-btn" id="btn-rerun">↻ Atualizar</button>
+    </div>
+
+    <!-- Result toolbar -->
+    <div class="res-toolbar">
+      <span class="res-info" id="res-info"></span>
+      <div class="res-btns">
+        <button class="res-btn res-btn--active" id="btn-chart">◫ Gráfico</button>
+        <button class="res-btn" id="btn-table">⊞ Tabela</button>
+        <button class="res-btn" id="btn-sql">‹/› SQL</button>
+        <button class="res-btn" id="btn-csv">↓ CSV</button>
+      </div>
+    </div>
+
+    <!-- SQL panel -->
+    <div class="sql-panel" id="sql-panel" style="display:none">
+      <div class="sql-head">
+        <span class="sql-label">SQL · DuckDB</span>
+        <span class="sql-note">reutilizável em Python, R, MotherDuck</span>
+        <button class="sql-copy" id="btn-copy-sql">Copiar</button>
+      </div>
+      <pre class="sql-pre" id="sql-pre"></pre>
+    </div>
+
+    <!-- Chart type sub-bar -->
+    <div class="chart-type-bar" id="chart-type-bar" style="display:none">
+      <button class="ct-btn ct-btn--active" data-type="bh">≡ Barras H</button>
+      <button class="ct-btn" data-type="bv">∥ Barras V</button>
+      <button class="ct-btn" data-type="ln">↗ Linha</button>
+    </div>
+
+    <!-- Chart view -->
+    <div id="view-chart" class="chart-view"></div>
+
+    <!-- Table view -->
+    <div id="view-table" class="table-view" style="display:none"></div>
+
+  </div><!-- /res-area -->
+
+  <!-- Loading overlay -->
+  <div class="res-loading" id="res-loading" style="display:none">
+    <div class="spinner"></div>
+    <span id="loading-msg">Carregando…</span>
+  </div>
+
+</div><!-- /tf -->
+</Base>
+
+<script define:vars={{ HF, BUILDER_DATA_JSON }}>
+  window.__RIDAB_HF__ = HF;
+  window.__RIDAB_BUILDER__ = JSON.parse(BUILDER_DATA_JSON);
+</script>
+
+<script type="module">
+import * as duckdb from "https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.29.0/+esm";
+
+const HF = window.__RIDAB_HF__;
+
+// ── BUILDER DATA (loaded from joins.yaml via Astro frontmatter) ──
+const BUILDER_DATA = window.__RIDAB_BUILDER__;
+const COUNTRY_FILL = { BR:'#007a3c', AR:'#2d70c4', UY:'#b07d0a', FR:'#1f3bb8', UK:'#5a2244', EU:'#1f3bb8' };
+const STRONG_KEYS_SET = new Set(['CPB','CRT','ROE','SALIC','CONTRATO','PROCESSO','REG_ANCINE','CNPJ','CPF','GRUPO_ECON','CNAE','PRODUTORA','DISTRIBUIDORA','EXIBIDORA']);
+// SQL keywords reserved by DuckDB that cannot be used as bare aliases
+const SQL_RESERVED = new Set([
+  'do','in','on','or','as','by','is','at','no','not','if','of','to',
+  'and','any','all','asc','desc','from','where','group','order','having',
+  'union','join','left','right','outer','inner','cross','natural','using',
+  'when','then','else','case','end','null','true','false','select','distinct',
+  'limit','offset','create','drop','table','view','with','as','set','into',
+  'returning','for','full','some','only','primary','foreign','key','unique',
+]);
+
+function escapeRegExp(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+async function ensureView(name) {
+  if (registeredViews.has(name)) return;
+  if (!BUILDER_DATA.catalog.some((item) => item.table === name)) {
+    throw new Error(`Tabela não publicada no catálogo: ${name}`);
+  }
+  await conn.query(`CREATE OR REPLACE VIEW "${name.replace(/"/g, '""')}" AS SELECT * FROM '${HF}/${name}.parquet'`);
+  registeredViews.add(name);
+}
+
+async function ensureViewsForSQL(sql) {
+  const required = BUILDER_DATA.catalog
+    .map((item) => item.table)
+    .filter((name) => new RegExp(`\\b${escapeRegExp(name)}\\b`, 'i').test(sql));
+  for (const name of required) await ensureView(name);
+}
+
+function aliasBase(table){
+  const parts = table.split('_').filter(Boolean);
+  if (parts.length === 1) return parts[0].slice(0,3);
+  // first letter of each word, min 3 chars to dodge keyword collisions
+  const initials = parts.map(p => p[0]).join('');
+  return initials.length >= 3 ? initials.slice(0,4) : (initials + parts[parts.length-1].slice(1,2)).slice(0,4);
+}
+
+// Generate alias unique in the current trail AND not a SQL reserved word
+function aliasFor(table, taken = new Set()){
+  let base = aliasBase(table);
+  let alias = base;
+  let n = 2;
+  while (SQL_RESERVED.has(alias.toLowerCase()) || taken.has(alias)) {
+    alias = base + n;
+    n++;
+    if (n > 99) break;
+  }
+  return alias;
+}
+
+// ── CRUZAMENTOS ────────────────────────────────────────────────
+const CRZ_CATS = [
+  { id: 'producao', label: 'Produção Nacional', color: '#007a3c' },
+  { id: 'mercado',  label: 'Mercado & Público', color: '#1f3bb8' },
+  { id: 'fomento',  label: 'Fomento Público', color: '#c8920a' },
+];
+
+const CRZ = [
+  // ── PRODUÇÃO NACIONAL ──────────────────────────────────────
+  {
+    id: 'obras-serie',
+    cat: 'producao',
+    label: '25 anos de produção',
+    desc: 'Pico pré-corte de 2019, queda na pandemia, retomada. Quebre por estado, tipo de obra ou janela de destino.',
+    tables: [{ name: 'obras-nao-pub', color: '#007a3c' }],
+    join: null, icon: '↗',
+    dims: [
+      { label: 'Ano de produção',   col: 'ano_producao_inicial' },
+      { label: 'Estado (UF)',       col: 'uf_requerente' },
+      { label: 'Tipo de obra',      col: 'tipo_obra' },
+      { label: 'Janela de destino', col: 'segmento_destinacao_inicial' },
+    ],
+    metrics: [{ label: 'Nº de obras', expr: 'COUNT(*)', alias: 'obras' }],
+    buildSQL: (dim, metric, search) => {
+      const isYear = dim.col === 'ano_producao_inicial';
+      const where = buildWhere([
+        `${dim.col} IS NOT NULL`,
+        isYear ? `${dim.col} >= 2000` : null,
+        search ? `CAST(${dim.col} AS VARCHAR) ILIKE '%${esc(search)}%'` : null,
+      ]);
+      return `SELECT ${dim.col} AS dim, ${metric.expr} AS valor
+FROM obras
+${where}
+GROUP BY 1 ORDER BY 1 ${isYear ? 'ASC' : 'DESC'}
+LIMIT 60`;
+    },
+  },
+  {
+    id: 'quem-dirige',
+    cat: 'producao',
+    label: 'Quem dirige o Brasil',
+    desc: 'Diretores mais prolíficos e sua distribuição por estado. A concentração geográfica na direção audiovisual brasileira.',
+    tables: [
+      { name: 'obras-nao-pub',   color: '#007a3c' },
+      { name: 'diretores-obras', color: '#007a3c' },
+    ],
+    join: { type: 'exact', label: 'CPB exato' }, icon: '🎬',
+    dims: [
+      { label: 'Diretor',       col: 'd.diretor' },
+      { label: 'Estado (UF)',   col: 'o.uf_requerente' },
+      { label: 'Tipo de obra',  col: 'o.tipo_obra' },
+      { label: 'Ano',           col: 'o.ano_producao_inicial' },
+    ],
+    metrics: [
+      { label: 'Nº de obras',      expr: 'COUNT(DISTINCT o.cpb)', alias: 'obras' },
+    ],
+    buildSQL: (dim, metric, search) => {
+      const isYear = dim.col === 'o.ano_producao_inicial';
+      const where = buildWhere([
+        `${dim.col} IS NOT NULL`,
+        isYear ? `o.ano_producao_inicial >= 2000` : null,
+        search ? `CAST(${dim.col} AS VARCHAR) ILIKE '%${esc(search)}%'` : null,
+      ]);
+      return `SELECT ${dim.col} AS dim, ${metric.expr} AS valor
+FROM obras o
+LEFT JOIN diretores_obras d ON d.cpb = o.cpb
+${where}
+GROUP BY 1 ORDER BY 2 DESC LIMIT 40`;
+    },
+  },
+  {
+    id: 'ficha-tecnica',
+    cat: 'producao',
+    label: 'Obra + diretor + produtora',
+    desc: 'Ficha técnica completa. Quais produtoras trabalham com os mesmos diretores? Quem produz mais por estado?',
+    tables: [
+      { name: 'obras-nao-pub',    color: '#007a3c' },
+      { name: 'diretores-obras',  color: '#007a3c' },
+      { name: 'produtores-obras', color: '#007a3c' },
+    ],
+    join: { type: 'exact', label: 'CPB exato' }, icon: '🎞',
+    dims: [
+      { label: 'Produtora',    col: 'p.produtor' },
+      { label: 'Diretor',      col: 'd.diretor' },
+      { label: 'Estado (UF)', col: 'o.uf_requerente' },
+      { label: 'Tipo de obra', col: 'o.tipo_obra' },
+    ],
+    metrics: [
+      { label: 'Nº de obras', expr: 'COUNT(DISTINCT o.cpb)', alias: 'obras' },
+    ],
+    buildSQL: (dim, metric, search) => {
+      const where = buildWhere([
+        `${dim.col} IS NOT NULL`,
+        search ? `CAST(${dim.col} AS VARCHAR) ILIKE '%${esc(search)}%'` : null,
+      ]);
+      return `SELECT ${dim.col} AS dim, ${metric.expr} AS valor
+FROM obras o
+LEFT JOIN diretores_obras d ON d.cpb = o.cpb
+LEFT JOIN produtores_obras p ON p.cpb = o.cpb
+${where}
+GROUP BY 1 ORDER BY 2 DESC LIMIT 40`;
+    },
+  },
+  // ── MERCADO & PÚBLICO ──────────────────────────────────────
+  {
+    id: 'obras-bilheteria',
+    cat: 'mercado',
+    label: 'Do registro à tela',
+    desc: 'De 61 mil obras registradas, quantas chegaram ao cinema? Espectadores reais por obra, estado e ano de exibição.',
+    tables: [
+      { name: 'obras-nao-pub',       color: '#007a3c' },
+      { name: 'bilheteria-agregada', color: '#007a3c' },
+    ],
+    join: { type: 'exact', label: 'CPB exato' }, icon: '🎟',
+    dims: [
+      { label: 'Obra (título)',    col: 'o.titulo_original' },
+      { label: 'Ano de exibição', col: 'b.ano' },
+      { label: 'Estado (UF)',     col: 'o.uf_requerente' },
+      { label: 'Tipo de obra',    col: 'o.tipo_obra' },
+    ],
+    metrics: [
+      { label: 'Espectadores', expr: 'SUM(b.publico)',         alias: 'espectadores' },
+      { label: 'Nº de obras',  expr: 'COUNT(DISTINCT o.cpb)', alias: 'obras' },
+    ],
+    buildSQL: (dim, metric, search) => {
+      const where = buildWhere([
+        `${dim.col} IS NOT NULL`,
+        search ? `CAST(${dim.col} AS VARCHAR) ILIKE '%${esc(search)}%'` : null,
+      ]);
+      return `SELECT ${dim.col} AS dim, ${metric.expr} AS valor
+FROM obras o
+INNER JOIN bilheteria_por_filme_ano b
+  ON b.cpb_roe = o.cpb AND b.cpb_roe LIKE 'B%'
+${where}
+GROUP BY 1 ORDER BY 2 DESC LIMIT 40`;
+    },
+  },
+  {
+    id: 'br-eu',
+    cat: 'mercado',
+    label: 'Brasil nas telas da Europa',
+    desc: 'Quais filmes brasileiros acumularam mais espectadores nos 37 países europeus? Dados do Observatório Europeu (Lumière).',
+    tables: [
+      { name: 'lumiere-cinemas-europa', color: '#1f3bb8' },
+    ],
+    join: null, icon: '🌍',
+    dims: [
+      { label: 'Filme (título)',     col: 'titulo_original' },
+      { label: 'Ano de produção',    col: 'ano_producao' },
+      { label: 'País(es) produção',  col: 'paises_producao' },
+    ],
+    metrics: [
+      { label: 'Admissões (Europa)', expr: 'SUM(admissoes_1996_2026)', alias: 'admissoes_europa' },
+      { label: 'Nº de filmes',       expr: 'COUNT(*)',                  alias: 'filmes' },
+    ],
+    buildSQL: (dim, metric, search) => {
+      const where = buildWhere([
+        `${dim.col} IS NOT NULL`,
+        `tem_brasil = TRUE`,
+        search ? `CAST(${dim.col} AS VARCHAR) ILIKE '%${esc(search)}%'` : null,
+      ]);
+      return `SELECT ${dim.col} AS dim, ${metric.expr} AS valor
+FROM bilheteria_europa
+${where}
+GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 40`;
+    },
+  },
+  {
+    id: 'embrafilme-historico',
+    cat: 'mercado',
+    label: 'Cinema antes do mercado',
+    desc: 'Indicadores históricos de 1970 a 1987 — público, renda e distribuição territorial na era da empresa estatal.',
+    tables: [
+      { name: 'embrafilme-historico', color: '#007a3c' },
+    ],
+    join: null, icon: '1980',
+    dims: [
+      { label: 'Ano',            col: 'ano' },
+      { label: 'Indicador',      col: 'indicador' },
+      { label: 'Território',     col: 'territorio_nome' },
+      { label: 'Tipo território', col: 'territorio_tipo' },
+    ],
+    metrics: [
+      { label: 'Valor',     expr: 'SUM(valor)', alias: 'valor' },
+      { label: 'Registros', expr: 'COUNT(*)',   alias: 'registros' },
+    ],
+    buildSQL: (dim, metric, search) => {
+      const where = buildWhere([
+        `${dim.col} IS NOT NULL`,
+        search ? `CAST(${dim.col} AS VARCHAR) ILIKE '%${esc(search)}%'` : null,
+      ]);
+      return `SELECT ${dim.col} AS dim, ${metric.expr} AS valor
+FROM embrafilme_exibicao_territorio_ano
+${where}
+GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 60`;
+    },
+  },
+  // ── FOMENTO PÚBLICO ────────────────────────────────────────
+  {
+    id: 'obras-fsa',
+    cat: 'fomento',
+    label: 'Onde vai o FSA',
+    desc: 'Distribuição do Fundo Setorial por chamada, estado e tipo de obra — 15 anos de investimento público audiovisual.',
+    tables: [
+      { name: 'obras-nao-pub', color: '#007a3c' },
+      { name: 'fsa-projetos',  color: '#c8920a' },
+    ],
+    join: { type: 'proxy', label: 'proxy título' }, icon: '💰',
+    dims: [
+      { label: 'Estado (UF)',      col: 'o.uf_requerente' },
+      { label: 'Chamada FSA',      col: 'f.chamada_publica' },
+      { label: 'Tipo de obra',     col: 'o.tipo_obra' },
+      { label: 'Produtora (FSA)', col: 'f.razao_social_produtora' },
+    ],
+    metrics: [
+      { label: 'Total investido (R$)', expr: 'SUM(f.valor_contrato_brl)', alias: 'total_reais' },
+      { label: 'Nº de projetos',       expr: 'COUNT(*)',                  alias: 'projetos' },
+    ],
+    buildSQL: (dim, metric, search) => {
+      const where = buildWhere([
+        `${dim.col} IS NOT NULL`,
+        search ? `CAST(${dim.col} AS VARCHAR) ILIKE '%${esc(search)}%'` : null,
+      ]);
+      return `WITH o_n AS (
+  SELECT *, lower(regexp_replace(titulo_original,'[^a-zA-Z0-9 ]','','g')) AS _tn
+  FROM obras
+),
+f_n AS (
+  SELECT *, lower(regexp_replace(titulo_projeto,'[^a-zA-Z0-9 ]','','g')) AS _tn
+  FROM fomento_fsa
+)
+SELECT ${dim.col} AS dim, ${metric.expr} AS valor
+FROM o_n o
+INNER JOIN f_n f ON f._tn = o._tn
+${where}
+GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 40`;
+    },
+  },
+  {
+    id: 'fsa-publico',
+    cat: 'fomento',
+    label: 'FSA que chegou ao público',
+    desc: 'Obras com fomento do FSA que tiveram espectadores no cinema. O retorno em audiência do investimento público.',
+    tables: [
+      { name: 'obras-nao-pub',       color: '#007a3c' },
+      { name: 'fsa-projetos',        color: '#c8920a' },
+      { name: 'bilheteria-agregada', color: '#007a3c' },
+    ],
+    join: { type: 'proxy', label: 'proxy título + CPB' }, icon: '📊',
+    dims: [
+      { label: 'Obra (título)',    col: 'o.titulo_original' },
+      { label: 'Chamada FSA',     col: 'f.chamada_publica' },
+      { label: 'Estado (UF)',     col: 'o.uf_requerente' },
+      { label: 'Ano de exibição', col: 'b.ano' },
+    ],
+    metrics: [
+      { label: 'Espectadores',      expr: 'SUM(b.publico)',            alias: 'espectadores' },
+      { label: 'Total FSA (R$)',    expr: 'SUM(f.valor_contrato_brl)', alias: 'fsa_investido' },
+      { label: 'Nº de obras',      expr: 'COUNT(DISTINCT o.cpb)',      alias: 'obras' },
+    ],
+    buildSQL: (dim, metric, search) => {
+      const where = buildWhere([
+        `${dim.col} IS NOT NULL`,
+        search ? `CAST(${dim.col} AS VARCHAR) ILIKE '%${esc(search)}%'` : null,
+      ]);
+      return `WITH o_n AS (
+  SELECT *, lower(regexp_replace(titulo_original,'[^a-zA-Z0-9 ]','','g')) AS _tn
+  FROM obras
+),
+f_n AS (
+  SELECT *, lower(regexp_replace(titulo_projeto,'[^a-zA-Z0-9 ]','','g')) AS _tn
+  FROM fomento_fsa
+)
+SELECT ${dim.col} AS dim, ${metric.expr} AS valor
+FROM o_n o
+INNER JOIN f_n f ON f._tn = o._tn
+INNER JOIN bilheteria_por_filme_ano b
+  ON b.cpb_roe = o.cpb AND b.cpb_roe LIKE 'B%'
+${where}
+GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 40`;
+    },
+  },
+  {
+    id: 'festivais-fsa',
+    cat: 'fomento',
+    label: 'Premiações internacionais',
+    desc: 'Quais obras com fomento FSA foram mais premiadas? Festivais internacionais registrados nas atas de desempenho artístico.',
+    tables: [
+      { name: 'atas-fsa-festivais', color: '#c8920a' },
+    ],
+    join: null, icon: '★',
+    dims: [
+      { label: 'Obra',           col: 'titulo_obra' },
+      { label: 'País do festival', col: 'pais_evento_extraido' },
+      { label: 'Evento',         col: 'evento' },
+      { label: 'Ano da chamada', col: 'ano_chamada' },
+    ],
+    metrics: [
+      { label: 'Nº de premiações', expr: 'COUNT(*)',                    alias: 'premiacoes' },
+      { label: 'Nº de obras',      expr: 'COUNT(DISTINCT titulo_obra)', alias: 'obras' },
+      { label: 'Pontos somados',   expr: 'SUM(pontos_evento)',          alias: 'pontos' },
+    ],
+    buildSQL: (dim, metric, search) => {
+      const where = buildWhere([
+        `${dim.col} IS NOT NULL`,
+        `evento_internacional_estimado IS NOT FALSE`,
+        search ? `CAST(${dim.col} AS VARCHAR) ILIKE '%${esc(search)}%'` : null,
+      ]);
+      return `SELECT ${dim.col} AS dim, ${metric.expr} AS valor
+FROM fsa_atas_festivais
+${where}
+GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 40`;
+    },
+  },
+  {
+    id: 'obras-renuncia',
+    cat: 'fomento',
+    label: 'Lei do Audiovisual',
+    desc: 'Captação via renúncia fiscal por obra, estado e tipo — o mecanismo de incentivo privado ao cinema brasileiro.',
+    tables: [
+      { name: 'obras-nao-pub',   color: '#007a3c' },
+      { name: 'renuncia-fiscal', color: '#1f3bb8' },
+    ],
+    join: { type: 'proxy', label: 'proxy título' }, icon: '📋',
+    dims: [
+      { label: 'Estado (UF)',   col: 'o.uf_requerente' },
+      { label: 'Obra (título)', col: 'o.titulo_original' },
+      { label: 'Tipo de obra',  col: 'o.tipo_obra' },
+    ],
+    metrics: [
+      { label: 'Total captado (R$)', expr: 'SUM(r.total_captado)', alias: 'total_captado' },
+      { label: 'Nº de projetos',     expr: 'COUNT(*)',              alias: 'projetos' },
+    ],
+    buildSQL: (dim, metric, search) => {
+      const where = buildWhere([
+        `${dim.col} IS NOT NULL`,
+        search ? `CAST(${dim.col} AS VARCHAR) ILIKE '%${esc(search)}%'` : null,
+      ]);
+      return `WITH o_n AS (
+  SELECT *, lower(regexp_replace(titulo_original,'[^a-zA-Z0-9 ]','','g')) AS _tn
+  FROM obras
+),
+r_n AS (
+  SELECT *, lower(regexp_replace(titulo_projeto,'[^a-zA-Z0-9 ]','','g')) AS _tn
+  FROM renuncia_fiscal
+)
+SELECT ${dim.col} AS dim, ${metric.expr} AS valor
+FROM o_n o
+INNER JOIN r_n r ON r._tn = o._tn
+${where}
+GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 40`;
+    },
+  },
+  {
+    id: 'condecine-arrecadacao',
+    cat: 'fomento',
+    label: 'A conta do setor',
+    desc: 'Série anual da arrecadação bruta da CONDECINE por modalidade, antes do abatimento da DRU.',
+    tables: [
+      { name: 'condecine-arrecadacao', color: '#c8920a' },
+    ],
+    join: null, icon: 'R$',
+    dims: [
+      { label: 'Ano',            col: 'ano' },
+      { label: 'Tipo CONDECINE', col: 'tipo_condecine' },
+    ],
+    metrics: [
+      { label: 'Valor nominal (R$)', expr: 'SUM(valor_nominal_brl)', alias: 'valor_brl' },
+      { label: 'Registros',          expr: 'COUNT(*)',               alias: 'registros' },
+    ],
+    buildSQL: (dim, metric, search) => {
+      const where = buildWhere([
+        `${dim.col} IS NOT NULL`,
+        search ? `CAST(${dim.col} AS VARCHAR) ILIKE '%${esc(search)}%'` : null,
+      ]);
+      return `SELECT ${dim.col} AS dim, ${metric.expr} AS valor
+FROM condecine_arrecadacao_bruta_anual
+${where}
+GROUP BY 1 ORDER BY 1 ${dim.col === 'ano' || dim.col === 'mes' ? 'ASC' : 'DESC'} NULLS LAST LIMIT 60`;
+    },
+  },
+  {
+    id: 'fluxos-fomento',
+    cat: 'fomento',
+    label: 'Valores Captados/Contratados por mecanismo',
+    desc: 'Valores anuais captados ou contratados por mecanismo de incentivo, sem misturar desembolso, arrecadação ou premiação.',
+    tables: [
+      { name: 'fluxos-fomento', color: '#c8920a' },
+    ],
+    join: null, icon: '$',
+    dims: [
+      { label: 'Ano',           col: 'ano' },
+      { label: 'Mecanismo',     col: 'mecanismo_ou_programa' },
+    ],
+    metrics: [
+      { label: 'Valor BRL nominal', expr: 'SUM(valor_nominal_brl)', alias: 'valor_brl' },
+      { label: 'Registros',         expr: 'COUNT(*)',               alias: 'registros' },
+    ],
+    buildSQL: (dim, metric, search) => {
+      const where = buildWhere([
+        `${dim.col} IS NOT NULL`,
+        search ? `CAST(${dim.col} AS VARCHAR) ILIKE '%${esc(search)}%'` : null,
+      ]);
+      return `SELECT ${dim.col} AS dim, ${metric.expr} AS valor
+FROM fomento_valores_captados_mecanismo
+${where}
+GROUP BY 1 ORDER BY 2 DESC NULLS LAST LIMIT 60`;
+    },
+  },
+];
+
+// ── HELPERS ────────────────────────────────────────────────────
+function buildWhere(clauses) {
+  const valid = clauses.filter(Boolean);
+  return valid.length ? `WHERE ${valid.join('\n  AND ')}` : '';
+}
+function esc(s) { return String(s ?? '').replace(/'/g, "''"); }
+function fmtNum(n) {
+  if (!Number.isFinite(n)) return '—';
+  return Number.isInteger(n)
+    ? n.toLocaleString('pt-BR')
+    : n.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+const JOIN_COLOR = { exact: '#007a3c', proxy: '#c8920a' };
+
+// ── NL AI BOX ──────────────────────────────────────────────────
+const NL_SCHEMA = `Você é um assistente SQL para o repositório RIDAB de dados do audiovisual brasileiro.
+Gere uma única query DuckDB válida com base na descrição do usuário.
+Use APENAS estas tabelas (views DuckDB sobre arquivos Parquet no HuggingFace):
+
+- obras: Obras audiovisuais registradas na ANCINE. Colunas principais: cpb (ID), titulo_original, tipo_obra, ano_producao_inicial, uf_requerente, segmento_destinacao_inicial
+- bilheteria_por_filme_ano: Bilheteria real no cinema. Colunas: cpb_roe, ano, publico (espectadores). Join com obras: cpb_roe = obras.cpb AND cpb_roe LIKE 'B%'
+- diretores_obras: Diretores. Colunas: cpb, diretor. Join com obras: cpb = obras.cpb
+- produtores_obras: Produtores. Colunas: cpb, produtor. Join com obras: cpb = obras.cpb
+- fomento_fsa: Projetos do FSA. Colunas: titulo_projeto, chamada_publica, razao_social_produtora, valor_contrato_brl, ano. Join com obras via título normalizado.
+- condecine_arrecadacao_bruta_anual: Arrecadação bruta CONDECINE. Colunas: ano, tipo_condecine, valor_nominal_brl
+- fomento_valores_captados_mecanismo: Valores captados/contratados por mecanismo. Colunas: ano, mecanismo_ou_programa, valor_nominal_brl
+- renuncia_fiscal: Renúncia fiscal (Lei do Audiovisual). Colunas: titulo_projeto, total_captado, ano. Join com obras via título normalizado.
+- fsa_atas_festivais: Festivais e premiações FSA. Colunas: titulo_obra, cpb, evento, pais_evento_extraido, tipo_pontuacao, pontos_evento, ano_chamada, evento_internacional_estimado
+- fsa_atas_resultados: Resultados do FSA. Colunas: titulo_obra, cpb, ano_chamada
+- embrafilme_exibicao_territorio_ano: Dados históricos da Embrafilme (1970-87). Colunas: ano, indicador, territorio_nome, territorio_tipo, titulo_publicacao, valor
+- bilheteria_europa: Filmes em salas europeias (Lumière). Colunas: titulo_original, paises_producao, ano_producao, admissoes_1996_2026, tem_brasil
+
+Para joins por título normalizado use: lower(regexp_replace(coluna,'[^a-zA-Z0-9 ]','','g'))
+Retorne APENAS o SQL, sem explicação, sem markdown. Use LIMIT 40 no máximo. Formate para legibilidade.`;
+
+const NL_HINTS = {
+  gemini: 'Gere uma chave de acesso em <strong>aistudio.google.com</strong>',
+  anthropic: 'API paga — gere sua key em <strong>console.anthropic.com</strong>',
+  openai: 'API paga — gere sua key em <strong>platform.openai.com</strong>',
+};
+
+let nlProvider = 'gemini';
+
+document.getElementById('nl-providers').querySelectorAll('.nl-pvr').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.nl-pvr').forEach(b => b.classList.remove('nl-pvr--active'));
+    btn.classList.add('nl-pvr--active');
+    nlProvider = btn.dataset.provider;
+    document.getElementById('nl-hint').innerHTML = NL_HINTS[nlProvider] ?? '';
+    const keyEl = document.getElementById('nl-apikey');
+    if (nlProvider === 'gemini') keyEl.placeholder = 'AIzaSy… (Google AI Studio)';
+    else if (nlProvider === 'anthropic') keyEl.placeholder = 'sk-ant-api03-…';
+    else keyEl.placeholder = 'sk-…';
+  });
+});
+
+document.getElementById('nl-run').addEventListener('click', async () => {
+  const apiKey = document.getElementById('nl-apikey').value.trim();
+  const query  = document.getElementById('nl-query').value.trim();
+  const result = document.getElementById('nl-result');
+
+  if (!query) { alert('Digite uma pergunta antes de analisar.'); return; }
+  if (!apiKey) { alert('Insira sua API key.'); return; }
+  if (!ready)  { alert('DuckDB ainda não carregou — aguarde o ponto verde.'); return; }
+
+  const btn = document.getElementById('nl-run');
+  btn.disabled = true;
+  btn.textContent = '⏳ Gerando SQL…';
+  result.style.display = 'none';
+
+  try {
+    const sql = await nlGenerateSQL(nlProvider, apiKey, query);
+    btn.textContent = '⏳ Executando…';
+
+    let sqlClean = sql.replace(/```sql\s*/i, '').replace(/```\s*$/, '').trim();
+    if (!sqlClean.toLowerCase().startsWith('select') && !sqlClean.toLowerCase().startsWith('with')) {
+      const match = sql.match(/((?:WITH|SELECT)[\s\S]+)/i);
+      if (match) sqlClean = match[1].trim();
+    }
+
+    const t0  = Date.now();
+    const res = await conn.query(sqlClean);
+    const ms  = Date.now() - t0;
+    const rows = res.toArray();
+    const cols = res.schema.fields.map(f => f.name);
+
+    lastSQL  = sqlClean;
+    lastRows = rows;
+    lastCols = cols;
+    sqlPre.textContent = sqlClean;
+
+    result.style.display = 'block';
+    result.innerHTML = `
+      <div class="nl-sql-bar">
+        <span class="nl-sql-label">SQL gerado</span>
+        <pre class="nl-sql-pre">${sqlClean}</pre>
+        <div class="nl-result-meta">${rows.length} linhas · ${ms}ms</div>
+      </div>
+      <div class="nl-tbl-wrap">${nlRenderTable(rows, cols)}</div>`;
+  } catch (e) {
+    result.style.display = 'block';
+    result.innerHTML = `<div class="nl-err">Erro: ${e.message}</div>`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '↵ Analisar';
+  }
+});
+
+async function nlGenerateSQL(provider, apiKey, userQuery) {
+  if (provider === 'gemini') {
+    const r = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          system_instruction: { parts: [{ text: NL_SCHEMA }] },
+          contents: [{ parts: [{ text: userQuery }] }],
+          generationConfig: { temperature: 0.1, maxOutputTokens: 1024 },
+        }),
+      }
+    );
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.error?.message ?? `HTTP ${r.status}`);
+    return d.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
+  }
+
+  if (provider === 'anthropic') {
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 1024,
+        system: NL_SCHEMA,
+        messages: [{ role: 'user', content: userQuery }],
+      }),
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.error?.message ?? `HTTP ${r.status}`);
+    return d.content?.[0]?.text ?? '';
+  }
+
+  if (provider === 'openai') {
+    const r = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        temperature: 0.1,
+        max_tokens: 1024,
+        messages: [
+          { role: 'system', content: NL_SCHEMA },
+          { role: 'user', content: userQuery },
+        ],
+      }),
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.error?.message ?? `HTTP ${r.status}`);
+    return d.choices?.[0]?.message?.content ?? '';
+  }
+
+  throw new Error('Provedor desconhecido: ' + provider);
+}
+
+function nlRenderTable(rows, cols) {
+  if (!rows.length) return '<p class="nl-empty">Nenhum resultado.</p>';
+  const metricCol = cols[cols.length - 1];
+  const metricVals = rows.map(r => Number(r[metricCol]) || 0);
+  const maxVal = Math.max(...metricVals, 1);
+  let h = `<table class="nl-dtbl"><thead><tr>` + cols.map(c => `<th>${c}</th>`).join('') + `</tr></thead><tbody>`;
+  rows.slice(0, 40).forEach(row => {
+    h += `<tr>`;
+    cols.forEach((col, i) => {
+      const v = row[col];
+      const disp = v == null ? '—' : String(v);
+      if (i === cols.length - 1 && Number.isFinite(Number(v)) && maxVal > 0) {
+        const pct = Math.round((Number(v) / maxVal) * 100);
+        h += `<td class="td-metric"><div class="td-bar-wrap"><div class="td-bar" style="width:${pct}%"></div><span>${fmtNum(Number(v))}</span></div></td>`;
+      } else {
+        h += `<td title="${disp}">${disp.slice(0, 120)}</td>`;
+      }
+    });
+    h += `</tr>`;
+  });
+  return h + `</tbody></table>`;
+}
+
+// ── STATE ──────────────────────────────────────────────────────
+let db, conn, ready = false;
+let appMode = 'builder'; // 'conexoes' | 'builder'
+let activeCrz = null;
+let lastSQL = '', lastRows = [], lastCols = [];
+let viewMode = 'chart';   // 'chart' | 'table'
+let chartType = 'bh';     // 'bh' | 'bv' | 'ln'
+let sortCol = null, sortAsc = true;
+let diagramInitialized = false;
+
+// Builder state
+const registeredViews = new Set();
+const builderColCache = {}; // table -> [{name,type}]
+let builderTables = []; // [{table, alias}]
+let builderGroupBys = []; // ["table.col", ...] — colunas a mostrar. Viram GROUP BY se houver métricas; SELECT cru caso contrário.
+let builderMetrics = []; // [{op:'SUM'|'COUNT'|'AVG'|'COUNT_DISTINCT', col:'table.col'|'*'}]
+let builderFilters = []; // [{col, op, val}]
+let builderLimit = 100;
+let builderJoinChoices = {}; // tabela adicionada -> chave escolhida
+let builderActiveKey = null; // filter chip: only datasets exposing this key
+let builderActiveCountry = null;
+let builderSearch = '';
+let builderCatalogLimit = 80;
+
+// ── DOM ────────────────────────────────────────────────────────
+const dot        = document.getElementById('tf-dot');
+const statusEl   = document.getElementById('tf-status');
+const crGrid     = document.getElementById('cr-grid');
+const resArea    = document.getElementById('res-area');
+const resLoading = document.getElementById('res-loading');
+const loadingMsg = document.getElementById('loading-msg');
+const refBar     = document.getElementById('ref-bar');
+const refDim     = document.getElementById('ref-dim');
+const refMetric  = document.getElementById('ref-metric');
+const refMetricGroup = document.getElementById('ref-metric-group');
+const refSearch  = document.getElementById('ref-search');
+const btnRerun   = document.getElementById('btn-rerun');
+const resInfo    = document.getElementById('res-info');
+const btnChart   = document.getElementById('btn-chart');
+const btnTable   = document.getElementById('btn-table');
+const btnSql     = document.getElementById('btn-sql');
+const btnCsv     = document.getElementById('btn-csv');
+const sqlPanel   = document.getElementById('sql-panel');
+const sqlPre     = document.getElementById('sql-pre');
+const btnCopySql = document.getElementById('btn-copy-sql');
+const ctBar      = document.getElementById('chart-type-bar');
+const viewChart  = document.getElementById('view-chart');
+const viewTable  = document.getElementById('view-table');
+const requestedTable = new URLSearchParams(window.location.search).get('table');
+const hasRequestedTable = requestedTable && BUILDER_DATA.catalog.some((item) => item.table === requestedTable);
+
+function markBuilderDirty(message = 'A montagem mudou. Execute o relatório para atualizar o resultado.') {
+  if (!lastSQL || appMode !== 'builder') return;
+  lastSQL = ''; lastRows = []; lastCols = [];
+  resArea.style.display = 'none';
+  sqlPanel.style.display = 'none';
+  statusEl.textContent = message;
+}
+
+// Mostra a seleção vinda do dataset imediatamente. A engine e as colunas
+// carregam depois, sem fazer a interface parecer vazia durante a rede fria.
+if (hasRequestedTable) addToTrail(requestedTable);
+
+// ── INIT ───────────────────────────────────────────────────────
+(async () => {
+  try {
+    const bundles = duckdb.getJsDelivrBundles();
+    const bundle  = await duckdb.selectBundle(bundles);
+    const wUrl = URL.createObjectURL(
+      new Blob([`importScripts("${bundle.mainWorker}");`], { type: 'text/javascript' })
+    );
+    db = new duckdb.AsyncDuckDB(new duckdb.ConsoleLogger(), new Worker(wUrl));
+    await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
+    conn = await db.connect();
+    await conn.query("INSTALL httpfs; LOAD httpfs; SET s3_region='us-east-1';");
+
+    dot.className = 'tdot tdot--ok';
+    statusEl.textContent = `${BUILDER_DATA.catalog.length} tabelas · carregamento sob demanda`;
+    ready = true;
+    renderCards();
+    renderBuilder();
+    if (hasRequestedTable) {
+      await ensureView(requestedTable);
+      const description = await conn.query(`DESCRIBE SELECT * FROM "${requestedTable.replace(/"/g, '""')}"`);
+      builderColCache[requestedTable] = description.toArray().map((row) => ({
+        name: String(row.column_name),
+        type: String(row.column_type),
+      }));
+      renderBuilder();
+      renderAggPane();
+      document.querySelector(`[data-table="${CSS.escape(requestedTable)}"]`)?.scrollIntoView({ block: 'nearest' });
+    } else {
+      try {
+        const savedRecipe = JSON.parse(localStorage.getItem('ridab_analysis_recipe_v1') || 'null');
+        if (savedRecipe) await applyRecipe(savedRecipe, false);
+      } catch {}
+    }
+  } catch (e) {
+    dot.className = 'tdot tdot--err';
+    statusEl.textContent = 'Erro ao iniciar: ' + e.message;
+  }
+})();
+
+// ── MODE TABS ──────────────────────────────────────────────────
+document.getElementById('mtab-conexoes').addEventListener('click', () => switchMode('conexoes'));
+document.getElementById('mtab-builder').addEventListener('click',  () => switchMode('builder'));
+document.getElementById('mtab-diagrama').addEventListener('click', () => switchMode('diagrama'));
+
+function switchMode(mode) {
+  appMode = mode;
+  document.getElementById('mtab-conexoes').classList.toggle('mtab--active', mode === 'conexoes');
+  document.getElementById('mtab-builder').classList.toggle('mtab--active', mode === 'builder');
+  document.getElementById('mtab-diagrama').classList.toggle('mtab--active', mode === 'diagrama');
+  document.getElementById('panel-conexoes').style.display = mode === 'conexoes' ? 'block' : 'none';
+  document.getElementById('panel-builder').style.display  = mode === 'builder'  ? 'block' : 'none';
+  document.getElementById('panel-diagrama').style.display = mode === 'diagrama' ? 'block' : 'none';
+  refBar.style.display = mode === 'conexoes' ? 'flex' : 'none';
+  resArea.style.display = 'none';
+  sqlPanel.style.display = 'none';
+  btnSql.classList.remove('res-btn--active');
+  if (mode === 'diagrama') initDiagram();
+}
+
+// ── RENDER CARDS ───────────────────────────────────────────────
+function renderCards() {
+  let html = '';
+  for (const cat of CRZ_CATS) {
+    const items = CRZ.filter(c => c.cat === cat.id);
+    if (!items.length) continue;
+    html += `<div class="cr-cat-header" style="--cat-clr:${cat.color}">
+      <span class="cr-cat-dot"></span><span class="cr-cat-label">${cat.label}</span>
+    </div>`;
+    html += items.map(c => {
+      const tablePills = c.tables.map(t =>
+        `<span class="cr-tbl-pill" style="border-color:${t.color};color:${t.color}">${t.name}</span>`
+      ).join('<span class="cr-plus">+</span>');
+      const joinBadge = c.join
+        ? `<span class="cr-join-badge" style="color:${JOIN_COLOR[c.join.type]};border-color:${JOIN_COLOR[c.join.type]}20;background:${JOIN_COLOR[c.join.type]}10">${c.join.label}</span>`
+        : '';
+      return `<button class="cr-card" data-id="${c.id}" ${!ready ? 'disabled' : ''}>
+        <div class="cr-card-top"><div class="cr-tables">${tablePills}</div>${joinBadge}</div>
+        <div class="cr-card-icon">${c.icon}</div>
+        <div class="cr-card-label">${c.label}</div>
+        <div class="cr-card-desc">${c.desc}</div>
+        <div class="cr-card-cta">Explorar →</div>
+      </button>`;
+    }).join('');
+  }
+  crGrid.innerHTML = html;
+  crGrid.querySelectorAll('.cr-card').forEach(btn => {
+    btn.addEventListener('click', () => selectCrz(btn.dataset.id));
+  });
+}
+
+// ── SELECT CRUZAMENTO ──────────────────────────────────────────
+function selectCrz(id) {
+  activeCrz = CRZ.find(c => c.id === id);
+  if (!activeCrz) return;
+  crGrid.querySelectorAll('.cr-card').forEach(b =>
+    b.classList.toggle('cr-card--active', b.dataset.id === id)
+  );
+  refDim.innerHTML = activeCrz.dims.map((d, i) =>
+    `<option value="${i}">${d.label}</option>`).join('');
+  refMetric.innerHTML = activeCrz.metrics.map((m, i) =>
+    `<option value="${i}">${m.label}</option>`).join('');
+  refMetricGroup.style.display = activeCrz.metrics.length > 1 ? 'flex' : 'none';
+  refSearch.value = '';
+  refBar.style.display = 'flex';
+  resArea.style.display = 'block';
+  sqlPanel.style.display = 'none';
+  btnSql.classList.remove('res-btn--active');
+  runQuery();
+}
+
+// ── RUN QUERY ──────────────────────────────────────────────────
+async function runQuery() {
+  if (!ready) return;
+
+  let sql;
+  if (appMode === 'conexoes') {
+    if (!activeCrz) return;
+    const dim    = activeCrz.dims[+refDim.value];
+    const metric = activeCrz.metrics[+refMetric.value];
+    const search = refSearch.value.trim();
+    sql = activeCrz.buildSQL(dim, metric, search);
+  } else {
+    sql = await buildBuilderSQL();
+    if (!sql) return;
+  }
+
+  lastSQL = sql;
+  sqlPre.textContent = sql;
+  sortCol = null; sortAsc = true;
+
+  resLoading.style.display = 'flex';
+  loadingMsg.textContent   = 'Consultando…';
+  viewChart.innerHTML = '';
+  viewTable.innerHTML = '';
+
+  try {
+    await ensureViewsForSQL(sql);
+    const t0  = Date.now();
+    const res = await conn.query(sql);
+    const ms  = Date.now() - t0;
+    lastRows  = res.toArray();
+    lastCols  = res.schema.fields.map(f => f.name);
+    const chartable = lastCols.length >= 2 && lastRows.some(row => {
+      const value = row[lastCols[lastCols.length - 1]];
+      return value !== null && value !== '' && Number.isFinite(Number(value));
+    });
+    btnChart.disabled = !chartable;
+    btnChart.title = chartable ? 'Visualizar o resultado em gráfico' : 'Escolha ao menos uma dimensão e uma métrica numérica';
+    if (!chartable) viewMode = 'table';
+    btnChart.classList.toggle('res-btn--active', viewMode === 'chart');
+    btnTable.classList.toggle('res-btn--active', viewMode === 'table');
+
+    resArea.style.display = 'block';
+    resInfo.textContent = `${lastRows.length} linhas · ${ms}ms`;
+    statusEl.textContent = `${lastRows.length} linhas · ${ms}ms`;
+    renderView();
+  } catch (e) {
+    resArea.style.display = 'block';
+    statusEl.textContent = 'Erro: ' + e.message;
+    viewChart.innerHTML = `<div class="qerr">${e.message}</div>`;
+    viewTable.innerHTML = '';
+  } finally {
+    resLoading.style.display = 'none';
+  }
+}
+
+btnRerun.addEventListener('click', runQuery);
+refDim.addEventListener('change', runQuery);
+refMetric.addEventListener('change', runQuery);
+refSearch.addEventListener('keydown', e => { if (e.key === 'Enter') runQuery(); });
+
+// ── RENDER VIEW ────────────────────────────────────────────────
+function renderView() {
+  if (viewMode === 'chart') {
+    viewChart.style.display = 'block';
+    viewTable.style.display = 'none';
+    ctBar.style.display     = 'flex';
+    renderChart();
+  } else {
+    viewChart.style.display = 'none';
+    viewTable.style.display = 'block';
+    ctBar.style.display     = 'none';
+    renderTable();
+  }
+}
+
+// ── CHART TYPES ────────────────────────────────────────────────
+ctBar.querySelectorAll('.ct-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    chartType = btn.dataset.type;
+    ctBar.querySelectorAll('.ct-btn').forEach(b => b.classList.remove('ct-btn--active'));
+    btn.classList.add('ct-btn--active');
+    renderChart();
+  });
+});
+
+function getChartData() {
+  const dimCol = lastCols[0];
+  const valCol = lastCols[lastCols.length - 1];
+  const rows   = lastRows.slice(0, 40);
+  const vals   = rows.map(r => Number(r[valCol]) || 0);
+  const maxVal = Math.max(...vals, 1);
+  return { dimCol, valCol, rows, vals, maxVal };
+}
+
+function renderChart() {
+  if (!lastRows.length) {
+    viewChart.innerHTML = '<div class="qerr">Nenhum resultado.</div>';
+    return;
+  }
+  const { dimCol, valCol, rows, vals, maxVal } = getChartData();
+  const dimLabel = appMode === 'conexoes' ? (activeCrz?.dims[+refDim.value]?.label ?? dimCol) : dimCol;
+  const valLabel = appMode === 'conexoes' ? (activeCrz?.metrics[+refMetric.value]?.label ?? valCol) : valCol;
+
+  const legend = `<div class="chart-legend">
+    <span class="chart-x">${dimLabel}</span>
+    <span class="chart-m">${valLabel}</span>
+  </div>`;
+
+  if (chartType === 'bh') {
+    const bars = rows.map(r => {
+      const v   = Number(r[valCol]) || 0;
+      const lbl = String(r[dimCol] ?? '—');
+      const pct = (v / maxVal) * 100;
+      return `<div class="cbar">
+        <div class="cbar-lbl" title="${lbl}">${lbl}</div>
+        <div class="cbar-track"><div class="cbar-fill" style="width:${pct.toFixed(1)}%"></div></div>
+        <div class="cbar-val">${fmtNum(v)}</div>
+      </div>`;
+    }).join('');
+    viewChart.innerHTML = `${legend}<div class="chart-bars">${bars}</div>`;
+
+  } else if (chartType === 'bv') {
+    const bars = rows.map(r => {
+      const v   = Number(r[valCol]) || 0;
+      const lbl = String(r[dimCol] ?? '—');
+      const pct = (v / maxVal) * 100;
+      return `<div class="cbv-col">
+        <div class="cbv-val">${fmtNum(v)}</div>
+        <div class="cbv-track"><div class="cbv-fill" style="height:${pct.toFixed(1)}%"></div></div>
+        <div class="cbv-lbl" title="${lbl}">${lbl}</div>
+      </div>`;
+    }).join('');
+    viewChart.innerHTML = `${legend}<div class="chart-bars-v">${bars}</div>`;
+
+  } else { // ln
+    const W = 800, H = 180, PAD = 10, BOTTOM = 60;
+    const n   = rows.length;
+    const xStep = n > 1 ? (W - PAD * 2) / (n - 1) : 0;
+    const points = rows.map((r, i) => {
+      const v = Number(r[valCol]) || 0;
+      const x = PAD + i * xStep;
+      const y = H - PAD - ((v / maxVal) * (H - PAD * 2 - BOTTOM));
+      return { x, y, v, lbl: String(r[dimCol] ?? '—') };
+    });
+    const polyline = points.map(p => `${p.x},${p.y}`).join(' ');
+    const dots = points.map(p =>
+      `<circle cx="${p.x}" cy="${p.y}" r="3.5" fill="var(--br)">
+        <title>${p.lbl}: ${fmtNum(p.v)}</title>
+      </circle>`
+    ).join('');
+    // X-axis labels: show max 10 evenly
+    const step = Math.max(1, Math.ceil(n / 10));
+    const labels = points.filter((_, i) => i % step === 0 || i === n - 1).map(p =>
+      `<text x="${p.x}" y="${H + 14}" text-anchor="middle" font-size="9" fill="var(--muted)"
+        transform="rotate(-35,${p.x},${H + 14})">${p.lbl.slice(0, 20)}</text>`
+    ).join('');
+    const area = points.map((p, i) => (i === 0 ? `M${p.x},${H - PAD - BOTTOM + BOTTOM}` : ``) + '').join('');
+    viewChart.innerHTML = `${legend}<div class="chart-svg-wrap">
+      <svg viewBox="0 0 ${W} ${H + BOTTOM}" preserveAspectRatio="xMidYMid meet" class="chart-svg">
+        <polyline points="${polyline}" fill="none" stroke="var(--br)" stroke-width="2" stroke-linejoin="round"/>
+        ${dots}
+        ${labels}
+      </svg>
+    </div>`;
+  }
+}
+
+// ── SORTABLE TABLE ─────────────────────────────────────────────
+function sortedRows() {
+  if (!sortCol) return lastRows;
+  return [...lastRows].sort((a, b) => {
+    const av = a[sortCol], bv = b[sortCol];
+    const an = Number(av), bn = Number(bv);
+    const cmp = Number.isFinite(an) && Number.isFinite(bn)
+      ? an - bn
+      : String(av ?? '').localeCompare(String(bv ?? ''), 'pt-BR');
+    return sortAsc ? cmp : -cmp;
+  });
+}
+
+function renderTable() {
+  if (!lastRows.length) { viewTable.innerHTML = '<div class="qerr">Nenhum resultado.</div>'; return; }
+
+  const rows    = sortedRows();
+  const metricCol = lastCols[lastCols.length - 1];
+  const metricVals = rows.map(r => Number(r[metricCol]) || 0);
+  const maxVal  = Math.max(...metricVals, 1);
+
+  const friendlyHdr = (c, i) => {
+    if (appMode === 'conexoes') {
+      if (c === 'dim')   return activeCrz?.dims[+refDim.value]?.label    ?? c;
+      if (c === 'valor') return activeCrz?.metrics[+refMetric.value]?.label ?? c;
+    }
+    return c;
+  };
+
+  let h = `<table class="dtbl"><thead><tr>`;
+  lastCols.forEach((c, i) => {
+    const dir  = sortCol === c ? (sortAsc ? ' ↑' : ' ↓') : '';
+    const cls  = `th-sort${sortCol === c ? ' th-sort--active' : ''}`;
+    h += `<th class="${cls}" data-col="${c}">${friendlyHdr(c, i)}${dir}</th>`;
+  });
+  h += `</tr></thead><tbody>`;
+
+  rows.forEach(row => {
+    h += `<tr>`;
+    lastCols.forEach((col, i) => {
+      const v    = row[col];
+      const disp = v == null ? '—' : String(v);
+      if (i === lastCols.length - 1 && maxVal > 0 && Number.isFinite(Number(v))) {
+        const pct = Math.round((Number(v) / maxVal) * 100);
+        h += `<td class="td-metric"><div class="td-bar-wrap">
+          <div class="td-bar" style="width:${pct}%"></div>
+          <span>${fmtNum(Number(v))}</span>
+        </div></td>`;
+      } else {
+        h += `<td title="${disp}">${disp}</td>`;
+      }
+    });
+    h += `</tr>`;
+  });
+  h += `</tbody></table>`;
+  viewTable.innerHTML = h;
+
+  viewTable.querySelectorAll('.th-sort').forEach(th => {
+    th.addEventListener('click', () => {
+      const col = th.dataset.col;
+      if (sortCol === col) sortAsc = !sortAsc;
+      else { sortCol = col; sortAsc = true; }
+      renderTable();
+    });
+  });
+}
+
+// ── TOOLBAR BUTTONS ────────────────────────────────────────────
+btnChart.addEventListener('click', () => {
+  if (btnChart.disabled) return;
+  viewMode = 'chart';
+  btnChart.classList.add('res-btn--active');
+  btnTable.classList.remove('res-btn--active');
+  renderView();
+});
+btnTable.addEventListener('click', () => {
+  viewMode = 'table';
+  btnTable.classList.add('res-btn--active');
+  btnChart.classList.remove('res-btn--active');
+  renderView();
+});
+btnSql.addEventListener('click', () => {
+  const vis = sqlPanel.style.display !== 'none';
+  sqlPanel.style.display = vis ? 'none' : 'block';
+  btnSql.classList.toggle('res-btn--active', !vis);
+});
+btnCopySql.addEventListener('click', async () => {
+  await navigator.clipboard.writeText(sqlPre.textContent);
+  btnCopySql.textContent = 'Copiado!';
+  setTimeout(() => { btnCopySql.textContent = 'Copiar'; }, 1500);
+});
+function stripLimit(sql) {
+  return sql.replace(/\s+LIMIT\s+\d+\s*$/i, '');
+}
+
+function makeCsvBlob(rows, cols) {
+  const sep = ';';
+  const header = cols.join(sep);
+  const body = rows.map(r =>
+    cols.map(c => {
+      const v = r[c]; if (v == null) return '';
+      const s = String(v);
+      return (s.includes(sep) || s.includes('"') || s.includes('\n'))
+        ? `"${s.replace(/"/g, '""')}"` : s;
+    }).join(sep)
+  ).join('\n');
+  return new Blob(['﻿' + header + '\n' + body], { type: 'text/csv;charset=utf-8;' });
+}
+
+btnCsv.addEventListener('click', async () => {
+  if (!lastSQL || !lastCols.length) return;
+  const sqlAll = stripLimit(lastSQL);
+  const orig = btnCsv.textContent;
+  btnCsv.textContent = '⏳…';
+  btnCsv.disabled = true;
+  try {
+    const res  = await conn.query(sqlAll);
+    const rows = res.toArray();
+    const cols = res.schema.fields.map(f => f.name);
+    const blob = makeCsvBlob(rows, cols);
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `ridab_${activeCrz?.id ?? 'export'}_${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    resInfo.textContent = `${lastRows.length} exibidas · ${rows.length} exportadas`;
+  } catch (e) {
+    statusEl.textContent = 'Erro ao exportar: ' + e.message;
+  } finally {
+    btnCsv.textContent = orig;
+    btnCsv.disabled = false;
+  }
+});
+
+// ── REPORT BUILDER ─────────────────────────────────────────────
+//  Three-column UI: catalog (left) · trail (center) · aggregation (right)
+//  Driven by BUILDER_DATA (loaded from joins.yaml at build time).
+
+const BUILDER_KEY_COLORS = {
+  CPB:'#dc2626',CRT:'#ea580c',ROE:'#f59e0b',SALIC:'#7c3aed',CONTRATO:'#9333ea',
+  PROCESSO:'#a855f7',REG_ANCINE:'#0891b2',CNPJ:'#0284c7',CPF:'#0ea5e9',
+  CNAE:'#14b8a6',GRUPO_ECON:'#10b981',PRODUTORA:'#84cc16',DISTRIBUIDORA:'#65a30d',
+  EXIBIDORA:'#4d7c0f',TITULO_OBRA:'#e11d48',MUNICIPIO:'#94a3b8',UF:'#64748b',
+  GENERO:'#a78bfa',CLASSIFICACAO:'#8b5cf6',PAIS:'#cbd5e1',ANO:'#94a3b8',
+};
+
+// Descrição regulatória das chaves — usada no popover de hover do diagrama
+const KEY_REGULATION = {
+  CPB: {
+    title: 'CPB — Certificado de Produto Brasileiro',
+    role: 'Identifica oficialmente uma obra como brasileira perante a ANCINE.',
+    body: 'Toda obra brasileira que queira cumprir cota de tela, ser usada como comprovação de entrega de obra financiada (FSA, Lei do Audiovisual, Rouanet) ou acessar incentivos precisa ter um CPB. É a “certidão de nascimento” regulatória da obra.'
+  },
+  CRT: {
+    title: 'CRT — Certificado de Registro de Título',
+    role: 'Autoriza a veiculação comercial da obra (cinema, TV, vídeo doméstico, VoD).',
+    body: 'Toda exibição ou veiculação regulada gera obrigação de emitir um CRT e recolher a CONDECINE — tributo cobrado por título e por segmento de mercado. Uma mesma obra (um CPB) pode ter vários CRTs, um para cada segmento/janela em que é veiculada.'
+  },
+  ROE: {
+    title: 'ROE — Registro de Obra Estrangeira',
+    role: 'Equivalente ao CPB para obras de origem não-brasileira distribuídas no mercado nacional.',
+    body: 'Obras estrangeiras que entram nos circuitos regulados (cinema, TV, VoD, vídeo físico) precisam de ROE. Pareia com a CONDECINE-Remessa quando há remessa de receita ao exterior. É a chave usada para casar dados de bilheteria, cota e distribuição de filmes não-brasileiros.'
+  },
+  SALIC: {
+    title: 'SALIC / Pronac — Sistema de Apoio às Leis de Incentivo à Cultura',
+    role: 'Identifica cada projeto cultural inscrito na Lei Rouanet e em leis correlatas.',
+    body: 'O número Pronac/SALIC acompanha o projeto da inscrição à prestação de contas — captação, execução, fiscalização e renúncia fiscal. Permite cruzar valores captados, aprovados, executados e desembolsos por proponente.'
+  },
+  CONTRATO: {
+    title: 'CONTRATO — Número de contrato administrativo',
+    role: 'Vincula execução financeira pública a uma obra ou projeto.',
+    body: 'Usado quando há contrato de fomento (ex.: FSA — Fundo Setorial do Audiovisual), apoio direto ou prestação de serviço. Liga investimento, cronograma de desembolso e marcos contratuais à obra/projeto correspondente.'
+  },
+  PROCESSO: {
+    title: 'PROCESSO — Número de processo administrativo',
+    role: 'Identificador do trâmite regulatório dentro da ANCINE / órgãos públicos.',
+    body: 'Cobre análise técnica, fiscalização, aplicação de penalidades e recursos. Permite ligar uma decisão regulatória ao agente, à obra e ao instrumento legal envolvido.'
+  },
+  REG_ANCINE: {
+    title: 'REG_ANCINE — Registro de agente econômico',
+    role: 'Cadastro obrigatório para atuar como produtora, distribuidora, exibidora ou empresa de programação.',
+    body: 'É o “CNPJ regulado” do setor: qualquer agente que opere o mercado audiovisual brasileiro precisa estar registrado, classificado por atividade e por independência. Permite cruzar atuação de mercado com a estrutura societária real.'
+  },
+  CNPJ: {
+    title: 'CNPJ — Cadastro Nacional de Pessoa Jurídica',
+    role: 'Identificador empresarial brasileiro padrão.',
+    body: 'Permite ligar agentes do audiovisual a bases extra-setoriais (Receita Federal, CNAE, grupo econômico) e cruzar produtoras/distribuidoras/exibidoras com seus controladores e atividades secundárias.'
+  },
+  CPF: {
+    title: 'CPF — Cadastro de Pessoa Física',
+    role: 'Identificador de pessoa física (diretores, roteiristas, sócios).',
+    body: 'Usado para casar autorias, participações societárias e indicações nominais entre bases. Sempre tratado de forma agregada / anonimizada no portal.'
+  },
+  TITULO_OBRA: {
+    title: 'TITULO_OBRA — Título da obra (junção fuzzy)',
+    role: 'Liga registros de obras quando não há CPB/ROE em ambos os lados.',
+    body: 'Junção feita por título normalizado (lowercase, sem acentos/pontuação, sem artigos), com fallback de ano. Útil para cruzar bilheteria, festivais, BFI e bases internacionais. Tem ruído — sempre validar amostragem.'
+  },
+  PRODUTORA: {
+    title: 'PRODUTORA — Nome da produtora',
+    role: 'Junção fuzzy por nome de produtora quando o REG_ANCINE/CNPJ não está disponível.',
+    body: 'Usado principalmente para casar bases internacionais ou históricas. Recomenda-se preferir REG_ANCINE/CNPJ sempre que possível para evitar colisões e variações ortográficas.'
+  },
+  DISTRIBUIDORA: {
+    title: 'DISTRIBUIDORA — Nome da distribuidora',
+    role: 'Junção fuzzy por nome quando a chave regulada (REG_ANCINE) está ausente.',
+    body: 'Útil principalmente nas bases de bilheteria histórica. Sujeito às mesmas ressalvas de PRODUTORA.'
+  },
+  EXIBIDORA: {
+    title: 'EXIBIDORA — Nome de exibidora / grupo de salas',
+    role: 'Junção fuzzy de grupo exibidor.',
+    body: 'Casa bilheteria, parque exibidor e infraestrutura por grupo. Quando possível, preferir REG_ANCINE para precisão.'
+  },
+  GRUPO_ECON: {
+    title: 'GRUPO_ECON — Grupo econômico',
+    role: 'Identificação da holding/controlador que reúne múltiplos agentes regulados.',
+    body: 'Permite olhar concentração de mercado: várias produtoras/distribuidoras podem pertencer ao mesmo grupo. Crítico para análises de pluralidade e dominância.'
+  },
+};
+const KEY_REGULATION_FALLBACK = (k, gloss) => ({ title: k, role: gloss || '', body: '' });
+
+function bridgeBetween(a, b) {
+  if (!a || !b) return null;
+  return BUILDER_DATA.bridges.find(br =>
+    (br.tables[0] === a && br.tables[1] === b) ||
+    (br.tables[0] === b && br.tables[1] === a)
+  ) || null;
+}
+
+function renderBuilder() {
+  renderBuilderKeyFilters();
+  renderBuilderCountryFilters();
+  renderBuilderCatalog();
+  renderBuilderTrail();
+}
+
+function renderBuilderKeyFilters() {
+  const root = document.getElementById('bldr-key-filters');
+  if (!root) return;
+  const allKeys = Array.from(new Set(BUILDER_DATA.catalog.flatMap(d => d.keys)));
+  const strongFirst = allKeys.filter(k => STRONG_KEYS_SET.has(k)).sort();
+  const weakAfter   = allKeys.filter(k => !STRONG_KEYS_SET.has(k)).sort();
+  const all = ['all', ...strongFirst, ...weakAfter];
+  root.innerHTML = all.map(k => {
+    const label = k === 'all' ? 'todas' : k;
+    const active = (builderActiveKey === null && k === 'all') || builderActiveKey === k;
+    const color = k === 'all' ? '#999' : (BUILDER_KEY_COLORS[k] || '#999');
+    return `<button class="bldr-chip${active ? ' bldr-chip--on' : ''}" data-key="${k}"><span class="bldr-dot" style="background:${color}"></span>${label}</button>`;
+  }).join('');
+  root.querySelectorAll('.bldr-chip').forEach(b => b.onclick = () => {
+    const k = b.dataset.key;
+    builderActiveKey = k === 'all' ? null : k;
+    builderCatalogLimit = 80;
+    renderBuilderKeyFilters();
+    renderBuilderCatalog();
+  });
+}
+
+function renderBuilderCountryFilters() {
+  const root = document.getElementById('bldr-country-filters');
+  if (!root) return;
+  const countries = ['all','BR','AR','UY','FR','UK','EU'];
+  const FILL = { BR:'#007a3c', AR:'#2d70c4', UY:'#b07d0a', FR:'#1f3bb8', UK:'#5a2244', EU:'#1f3bb8' };
+  root.innerHTML = countries.map(c => {
+    const active = (builderActiveCountry === null && c === 'all') || builderActiveCountry === c;
+    const color = c === 'all' ? '#999' : FILL[c];
+    return `<button class="bldr-chip${active ? ' bldr-chip--on' : ''}" data-country="${c}"><span class="bldr-dot" style="background:${color}"></span>${c === 'all' ? 'todos' : c}</button>`;
+  }).join('');
+  root.querySelectorAll('.bldr-chip').forEach(b => b.onclick = () => {
+    const c = b.dataset.country;
+    builderActiveCountry = c === 'all' ? null : c;
+    builderCatalogLimit = 80;
+    renderBuilderCountryFilters();
+    renderBuilderCatalog();
+  });
+}
+
+function renderBuilderCatalog() {
+  const root = document.getElementById('bldr-cat-list');
+  if (!root) return;
+  const q = builderSearch.toLowerCase();
+  const filtered = BUILDER_DATA.catalog.filter(d => {
+    if (builderActiveKey && !d.keys.includes(builderActiveKey)) return false;
+    if (builderActiveCountry && d.country !== builderActiveCountry) return false;
+    if (q && !d.title.toLowerCase().includes(q) && !d.table.toLowerCase().includes(q) && !d.slug.toLowerCase().includes(q)) return false;
+    return true;
+  });
+  const visible = filtered.slice(0, builderCatalogLimit);
+  // group by country
+  const byCountry = {};
+  for (const d of visible) (byCountry[d.country] ??= []).push(d);
+  const COUNTRY_NAMES = { BR:'Brasil', AR:'Argentina', UY:'Uruguai', FR:'França', UK:'Reino Unido', EU:'Europa' };
+  const FILL = { BR:'#007a3c', AR:'#2d70c4', UY:'#b07d0a', FR:'#1f3bb8', UK:'#5a2244', EU:'#1f3bb8' };
+  const COUNTRY_ORDER = ['BR','AR','UY','FR','UK','EU'];
+  let html = '';
+  for (const c of COUNTRY_ORDER) {
+    const items = byCountry[c];
+    if (!items?.length) continue;
+    html += `<div class="bldr-cat-group">
+      <div class="bldr-cat-grouphead" style="border-left-color:${FILL[c]}">${COUNTRY_NAMES[c]} <span class="bldr-cat-count">${items.length}</span></div>`;
+    items.sort((a,b)=>a.title.localeCompare(b.title)).forEach(d => {
+      const inTrail = builderTables.some(t => t.table === d.table);
+      const keysHtml = d.keys.slice(0,5).map(k =>
+        `<span class="bldr-keypill" style="border-color:${BUILDER_KEY_COLORS[k] || '#999'};color:${BUILDER_KEY_COLORS[k] || '#999'}">${k}</span>`
+      ).join('');
+      html += `<button class="bldr-cat-item${inTrail ? ' bldr-cat-item--in' : ''}" data-table="${d.table}" title="${d.description || d.dataset_title}">
+        <div class="bldr-cat-title">${d.title}</div>
+        <div class="bldr-cat-dataset">${d.dataset_title}</div>
+        <div class="bldr-cat-keys">${keysHtml || '<span class="bldr-cat-nokeys">— sem chaves de junção</span>'}</div>
+      </button>`;
+    });
+    html += `</div>`;
+  }
+  if (!html) html = '<p class="bldr-empty">Nenhuma tabela com esses filtros.</p><button class="bldr-more" data-clear-filters>Limpar filtros</button>';
+  else if (visible.length < filtered.length) html += `<button class="bldr-more" data-show-more>Mostrar mais ${Math.min(80, filtered.length - visible.length)} <span>${visible.length} de ${filtered.length}</span></button>`;
+  root.innerHTML = html;
+  root.querySelectorAll('.bldr-cat-item').forEach(b => b.onclick = () => addToTrail(b.dataset.table));
+  root.querySelector('[data-show-more]')?.addEventListener('click', () => { builderCatalogLimit += 80; renderBuilderCatalog(); });
+  root.querySelector('[data-clear-filters]')?.addEventListener('click', () => {
+    builderActiveKey = null; builderActiveCountry = null; builderSearch = ''; builderCatalogLimit = 80;
+    document.getElementById('bldr-search').value = '';
+    renderBuilderKeyFilters(); renderBuilderCountryFilters(); renderBuilderCatalog();
+  });
+}
+
+async function addToTrail(table) {
+  if (builderTables.some(t => t.table === table)) return; // already in
+  const alias = aliasFor(table);
+  builderTables.push({ table, alias });
+  markBuilderDirty();
+  // ensure DuckDB view for it
+  if (ready && !registeredViews.has(table)) {
+    try {
+      await ensureView(table);
+    } catch (e) {
+      console.warn('view register failed for', table, e);
+    }
+  }
+  // fetch columns once
+  if (!builderColCache[table] && ready) {
+    try {
+      const res = await conn.query(`DESCRIBE SELECT * FROM ${table}`);
+      builderColCache[table] = res.toArray().map(r => ({ name: String(r.column_name), type: String(r.column_type) }));
+    } catch (e) {
+      builderColCache[table] = [];
+    }
+  }
+  renderBuilder();
+  renderAggPane();
+}
+
+function removeFromTrail(table) {
+  builderTables = builderTables.filter(t => t.table !== table);
+  // clean group-by / metrics / filters that referenced this table
+  builderGroupBys = builderGroupBys.filter(ref => !ref.startsWith(table + '.'));
+  builderMetrics = builderMetrics.filter(m => !m.col || m.col === '*' || !m.col.startsWith(table + '.'));
+  builderFilters = builderFilters.filter(f => !f.col?.startsWith(table + '.'));
+  delete builderJoinChoices[table];
+  markBuilderDirty();
+  renderBuilder();
+  renderAggPane();
+}
+
+function renderBuilderTrail() {
+  const root = document.getElementById('bldr-trail-list');
+  const warn = document.getElementById('bldr-trail-warnings');
+  const exploreLink = document.getElementById('mtab-explorar');
+  if (exploreLink) exploreLink.href = `${exploreLink.href.split('?')[0]}${builderTables[0] ? `?table=${encodeURIComponent(builderTables[0].table)}` : ''}`;
+  if (!root) return;
+  if (builderTables.length === 0) {
+    root.innerHTML = '<p class="bldr-empty">Clique num dataset à esquerda para começar.</p>';
+    warn.innerHTML = '';
+    return;
+  }
+  let html = '';
+  let unreachable = [];
+  for (let i = 0; i < builderTables.length; i++) {
+    const t = builderTables[i];
+    const meta = BUILDER_DATA.catalog.find(c => c.table === t.table);
+    let bridgeHtml = '';
+    if (i > 0) {
+      // find best bridge with any prior
+      let best = null;
+      for (let j = 0; j < i; j++) {
+        const b = bridgeBetween(t.table, builderTables[j].table);
+        if (b && (!best || (b.weight ?? 0) > (best.b.weight ?? 0))) best = { b, prev: builderTables[j].table };
+      }
+      if (!best) {
+        unreachable.push(t.table);
+        bridgeHtml = `<div class="bldr-bridge bldr-bridge--err">Sem conexão válida com as tabelas anteriores</div>`;
+      } else {
+        const defaultKey = best.b.via_keys.find(k => STRONG_KEYS_SET.has(k)) || best.b.via_keys[0];
+        const selectedKey = best.b.via_keys.includes(builderJoinChoices[t.table]) ? builderJoinChoices[t.table] : defaultKey;
+        builderJoinChoices[t.table] = selectedKey;
+        const keyOptions = best.b.via_keys.map(k => `<option value="${k}"${k === selectedKey ? ' selected' : ''}>${k}</option>`).join('');
+        bridgeHtml = `<div class="bldr-bridge">
+          <span>↑ conecta com <strong>${best.prev}</strong> pela chave</span>
+          <select class="bldr-join-key" data-table="${t.table}">${keyOptions}</select>
+          <button class="bldr-diagnose" data-left="${best.prev}" data-right="${t.table}" data-key="${selectedKey}">Diagnosticar</button>
+          <div class="bldr-diagnostic" data-diagnostic="${t.table}" aria-live="polite"></div>
+        </div>`;
+      }
+    }
+    html += `${bridgeHtml}
+      <div class="bldr-trail-item">
+        <span class="bldr-trail-alias">${t.alias}</span>
+        <span class="bldr-trail-name">${meta?.title || t.table}</span>
+        <button class="bldr-trail-rm" data-table="${t.table}" title="remover">×</button>
+      </div>`;
+  }
+  root.innerHTML = html;
+  root.querySelectorAll('.bldr-trail-rm').forEach(b => b.onclick = () => removeFromTrail(b.dataset.table));
+  root.querySelectorAll('.bldr-join-key').forEach(select => select.onchange = () => {
+    builderJoinChoices[select.dataset.table] = select.value;
+    markBuilderDirty('A chave de junção mudou. Execute o relatório para atualizar o resultado.');
+    renderBuilderTrail();
+  });
+  root.querySelectorAll('.bldr-diagnose').forEach(button => button.onclick = () => diagnoseJoin(button));
+  warn.innerHTML = unreachable.length
+    ? `<div class="bldr-warn"><strong>Análise bloqueada:</strong> ${unreachable.join(', ')} não tem conexão válida com as tabelas anteriores. Adicione uma tabela intermediária ou remova a tabela desconectada.</div>`
+    : '';
+}
+
+function quoteIdent(value) {
+  return `"${String(value).replace(/"/g, '""')}"`;
+}
+
+function diagnosticKeyExpr(table, col) {
+  const ref = `${quoteIdent(table)}.${quoteIdent(col.col)}`;
+  if (col.normalize === 'titulo_norm') return `NULLIF(lower(regexp_replace(CAST(${ref} AS VARCHAR),'[^a-zA-Z0-9 ]','','g')), '')`;
+  if (col.normalize === 'cnpj_digits') return `NULLIF(regexp_replace(CAST(${ref} AS VARCHAR),'[^0-9]','','g'), '')`;
+  return `NULLIF(TRIM(CAST(${ref} AS VARCHAR)), '')`;
+}
+
+async function diagnoseJoin(button) {
+  const { left, right, key } = button.dataset;
+  const output = document.querySelector(`[data-diagnostic="${CSS.escape(right)}"]`);
+  const leftMeta = BUILDER_DATA.catalog.find(item => item.table === left);
+  const rightMeta = BUILDER_DATA.catalog.find(item => item.table === right);
+  const leftCol = leftMeta?.key_cols?.[key]?.[0];
+  const rightCol = rightMeta?.key_cols?.[key]?.[0];
+  if (!leftCol || !rightCol) { output.textContent = 'Não há colunas concretas para diagnosticar esta chave.'; return; }
+  if (!ready) { output.textContent = 'O motor de consultas ainda está carregando.'; return; }
+  button.disabled = true;
+  output.textContent = 'Calculando cardinalidade nas tabelas completas…';
+  try {
+    await ensureView(left); await ensureView(right);
+    const lk = diagnosticKeyExpr(left, leftCol);
+    const rk = diagnosticKeyExpr(right, rightCol);
+    const result = await conn.query(`
+      WITH l AS (SELECT ${lk} AS k, COUNT(*)::BIGINT AS n FROM ${quoteIdent(left)} WHERE ${lk} IS NOT NULL GROUP BY 1),
+           r AS (SELECT ${rk} AS k, COUNT(*)::BIGINT AS n FROM ${quoteIdent(right)} WHERE ${rk} IS NOT NULL GROUP BY 1),
+           m AS (SELECT l.k, l.n AS ln, r.n AS rn FROM l INNER JOIN r USING (k))
+      SELECT
+        (SELECT COALESCE(SUM(n),0) FROM l) AS valid_left,
+        (SELECT COALESCE(SUM(n),0) FROM r) AS valid_right,
+        (SELECT COUNT(*) FROM m) AS matching_keys,
+        (SELECT COALESCE(SUM(ln),0) FROM m) AS left_rows_matched,
+        (SELECT COALESCE(SUM(rn),0) FROM m) AS right_rows_matched,
+        (SELECT COALESCE(SUM(ln * rn),0) FROM m) AS joined_pairs,
+        (SELECT COALESCE(MAX(ln),0) FROM m) AS max_left_repeat,
+        (SELECT COALESCE(MAX(rn),0) FROM m) AS max_right_repeat
+    `);
+    const row = result.toArray()[0];
+    const fmt = (value) => new Intl.NumberFormat('pt-BR').format(Number(value ?? 0));
+    const expansion = Number(row.joined_pairs) > Math.max(Number(row.left_rows_matched), Number(row.right_rows_matched));
+    output.innerHTML = `<strong>${fmt(row.matching_keys)} chaves coincidem</strong> · ${fmt(row.left_rows_matched)} linhas à esquerda · ${fmt(row.right_rows_matched)} à direita · <strong>${fmt(row.joined_pairs)} pares no join</strong><br><span>${expansion ? 'Há repetição nos dois lados; somas podem ser multiplicadas.' : 'Não foi detectada expansão muitos-para-muitos nas chaves coincidentes.'} Maior repetição: ${fmt(row.max_left_repeat)} × ${fmt(row.max_right_repeat)}.</span>`;
+  } catch (error) {
+    output.textContent = `Não foi possível calcular o diagnóstico: ${error.message}`;
+  } finally { button.disabled = false; }
+}
+
+function renderAggPane() {
+  const pane = document.getElementById('bldr-agg-pane');
+  if (!pane) return;
+  pane.style.display = builderTables.length > 0 ? 'flex' : 'none';
+  if (!builderTables.length) return;
+
+  // drop group-by entries whose table is no longer in the trail
+  const validTables = new Set(builderTables.map(t => t.table));
+  builderGroupBys = builderGroupBys.filter(ref => validTables.has(ref.split('.')[0]));
+
+  // chips of selected columns
+  const chips = document.getElementById('bldr-gb-chips');
+  if (builderGroupBys.length === 0) {
+    chips.innerHTML = '<p class="bldr-empty">Nenhuma coluna escolhida. Sem coluna nem métrica, sai <code>COUNT(*)</code>.</p>';
+  } else {
+    chips.innerHTML = builderGroupBys.map((ref, i) => {
+      const [tb, col] = ref.split('.');
+      const alias = builderTables.find(t => t.table === tb)?.alias || tb;
+      return `<span class="bldr-gb-chip"><span class="bldr-gb-chip-alias">${alias}.</span>${col}<button data-i="${i}" title="remover">×</button></span>`;
+    }).join('');
+    chips.querySelectorAll('button').forEach(b => b.onclick = () => {
+      builderGroupBys.splice(+b.dataset.i, 1); markBuilderDirty(); renderAggPane();
+    });
+  }
+
+  // dropdown to add a column (excludes already-chosen)
+  const add = document.getElementById('bldr-gb-add');
+  const chosen = new Set(builderGroupBys);
+  let opts = '<option value="">+ adicionar coluna</option>';
+  for (const t of builderTables) {
+    const cols = (builderColCache[t.table] || []).filter(c => !chosen.has(`${t.table}.${c.name}`));
+    if (cols.length === 0) continue;
+    opts += `<optgroup label="${t.alias} · ${t.table}">`;
+    for (const c of cols) {
+      opts += `<option value="${t.table}.${c.name}">${c.name}  ·  ${c.type}</option>`;
+    }
+    opts += '</optgroup>';
+  }
+  add.innerHTML = opts;
+  add.value = '';
+  add.onchange = () => {
+    if (add.value) { builderGroupBys.push(add.value); markBuilderDirty(); renderAggPane(); }
+  };
+
+  // metrics
+  renderBuilderMetrics();
+  renderBuilderFilters();
+}
+
+// Categorize a DuckDB type so we know which operators make sense
+function colKind(type){
+  const t = String(type || '').toLowerCase();
+  if (/int|bigint|double|float|decimal|numeric|hugeint|tinyint|smallint|real/.test(t)) return 'num';
+  if (/date|time|timestamp/.test(t)) return 'date';
+  if (/bool/.test(t)) return 'bool';
+  return 'cat'; // varchar, text, etc.
+}
+// Operators available per kind. COUNT(*) is always usable via the "*" column.
+const OPS_BY_KIND = {
+  num:  ['SUM','AVG','MIN','MAX','COUNT','COUNT_DISTINCT'],
+  cat:  ['COUNT','COUNT_DISTINCT','MIN','MAX'],
+  date: ['MIN','MAX','COUNT','COUNT_DISTINCT'],
+  bool: ['COUNT','COUNT_DISTINCT','SUM'], // SUM(bool) = true-count
+};
+const OP_LABEL = {
+  SUM:'soma', AVG:'média', MIN:'mínimo', MAX:'máximo',
+  COUNT:'contar', COUNT_DISTINCT:'contar únicos',
+};
+
+function renderBuilderMetrics() {
+  const root = document.getElementById('bldr-metrics');
+  if (!root) return;
+  if (builderMetrics.length === 0) {
+    root.innerHTML = '<p class="bldr-empty">Nenhuma métrica. Clique em "+ adicionar métrica" — ou execute como está pra ver COUNT(*).</p>';
+    return;
+  }
+  // all columns across selected tables, with their type
+  const allCols = builderTables.flatMap(t =>
+    (builderColCache[t.table] || []).map(c => ({
+      ref: `${t.table}.${c.name}`, type: c.type, kind: colKind(c.type),
+    }))
+  );
+  // synthetic "* (todas as linhas)" so user can pick COUNT(*) explicitly
+  const colsWithStar = [{ ref:'*', type:'', kind:'any', label:'*  ·  todas as linhas' }, ...allCols.map(c => ({...c, label:`${c.ref}  ·  ${c.type}`}))];
+
+  root.innerHTML = builderMetrics.map((m, i) => {
+    const colMeta = m.col === '*' ? { kind: 'any' } : (allCols.find(c => c.ref === m.col) || { kind: 'cat' });
+    // ops valid for the chosen column kind (COUNT/COUNT_DISTINCT always work)
+    const opsAllowed = m.col === '*'
+      ? ['COUNT']
+      : (OPS_BY_KIND[colMeta.kind] || ['COUNT','COUNT_DISTINCT']);
+    const opOpts = opsAllowed.map(op =>
+      `<option value="${op}"${op === m.op ? ' selected' : ''}>${OP_LABEL[op]||op}</option>`
+    ).join('');
+    const colOpts = colsWithStar.map(c =>
+      `<option value="${c.ref}"${c.ref === m.col ? ' selected' : ''}>${c.label}</option>`
+    ).join('');
+    return `<div class="bldr-metric-row">
+      <select class="bldr-mselect bldr-mselect--op" data-i="${i}" data-f="op">${opOpts}</select>
+      <select class="bldr-mselect" data-i="${i}" data-f="col">${colOpts}</select>
+      <button class="bldr-trail-rm" data-i="${i}" data-rm="m">×</button>
+    </div>`;
+  }).join('');
+  root.querySelectorAll('.bldr-mselect').forEach(el => el.onchange = () => {
+    const m = builderMetrics[+el.dataset.i];
+    m[el.dataset.f] = el.value;
+    if (el.dataset.f === 'col') {
+      // when column changes, snap op to one valid for the new kind
+      const meta = m.col === '*' ? { kind: 'any' } : (allCols.find(c => c.ref === m.col) || { kind: 'cat' });
+      const allowed = m.col === '*' ? ['COUNT'] : (OPS_BY_KIND[meta.kind] || ['COUNT','COUNT_DISTINCT']);
+      if (!allowed.includes(m.op)) m.op = allowed[0];
+    }
+    if (el.dataset.f === 'op' && m.op === 'COUNT' && !m.col) m.col = '*';
+    markBuilderDirty();
+    renderBuilderMetrics();
+  });
+  root.querySelectorAll('[data-rm="m"]').forEach(el => el.onclick = () => {
+    builderMetrics.splice(+el.dataset.i, 1); markBuilderDirty(); renderBuilderMetrics();
+  });
+}
+
+function renderBuilderFilters() {
+  const root = document.getElementById('bldr-filter-rows');
+  if (!root) return;
+  if (builderFilters.length === 0) { root.innerHTML = ''; return; }
+  const allCols = builderTables.flatMap(t => (builderColCache[t.table] || []).map(c => `${t.table}.${c.name}`));
+  root.innerHTML = builderFilters.map((f, i) => {
+    const colOpts = allCols.map(c => `<option value="${c}"${c === f.col ? ' selected' : ''}>${c}</option>`).join('');
+    const needsVal = f.op !== 'IS NOT NULL' && f.op !== 'IS NULL';
+    return `<div class="bldr-metric-row">
+      <select class="bldr-mselect" data-i="${i}" data-f="col">${colOpts}</select>
+      <select class="bldr-mselect bldr-mselect--op" data-i="${i}" data-f="op">
+        ${[['=','='],['!=','≠'],['ILIKE','contém'],['>','>'],['<','<'],['IS NOT NULL','não nulo']].map(([v,l])=>`<option value="${v}"${v===f.op?' selected':''}>${l}</option>`).join('')}
+      </select>
+      ${needsVal ? `<input class="bldr-finput" data-i="${i}" value="${esc(f.val ?? '')}" placeholder="valor">` : ''}
+      <button class="bldr-trail-rm" data-i="${i}" data-rm="f">×</button>
+    </div>`;
+  }).join('');
+  root.querySelectorAll('.bldr-mselect').forEach(el => el.onchange = () => {
+    builderFilters[+el.dataset.i][el.dataset.f] = el.value; markBuilderDirty(); renderBuilderFilters();
+  });
+  root.querySelectorAll('.bldr-finput').forEach(el => el.oninput = () => {
+    builderFilters[+el.dataset.i].val = el.value;
+    markBuilderDirty();
+  });
+  root.querySelectorAll('[data-rm="f"]').forEach(el => el.onclick = () => {
+    builderFilters.splice(+el.dataset.i, 1); markBuilderDirty(); renderBuilderFilters();
+  });
+}
+
+// Event listeners for the builder pane
+document.getElementById('bldr-search').addEventListener('input', e => {
+  builderSearch = e.target.value;
+  builderCatalogLimit = 80;
+  renderBuilderCatalog();
+});
+document.getElementById('bldr-add-metric').addEventListener('click', () => {
+  builderMetrics.push({ op: 'COUNT', col: '*' });
+  markBuilderDirty();
+  renderBuilderMetrics();
+});
+document.getElementById('bldr-add-filter').addEventListener('click', () => {
+  const allCols = builderTables.flatMap(t => (builderColCache[t.table] || []).map(c => `${t.table}.${c.name}`));
+  builderFilters.push({ col: allCols[0] || '', op: 'IS NOT NULL', val: '' });
+  markBuilderDirty();
+  renderBuilderFilters();
+});
+document.getElementById('bldr-limit-chips').addEventListener('click', e => {
+  const b = e.target.closest('.lchip'); if (!b) return;
+  builderLimit = +b.dataset.n;
+  markBuilderDirty();
+  document.querySelectorAll('#bldr-limit-chips .lchip').forEach(x => x.classList.remove('lchip--active'));
+  b.classList.add('lchip--active');
+});
+document.getElementById('bldr-run').addEventListener('click', () => {
+  if (!ready) return;
+  refBar.style.display = 'none';
+  resArea.style.display = 'block';
+  runQuery();
+});
+
+function currentRecipe() {
+  return {
+    format: 'ridab-analysis-recipe', version: 1,
+    savedAt: new Date().toISOString(),
+    tables: builderTables.map(item => item.table),
+    joinChoices: { ...builderJoinChoices },
+    columns: [...builderGroupBys], metrics: builderMetrics.map(item => ({ ...item })),
+    filters: builderFilters.map(item => ({ ...item })), limit: builderLimit,
+  };
+}
+
+async function applyRecipe(recipe, announce = true) {
+  if (!recipe || recipe.format !== 'ridab-analysis-recipe' || recipe.version !== 1 || !Array.isArray(recipe.tables)) throw new Error('Formato de receita não reconhecido.');
+  const known = new Set(BUILDER_DATA.catalog.map(item => item.table));
+  if (recipe.tables.some(table => !known.has(table))) throw new Error('A receita menciona uma tabela que não existe neste catálogo.');
+  builderTables = []; builderGroupBys = []; builderMetrics = []; builderFilters = [];
+  builderJoinChoices = { ...(recipe.joinChoices || {}) };
+  for (const table of recipe.tables) await addToTrail(table);
+  const validRefs = new Set(builderTables.flatMap(t => (builderColCache[t.table] || []).map(col => `${t.table}.${col.name}`)));
+  builderGroupBys = (recipe.columns || []).filter(ref => validRefs.has(ref));
+  builderMetrics = (recipe.metrics || []).filter(item => item?.col === '*' || validRefs.has(item?.col)).map(item => ({ op: item.op, col: item.col }));
+  builderFilters = (recipe.filters || []).filter(item => validRefs.has(item?.col)).map(item => ({ col: item.col, op: item.op, val: item.val ?? '' }));
+  builderLimit = [0,25,50,100,500,1000,2000].includes(Number(recipe.limit)) ? Number(recipe.limit) : 100;
+  document.querySelectorAll('#bldr-limit-chips .lchip').forEach(chip => chip.classList.toggle('lchip--active', Number(chip.dataset.n) === builderLimit));
+  renderBuilder(); renderAggPane();
+  if (announce) document.getElementById('bldr-save-status').textContent = `Receita carregada com ${builderTables.length} tabela${builderTables.length === 1 ? '' : 's'}.`;
+}
+
+document.getElementById('bldr-save').addEventListener('click', () => {
+  localStorage.setItem('ridab_analysis_recipe_v1', JSON.stringify(currentRecipe()));
+  document.getElementById('bldr-save-status').textContent = 'Receita salva neste navegador. Chaves de IA não fazem parte do arquivo.';
+});
+document.getElementById('bldr-download-recipe').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify(currentRecipe(), null, 2)], { type: 'application/json' });
+  const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = `ridab-receita-${new Date().toISOString().slice(0,10)}.json`; link.click(); URL.revokeObjectURL(link.href);
+});
+document.getElementById('bldr-import-recipe').addEventListener('change', async (event) => {
+  const file = event.target.files?.[0]; if (!file) return;
+  try { await applyRecipe(JSON.parse(await file.text())); }
+  catch (error) { document.getElementById('bldr-save-status').textContent = `Receita recusada: ${error.message}`; }
+  finally { event.target.value = ''; }
+});
+
+// ── BUILD BUILDER SQL ───────────────────────────────────────────
+async function buildBuilderSQL() {
+  if (builderTables.length === 0) return null;
+
+  const aliasFor_ = (table) => builderTables.find(t => t.table === table)?.alias || aliasFor(table);
+  const qualify = (ref) => {
+    // ref is "table.col" → "alias.col"
+    const [tb, col] = ref.split('.');
+    return `${aliasFor_(tb)}.${col}`;
+  };
+
+  // Pick alias for each chosen column — dedupe across tables so headers stay unique.
+  // e.g. obras.cpb + diretores_obras.cpb → "cpb" and "cpb_dob"
+  const usedAliases = new Set();
+  const colAliases = builderGroupBys.map(ref => {
+    const [tb, col] = ref.split('.');
+    let a = col;
+    if (usedAliases.has(a)) a = `${col}_${aliasFor_(tb)}`;
+    let n = 2;
+    while (usedAliases.has(a)) a = `${col}_${aliasFor_(tb)}${n++}`;
+    usedAliases.add(a);
+    return a;
+  });
+
+  // SELECT clause
+  const selectParts = [];
+  const hasMetrics = builderMetrics.length > 0;
+  const hasCols = builderGroupBys.length > 0;
+  builderGroupBys.forEach((ref, i) => {
+    selectParts.push(`${qualify(ref)} AS "${colAliases[i]}"`);
+  });
+  if (hasMetrics) {
+    for (const m of builderMetrics) {
+      const colExpr = m.col === '*' ? '*' : (m.col ? qualify(m.col) : '*');
+      const op = m.op === 'COUNT_DISTINCT' ? `COUNT(DISTINCT ${colExpr})` : `${m.op}(${colExpr})`;
+      const alias = (m.op + '_' + (m.col || 'all')).toLowerCase().replace(/[^a-z0-9_]+/g,'_');
+      selectParts.push(`${op} AS ${alias}`);
+    }
+  } else if (!hasCols) {
+    // nothing chosen at all → sensible default
+    selectParts.push('COUNT(*) AS registros');
+  }
+
+  // FROM + JOINs
+  const first = builderTables[0];
+  let fromClause = `FROM ${first.table} ${first.alias}`;
+  const inPlan = new Set([first.table]);
+  for (let i = 1; i < builderTables.length; i++) {
+    const t = builderTables[i];
+    // find best bridge to anything in plan
+    let best = null;
+    for (const prev of inPlan) {
+      const b = bridgeBetween(t.table, prev);
+      if (b && (!best || (b.weight ?? 0) > (best.b.weight ?? 0))) best = { b, prev };
+    }
+    if (!best) {
+      statusEl.textContent = `Conexão ausente para ${t.table}. A consulta não foi executada.`;
+      return null;
+    }
+    // pick first strong key in via_keys
+    const preferredKey = builderJoinChoices[t.table];
+    const joinKey = best.b.via_keys.includes(preferredKey) ? preferredKey : (best.b.via_keys.find(k => STRONG_KEYS_SET.has(k)) || best.b.via_keys[0]);
+    // find concrete columns on both sides exposing that key
+    const tMeta = BUILDER_DATA.catalog.find(c => c.table === t.table);
+    const pMeta = BUILDER_DATA.catalog.find(c => c.table === best.prev);
+    const tCols = tMeta?.key_cols?.[joinKey] || [];
+    const pCols = pMeta?.key_cols?.[joinKey] || [];
+    if (!tCols.length || !pCols.length) {
+      statusEl.textContent = `A chave ${joinKey} não tem colunas válidas nos dois lados. A consulta não foi executada.`;
+      return null;
+    }
+    // simple equality join on the first column of each side (with normalization if applicable)
+    const lc = tCols[0]; const rc = pCols[0];
+    const norm = lc.normalize === 'titulo_norm' || rc.normalize === 'titulo_norm';
+    let cond;
+    if (norm) {
+      const left = `lower(regexp_replace(${t.alias}.${lc.col},'[^a-zA-Z0-9 ]','','g'))`;
+      const right = `lower(regexp_replace(${aliasFor_(best.prev)}.${rc.col},'[^a-zA-Z0-9 ]','','g'))`;
+      cond = `${left} <> '' AND ${right} <> '' AND ${left} = ${right}`;
+    } else if (joinKey === 'CNPJ') {
+      const left = `regexp_replace(CAST(${t.alias}.${lc.col} AS VARCHAR),'[^0-9]','','g')`;
+      const right = `regexp_replace(CAST(${aliasFor_(best.prev)}.${rc.col} AS VARCHAR),'[^0-9]','','g')`;
+      cond = `${left} <> '' AND ${right} <> '' AND ${left} = ${right}`;
+    } else {
+      cond = `NULLIF(TRIM(CAST(${t.alias}.${lc.col} AS VARCHAR)), '') IS NOT NULL AND NULLIF(TRIM(CAST(${aliasFor_(best.prev)}.${rc.col} AS VARCHAR)), '') IS NOT NULL AND ${t.alias}.${lc.col} = ${aliasFor_(best.prev)}.${rc.col}`;
+    }
+    fromClause += `\nLEFT JOIN ${t.table} ${t.alias} ON ${cond}`;
+    inPlan.add(t.table);
+  }
+
+  // WHERE clauses
+  const whereClauses = builderFilters.map(f => {
+    if (!f.col) return null;
+    const c = qualify(f.col);
+    if (f.op === 'IS NOT NULL') return `${c} IS NOT NULL`;
+    if (f.op === 'IS NULL') return `${c} IS NULL`;
+    const isNum = f.val !== '' && !Number.isNaN(Number(f.val));
+    const v = isNum ? f.val : `'${esc(f.val)}'`;
+    if (f.op === 'ILIKE') return `${c} ILIKE '%${esc(f.val)}%'`;
+    return `${c} ${f.op} ${v}`;
+  }).filter(Boolean);
+  // exclude null on group keys only when actually aggregating (raw SELECT can keep nulls)
+  if (hasCols && hasMetrics) {
+    builderGroupBys.forEach(ref => whereClauses.unshift(`${qualify(ref)} IS NOT NULL`));
+  }
+  const where = whereClauses.length ? `WHERE ${whereClauses.join('\n  AND ')}` : '';
+
+  // GROUP BY / ORDER BY / LIMIT
+  // - cols + metrics: GROUP BY all chosen cols, order by first metric DESC
+  // - cols only (no metrics): raw SELECT, no GROUP BY, order by first col ASC
+  // - metrics only / nothing: single-row aggregate, no GROUP BY / ORDER BY
+  let groupBy = '', orderBy = '';
+  if (hasCols && hasMetrics) {
+    const idxs = builderGroupBys.map((_, i) => i + 1).join(', ');
+    groupBy = `GROUP BY ${idxs}`;
+    orderBy = `ORDER BY ${builderGroupBys.length + 1} DESC NULLS LAST`;
+  } else if (hasCols && !hasMetrics) {
+    orderBy = `ORDER BY 1`;
+  }
+  const limitClause = builderLimit > 0 ? `LIMIT ${builderLimit}` : '';
+
+  return [
+    `SELECT ${selectParts.join(',\n       ')}`,
+    fromClause,
+    where,
+    groupBy,
+    orderBy,
+    limitClause,
+  ].filter(Boolean).join('\n');
+}
+// ── DIAGRAM: parquet row-count fetcher (footer-only, cached) ───
+const ROWCOUNT_CACHE_KEY = 'ridab_rowcounts_v1';
+function loadRowcountCache() {
+  try { return JSON.parse(localStorage.getItem(ROWCOUNT_CACHE_KEY) || '{}'); }
+  catch { return {}; }
+}
+function saveRowcountCache(c) {
+  try { localStorage.setItem(ROWCOUNT_CACHE_KEY, JSON.stringify(c)); } catch {}
+}
+async function fetchRowCounts(nodes) {
+  // Wait for DuckDB to be ready
+  const start = Date.now();
+  while (!conn && Date.now() - start < 30000) {
+    await new Promise(r => setTimeout(r, 250));
+  }
+  if (!conn) return;
+
+  const cache = loadRowcountCache();
+
+  // Apply cached values immediately
+  for (const n of nodes) {
+    if (cache[n.id] != null) applyRowsToNode(n, cache[n.id]);
+  }
+
+  // Fetch missing in small concurrent batches
+  const todo = nodes.filter(n => cache[n.id] == null);
+  const CONCURRENCY = 4;
+  let i = 0;
+  async function worker() {
+    while (i < todo.length) {
+      const n = todo[i++];
+      const url = `${HF}/${n.id}.parquet`;
+      try {
+        const res = await conn.query(
+          `SELECT CAST(SUM(num_rows) AS BIGINT) AS r FROM parquet_file_metadata('${url}')`
+        );
+        const row = res.toArray()[0];
+        const rows = row?.r != null ? Number(row.r) : 0;
+        cache[n.id] = rows;
+        applyRowsToNode(n, rows);
+      } catch (e) {
+        cache[n.id] = 0; // mark attempted so we don't retry every load
+      }
+    }
+  }
+  await Promise.all(Array.from({ length: CONCURRENCY }, worker));
+  saveRowcountCache(cache);
+}
+function applyRowsToNode(n, rows) {
+  if (!n._circ) return;
+  n._rows = rows;
+  const r = (function radiusFromRows(r2){
+    if (!r2 || r2 <= 0) return null;
+    return Math.max(4, Math.min(26, 3.5 + Math.log10(r2 + 1) * 2.3));
+  })(rows);
+  if (r == null) return;
+  n._nr = r;
+  n._circ.setAttribute('r', r.toFixed(1));
+  if (n._txt) {
+    const dy = n._labelAbove ? (-r - 5).toFixed(0) : (r + 11).toFixed(0);
+    n._txt.setAttribute('dy', dy);
+  }
+}
+
+// ── DIAGRAM ────────────────────────────────────────────────────
+function initDiagram() {
+  if (diagramInitialized) return;
+  diagramInitialized = true;
+
+  const svg   = document.getElementById('diag-svg');
+  const wrap  = svg.parentElement;
+  const W = wrap.clientWidth  || 900;
+  const H = wrap.clientHeight || 540;
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+
+  const NS = 'http://www.w3.org/2000/svg';
+  const catMap     = Object.fromEntries(BUILDER_DATA.catalog.map(d => [d.table, d]));
+  const catalogSet = new Set(BUILDER_DATA.catalog.map(d => d.table));
+
+  const JOIN_KEYS_PRE = new Set(['CPB','CRT','ROE','SALIC','CONTRATO','PROCESSO',
+    'REG_ANCINE','CNPJ','CPF','GRUPO_ECON','PRODUTORA','DISTRIBUIDORA','EXIBIDORA','TITULO_OBRA']);
+
+  const filteredBridges = BUILDER_DATA.bridges.filter(b => {
+    if (!JOIN_KEYS_PRE.has(b.top_key)) return false;
+    if (!catalogSet.has(b.tables[0]) || !catalogSet.has(b.tables[1])) return false;
+    if (b.top_key === 'TITULO_OBRA' && (b.weight || 0) < 6) return false;
+    if (b.top_key === 'CNPJ'        && (b.weight || 0) < 12) return false;
+    return true;
+  });
+
+  const bridgedSet = new Set(filteredBridges.flatMap(b => b.tables));
+  const tableList  = [...bridgedSet];
+
+  // ── Cluster assignment: each node's dominant join-key ──────
+  const nodeKeyCount = {};
+  for (const b of filteredBridges) {
+    for (const t of b.tables) {
+      (nodeKeyCount[t] = nodeKeyCount[t] || {})[b.top_key] =
+        (nodeKeyCount[t]?.[b.top_key] || 0) + (b.weight || 1);
+    }
+  }
+  const nodeCluster = {};
+  for (const id of tableList) {
+    const counts = nodeKeyCount[id] || {};
+    let bestKey = 'OUTROS', bestVal = -1;
+    for (const k in counts) if (counts[k] > bestVal) { bestVal = counts[k]; bestKey = k; }
+    nodeCluster[id] = bestKey;
+  }
+  const clusterGroups = {};
+  for (const id of tableList) {
+    (clusterGroups[nodeCluster[id]] = clusterGroups[nodeCluster[id]] || []).push(id);
+  }
+  // Sort clusters by size desc for stable placement
+  const clusterOrder = Object.keys(clusterGroups)
+    .sort((a, b) => clusterGroups[b].length - clusterGroups[a].length);
+
+  // Cluster centers on a ring around canvas center
+  const cx = W / 2, cy = H / 2;
+  const maxSub = Math.max(...clusterOrder.map(k => clusterGroups[k].length));
+  // Elliptical cluster ring: wider than tall to match a typical landscape container
+  const ringRy = Math.max(H * 0.48, maxSub * 19, 280);
+  const ringRx = ringRy * 1.85;
+  const clusterCenter = {};
+  clusterOrder.forEach((k, i) => {
+    const a = (i / clusterOrder.length) * 2 * Math.PI - Math.PI / 2;
+    clusterCenter[k] = { x: cx + ringRx * Math.cos(a), y: cy + ringRy * Math.sin(a), key: k };
+  });
+
+  const nodes = tableList.map(id => {
+    const meta  = catMap[id];
+    const ck    = nodeCluster[id];
+    const group = clusterGroups[ck];
+    const idx   = group.indexOf(id);
+    const sub   = group.length;
+    // Place each node on an inner ring within its cluster
+    const innerR = 18 + Math.min(60, sub * 4.2);
+    const a = (idx / Math.max(1, sub)) * 2 * Math.PI;
+    return {
+      id,
+      label: id.length > 24 ? id.slice(0, 22) + '…' : id,
+      title: meta?.title || id,
+      country: meta?.country || '??',
+      cluster: ck,
+      x: clusterCenter[ck].x + innerR * Math.cos(a),
+      y: clusterCenter[ck].y + innerR * Math.sin(a),
+      vx: 0, vy: 0, deg: 0,
+    };
+  });
+
+  const nodeById = Object.fromEntries(nodes.map(n => [n.id, n]));
+
+  const edges = filteredBridges.map(b => {
+    const s = nodeById[b.tables[0]];
+    const t = nodeById[b.tables[1]];
+    if (!s || !t) return null;
+    s.deg++; t.deg++;
+    return { s, t, key: b.top_key, keys: b.via_keys, w: b.weight || 1 };
+  }).filter(Boolean);
+
+  // ── State ──────────────────────────────────────────────────
+  const usedKeys = [...new Set(edges.map(e => e.key))];
+  let activeKeys    = new Set(usedKeys);
+  let activeCountry = null;
+  let selectedNode  = null;
+
+  // ── Sidebar: key filters ───────────────────────────────────
+  const keyFiltersEl = document.getElementById('diag-key-filters');
+  function renderKeyFilters() {
+    keyFiltersEl.innerHTML = usedKeys.map(k => {
+      const color = BUILDER_KEY_COLORS[k] || '#999';
+      const gloss = (BUILDER_DATA.keyGlossary[k] || '').split(' ').slice(0, 4).join(' ');
+      const on = activeKeys.has(k);
+      return `<button class="diag-kf-chip${on ? ' diag-kf-chip--on' : ''}" data-key="${k}">
+        <span class="diag-kf-dot" style="background:${color}"></span>
+        <span class="diag-kf-label">${k}</span>
+        ${gloss ? `<span class="diag-kf-gloss">${gloss}…</span>` : ''}
+      </button>`;
+    }).join('');
+    keyFiltersEl.querySelectorAll('.diag-kf-chip').forEach(b => {
+      b.onclick = () => {
+        const k = b.dataset.key;
+        if (activeKeys.has(k)) activeKeys.delete(k); else activeKeys.add(k);
+        renderKeyFilters();
+        updateVisibility();
+      };
+      b.onmouseenter = () => showKeyPopover(b.dataset.key);
+      b.onmouseleave = () => hideKeyPopover();
+    });
+  }
+  renderKeyFilters();
+
+  // ── Key regulation popover ─────────────────────────────────
+  const keypop = document.getElementById('diag-keypop');
+  function showKeyPopover(k) {
+    const gloss = BUILDER_DATA.keyGlossary?.[k] || '';
+    const info = KEY_REGULATION[k] || KEY_REGULATION_FALLBACK(k, gloss);
+    const color = BUILDER_KEY_COLORS[k] || 'var(--muted)';
+    keypop.style.borderLeftColor = color;
+    keypop.innerHTML = `
+      <div class="diag-keypop-title" style="color:${color}">${info.title}</div>
+      ${info.role ? `<div class="diag-keypop-role">${info.role}</div>` : ''}
+      ${info.body ? `<div class="diag-keypop-body">${info.body}</div>` : ''}
+      <div class="diag-keypop-hint">papel regulatório</div>
+    `;
+    keypop.style.display = 'block';
+  }
+  function hideKeyPopover() { keypop.style.display = 'none'; }
+
+  // ── Sidebar: country filters ───────────────────────────────
+  const countryFiltersEl = document.getElementById('diag-country-filters');
+  const usedCountries = [...new Set(nodes.map(n => n.country))].filter(Boolean).sort();
+  function renderCountryFilters() {
+    countryFiltersEl.innerHTML = ['all', ...usedCountries].map(c => {
+      const active = (activeCountry === null && c === 'all') || activeCountry === c;
+      const color  = c === 'all' ? '#999' : (COUNTRY_FILL[c] || '#999');
+      return `<button class="diag-kf-chip${active ? ' diag-kf-chip--on' : ''}" data-country="${c}">
+        <span class="diag-kf-dot" style="background:${color}"></span>
+        <span class="diag-kf-label">${c === 'all' ? 'todos' : c}</span>
+      </button>`;
+    }).join('');
+    countryFiltersEl.querySelectorAll('.diag-kf-chip').forEach(b => {
+      b.onclick = () => {
+        const c = b.dataset.country;
+        activeCountry = c === 'all' ? null : c;
+        renderCountryFilters();
+        updateVisibility();
+      };
+    });
+  }
+  renderCountryFilters();
+
+  // ── Cluster background labels + rings ──────────────────────
+  const clusterG = document.getElementById('diag-clusters');
+  const clusterEls = {};
+  for (const k of clusterOrder) {
+    const c = clusterCenter[k];
+    const members = clusterGroups[k];
+    const ringR2 = 26 + Math.min(80, members.length * 4.6);
+    const ring = document.createElementNS(NS, 'circle');
+    ring.setAttribute('class', 'diag-cluster-ring');
+    ring.setAttribute('cx', c.x.toFixed(1));
+    ring.setAttribute('cy', c.y.toFixed(1));
+    ring.setAttribute('r', ringR2.toFixed(1));
+    ring.setAttribute('stroke', BUILDER_KEY_COLORS[k] || 'var(--border)');
+    clusterG.appendChild(ring);
+
+    const lbl = document.createElementNS(NS, 'text');
+    lbl.setAttribute('class', 'diag-cluster-label');
+    lbl.setAttribute('x', c.x.toFixed(1));
+    lbl.setAttribute('y', (c.y - ringR2 - 6).toFixed(1));
+    lbl.textContent = k;
+    clusterG.appendChild(lbl);
+    clusterEls[k] = { ring, lbl, ringR: ringR2 };
+  }
+
+  // ── Edge elements (curved bezier, grouped per key) ─────────
+  const edgeG  = document.getElementById('diag-edges');
+  // Deterministic bend offset per key for visual grouping
+  const keyBend = {};
+  [...new Set(filteredBridges.map(b => b.top_key))].forEach((k, i, arr) => {
+    keyBend[k] = ((i / Math.max(1, arr.length - 1)) - 0.5) * 0.6;
+  });
+  const edgeEls = edges.map(e => {
+    const path = document.createElementNS(NS, 'path');
+    path.setAttribute('fill', 'none');
+    path.setAttribute('stroke', BUILDER_KEY_COLORS[e.key] || '#bbb');
+    path.setAttribute('stroke-width', (0.7 + Math.log(1 + e.w) * 0.7).toFixed(1));
+    path.setAttribute('stroke-opacity', '0.32');
+    path.setAttribute('stroke-linecap', 'round');
+    edgeG.appendChild(path);
+    return { el: path, e, bend: keyBend[e.key] || 0 };
+  });
+
+  // ── Node elements ──────────────────────────────────────────
+  const nodeG   = document.getElementById('diag-nodes');
+  const tooltip = document.getElementById('diag-tooltip');
+
+  // Bubble radius from row count (log-scale). Until counts arrive,
+  // a neutral fallback based on degree is used.
+  function radiusFromRows(rows) {
+    if (!rows || rows <= 0) return null;
+    const r = 3.5 + Math.log10(rows + 1) * 2.3;
+    return Math.max(4, Math.min(26, r));
+  }
+  function radiusFallback(n) { return 5 + Math.min(n.deg, 10) * 0.9; }
+
+  const nodeEls = nodes.map(n => {
+    const g    = document.createElementNS(NS, 'g');
+    const fill = COUNTRY_FILL[n.country] || '#888';
+    const nr   = radiusFallback(n);
+
+    const circ = document.createElementNS(NS, 'circle');
+    circ.setAttribute('r', nr.toFixed(1));
+    circ.setAttribute('fill', fill);
+    circ.setAttribute('fill-opacity', '0.85');
+    circ.setAttribute('stroke', '#fff');
+    circ.setAttribute('stroke-width', '1.2');
+
+    const txt = document.createElementNS(NS, 'text');
+    txt.textContent = n.label;
+    txt.setAttribute('class', 'diag-node-label');
+    txt.setAttribute('text-anchor', 'middle');
+    // Label placement: above node if node is above cluster center, else below
+    const cc = clusterCenter[n.cluster];
+    const labelAbove = n.y < cc.y;
+    txt.setAttribute('dy', labelAbove ? (-nr - 5).toFixed(0) : (nr + 11).toFixed(0));
+    n._labelAbove = labelAbove;
+
+    g.appendChild(circ); g.appendChild(txt);
+    nodeG.appendChild(g);
+
+    n._circ = circ; n._fill = fill; n._nr = nr; n._txt = txt;
+
+    // ── Drag ────────────────────────────────────────────────
+    let dragging = false, ox = 0, oy = 0, movedWhileDragging = false;
+    g.style.cursor = 'grab';
+
+    function screenToGraph(ev) {
+      const rect = svg.getBoundingClientRect();
+      const v = svg.viewBox.baseVal;
+      const vw = v.width || W, vh = v.height || H;
+      const vx0 = v.x || 0, vy0 = v.y || 0;
+      const mx = vx0 + (ev.clientX - rect.left) * (vw / rect.width);
+      const my = vy0 + (ev.clientY - rect.top)  * (vh / rect.height);
+      return { x: (mx - zx) / zk, y: (my - zy) / zk };
+    }
+    g.addEventListener('mousedown', ev => {
+      dragging = true; movedWhileDragging = false;
+      g.style.cursor = 'grabbing';
+      const p = screenToGraph(ev);
+      ox = p.x - n.x; oy = p.y - n.y;
+      ev.stopPropagation(); ev.preventDefault();
+    });
+    window.addEventListener('mousemove', ev => {
+      if (!dragging) return;
+      movedWhileDragging = true;
+      const p = screenToGraph(ev);
+      n.x = p.x - ox; n.y = p.y - oy;
+      n.vx = 0; n.vy = 0;
+      draw();
+    });
+    window.addEventListener('mouseup', () => {
+      if (dragging) { dragging = false; g.style.cursor = 'grab'; }
+    });
+
+    // ── Click highlight ─────────────────────────────────────
+    g.addEventListener('click', ev => {
+      if (movedWhileDragging) return;
+      ev.stopPropagation();
+      selectedNode = selectedNode === n.id ? null : n.id;
+      updateVisibility();
+    });
+
+    // ── Tooltip ─────────────────────────────────────────────
+    g.addEventListener('mouseenter', () => {
+      const connKeys = [...new Set(edges.filter(e => e.s.id===n.id||e.t.id===n.id).map(e=>e.key))];
+      tooltip.style.display = 'block';
+      tooltip.innerHTML = `<strong>${n.title}</strong><br><span class="diag-tt-table">${n.id}</span>${connKeys.length ? `<br><span class="diag-tt-keys">${connKeys.join(' · ')}</span>` : ''}`;
+    });
+    g.addEventListener('mousemove', ev => {
+      const rect = svg.getBoundingClientRect();
+      tooltip.style.left = (ev.clientX - rect.left + 14) + 'px';
+      tooltip.style.top  = (ev.clientY - rect.top  - 10) + 'px';
+    });
+    g.addEventListener('mouseleave', () => { tooltip.style.display = 'none'; });
+
+    return { el: g, n };
+  });
+
+  // ── Click on SVG background → deselect (skip if just panned) ──
+  let panMoved = false;
+  svg.addEventListener('click', () => {
+    if (panMoved) { panMoved = false; return; }
+    selectedNode = null; updateVisibility();
+  });
+
+  // ── updateVisibility ───────────────────────────────────────
+  function updateVisibility() {
+    const connectedNodes = new Set();
+    if (selectedNode) {
+      connectedNodes.add(selectedNode);
+      for (const e of edges) {
+        if (e.s.id === selectedNode || e.t.id === selectedNode) {
+          connectedNodes.add(e.s.id); connectedNodes.add(e.t.id);
+        }
+      }
+    }
+
+    for (const { el, e } of edgeEls) {
+      const keyOk     = activeKeys.has(e.key);
+      const countryOk = !activeCountry || e.s.country === activeCountry || e.t.country === activeCountry;
+      const selOk     = !selectedNode || e.s.id === selectedNode || e.t.id === selectedNode;
+
+      if (!keyOk || !countryOk) {
+        el.setAttribute('stroke-opacity', '0');
+      } else if (!selOk) {
+        el.setAttribute('stroke-opacity', '0.06');
+        el.setAttribute('stroke-width', (0.6 + Math.log(1 + e.w) * 0.7).toFixed(1));
+      } else {
+        const hi = !!selectedNode;
+        el.setAttribute('stroke-opacity', hi ? '0.88' : '0.38');
+        el.setAttribute('stroke-width', hi
+          ? (1.8 + Math.log(1 + e.w) * 0.9).toFixed(1)
+          : (0.6 + Math.log(1 + e.w) * 0.7).toFixed(1)
+        );
+      }
+    }
+
+    for (const { el, n } of nodeEls) {
+      const countryOk = !activeCountry || n.country === activeCountry;
+      const dim   = (selectedNode && !connectedNodes.has(n.id)) || !countryOk;
+      const isSel = n.id === selectedNode;
+      if (!countryOk) {
+        el.setAttribute('opacity', '0.1');
+      } else if (dim) {
+        el.setAttribute('opacity', '0.22');
+        n._circ.setAttribute('stroke', '#fff');
+        n._circ.setAttribute('stroke-width', '1.2');
+        n._circ.setAttribute('r', n._nr.toFixed(1));
+      } else {
+        el.setAttribute('opacity', '1');
+        if (isSel) {
+          n._circ.setAttribute('stroke', n._fill);
+          n._circ.setAttribute('stroke-width', '3');
+          n._circ.setAttribute('r', (n._nr * 1.35).toFixed(1));
+        } else {
+          n._circ.setAttribute('stroke', '#fff');
+          n._circ.setAttribute('stroke-width', '1.2');
+          n._circ.setAttribute('r', n._nr.toFixed(1));
+        }
+      }
+      n._txt.setAttribute('class',
+        'diag-node-label' +
+        (isSel ? ' diag-node-label--hi' : '') +
+        (dim ? ' diag-node-label--dim' : '')
+      );
+    }
+  }
+
+  // ── Draw positions ─────────────────────────────────────────
+  function draw() {
+    for (const { el, e, bend } of edgeEls) {
+      const x1 = e.s.x, y1 = e.s.y, x2 = e.t.x, y2 = e.t.y;
+      const mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
+      // perpendicular offset for curve, magnitude scales with length
+      const dx = x2 - x1, dy = y2 - y1;
+      const len = Math.sqrt(dx*dx + dy*dy) || 1;
+      const ox = -dy / len * len * bend * 0.25;
+      const oy =  dx / len * len * bend * 0.25;
+      el.setAttribute('d',
+        `M${x1.toFixed(1)},${y1.toFixed(1)} Q${(mx+ox).toFixed(1)},${(my+oy).toFixed(1)} ${x2.toFixed(1)},${y2.toFixed(1)}`
+      );
+    }
+    for (const { el, n } of nodeEls) {
+      el.setAttribute('transform', `translate(${n.x.toFixed(1)},${n.y.toFixed(1)})`);
+    }
+  }
+
+  // ── Silent settle (cluster-aware, no animation) ────────────
+  function settle(iters) {
+    for (let step = 0; step < iters; step++) {
+      // Repulsion (only between reasonably close nodes — O(n²) but n~50 is fine)
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const a = nodes[i], b = nodes[j];
+          let dx = b.x - a.x || 0.1;
+          let dy = b.y - a.y || 0.1;
+          const d2 = dx*dx + dy*dy + 1;
+          if (d2 > 16000) continue;
+          const d  = Math.sqrt(d2);
+          const f  = 2600 / d2;
+          a.vx -= (dx/d)*f; a.vy -= (dy/d)*f;
+          b.vx += (dx/d)*f; b.vy += (dy/d)*f;
+        }
+      }
+      // Edge springs (weaker for inter-cluster)
+      for (const e of edges) {
+        const dx   = e.t.x - e.s.x;
+        const dy   = e.t.y - e.s.y;
+        const d    = Math.sqrt(dx*dx + dy*dy) || 0.01;
+        const sameCluster = e.s.cluster === e.t.cluster;
+        const rest = sameCluster ? 38 : 220;
+        const k    = sameCluster ? 0.10 : 0.008;
+        const f    = (d - rest) * k;
+        const fx = (dx/d)*f, fy = (dy/d)*f;
+        e.s.vx += fx; e.s.vy += fy;
+        e.t.vx -= fx; e.t.vy -= fy;
+      }
+      // Pull each node toward its cluster center
+      for (const n of nodes) {
+        const c = clusterCenter[n.cluster];
+        n.vx += (c.x - n.x) * 0.18;
+        n.vy += (c.y - n.y) * 0.18;
+        n.vx *= 0.55; n.vy *= 0.55;
+        n.x += n.vx; n.y += n.vy;
+        // Hard clamp: never let a node drift more than maxR from its cluster center
+        const sub = clusterGroups[n.cluster].length;
+        const maxR = 30 + sub * 10;
+        const dxc = n.x - c.x, dyc = n.y - c.y;
+        const dC  = Math.sqrt(dxc*dxc + dyc*dyc);
+        if (dC > maxR) {
+          n.x = c.x + (dxc / dC) * maxR;
+          n.y = c.y + (dyc / dC) * maxR;
+          n.vx *= 0.4; n.vy *= 0.4;
+        }
+      }
+    }
+  }
+  settle(90);
+
+  // ── Fit viewBox to actual content bounding box (with padding) ──
+  function fitViewBox() {
+    let minX =  Infinity, minY =  Infinity, maxX = -Infinity, maxY = -Infinity;
+    for (const n of nodes) {
+      if (n.x < minX) minX = n.x; if (n.x > maxX) maxX = n.x;
+      if (n.y < minY) minY = n.y; if (n.y > maxY) maxY = n.y;
+    }
+    for (const k of clusterOrder) {
+      const c = clusterCenter[k]; const r = clusterEls[k].ringR + 18;
+      if (c.x - r < minX) minX = c.x - r; if (c.x + r > maxX) maxX = c.x + r;
+      if (c.y - r < minY) minY = c.y - r; if (c.y + r > maxY) maxY = c.y + r;
+    }
+    const padX = 60, padY = 60;
+    const vbW = (maxX - minX) + 2 * padX;
+    const vbH = (maxY - minY) + 2 * padY;
+    svg.setAttribute('viewBox', `${(minX - padX).toFixed(1)} ${(minY - padY).toFixed(1)} ${vbW.toFixed(1)} ${vbH.toFixed(1)}`);
+    svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+  }
+  fitViewBox();
+  draw();
+  updateVisibility();
+
+  // ── Async: bubble size by parquet row count (cached) ───────
+  fetchRowCounts(nodes).catch(err => console.warn('rowcount fetch failed', err));
+
+  // ── Zoom & pan ─────────────────────────────────────────────
+  const zoomG = document.getElementById('diag-zoom');
+  let zx = 0, zy = 0, zk = 1;
+  function applyZoom() {
+    zoomG.setAttribute('transform', `translate(${zx.toFixed(1)},${zy.toFixed(1)}) scale(${zk.toFixed(3)})`);
+  }
+  function zoomAt(mx, my, factor) {
+    const nk = Math.max(0.5, Math.min(4, zk * factor));
+    const r  = nk / zk;
+    zx = mx - (mx - zx) * r;
+    zy = my - (my - zy) * r;
+    zk = nk;
+    applyZoom();
+  }
+  function vbDims() {
+    const v = svg.viewBox.baseVal;
+    return { vw: v.width || W, vh: v.height || H };
+  }
+  svg.addEventListener('wheel', ev => {
+    ev.preventDefault();
+    const rect = svg.getBoundingClientRect();
+    const { vw, vh } = vbDims();
+    const mx = (ev.clientX - rect.left) * (vw / rect.width);
+    const my = (ev.clientY - rect.top)  * (vh / rect.height);
+    zoomAt(mx, my, ev.deltaY < 0 ? 1.15 : 1/1.15);
+  }, { passive: false });
+
+  // Pan on background drag
+  let panning = false, pX = 0, pY = 0;
+  svg.addEventListener('mousedown', ev => {
+    if (ev.target.closest('g[id^="diag-nodes"] g')) return; // node handles its own drag
+    panning = true; pX = ev.clientX; pY = ev.clientY;
+    svg.classList.add('is-panning');
+  });
+  window.addEventListener('mousemove', ev => {
+    if (!panning) return;
+    panMoved = true;
+    const rect = svg.getBoundingClientRect();
+    const { vw, vh } = vbDims();
+    zx += (ev.clientX - pX) * (vw / rect.width);
+    zy += (ev.clientY - pY) * (vh / rect.height);
+    pX = ev.clientX; pY = ev.clientY;
+    applyZoom();
+  });
+  window.addEventListener('mouseup', () => {
+    if (panning) { panning = false; svg.classList.remove('is-panning'); }
+  });
+
+  document.getElementById('diag-zoom-in').onclick  = () => {
+    const v = svg.viewBox.baseVal; zoomAt(v.x + v.width/2, v.y + v.height/2, 1.25);
+  };
+  document.getElementById('diag-zoom-out').onclick = () => {
+    const v = svg.viewBox.baseVal; zoomAt(v.x + v.width/2, v.y + v.height/2, 1/1.25);
+  };
+  document.getElementById('diag-zoom-reset').onclick = () => {
+    zx = 0; zy = 0; zk = 1; applyZoom();
+    for (const n of nodes) {
+      const c = clusterCenter[n.cluster];
+      const group = clusterGroups[n.cluster];
+      const idx = group.indexOf(n.id);
+      const sub = group.length;
+      const innerR = 18 + Math.min(60, sub * 4.2);
+      const a = (idx / Math.max(1, sub)) * 2 * Math.PI;
+      n.x = c.x + innerR * Math.cos(a);
+      n.y = c.y + innerR * Math.sin(a);
+      n.vx = 0; n.vy = 0;
+    }
+    settle(140);
+    fitViewBox();
+    draw();
+  };
+}
+
+// Legacy "Campos livres" code removed — replaced by Builder above.
+// __LEGACY_START__ to __LEGACY_END__ is dead code wrapped to keep diff clean.
+/* __LEGACY_START__
+  const container = document.getElementById('fl-table-pills');
+  container.innerHTML = TABLE_META.map(m =>
+    `<button class="fl-tbl-pill" data-id="${m.id}" style="border-color:${m.color};color:${m.color}">${m.label}</button>`
+  ).join('');
+  container.querySelectorAll('.fl-tbl-pill').forEach(btn => {
+    btn.addEventListener('click', () => flToggleTable(btn.dataset.id));
+  });
+}
+
+async function flToggleTable(tableId) {
+  if (flTables.has(tableId)) {
+    flTables.delete(tableId);
+    flChosen = flChosen.filter(c => c.tableId !== tableId);
+  } else {
+    flTables.add(tableId);
+    if (!flTableCols[tableId] && ready) {
+      try {
+        const res = await conn.query(`DESCRIBE SELECT * FROM ${tableId}`);
+        flTableCols[tableId] = res.toArray().map(r => ({
+          name: String(r.column_name),
+          type: String(r.column_type),
+        }));
+      } catch (e) {
+        console.warn('DESCRIBE failed for', tableId, e);
+        flTableCols[tableId] = [];
+      }
+    }
+  }
+  renderFlPanel();
+}
+
+function renderFlPanel() {
+  // Toggle pill active state
+  document.querySelectorAll('.fl-tbl-pill').forEach(p => {
+    p.classList.toggle('fl-tbl-pill--active', flTables.has(p.dataset.id));
+  });
+
+  const hasTables  = flTables.size > 0;
+  const hasChosen  = flChosen.length > 0;
+  document.getElementById('fl-cols-area').style.display    = hasTables ? 'grid' : 'none';
+  document.getElementById('fl-filters-area').style.display = hasChosen ? 'block' : 'none';
+  document.getElementById('fl-controls').style.display     = hasChosen ? 'flex'  : 'none';
+
+  if (!hasTables) return;
+
+  // Available columns
+  const colList = document.getElementById('fl-col-list');
+  colList.innerHTML = '';
+  for (const tid of flTables) {
+    const meta = TABLE_META.find(m => m.id === tid);
+    const cols = flTableCols[tid] || [];
+    cols.forEach(c => {
+      const active = flChosen.some(x => x.tableId === tid && x.col === c.name);
+      const btn = document.createElement('button');
+      btn.className = 'fl-col-chip' + (active ? ' fl-col-chip--active' : '');
+      btn.title = `${c.name} · ${c.type}`;
+      btn.innerHTML = `<span class="fl-col-alias" style="color:${meta.color}">${meta.alias}.</span>${c.name}`;
+      btn.addEventListener('click', () => {
+        if (active) {
+          flChosen = flChosen.filter(x => !(x.tableId === tid && x.col === c.name));
+        } else {
+          flChosen.push({ tableId: tid, alias: meta.alias, col: c.name });
+        }
+        renderFlPanel();
+      });
+      colList.appendChild(btn);
+    });
+  }
+
+  // Chosen columns
+  const chosenEl = document.getElementById('fl-chosen');
+  if (flChosen.length) {
+    chosenEl.innerHTML = flChosen.map((c, i) =>
+      `<div class="fl-sel-chip">
+        <span class="fl-col-alias">${c.alias}.</span>${c.col}
+        <button class="fl-sel-rm" data-i="${i}">×</button>
+      </div>`
+    ).join('');
+    chosenEl.querySelectorAll('.fl-sel-rm').forEach(btn => {
+      btn.addEventListener('click', () => {
+        flChosen.splice(+btn.dataset.i, 1);
+        renderFlPanel();
+      });
+    });
+  } else {
+    chosenEl.innerHTML = '<span class="fl-empty">Nenhuma coluna adicionada</span>';
+  }
+
+  renderFlFilters();
+}
+
+function allFlColKeys() {
+  const keys = [];
+  for (const tid of flTables) {
+    const meta = TABLE_META.find(m => m.id === tid);
+    (flTableCols[tid] || []).forEach(c => keys.push(`${meta.alias}.${c.name}`));
+  }
+  return keys;
+}
+
+function renderFlFilters() {
+  const area = document.getElementById('fl-filter-rows');
+  if (!area) return;
+  const cols = allFlColKeys();
+  area.innerHTML = flFilters.map((f, i) => {
+    const colOpts = cols.map(c =>
+      `<option value="${c}"${f.col === c ? ' selected' : ''}>${c}</option>`
+    ).join('');
+    const needsVal = f.op !== 'IS NOT NULL' && f.op !== 'IS NULL';
+    return `<div class="fl-filter-row">
+      <select class="fl-f-col" data-i="${i}">${colOpts}</select>
+      <select class="fl-f-op" data-i="${i}">
+        <option value="="${f.op==='='?' selected':''}>= igual</option>
+        <option value="!="${f.op==='!='?' selected':''}>≠ diferente</option>
+        <option value="ILIKE"${f.op==='ILIKE'?' selected':''}>contém</option>
+        <option value=">"${f.op==='>'?' selected':''}>&gt; maior</option>
+        <option value="<"${f.op==='<'?' selected':''}>&lt; menor</option>
+        <option value="IS NOT NULL"${f.op==='IS NOT NULL'?' selected':''}>não nulo</option>
+      </select>
+      ${needsVal ? `<input class="fl-f-val" data-i="${i}" value="${esc(f.val ?? '')}" placeholder="valor">` : ''}
+      <button class="fl-f-rm" data-i="${i}">×</button>
+    </div>`;
+  }).join('');
+
+  area.querySelectorAll('.fl-f-col').forEach(el => el.addEventListener('change', () => {
+    flFilters[+el.dataset.i].col = el.value; renderFlFilters();
+  }));
+  area.querySelectorAll('.fl-f-op').forEach(el => el.addEventListener('change', () => {
+    flFilters[+el.dataset.i].op = el.value; renderFlFilters();
+  }));
+  area.querySelectorAll('.fl-f-val').forEach(el => el.addEventListener('input', () => {
+    flFilters[+el.dataset.i].val = el.value;
+  }));
+  area.querySelectorAll('.fl-f-rm').forEach(btn => btn.addEventListener('click', () => {
+    flFilters.splice(+btn.dataset.i, 1); renderFlFilters();
+  }));
+}
+
+document.getElementById('fl-add-filter').addEventListener('click', () => {
+  const cols = allFlColKeys();
+  flFilters.push({ col: cols[0] ?? '', op: 'IS NOT NULL', val: '' });
+  renderFlFilters();
+});
+
+// Limit chips
+document.getElementById('fl-limit-chips').addEventListener('click', e => {
+  const btn = e.target.closest('.lchip');
+  if (!btn) return;
+  flLimit = +btn.dataset.n;
+  document.querySelectorAll('.lchip').forEach(b => b.classList.remove('lchip--active'));
+  btn.classList.add('lchip--active');
+});
+
+document.getElementById('fl-run').addEventListener('click', () => {
+  if (!ready) return;
+  refBar.style.display = 'none';
+  resArea.style.display = 'block';
+  runQuery();
+});
+
+// ── BUILD CAMPOS SQL ───────────────────────────────────────────
+function buildCamposSQL() {
+  if (!flChosen.length) return null;
+  const tables = [...flTables];
+
+  const selectCols = flChosen.map(c => `${c.alias}.${c.col}`).join(',\n  ');
+  const { from, ctes } = buildFromClause(tables);
+
+  const filterClauses = flFilters.map(f => {
+    if (!f.col) return null;
+    if (f.op === 'IS NOT NULL') return `${f.col} IS NOT NULL`;
+    if (f.op === 'IS NULL')     return `${f.col} IS NULL`;
+    const isNum = !isNaN(f.val) && f.val !== '';
+    const valExpr = isNum ? f.val : `'${esc(f.val)}'`;
+    if (f.op === 'ILIKE') return `${f.col} ILIKE '%${esc(f.val)}%'`;
+    return `${f.col} ${f.op} ${valExpr}`;
+  }).filter(Boolean);
+
+  const whereClause = filterClauses.length ? `WHERE ${filterClauses.join('\n  AND ')}` : '';
+  const ctePrefix   = ctes ? `${ctes}\n` : '';
+
+  return `${ctePrefix}SELECT\n  ${selectCols}\n${from}\n${whereClause}\nLIMIT ${flLimit}`;
+}
+
+function buildFromClause(tables) {
+  if (tables.length === 0) return { from: '', ctes: null };
+
+  if (tables.length === 1) {
+    const meta = TABLE_META.find(m => m.id === tables[0]);
+    return { from: `FROM ${tables[0]} ${meta.alias}`, ctes: null };
+  }
+
+  const hasObras     = tables.includes('obras');
+  const hasBilh      = tables.includes('bilheteria_por_filme_ano');
+  const hasDir       = tables.includes('diretores_obras');
+  const hasProd      = tables.includes('produtores_obras');
+  const hasFSA       = tables.includes('fomento_fsa');
+  const hasRen       = tables.includes('renuncia_fiscal');
+  const hasAtasFest  = tables.includes('fsa_atas_festivais');
+  const hasAtasRes   = tables.includes('fsa_atas_resultados');
+
+  const joins = [];
+  let ctes    = null;
+  let from    = 'FROM obras o';
+
+  if ((hasAtasFest || hasAtasRes) && !hasObras && !hasBilh && !hasDir && !hasProd && !hasFSA && !hasRen) {
+    if (hasAtasFest && hasAtasRes) {
+      return {
+        from: `FROM fsa_atas_festivais af
+LEFT JOIN fsa_atas_resultados ar
+  ON COALESCE(af.cpb, '') = COALESCE(ar.cpb, '')
+  AND af.chave_titulo = ar.chave_titulo
+  AND af.ano_chamada = ar.ano_chamada`,
+        ctes: null,
+      };
+    }
+    return { from: hasAtasFest ? 'FROM fsa_atas_festivais af' : 'FROM fsa_atas_resultados ar', ctes: null };
+  }
+
+  // Direct CPB joins
+  if (hasBilh)  joins.push(`INNER JOIN bilheteria_por_filme_ano b ON b.cpb_roe = o.cpb AND b.cpb_roe LIKE 'B%'`);
+  if (hasDir)   joins.push(`LEFT JOIN diretores_obras d ON d.cpb = o.cpb`);
+  if (hasProd)  joins.push(`LEFT JOIN produtores_obras p ON p.cpb = o.cpb`);
+
+  // Proxy title joins
+  if (hasFSA || hasRen) {
+    let cteStr = `WITH o_n AS (\n  SELECT *, lower(regexp_replace(titulo_original,'[^a-zA-Z0-9 ]','','g')) AS _tn\n  FROM obras\n)`;
+    if (hasFSA) {
+      cteStr += `,\nf_n AS (\n  SELECT *, lower(regexp_replace(titulo_projeto,'[^a-zA-Z0-9 ]','','g')) AS _tn\n  FROM fomento_fsa\n)`;
+      joins.push(`INNER JOIN f_n f ON f._tn = o._tn`);
+    }
+    if (hasRen) {
+      cteStr += `,\nr_n AS (\n  SELECT *, lower(regexp_replace(titulo_projeto,'[^a-zA-Z0-9 ]','','g')) AS _tn\n  FROM renuncia_fiscal\n)`;
+      joins.push(`INNER JOIN r_n r ON r._tn = o._tn`);
+    }
+    ctes = cteStr;
+    from = `FROM o_n o`;
+  }
+
+  if (joins.length) from += '\n' + joins.join('\n');
+  return { from, ctes };
+}
+__LEGACY_END__ */
+</script>
+
+<style is:global>
+/* ── Wrapper ─────────────────────────────────────────────────── */
+.tf {
+  max-width: 100%;
+  margin: 0;
+  padding: 0 var(--pad) 80px;
+}
+
+/* ── Status bar ──────────────────────────────────────────────── */
+.tf-bar {
+  display: flex; align-items: center; gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 48px;
+}
+.tf-ey {
+  font-family: var(--font-m); font-size: 10px;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--muted); flex-shrink: 0;
+}
+.tf-status-row {
+  display: flex; align-items: center; gap: 7px;
+  font-family: var(--font-m); font-size: 11px; color: var(--dim);
+}
+.tdot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--dim); flex-shrink: 0; transition: background .3s;
+}
+.tdot--ok  { background: #007a3c; box-shadow: 0 0 6px rgba(0,122,60,.4); }
+.tdot--err { background: #e8341a; }
+
+/* ── Docs link ───────────────────────────────────────────────── */
+.tf-doclink {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  margin-bottom: 32px; padding: 12px 18px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-left: 3px solid var(--br); border-radius: var(--r);
+  text-decoration: none; transition: border-color .14s, background .14s;
+}
+.tf-doclink:hover { background: var(--surface); border-color: var(--br); }
+.tf-doclink-text {
+  font-family: var(--font-m); font-size: 12px; color: var(--muted); line-height: 1.5;
+}
+.tf-doclink-arr {
+  font-family: var(--font-m); font-size: 11px; font-weight: 600;
+  color: var(--br); white-space: nowrap; flex-shrink: 0;
+}
+
+/* ── Mode tabs ───────────────────────────────────────────────── */
+.mode-tabs {
+  display: flex; gap: 0; margin-bottom: 32px;
+  border-bottom: 1px solid var(--border);
+}
+.mtab {
+  font-family: var(--font-m); font-size: 12px; font-weight: 600;
+  color: var(--dim); background: transparent; border: none;
+  padding: 10px 20px; cursor: pointer; position: relative;
+  transition: color .13s;
+}
+.mtab::after {
+  content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 2px;
+  background: transparent; transition: background .13s;
+}
+.mtab:hover { color: var(--text); }
+.mtab--active { color: var(--text); }
+.mtab--active::after { background: var(--br); }
+
+/* ── NL AI Box ───────────────────────────────────────────────── */
+.nl-box {
+  border: 1px solid var(--border2);
+  border-radius: var(--r);
+  overflow: hidden;
+  margin-bottom: 40px;
+  background: var(--surface);
+}
+.nl-box-head {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--br) 6%, var(--surface)), var(--surface));
+}
+.nl-box-title {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-d);
+  font-variation-settings: 'opsz' 14,'wdth' 90,'wght' 600;
+  font-size: 16px; letter-spacing: -.02em; color: var(--text);
+  margin-bottom: 4px;
+}
+.nl-sparkle { color: var(--br); font-size: 14px; }
+.nl-box-sub { font-size: 12.5px; color: var(--muted); line-height: 1.5; margin: 0; }
+.nl-providers {
+  display: flex; align-items: center; gap: 6px;
+  padding: 12px 24px; border-bottom: 1px solid var(--border);
+  background: var(--bg2); flex-wrap: wrap;
+}
+.nl-providers-label {
+  font-family: var(--font-m); font-size: 9.5px; font-weight: 600;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--dim);
+  margin-right: 2px;
+}
+.nl-pvr {
+  font-family: var(--font-m); font-size: 11px; font-weight: 500;
+  background: var(--surface); color: var(--muted);
+  border: 1px solid var(--border); border-radius: 99px;
+  padding: 4px 12px; cursor: pointer; transition: all .12s;
+  display: flex; align-items: center; gap: 5px;
+}
+.nl-pvr:hover { border-color: var(--br); color: var(--text); }
+.nl-pvr--active { background: var(--br); color: #fff; border-color: var(--br); }
+.nl-free-badge {
+  font-size: 9px; font-weight: 700; letter-spacing: .06em;
+  text-transform: uppercase; background: rgba(255,255,255,.25);
+  border-radius: 99px; padding: 1px 5px;
+}
+.nl-pvr:not(.nl-pvr--active) .nl-free-badge {
+  background: color-mix(in srgb, var(--br) 15%, transparent);
+  color: var(--br);
+}
+.nl-form {
+  display: flex; flex-direction: column; gap: 10px;
+  padding: 16px 24px;
+}
+.nl-apikey {
+  width: 100%; font-family: var(--font-m); font-size: 12px;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--r); color: var(--text);
+  padding: 8px 12px; outline: none; transition: border-color .13s;
+}
+.nl-apikey:focus { border-color: var(--br); }
+.nl-textarea {
+  width: 100%; font-family: var(--font-s); font-size: 13px;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--r); color: var(--text);
+  padding: 10px 12px; outline: none; resize: vertical;
+  min-height: 56px; line-height: 1.5; transition: border-color .13s;
+}
+.nl-textarea:focus { border-color: var(--br); }
+.nl-form-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap;
+}
+.nl-hint {
+  font-family: var(--font-m); font-size: 11px; color: var(--dim); line-height: 1.4;
+}
+.nl-hint strong { color: var(--text); font-weight: 600; }
+.nl-run-btn {
+  background: var(--br); color: #fff; border: none;
+  border-radius: var(--r); font-family: var(--font-s);
+  font-size: 12px; font-weight: 700;
+  padding: 9px 22px; cursor: pointer;
+  transition: opacity .14s; white-space: nowrap;
+  letter-spacing: .04em;
+}
+.nl-run-btn:hover { opacity: .88; }
+.nl-run-btn:disabled { opacity: .5; cursor: default; }
+.nl-result {
+  border-top: 1px solid var(--border);
+}
+.nl-sql-bar {
+  background: #0d0b08;
+  padding: 10px 16px 0;
+}
+.nl-sql-label {
+  font-family: var(--font-m); font-size: 9px; font-weight: 600;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: rgba(250,248,239,.35); display: block; margin-bottom: 6px;
+}
+.nl-sql-pre {
+  font-family: var(--font-m); font-size: 11px; line-height: 1.7;
+  color: rgba(250,248,239,.75); overflow-x: auto; margin: 0;
+  padding-bottom: 10px; max-height: 160px;
+  white-space: pre; border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.nl-result-meta {
+  padding: 8px 0;
+  font-family: var(--font-m); font-size: 10.5px;
+  color: rgba(250,248,239,.3);
+}
+.nl-tbl-wrap { overflow-x: auto; background: var(--surface); }
+.nl-dtbl { width: 100%; border-collapse: collapse; font-size: 12px; }
+.nl-dtbl th {
+  background: var(--bg2); padding: 8px 12px;
+  text-align: left; font-size: 10px; font-weight: 600;
+  letter-spacing: .05em; text-transform: uppercase; color: var(--muted);
+  border-bottom: 1px solid var(--border); white-space: nowrap;
+}
+.nl-dtbl td {
+  padding: 6px 12px; border-bottom: 1px solid var(--border);
+  font-family: var(--font-m); font-size: 11px;
+  white-space: nowrap; max-width: 280px;
+  overflow: hidden; text-overflow: ellipsis;
+}
+.nl-dtbl tbody tr:hover td { background: rgba(0,122,60,.03); }
+.nl-empty { font-size: 12px; color: var(--dim); padding: 16px 24px; margin: 0; }
+.nl-err {
+  padding: 14px 24px; color: #b5250e;
+  font-family: var(--font-m); font-size: 12px;
+  background: rgba(232,52,26,.05);
+}
+
+/* ── Category headers inside grid ────────────────────────────── */
+.cr-cat-header {
+  grid-column: 1 / -1;
+  display: flex; align-items: center; gap: 8px;
+  padding: 14px 20px 10px;
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+}
+.cr-cat-header:first-child { border-top: none; }
+.cr-cat-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--cat-clr, var(--br)); flex-shrink: 0;
+}
+.cr-cat-label {
+  font-family: var(--font-m); font-size: 9px; font-weight: 700;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--cat-clr, var(--br));
+}
+
+/* ── Cruzamento grid ─────────────────────────────────────────── */
+.cr-section { margin-bottom: 48px; }
+.cr-intro { margin-bottom: 28px; }
+.cr-h {
+  font-family: var(--font-d);
+  font-variation-settings: 'opsz' 14,'wdth' 90,'wght' 650;
+  font-size: 24px; letter-spacing: -.025em; color: var(--text); margin-bottom: 6px;
+}
+.cr-sub { font-size: 13.5px; color: var(--muted); }
+.cr-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 1px; background: var(--border); border: 1px solid var(--border);
+}
+.cr-card {
+  background: var(--bg); padding: 24px 22px 20px;
+  text-align: left; cursor: pointer; border: none;
+  display: flex; flex-direction: column; gap: 10px;
+  transition: background .14s; position: relative;
+}
+.cr-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: transparent; transition: background .15s;
+}
+.cr-card:hover { background: var(--surface); }
+.cr-card:hover::before { background: var(--border2); }
+.cr-card--active { background: var(--surface); }
+.cr-card--active::before { background: var(--br); }
+.cr-card:disabled { opacity: .5; cursor: default; }
+.cr-card-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.cr-tables { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.cr-tbl-pill {
+  font-family: var(--font-m); font-size: 9px;
+  letter-spacing: .06em; text-transform: uppercase;
+  padding: 3px 7px; border: 1px solid; border-radius: 2px;
+}
+.cr-plus { font-size: 12px; color: var(--dim); }
+.cr-join-badge {
+  font-family: var(--font-m); font-size: 9px;
+  letter-spacing: .06em; text-transform: uppercase;
+  padding: 3px 7px; border: 1px solid;
+  border-radius: 2px; margin-left: auto; flex-shrink: 0;
+}
+.cr-card-icon { font-size: 24px; line-height: 1; }
+.cr-card-label {
+  font-family: var(--font-d);
+  font-variation-settings: 'opsz' 14,'wdth' 90,'wght' 600;
+  font-size: 15px; letter-spacing: -.02em; color: var(--text);
+}
+.cr-card-desc { font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+.cr-card-cta {
+  font-family: var(--font-m); font-size: 10.5px; color: var(--dim);
+  margin-top: 4px; transition: color .13s;
+}
+.cr-card:hover .cr-card-cta,
+.cr-card--active .cr-card-cta { color: var(--br); }
+
+/* ── Campos livres ───────────────────────────────────────────── */
+.fl-wrap {
+  display: flex; flex-direction: column; gap: 24px;
+  margin-bottom: 32px;
+}
+.fl-section { display: flex; flex-direction: column; gap: 10px; }
+.fl-section-label {
+  font-family: var(--font-m); font-size: 9.5px;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--dim);
+  display: flex; align-items: center; gap: 8px;
+}
+.fl-hint { font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--muted); }
+.fl-table-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.fl-tbl-pill {
+  font-family: var(--font-m); font-size: 11px; font-weight: 600;
+  padding: 6px 14px; border: 1px solid; border-radius: 4px;
+  background: transparent; cursor: pointer;
+  transition: background .13s, opacity .13s;
+  opacity: .65;
+}
+.fl-tbl-pill--active { opacity: 1; background: color-mix(in srgb, currentColor 8%, transparent); }
+.fl-tbl-pill:hover   { opacity: 1; }
+
+.fl-cols-area {
+  display: grid; grid-template-columns: 1fr 240px; gap: 16px;
+  padding: 16px; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r);
+}
+.fl-available { display: flex; flex-direction: column; gap: 10px; }
+.fl-col-list { display: flex; flex-wrap: wrap; gap: 5px; }
+.fl-col-chip {
+  font-family: var(--font-m); font-size: 11px;
+  padding: 4px 9px; border: 1px solid var(--border);
+  border-radius: 3px; background: var(--surface);
+  color: var(--text); cursor: pointer; transition: all .12s;
+}
+.fl-col-chip:hover { border-color: var(--br); }
+.fl-col-chip--active { background: var(--br); color: #fff; border-color: var(--br); }
+.fl-col-alias { font-size: 9px; opacity: .7; margin-right: 1px; }
+.fl-chosen-area { display: flex; flex-direction: column; gap: 10px; }
+.fl-chosen { display: flex; flex-direction: column; gap: 5px; min-height: 40px; }
+.fl-sel-chip {
+  display: flex; align-items: center; gap: 6px;
+  font-family: var(--font-m); font-size: 11px;
+  padding: 5px 8px; background: var(--surface);
+  border: 1px solid var(--border); border-radius: 3px;
+}
+.fl-sel-rm {
+  background: transparent; border: none; color: var(--dim);
+  cursor: pointer; font-size: 14px; line-height: 1; padding: 0 2px;
+  margin-left: auto;
+}
+.fl-sel-rm:hover { color: #e8341a; }
+.fl-empty { font-size: 11px; color: var(--dim); font-style: italic; }
+
+.fl-filters-area { display: flex; flex-direction: column; gap: 10px; }
+.fl-add-filter {
+  font-family: var(--font-m); font-size: 10px; color: var(--br);
+  background: transparent; border: none; cursor: pointer; padding: 0;
+  font-weight: 600; letter-spacing: .03em;
+}
+.fl-filter-row {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+.fl-f-col, .fl-f-op {
+  font-family: var(--font-m); font-size: 11.5px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 4px; color: var(--text);
+  padding: 6px 8px; cursor: pointer;
+}
+.fl-f-val {
+  font-family: var(--font-m); font-size: 11.5px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 4px; color: var(--text);
+  padding: 6px 10px; width: 140px;
+}
+.fl-f-rm {
+  background: transparent; border: none; color: var(--dim);
+  cursor: pointer; font-size: 16px; padding: 0 4px;
+}
+.fl-f-rm:hover { color: #e8341a; }
+
+.fl-controls {
+  display: flex; align-items: flex-end; gap: 20px;
+  padding-top: 4px;
+}
+.fl-limit-group { display: flex; flex-direction: column; gap: 8px; }
+.fl-limit-chips { display: flex; gap: 4px; }
+.lchip {
+  font-family: var(--font-m); font-size: 11px; font-weight: 600;
+  padding: 5px 10px; border: 1px solid var(--border);
+  border-radius: 4px; background: transparent; color: var(--dim);
+  cursor: pointer; transition: all .12s;
+}
+.lchip:hover { border-color: var(--br); color: var(--br); }
+.lchip--active { background: var(--br); color: #fff; border-color: var(--br); }
+.fl-run-btn {
+  background: var(--br); color: #fff; border: none;
+  border-radius: 4px; font-family: var(--font-s);
+  font-size: 12px; font-weight: 700;
+  padding: 9px 22px; cursor: pointer;
+  transition: opacity .14s; letter-spacing: .04em;
+}
+.fl-run-btn:hover { opacity: .88; }
+
+/* ── Result area ─────────────────────────────────────────────── */
+.res-area { border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; }
+
+.ref-bar {
+  display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap;
+  padding: 16px 20px; background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+}
+.ref-group { display: flex; flex-direction: column; gap: 5px; }
+.ref-group--search { flex: 1; min-width: 160px; }
+.ref-label {
+  font-family: var(--font-m); font-size: 9.5px;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--dim);
+}
+.ref-select {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 4px; color: var(--text);
+  padding: 7px 10px; font-size: 12.5px; font-family: var(--font-m);
+  cursor: pointer; min-width: 160px; transition: border-color .14s;
+}
+.ref-select:hover { border-color: var(--br); }
+.ref-input {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 4px; color: var(--text);
+  padding: 7px 10px; font-size: 12.5px; font-family: var(--font-m);
+  width: 100%; transition: border-color .14s;
+}
+.ref-input:focus { outline: none; border-color: var(--br); }
+.ref-run-btn {
+  background: var(--br); color: #fff; border: none; border-radius: 4px;
+  font-size: 12px; font-weight: 600; font-family: var(--font-s);
+  padding: 7px 16px; cursor: pointer; white-space: nowrap;
+  transition: opacity .14s; align-self: flex-end;
+}
+.ref-run-btn:hover { opacity: .88; }
+
+/* Toolbar */
+.res-toolbar {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 20px; border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.res-info { font-family: var(--font-m); font-size: 11px; color: var(--dim); flex: 1; }
+.res-btns { display: flex; gap: 4px; }
+.res-btn {
+  font-family: var(--font-m); font-size: 11px;
+  color: var(--muted); background: transparent;
+  border: 1px solid var(--border); border-radius: 4px;
+  padding: 5px 11px; cursor: pointer; transition: all .12s;
+}
+.res-btn:hover { border-color: var(--text); color: var(--text); }
+.res-btn--active { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+/* SQL panel */
+.sql-panel { background: #0d0b08; border-bottom: 1px solid var(--border); }
+.sql-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 16px; border-bottom: 1px solid #1e1c19;
+  font-family: var(--font-m); font-size: 10px; color: rgba(250,248,239,.35);
+}
+.sql-label { color: rgba(250,248,239,.55); }
+.sql-note { flex: 1; }
+.sql-copy {
+  background: transparent; border: 1px solid rgba(250,248,239,.2);
+  border-radius: 3px; color: rgba(250,248,239,.5);
+  font-size: 10px; font-family: var(--font-m);
+  padding: 2px 8px; cursor: pointer; transition: background .13s;
+}
+.sql-copy:hover { background: rgba(250,248,239,.08); }
+.sql-pre {
+  font-family: var(--font-m); font-size: 11.5px;
+  line-height: 1.75; color: rgba(250,248,239,.78);
+  padding: 14px 16px; margin: 0; overflow-x: auto; max-height: 220px;
+}
+
+/* Chart type sub-bar */
+.chart-type-bar {
+  display: flex; gap: 4px;
+  padding: 8px 16px; background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+}
+.ct-btn {
+  font-family: var(--font-m); font-size: 10.5px; font-weight: 600;
+  color: var(--dim); background: transparent;
+  border: 1px solid var(--border); border-radius: 3px;
+  padding: 4px 11px; cursor: pointer; transition: all .12s;
+}
+.ct-btn:hover { color: var(--text); border-color: var(--text); }
+.ct-btn--active { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+/* Chart: horizontal bars */
+.chart-view { padding: 20px 24px 24px; background: var(--surface); }
+.chart-legend {
+  display: flex; justify-content: space-between;
+  font-family: var(--font-m); font-size: 10px; color: var(--dim);
+  margin-bottom: 16px; letter-spacing: .06em; text-transform: uppercase;
+}
+.chart-bars { display: flex; flex-direction: column; gap: 6px; }
+.cbar { display: grid; grid-template-columns: 200px 1fr 100px; align-items: center; gap: 12px; }
+.cbar-lbl {
+  font-family: var(--font-m); font-size: 11.5px; color: var(--text);
+  text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.cbar-track { background: var(--border); border-radius: 2px; height: 8px; overflow: hidden; }
+.cbar-fill  { height: 100%; background: var(--br); border-radius: 2px; transition: width .35s ease; }
+.cbar-val   { font-family: var(--font-m); font-size: 11.5px; color: var(--muted); }
+
+/* Chart: vertical bars */
+.chart-bars-v {
+  display: flex; align-items: flex-end; gap: 6px;
+  overflow-x: auto; padding-bottom: 8px; min-height: 180px;
+}
+.cbv-col {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  flex: 1; min-width: 28px; max-width: 64px;
+}
+.cbv-val {
+  font-family: var(--font-m); font-size: 9px; color: var(--muted);
+  writing-mode: horizontal-tb; white-space: nowrap;
+}
+.cbv-track {
+  width: 100%; flex: 1; display: flex; align-items: flex-end;
+  background: var(--border); border-radius: 2px 2px 0 0; min-height: 120px;
+}
+.cbv-fill {
+  width: 100%; background: var(--br); border-radius: 2px 2px 0 0;
+  transition: height .35s ease; min-height: 2px;
+}
+.cbv-lbl {
+  font-family: var(--font-m); font-size: 9px; color: var(--muted);
+  writing-mode: vertical-rl; text-orientation: mixed;
+  transform: rotate(180deg); white-space: nowrap;
+  max-height: 80px; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* Chart: line (SVG) */
+.chart-svg-wrap { width: 100%; overflow-x: auto; }
+.chart-svg { width: 100%; min-width: 400px; display: block; }
+
+/* Sortable table */
+.table-view { overflow-x: auto; background: var(--surface); }
+.dtbl { width: 100%; border-collapse: collapse; font-size: 12px; }
+.dtbl th {
+  background: var(--bg2); padding: 9px 12px;
+  text-align: left; font-size: 10.5px; font-weight: 600;
+  letter-spacing: .04em; color: var(--muted);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap; position: sticky; top: 0;
+}
+.th-sort { cursor: pointer; user-select: none; transition: color .12s; }
+.th-sort:hover { color: var(--text); }
+.th-sort--active { color: var(--br); }
+.dtbl td {
+  padding: 7px 12px; border-bottom: 1px solid var(--border);
+  font-family: var(--font-m); font-size: 11px;
+  white-space: nowrap; max-width: 300px;
+  overflow: hidden; text-overflow: ellipsis;
+}
+.dtbl tbody tr:hover td { background: rgba(0,122,60,.03); }
+.td-metric { min-width: 160px; }
+.td-bar-wrap { display: flex; align-items: center; gap: 8px; }
+.td-bar { height: 5px; background: var(--br); border-radius: 2px; opacity: .5; min-width: 2px; }
+
+/* Loading */
+.res-loading {
+  position: fixed; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  gap: 12px; z-index: 50;
+  background: rgba(250,248,239,.7);
+  font-family: var(--font-m); font-size: 13px; color: var(--muted);
+  backdrop-filter: blur(2px);
+}
+.spinner {
+  width: 20px; height: 20px; border-radius: 50%;
+  border: 2px solid var(--border); border-top-color: var(--br);
+  animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.qerr {
+  padding: 20px; color: #b5250e;
+  font-family: var(--font-m); font-size: 12px;
+  background: rgba(232,52,26,.06); border-top: 1px solid rgba(232,52,26,.15);
+}
+
+/* ── Mobile ──────────────────────────────────────────────────── */
+@media (max-width: 680px) {
+  .cr-grid { grid-template-columns: 1fr; }
+  .cbar { grid-template-columns: 120px 1fr 80px; gap: 8px; }
+  .cbar-lbl { font-size: 10px; }
+  .ref-bar { gap: 10px; }
+  .ref-select, .ref-input { min-width: unset; width: 100%; }
+  .fl-cols-area { grid-template-columns: 1fr; }
+}
+
+/* ── REPORT BUILDER ─────────────────────────────────────────── */
+.bldr {
+  display: grid;
+  grid-template-columns: 320px 1fr 360px;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  height: calc(100vh - 240px);
+  min-height: 520px;
+  margin-bottom: 32px;
+}
+.bldr-cat, .bldr-trail, .bldr-agg {
+  background: var(--bg);
+  padding: 16px 14px;
+  overflow-y: auto;
+  min-height: 0;
+}
+.bldr-cat { background: var(--bg2); }
+.bldr-agg { background: var(--surface2); display: flex; flex-direction: column; gap: 14px; }
+.bldr-h {
+  font-family: var(--font-m); font-size: 10px; font-weight: 600;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 12px;
+}
+.bldr-mini-label {
+  font-family: var(--font-m); font-size: 9.5px;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: var(--dim);
+}
+.bldr-search {
+  width: 100%;
+  font-family: var(--font-s); font-size: 12.5px;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border); border-radius: var(--r);
+  padding: 7px 10px; outline: none; margin-bottom: 10px;
+}
+.bldr-search:focus { border-color: var(--br); }
+.bldr-cat-filters {
+  display: flex; align-items: flex-start; gap: 6px;
+  margin-bottom: 8px; flex-wrap: wrap;
+}
+.bldr-key-filters, .bldr-country-filters { display: flex; flex-wrap: wrap; gap: 3px; }
+.bldr-chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-family: var(--font-m); font-size: 9.5px; font-weight: 500;
+  background: var(--surface); color: var(--muted);
+  border: 1px solid var(--border); border-radius: 999px;
+  padding: 2px 7px 2px 5px; cursor: pointer;
+  transition: all .12s;
+}
+.bldr-chip:hover { border-color: var(--border2); color: var(--text); }
+.bldr-chip--on { color: var(--text); border-color: var(--text); }
+.bldr-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.bldr-cat-list { display: flex; flex-direction: column; gap: 12px; margin-top: 4px; }
+.bldr-cat-group { display: flex; flex-direction: column; gap: 2px; }
+.bldr-cat-grouphead {
+  font-family: var(--font-m); font-size: 9.5px; font-weight: 600;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: var(--muted);
+  border-left: 3px solid;
+  padding: 3px 0 3px 8px; margin-bottom: 4px;
+}
+.bldr-cat-count {
+  color: var(--dim); font-weight: 400; margin-left: 4px;
+}
+.bldr-cat-item {
+  display: flex; flex-direction: column; gap: 4px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--r);
+  padding: 7px 10px; cursor: pointer; text-align: left;
+  transition: all .12s; width: 100%;
+}
+.bldr-cat-item:hover { border-color: var(--br); background: var(--surface2); }
+.bldr-cat-item--in {
+  background: color-mix(in srgb, var(--br) 8%, var(--surface));
+  border-color: var(--br);
+}
+.bldr-cat-title {
+  font-family: var(--font-s); font-size: 12px; font-weight: 500;
+  color: var(--text); line-height: 1.3;
+}
+.bldr-cat-dataset {
+  overflow: hidden;
+  color: var(--dim);
+  font-family: var(--font-m);
+  font-size: 8.5px;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.bldr-cat-keys { display: flex; flex-wrap: wrap; gap: 3px; }
+.bldr-keypill {
+  font-family: var(--font-m); font-size: 8.5px; font-weight: 600;
+  padding: 1px 5px; border: 1px solid; border-radius: 2px;
+  letter-spacing: .04em;
+}
+.bldr-cat-nokeys {
+  font-family: var(--font-m); font-size: 9.5px;
+  color: var(--dim); font-style: italic;
+}
+.bldr-more {
+  width: 100%; padding: 9px 10px; cursor: pointer;
+  border: 1px dashed var(--border2); border-radius: var(--r);
+  background: var(--surface); color: var(--br);
+  font-family: var(--font-m); font-size: 10px; font-weight: 600;
+}
+.bldr-more span { color: var(--dim); font-weight: 400; margin-left: 6px; }
+.bldr-more:hover { border-color: var(--br); background: var(--surface2); }
+
+/* Trail */
+.bldr-trail-list { display: flex; flex-direction: column; gap: 6px; }
+.bldr-trail-item {
+  display: grid; grid-template-columns: 28px 1fr 24px; align-items: center; gap: 8px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--r);
+  padding: 8px 10px;
+}
+.bldr-trail-alias {
+  font-family: var(--font-m); font-size: 11px; font-weight: 700;
+  color: var(--br); text-align: center;
+}
+.bldr-trail-name {
+  font-family: var(--font-s); font-size: 13px; color: var(--text);
+}
+.bldr-trail-rm {
+  background: transparent; border: none; color: var(--dim);
+  font-size: 16px; cursor: pointer; line-height: 1;
+  padding: 2px 6px; border-radius: 3px;
+}
+.bldr-trail-rm:hover { background: var(--bg2); color: #e8341a; }
+.bldr-bridge {
+  font-family: var(--font-m); font-size: 10.5px;
+  color: var(--muted); padding: 4px 14px;
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+}
+.bldr-bridge strong { color: var(--text); font-family: var(--font-m); }
+.bldr-bridge--err { color: #c8920a; }
+.bldr-warn {
+  background: color-mix(in srgb, #c8920a 12%, var(--surface));
+  border: 1px solid color-mix(in srgb, #c8920a 30%, var(--border));
+  border-radius: var(--r);
+  padding: 10px 14px;
+  font-size: 12px; color: var(--text);
+  margin-top: 14px;
+}
+.bldr-warn strong { font-weight: 700; }
+.bldr-empty {
+  font-size: 12.5px; color: var(--muted);
+  line-height: 1.55; margin: 0;
+}
+
+/* Aggregation pane */
+.bldr-agg-block { display: flex; flex-direction: column; gap: 6px; }
+.bldr-select {
+  font-family: var(--font-m); font-size: 11.5px;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border); border-radius: var(--r);
+  padding: 7px 8px; cursor: pointer; outline: none;
+}
+.bldr-select:focus { border-color: var(--br); }
+.bldr-gb-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.bldr-gb-chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-family: var(--font-m); font-size: 10.5px;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border); border-radius: 3px;
+  padding: 3px 4px 3px 7px;
+}
+.bldr-gb-chip-alias { color: var(--dim); font-size: 9.5px; }
+.bldr-gb-chip button {
+  background: transparent; border: none; cursor: pointer;
+  color: var(--dim); font-size: 13px; line-height: 1;
+  padding: 0 3px; border-radius: 2px;
+}
+.bldr-gb-chip button:hover { color: #e8341a; background: var(--bg2); }
+.bldr-mini-hint { color: var(--dim); font-weight: 400; text-transform: none; letter-spacing: 0; }
+.bldr-help {
+  font-family: var(--font-s); font-size: 10.5px; color: var(--dim);
+  line-height: 1.45; display: block; margin-top: 2px;
+}
+.bldr-help code {
+  font-family: var(--font-m); font-size: 10px;
+  background: var(--bg2); padding: 1px 4px; border-radius: 2px; color: var(--text);
+}
+.bldr-metrics { display: flex; flex-direction: column; gap: 6px; }
+.bldr-metric-row {
+  display: grid; grid-template-columns: auto 1fr auto auto; gap: 5px; align-items: center;
+}
+.bldr-metric-row .bldr-finput {
+  font-family: var(--font-m); font-size: 11px;
+  border: 1px solid var(--border); background: var(--surface); color: var(--text);
+  padding: 6px 8px; border-radius: var(--r); outline: none;
+  min-width: 0;
+}
+.bldr-metric-row .bldr-mselect {
+  font-family: var(--font-m); font-size: 10.5px;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border); border-radius: var(--r);
+  padding: 5px 6px; min-width: 0;
+}
+.bldr-metric-row .bldr-mselect--op { max-width: 80px; }
+.bldr-add-metric {
+  font-family: var(--font-m); font-size: 10.5px; font-weight: 500;
+  background: transparent; color: var(--br);
+  border: 1px dashed var(--border2); border-radius: var(--r);
+  padding: 6px 10px; cursor: pointer;
+  transition: all .12s;
+}
+.bldr-add-metric:hover { background: var(--bg2); border-color: var(--br); }
+
+@media (max-width: 1280px) {
+  .bldr { grid-template-columns: 260px 1fr 320px; }
+}
+@media (max-width: 1024px) {
+  .bldr { grid-template-columns: 240px 1fr; height: auto; }
+  .bldr-agg { display: none !important; }
+}
+@media (max-width: 720px) {
+  .bldr { grid-template-columns: 1fr; height: auto; }
+  .bldr-cat { max-height: 280px; }
+}
+
+/* ── DIAGRAMA ────────────────────────────────────────────────── */
+.diag-layout {
+  display: flex; gap: 0; border: 1px solid var(--border);
+  border-radius: var(--r); overflow: hidden; margin-bottom: 32px;
+  background: var(--bg); min-height: 540px;
+}
+.diag-sidebar {
+  width: 196px; flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  background: var(--bg2);
+  display: flex; flex-direction: column; gap: 0;
+  overflow-y: auto;
+}
+.diag-sb-section { padding: 14px 14px 10px; border-bottom: 1px solid var(--border); }
+.diag-sb-title {
+  font-family: var(--font-m); font-size: 9px; font-weight: 700;
+  letter-spacing: .13em; text-transform: uppercase; color: var(--dim);
+  margin-bottom: 8px;
+}
+.diag-sb-chips { display: flex; flex-direction: column; gap: 4px; }
+.diag-kf-chip {
+  display: flex; align-items: flex-start; gap: 6px;
+  background: none; border: 1px solid var(--border);
+  border-radius: 5px; padding: 4px 7px; cursor: pointer;
+  font-family: var(--font-m); text-align: left;
+  opacity: 0.45; transition: opacity .12s, border-color .12s;
+  width: 100%;
+}
+.diag-kf-chip--on { opacity: 1; border-color: var(--muted); }
+.diag-kf-chip:hover { opacity: 0.8; }
+.diag-kf-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; }
+.diag-kf-label { font-size: 10px; font-weight: 600; color: var(--text); line-height: 1.3; }
+.diag-kf-gloss { font-size: 9px; color: var(--dim); display: block; line-height: 1.3; }
+.diag-sb-hint {
+  padding: 12px 14px; font-family: var(--font-m); font-size: 9px;
+  color: var(--dim); line-height: 1.6; margin: auto 0 0;
+}
+.diag-main {
+  flex: 1; display: flex; flex-direction: column; min-width: 0;
+}
+.diag-head {
+  padding: 12px 18px 10px; background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  display: flex; flex-direction: column; gap: 3px;
+}
+.diag-title {
+  font-family: var(--font-m); font-size: 10px; font-weight: 600;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--muted);
+}
+.diag-sub { font-family: var(--font-m); font-size: 9.5px; color: var(--dim); }
+.diag-body {
+  position: relative; flex: 1;
+  height: calc(100vh - 320px); min-height: 540px;
+  background:
+    radial-gradient(ellipse at center, rgba(0,0,0,0.015) 0%, transparent 70%),
+    var(--bg);
+}
+.diag-svg { width: 100%; height: 100%; display: block; cursor: grab; }
+.diag-svg.is-panning { cursor: grabbing; }
+.diag-zoom-ctl {
+  position: absolute; right: 12px; bottom: 12px;
+  display: flex; flex-direction: column; gap: 4px; z-index: 5;
+}
+.diag-zb {
+  width: 28px; height: 28px; border-radius: 6px;
+  background: var(--bg2); border: 1px solid var(--border);
+  color: var(--text); font-family: var(--font-m); font-size: 14px;
+  cursor: pointer; line-height: 1; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .12s, border-color .12s;
+}
+.diag-zb:hover { background: var(--bg); border-color: var(--muted); }
+.diag-cluster-label {
+  font-family: var(--font-m); font-size: 10px; font-weight: 700;
+  letter-spacing: .2em; text-transform: uppercase;
+  fill: var(--dim); opacity: 0.55;
+  text-anchor: middle; pointer-events: none;
+  paint-order: stroke; stroke: var(--bg); stroke-width: 4px;
+}
+.diag-cluster-ring {
+  fill: none; stroke: var(--border);
+  stroke-dasharray: 2 4; opacity: 0.5;
+  pointer-events: none;
+}
+.diag-node-label {
+  font-family: var(--font-m); font-size: 8.5px;
+  fill: var(--text); pointer-events: none;
+  paint-order: stroke; stroke: var(--bg); stroke-width: 3px;
+  stroke-linejoin: round;
+}
+.diag-node-label--hi {
+  font-weight: 700; font-size: 10.5px; fill: var(--text);
+}
+.diag-node-label--dim { opacity: 0.25; }
+.diag-tooltip {
+  position: absolute; pointer-events: none; display: none;
+  background: var(--text); color: var(--bg);
+  font-family: var(--font-m); font-size: 11px;
+  padding: 7px 11px; border-radius: var(--r);
+  line-height: 1.55; max-width: 300px; z-index: 10;
+  white-space: nowrap;
+}
+.diag-tt-table { font-size: 9.5px; color: rgba(250,248,239,.45); display: block; }
+.diag-tt-keys  { font-size: 9.5px; color: rgba(250,248,239,.65); display: block; }
+
+.diag-keypop {
+  position: absolute; z-index: 20; pointer-events: none;
+  top: 14px; left: 14px;
+  width: 320px; max-width: calc(100% - 28px);
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 14px 16px 14px 18px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.06);
+  border-left: 3px solid var(--muted);
+}
+.diag-keypop-title {
+  font-family: var(--font-m); font-size: 11px; font-weight: 700;
+  letter-spacing: .04em; color: var(--text);
+  margin: 0 0 6px;
+}
+.diag-keypop-role {
+  font-family: var(--font-m); font-size: 10px;
+  color: var(--muted); margin: 0 0 10px; line-height: 1.5;
+  font-style: italic;
+}
+.diag-keypop-body {
+  font-family: var(--font-m); font-size: 10.5px;
+  color: var(--text); line-height: 1.65; margin: 0;
+}
+.diag-keypop-hint {
+  font-family: var(--font-m); font-size: 9px;
+  color: var(--dim); margin: 10px 0 0; letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.mtab--link { text-decoration: none; margin-left: auto; }
+.bldr-h--actions { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+.bldr-recipe-actions { display:flex; gap:5px; flex-wrap:wrap; justify-content:flex-end; }
+.bldr-recipe-actions button,.bldr-recipe-actions label,.bldr-diagnose { border:1px solid var(--border2); background:var(--surface); color:var(--muted); border-radius:3px; padding:4px 7px; font:9px var(--font-m); letter-spacing:.02em; text-transform:none; cursor:pointer; }
+.bldr-recipe-actions input { position:absolute; inline-size:1px; block-size:1px; opacity:0; }
+.bldr-save-status { min-height:18px; margin:-5px 0 8px; color:var(--br); font:9px/1.4 var(--font-m); }
+.bldr-join-key { border:1px solid var(--border2); background:var(--surface); color:var(--text); padding:3px 5px; font:10px var(--font-m); }
+.bldr-diagnose:hover { border-color:var(--br); color:var(--br); }.bldr-diagnose:disabled{opacity:.55;cursor:wait}
+.bldr-diagnostic { flex-basis:100%; background:var(--bg2); border-left:2px solid var(--br); padding:7px 9px; line-height:1.45; color:var(--muted); }
+.bldr-diagnostic:empty { display:none; }.bldr-diagnostic strong{color:var(--text)}.bldr-diagnostic span{color:var(--dim)}
+@media(max-width:760px){.mode-tabs{overflow-x:auto}.mtab{white-space:nowrap;padding-inline:12px}.mtab--link{margin-left:0}.bldr-h--actions{flex-direction:column}.bldr-recipe-actions{justify-content:flex-start}}
+</style>
