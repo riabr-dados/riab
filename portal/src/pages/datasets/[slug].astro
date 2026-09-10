@@ -614,6 +614,10 @@ const schemaContext = primaryResource?.schemaContext ?? "";
           <span class="ds-meta-label">Tamanho</span>
           <span class="ds-meta-val">{fmtBytes(ds.raw?.size_bytes)}</span>
         </div>
+        <div class="ds-meta-item">
+          <span class="ds-meta-label">Tabelas tratadas</span>
+          <span class="ds-meta-val">{tables.length} {tables.length === 1 ? "tabela" : "tabelas"}</span>
+        </div>
         {ds.raw?.files > 1 && (
           <div class="ds-meta-item">
             <span class="ds-meta-label">Arquivos</span>

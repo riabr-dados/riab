@@ -298,6 +298,14 @@ main:has(.tf), main:has(.cnx) { max-width: 100%; padding: 0; }
 .dcard__tag--country { color: var(--muted); }
 .dcard__tag--cleaned { border-color: rgba(0,122,60,.3); color: var(--br); }
 
+.catalog-note {
+  max-width: 760px;
+  margin: -6px 0 24px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
 /* Categoria + Procedencia chips no card */
 .dcard__chips { display: flex; gap: 5px; flex-wrap: wrap; }
 .dcard__cat {

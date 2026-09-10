@@ -61,6 +61,7 @@ function fmtBytes(b) {
 const totalBytes = ds.raw?.size_bytes ?? 0;
 const formats = [ds.raw?.format?.toUpperCase()].filter(Boolean).join(", ");
 const tables = ds.cleaned?.tables ?? [];
+const tableLabel = `${tables.length} ${tables.length === 1 ? "tabela" : "tabelas"}`;
 const categorias = Array.isArray(ds.categoria) ? ds.categoria : (ds.categoria ? [ds.categoria] : []);
 const procedencia = ds.procedencia ?? null;
 const procedenciaLabel = procedencia ? PROCEDENCIA_LABEL[procedencia] ?? procedencia : null;
@@ -77,6 +78,7 @@ const dataCats = categorias.join(" ");
   data-procedencia={procedencia ?? ""}
   data-subfonte={subfonte ?? ""}
   data-categorias={dataCats}
+  data-tables-count={tables.length}
 >
   <div class="dcard__top">
     <span class="dcard__inst">{ds.source?.name?.split(" - ")[0] ?? ds.source_id}</span>
@@ -105,6 +107,10 @@ const dataCats = categorias.join(" ");
     {totalBytes > 0 && <span class="dcard__tag">{fmtBytes(totalBytes)}</span>}
     {ds.raw?.files > 1 && <span class="dcard__tag">{ds.raw.files} arquivos</span>}
     {ds.coverage && <span class="dcard__tag">{ds.coverage}</span>}
-    {tables.length > 0 && <span class="dcard__tag dcard__tag--cleaned">Parquet disponivel</span>}
+    {tables.length > 0 && (
+      <span class="dcard__tag dcard__tag--cleaned" title="Tabelas tratadas disponíveis em formatos abertos">
+        {tableLabel}
+      </span>
+    )}
   </div>
 </a>

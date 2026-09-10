@@ -21,8 +21,8 @@ const SECTIONS = [
     num: "01",
     href: "datasets/",
     label: "Datasets",
-    desc: `Catálogo de ${stats.total_datasets} datasets de fontes oficiais e tabelas derivadas de ${stats.total_paises} países — ANCINE, CNC, BFI, INCAA, ACAU, Lumière, IBGE.`,
-    tag: `${stats.total_datasets} datasets · ${stats.total_paises} países`,
+    desc: `Catálogo de ${stats.total_datasets} datasets com ${stats.total_tabelas} tabelas tratadas de fontes oficiais de ${stats.total_paises} países — ANCINE, CNC, BFI, INCAA, ACAU, Lumière, IBGE.`,
+    tag: `${stats.total_datasets} datasets · ${stats.total_tabelas} tabelas · ${stats.total_paises} países`,
     featured: true,
   },
   {
@@ -106,6 +106,8 @@ const base = import.meta.env.BASE_URL;
     <span class="hero-ey__sep"></span>
     <span>{stats.total_datasets} datasets</span>
     <span class="hero-ey__sep"></span>
+    <span>{stats.total_tabelas} tabelas</span>
+    <span class="hero-ey__sep"></span>
     <span>{stats.total_paises} países</span>
     <span class="hero-ey__sep"></span>
     <span>{stats.total_fontes} fontes</span>
@@ -122,7 +124,7 @@ const base = import.meta.env.BASE_URL;
         <span class="hero-h__l hero-h__l--em">Audiovisual Brasileiro.</span>
       </h1>
       <p class="hero-desc">
-        {stats.total_datasets} datasets de fontes oficiais e tabelas derivadas — ANCINE, CNC, BFI, INCAA, ACAU, Lumière, IBGE.
+        {stats.total_datasets} datasets com {stats.total_tabelas} tabelas tratadas de fontes oficiais — ANCINE, CNC, BFI, INCAA, ACAU, Lumière, IBGE.
         Consulte, cruze e exporte direto do navegador. Sem instalar nada, sem cadastro, sem custo.
       </p>
     </div>
@@ -160,8 +162,8 @@ const base = import.meta.env.BASE_URL;
     <div class="stat-l">Países</div>
   </div>
   <div class="stat stat--red">
-    <div class="stat-v">+60<small>k</small></div>
-    <div class="stat-l">Obras cadastradas</div>
+    <div class="stat-v">{stats.total_tabelas}</div>
+    <div class="stat-l">Tabelas tratadas</div>
   </div>
   <div class="stat stat--uy">
     <div class="stat-v">{stats.total_fontes}</div>

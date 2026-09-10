@@ -4,6 +4,7 @@ import DatasetCard from "../../components/DatasetCard.astro";
 import { getDatasets } from "../../lib/catalog.js";
 
 const datasets = getDatasets();
+const totalTables = datasets.reduce((total, ds) => total + (ds.cleaned?.tables?.length ?? 0), 0);
 
 const byCountry = datasets.reduce((acc, ds) => {
   const c = ds.source?.country ?? "??";
@@ -71,7 +72,12 @@ const procedenciasOrdenadas = PROC_ORDER.filter((k) => procCounts[k]);
 <Base title="Datasets" description="Catalogo completo de datasets do RIDAB.">
   <div class="page-inner">
     <h1 class="page-title">Catalogo de Datasets</h1>
-    <p class="page-sub" id="ds-count-line">{datasets.length} datasets de {groups.length} paises</p>
+    <p class="page-sub" id="ds-count-line">
+      {datasets.length} datasets · {totalTables} tabelas · {groups.length} paises
+    </p>
+    <p class="catalog-note">
+      Cada dataset reúne uma fonte ou tema. O selo de cada cartão informa quantas tabelas tratadas estão disponíveis para baixar e analisar.
+    </p>
 
     <div class="filterbar">
       <div class="filterbar__row">
@@ -142,9 +148,14 @@ const procedenciasOrdenadas = PROC_ORDER.filter((k) => procCounts[k]);
       const empty = document.getElementById("filter-empty");
       const countLine = document.getElementById("ds-count-line");
       const totalDatasets = cards.length;
+      const totalTables = Array.from(cards).reduce(
+        (sum, card) => sum + Number(card.dataset.tablesCount || 0),
+        0
+      );
 
       function apply() {
         let visibleTotal = 0;
+        let visibleTables = 0;
         const sectionCounts = {};
 
         cards.forEach((card) => {
@@ -160,6 +171,7 @@ const procedenciasOrdenadas = PROC_ORDER.filter((k) => procCounts[k]);
           card.style.display = show ? "" : "none";
           if (show) {
             visibleTotal += 1;
+            visibleTables += Number(card.dataset.tablesCount || 0);
             sectionCounts[country] = (sectionCounts[country] || 0) + 1;
           }
         });
@@ -176,8 +188,8 @@ const procedenciasOrdenadas = PROC_ORDER.filter((k) => procCounts[k]);
         if (countLine) {
           countLine.textContent =
             visibleTotal === totalDatasets
-              ? `${totalDatasets} datasets de ${sections.length} paises`
-              : `${visibleTotal} de ${totalDatasets} datasets visiveis`;
+              ? `${totalDatasets} datasets · ${totalTables} tabelas · ${sections.length} paises`
+              : `${visibleTotal} de ${totalDatasets} datasets · ${visibleTables} tabelas visiveis`;
         }
       }
 
