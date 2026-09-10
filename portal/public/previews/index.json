@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "previews": {
+    "preco_ingresso": {
+      "id": "preco-ingresso-observado",
+      "path": "preco-ingresso-observado.json"
+    },
+    "obras": {
+      "id": "obras-por-tipo",
+      "path": "obras-por-tipo.json"
+    },
+    "pib_audiovisual_total_ano": {
+      "id": "pib-audiovisual-total",
+      "path": "pib-audiovisual-total.json"
+    }
+  }
+}

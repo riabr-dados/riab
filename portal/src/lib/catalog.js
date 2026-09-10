@@ -95,6 +95,63 @@ export function getTableSchema(table) {
   }
 }
 
+/**
+ * Nome específico de uma tabela dentro do dataset.
+ * O schema é a fonte editorial preferida; o título do dataset continua visível
+ * como contexto, mas não pode tornar dezenas de tabelas indistinguíveis.
+ */
+export function getTableLabel(table, dataset = null) {
+  const schema = getTableSchema(table);
+  const explicit = schema?.title ?? schema?.label;
+  if (explicit) return String(explicit).trim();
+
+  const special = [
+    [/_reprocessamento_regioes_pdet_\d{4}$/, "Arquivos regionais RAIS/PDET"],
+    [/_comparacao_ancine_pdet_(\d{4})$/, "Comparação ANCINE × PDET $1"],
+    [/_reprocessado_pdet_(\d{4})$/, "Reprocessamento RAIS/PDET $1"],
+    [/_total_ano$/, "Total anual"],
+    [/_subclasse_ano$/, "Por subclasse CNAE e ano"],
+    [/_atividade_ano$/, "Por atividade e ano"],
+    [/_servico_ano$/, "Por serviço e ano"],
+    [/_fontes$/, "Fontes e proveniência"],
+  ];
+  for (const [pattern, label] of special) {
+    const match = table.match(pattern);
+    if (match) return label.replace("$1", match[1] ?? "");
+  }
+
+  const humanized = table
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, (letter) => letter.toLocaleUpperCase("pt-BR"));
+  const datasetTitle = dataset?.title?.trim();
+  return datasetTitle && (dataset?.cleaned?.tables?.length ?? 0) === 1
+    ? datasetTitle
+    : humanized;
+}
+
+/** Descritores compartilhados pelo catálogo, detalhe e ambiente Analisar. */
+export function getTableDescriptors(datasets = getDatasets()) {
+  const descriptors = new Map();
+  for (const dataset of datasets) {
+    for (const resource of dataset.cleaned?.tables ?? []) {
+      const table = typeof resource === "string" ? resource : resource.name;
+      if (!table) continue;
+      const schema = getTableSchema(table);
+      const current = descriptors.get(table);
+      const descriptor = current ?? {
+        table,
+        label: getTableLabel(table, dataset),
+        description: schema?.description?.trim() ?? dataset.description?.trim() ?? "",
+        schema,
+        datasets: [],
+      };
+      descriptor.datasets.push({ slug: dataset.slug, title: dataset.title });
+      descriptors.set(table, descriptor);
+    }
+  }
+  return [...descriptors.values()];
+}
+
 /** Gera contexto compacto de schema para o prompt de linguagem natural */
 export function buildSchemaContext(table) {
   const schema = getTableSchema(table);

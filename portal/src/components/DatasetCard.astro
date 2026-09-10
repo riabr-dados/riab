@@ -1,4 +1,5 @@
 ---
+import { getTableLabel } from "../lib/catalog.js";
 const { ds } = Astro.props;
 const base = import.meta.env.BASE_URL;
 
@@ -62,6 +63,10 @@ const totalBytes = ds.raw?.size_bytes ?? 0;
 const formats = [ds.raw?.format?.toUpperCase()].filter(Boolean).join(", ");
 const tables = ds.cleaned?.tables ?? [];
 const tableLabel = `${tables.length} ${tables.length === 1 ? "tabela" : "tabelas"}`;
+const tableSearch = tables.map((table) => {
+  const name = typeof table === "string" ? table : table.name;
+  return `${name} ${getTableLabel(name, ds)}`;
+}).join(" ");
 const categorias = Array.isArray(ds.categoria) ? ds.categoria : (ds.categoria ? [ds.categoria] : []);
 const procedencia = ds.procedencia ?? null;
 const procedenciaLabel = procedencia ? PROCEDENCIA_LABEL[procedencia] ?? procedencia : null;
@@ -79,6 +84,7 @@ const dataCats = categorias.join(" ");
   data-subfonte={subfonte ?? ""}
   data-categorias={dataCats}
   data-tables-count={tables.length}
+  data-search={`${ds.title} ${ds.description ?? ""} ${tableSearch}`.toLowerCase()}
 >
   <div class="dcard__top">
     <span class="dcard__inst">{ds.source?.name?.split(" - ")[0] ?? ds.source_id}</span>

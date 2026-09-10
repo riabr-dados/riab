@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "id": "pib-audiovisual-total",
+  "table": "pib_audiovisual_total_ano",
+  "title": "Valor adicionado das atividades audiovisuais",
+  "question": "Qual foi o valor adicionado pelas atividades audiovisuais em cada ano?",
+  "rowUnit": "ano de referência",
+  "chart": "line",
+  "note": "Valores correntes não descontam a inflação. A série publicada vai de 2007 a 2019.",
+  "source": {
+    "parquetSha256": "9e385fc3402d3f4f86ca201892f0cb94e02bc68c637cda43e42f27e5bf1507ed",
+    "presentationSha256": "f7b6be22dd1a5e54c9f1b0fa8891cc074e960d18596f56b8491f11ead104d368"
+  },
+  "data": {
+    "rows": [
+      {
+        "ano": 2007,
+        "valor_adicionado_brl_milhoes_correntes": 8866.1
+      },
+      {
+        "ano": 2008,
+        "valor_adicionado_brl_milhoes_correntes": 10224.7
+      },
+      {
+        "ano": 2009,
+        "valor_adicionado_brl_milhoes_correntes": 11985.2
+      },
+      {
+        "ano": 2010,
+        "valor_adicionado_brl_milhoes_correntes": 13180.0
+      },
+      {
+        "ano": 2011,
+        "valor_adicionado_brl_milhoes_correntes": 16930.5
+      },
+      {
+        "ano": 2012,
+        "valor_adicionado_brl_milhoes_correntes": 20390.5
+      },
+      {
+        "ano": 2013,
+        "valor_adicionado_brl_milhoes_correntes": 23079.5
+      },
+      {
+        "ano": 2014,
+        "valor_adicionado_brl_milhoes_correntes": 25550.2
+      },
+      {
+        "ano": 2015,
+        "valor_adicionado_brl_milhoes_correntes": 25742.4
+      },
+      {
+        "ano": 2016,
+        "valor_adicionado_brl_milhoes_correntes": 24222.4
+      },
+      {
+        "ano": 2017,
+        "valor_adicionado_brl_milhoes_correntes": 26015.1
+      },
+      {
+        "ano": 2018,
+        "valor_adicionado_brl_milhoes_correntes": 26689.2
+      },
+      {
+        "ano": 2019,
+        "valor_adicionado_brl_milhoes_correntes": 27475.8
+      }
+    ],
+    "x": "ano",
+    "measures": [
+      {
+        "column": "valor_adicionado_brl_milhoes_correntes",
+        "label": "Valor corrente",
+        "unit": "R$ milhões correntes",
+        "decimals": 1
+      }
+    ]
+  }
+}

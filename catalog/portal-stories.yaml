@@ -1,0 +1,23 @@
+version: 1
+stories:
+  cinema-admissoes-europa:
+    section: cinema
+    table: brasil_no_mundo_bilheteria_europa
+    title: Quais obras do recorte têm mais admissões acumuladas na Europa?
+    source: Lumière / Observatório Europeu do Audiovisual
+    unit: admissões acumuladas no campo 1996–2026
+    note: País de produção não é país de exibição. A tabela não decompõe esse público por país ou ano de sessão.
+  cnc-registros-brasil:
+    section: coproducoes
+    table: brasil_no_mundo_obras_franca_cnc
+    title: Em quais registros do CNC a participação brasileira aparece?
+    source: Centre national du cinéma et de l'image animée (CNC)
+    unit: registros nas tabelas de origem
+    note: Vistos e agréments documentam procedimentos diferentes e não devem ser somados como filmes únicos.
+  bfi-admissoes-brasil:
+    section: mercado
+    table: brasil_no_mundo_mercado_bfi
+    title: Como o público de cinema no Brasil mudou entre 2019 e 2023?
+    source: British Film Institute (BFI)
+    unit: milhões de ingressos
+    note: O indicador descreve o mercado brasileiro em uma publicação estrangeira; não mede circulação de filmes brasileiros no exterior.

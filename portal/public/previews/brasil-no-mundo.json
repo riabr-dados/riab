@@ -1,0 +1,92 @@
+{
+  "version": 1,
+  "stories": [
+    {
+      "id": "cinema-admissoes-europa",
+      "section": "cinema",
+      "table": "brasil_no_mundo_bilheteria_europa",
+      "title": "Quais obras do recorte têm mais admissões acumuladas na Europa?",
+      "source": "Lumière / Observatório Europeu do Audiovisual",
+      "unit": "admissões acumuladas no campo 1996–2026",
+      "note": "País de produção não é país de exibição. A tabela não decompõe esse público por país ou ano de sessão.",
+      "view": "bar",
+      "rows": [
+        {
+          "label": "Central do Brasil",
+          "value": 2218086
+        },
+        {
+          "label": "Cidade De Deus",
+          "value": 1810560
+        },
+        {
+          "label": "Noah's Ark",
+          "value": 545200
+        },
+        {
+          "label": "O Menino e o Mundo",
+          "value": 533467
+        },
+        {
+          "label": "Que Horas Ela Volta?",
+          "value": 457159
+        }
+      ],
+      "sourceSha256": "7709752d83a292efa95ffd79bb06321f333e3551cd79b71807f8ceea363145c0"
+    },
+    {
+      "id": "cnc-registros-brasil",
+      "section": "coproducoes",
+      "table": "brasil_no_mundo_obras_franca_cnc",
+      "title": "Em quais registros do CNC a participação brasileira aparece?",
+      "source": "Centre national du cinéma et de l'image animée (CNC)",
+      "unit": "registros nas tabelas de origem",
+      "note": "Vistos e agréments documentam procedimentos diferentes e não devem ser somados como filmes únicos.",
+      "view": "bar",
+      "rows": [
+        {
+          "label": "Vistos de exibição",
+          "value": 146
+        },
+        {
+          "label": "Filmes com agrément",
+          "value": 39
+        }
+      ],
+      "sourceSha256": "d8f5e148cfbc57a54b0e6d1b5288b2e21f44a670df72ea332bba7029eb0ded4c"
+    },
+    {
+      "id": "bfi-admissoes-brasil",
+      "section": "mercado",
+      "table": "brasil_no_mundo_mercado_bfi",
+      "title": "Como o público de cinema no Brasil mudou entre 2019 e 2023?",
+      "source": "British Film Institute (BFI)",
+      "unit": "milhões de ingressos",
+      "note": "O indicador descreve o mercado brasileiro em uma publicação estrangeira; não mede circulação de filmes brasileiros no exterior.",
+      "view": "line",
+      "rows": [
+        {
+          "label": 2019,
+          "value": 176.433
+        },
+        {
+          "label": 2020,
+          "value": 38.837
+        },
+        {
+          "label": 2021,
+          "value": 50.65
+        },
+        {
+          "label": 2022,
+          "value": 95.6
+        },
+        {
+          "label": 2023,
+          "value": 113.8
+        }
+      ],
+      "sourceSha256": "a11bf4cb648151edecb5eb20a606fbdf456894bde60e85a80a354641e63cfa42"
+    }
+  ]
+}

@@ -2,9 +2,11 @@
 import Base from "../../layouts/Base.astro";
 import CodeSnippet from "../../components/CodeSnippet.astro";
 import DataExplorer from "../../components/DataExplorer.astro";
+import DatasetPreview from "../../components/DatasetPreview.astro";
 import ResourceDownloads from "../../components/ResourceDownloads.astro";
-import { getDatasets, getDataset, buildSchemaContext, getTableSchema, getDownloads } from "../../lib/catalog.js";
+import { getDatasets, getDataset, buildSchemaContext, getTableLabel, getTableSchema, getDownloads } from "../../lib/catalog.js";
 import { duckdbSnippet, pandasSnippet, rSnippet, cliSnippet, cleanedUrl, rawUrl } from "../../lib/hf.js";
+import { getPreview } from "../../lib/presentation.js";
 
 export async function getStaticPaths() {
   const datasets = getDatasets();
@@ -551,18 +553,19 @@ const resourceConfigs = dataTables.map((table) => {
   const schema = getTableSchema(table);
   return {
     table,
-    label: resourceLabel(table),
+    label: getTableLabel(table, ds),
     description: schema?.description?.trim() ?? table,
     downloads: getDownloads(table),
     defaultQuery: DEFAULT_QUERIES[table] ?? `SELECT * FROM ${table} LIMIT 100`,
     crossQueries: CROSS_QUERIES[table] ?? [],
     schemaContext: buildSchemaContext(table),
+    preview: getPreview(table),
   };
 });
 
 const documentationConfigs = documentationTables.map((table) => ({
   table,
-  label: resourceLabel(table),
+  label: getTableLabel(table, ds),
   description: "Inventario de fontes, PDFs e URLs oficiais usados na reconstrucao.",
   downloads: getDownloads(table),
 }));
@@ -640,6 +643,21 @@ const schemaContext = primaryResource?.schemaContext ?? "";
       </div>
     </header>
 
+    {resourceConfigs.some((resource) => resource.preview) && (
+      <div class="preview-deck">
+        {resourceConfigs.filter((resource) => resource.preview).map((resource) => (
+          <div class="preview-deck__item" data-preview-table={resource.table} hidden={resource.table !== primaryTable}>
+            <DatasetPreview
+              preview={resource.preview}
+              table={resource.table}
+              datasetSlug={ds.slug}
+              tableCount={resourceConfigs.length}
+            />
+          </div>
+        ))}
+      </div>
+    )}
+
     {resourceConfigs.length > 0 && (
       <section class="ds-section">
         <h2 class="ds-section__title">// Recursos de Dados</h2>
@@ -655,7 +673,8 @@ const schemaContext = primaryResource?.schemaContext ?? "";
               </div>
               <p class="resource-card__desc">{resource.description}</p>
               <div class="resource-card__actions">
-                <button class="btn-outline btn-sm js-open-resource" data-table={resource.table}>Explorar</button>
+                <button class="btn-outline btn-sm js-open-resource" data-table={resource.table}>Selecionar tabela</button>
+                <a class="btn-outline btn-sm" href={`${import.meta.env.BASE_URL}analisar/?table=${encodeURIComponent(resource.table)}&dataset=${encodeURIComponent(ds.slug)}`}>Analisar</a>
                 <a class="btn-outline btn-sm" href={cleanedUrl(resource.table)} target="_blank" rel="noopener">Parquet</a>
               </div>
               <ResourceDownloads downloads={resource.downloads} />
@@ -1076,20 +1095,30 @@ kbd {
 </style>
 
 <script>
+  function setActiveResource(table) {
+    document.querySelectorAll(".resource-card").forEach((card) => {
+      card.classList.toggle("resource-card--active", card.dataset.table === table);
+    });
+    document.querySelectorAll("[data-preview-table]").forEach((item) => {
+      if (!(item instanceof HTMLElement) || item.matches("table")) return;
+      item.hidden = item.dataset.previewTable !== table;
+    });
+  }
+
   document.querySelectorAll(".js-open-resource").forEach((button) => {
     button.addEventListener("click", () => {
       const table = button.dataset.table;
       if (!table) return;
+      setActiveResource(table);
       window.dispatchEvent(new CustomEvent("riab:set-table", { detail: { table } }));
-      document.getElementById("explorer")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      const preview = document.querySelector(`[data-preview-table="${CSS.escape(table)}"]`);
+      (preview ?? document.getElementById("explorer"))?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   });
 
   window.addEventListener("riab:resource-changed", (event) => {
     const activeTable = event.detail?.table;
-    document.querySelectorAll(".resource-card").forEach((card) => {
-      card.classList.toggle("resource-card--active", card.dataset.table === activeTable);
-    });
+    setActiveResource(activeTable);
   });
 
   const tabs = document.querySelectorAll(".stab");

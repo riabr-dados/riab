@@ -1,0 +1,88 @@
+{
+  "version": 1,
+  "id": "preco-ingresso-observado",
+  "table": "preco_ingresso",
+  "title": "O ingresso ao longo do tempo",
+  "question": "Quanto custou, em média, um ingresso de cinema no Brasil ao longo dos anos?",
+  "rowUnit": "ano de referência",
+  "chart": "line",
+  "note": "Os registros de apoio de 2025–2026 repetem o valor de 2024 e ficam fora desta prévia.",
+  "source": {
+    "parquetSha256": "a427e26fae96cfdee98eeae409709ce82ed7b972aa0ac609b0f058c42612b8e0",
+    "presentationSha256": "f7b6be22dd1a5e54c9f1b0fa8891cc074e960d18596f56b8491f11ead104d368"
+  },
+  "data": {
+    "rows": [
+      {
+        "ano": 2014,
+        "pmi_nominal": 12.57,
+        "pmi_real_2024": 21.9873
+      },
+      {
+        "ano": 2015,
+        "pmi_nominal": 13.59,
+        "pmi_real_2024": 21.4796
+      },
+      {
+        "ano": 2016,
+        "pmi_nominal": 14.1,
+        "pmi_real_2024": 20.9669
+      },
+      {
+        "ano": 2017,
+        "pmi_nominal": 15.0,
+        "pmi_real_2024": 21.666
+      },
+      {
+        "ano": 2018,
+        "pmi_nominal": 15.04,
+        "pmi_real_2024": 20.9386
+      },
+      {
+        "ano": 2019,
+        "pmi_nominal": 15.81,
+        "pmi_real_2024": 21.1011
+      },
+      {
+        "ano": 2020,
+        "pmi_nominal": 15.94,
+        "pmi_real_2024": 20.3546
+      },
+      {
+        "ano": 2021,
+        "pmi_nominal": 17.48,
+        "pmi_real_2024": 20.2809
+      },
+      {
+        "ano": 2022,
+        "pmi_nominal": 19.1,
+        "pmi_real_2024": 20.9476
+      },
+      {
+        "ano": 2023,
+        "pmi_nominal": 19.61,
+        "pmi_real_2024": 20.5572
+      },
+      {
+        "ano": 2024,
+        "pmi_nominal": 19.88,
+        "pmi_real_2024": 19.88
+      }
+    ],
+    "x": "ano",
+    "measures": [
+      {
+        "column": "pmi_nominal",
+        "label": "Nominal",
+        "unit": "R$",
+        "decimals": 2
+      },
+      {
+        "column": "pmi_real_2024",
+        "label": "Em R$ de 2024",
+        "unit": "R$ de 2024",
+        "decimals": 2
+      }
+    ]
+  }
+}

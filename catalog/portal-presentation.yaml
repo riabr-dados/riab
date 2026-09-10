@@ -1,0 +1,56 @@
+version: 1
+tables:
+  preco_ingresso:
+    title: Preço médio do ingresso
+    row_unit: ano de referência
+    question: Quanto custou, em média, um ingresso de cinema no Brasil ao longo dos anos?
+    preview:
+      id: preco-ingresso-observado
+      title: O ingresso ao longo do tempo
+      chart: line
+      x: ano
+      measures:
+        - column: pmi_nominal
+          label: Nominal
+          unit: R$
+          decimals: 2
+        - column: pmi_real_2024
+          label: Em R$ de 2024
+          unit: R$ de 2024
+          decimals: 2
+      filters:
+        - column: fonte
+          operator: neq
+          value: fallback
+      order_by: [{column: ano, direction: asc}]
+      note: Os registros de apoio de 2025–2026 repetem o valor de 2024 e ficam fora desta prévia.
+  obras:
+    title: Obras audiovisuais brasileiras registradas
+    row_unit: registro de obra
+    question: Como os registros de obras se distribuem por tipo?
+    preview:
+      id: obras-por-tipo
+      title: Registros por tipo de obra
+      chart: bar
+      category: tipo_obra
+      measure: count_rows
+      limit: 8
+      order: desc
+      unit: registros
+      note: A contagem representa linhas da tabela; categorias ausentes aparecem como não informadas.
+  pib_audiovisual_total_ano:
+    title: Valor adicionado do audiovisual por ano
+    row_unit: ano de referência
+    question: Qual foi o valor adicionado pelas atividades audiovisuais em cada ano?
+    preview:
+      id: pib-audiovisual-total
+      title: Valor adicionado das atividades audiovisuais
+      chart: line
+      x: ano
+      measures:
+        - column: valor_adicionado_brl_milhoes_correntes
+          label: Valor corrente
+          unit: R$ milhões correntes
+          decimals: 1
+      order_by: [{column: ano, direction: asc}]
+      note: Valores correntes não descontam a inflação. A série publicada vai de 2007 a 2019.

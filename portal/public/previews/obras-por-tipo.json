@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "id": "obras-por-tipo",
+  "table": "obras",
+  "title": "Registros por tipo de obra",
+  "question": "Como os registros de obras se distribuem por tipo?",
+  "rowUnit": "registro de obra",
+  "chart": "bar",
+  "note": "A contagem representa linhas da tabela; categorias ausentes aparecem como não informadas.",
+  "source": {
+    "parquetSha256": "b2b13c7c327f96240eac8c240c7fae440e001f9affb1540cba84902170fb52ef",
+    "presentationSha256": "f7b6be22dd1a5e54c9f1b0fa8891cc074e960d18596f56b8491f11ead104d368"
+  },
+  "data": {
+    "rows": [
+      {
+        "category": "FICÇÃO",
+        "value": 17998
+      },
+      {
+        "category": "DOCUMENTÁRIO",
+        "value": 15264
+      },
+      {
+        "category": "VÍDEOMUSICAL",
+        "value": 14563
+      },
+      {
+        "category": "NÃO CLASSIFICADA",
+        "value": 3998
+      },
+      {
+        "category": "VARIEDADES",
+        "value": 3629
+      },
+      {
+        "category": "ANIMAÇÃO",
+        "value": 3563
+      },
+      {
+        "category": "JORNALÍSTICA",
+        "value": 1068
+      },
+      {
+        "category": "REALITY-SHOW",
+        "value": 573
+      }
+    ],
+    "unit": "registros"
+  }
+}

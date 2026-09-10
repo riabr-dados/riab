@@ -1,0 +1,151 @@
+---
+const { preview, table, datasetSlug, tableCount = 1 } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const dataJson = JSON.stringify(preview);
+---
+
+<section class="dataset-preview" data-preview-root data-preview={dataJson}>
+  <header class="dataset-preview__header">
+    <div>
+      <p class="dataset-preview__context">Visão geral · {tableCount} {tableCount === 1 ? "tabela" : "tabelas"}</p>
+      <h2>{preview.title}</h2>
+      {preview.question && <p class="dataset-preview__question">{preview.question}</p>}
+    </div>
+    {preview.data?.measures?.length > 1 && (
+      <div class="dataset-preview__measure" role="group" aria-label="Medida do gráfico">
+        {preview.data.measures.map((measure, index) => (
+          <button type="button" class:list={["preview-measure", { "is-active": index === 0 }]} data-measure={index}>
+            {measure.label}
+          </button>
+        ))}
+      </div>
+    )}
+  </header>
+
+  <div class="dataset-preview__chart">
+    <svg viewBox="0 0 760 300" role="img" aria-label={preview.title} data-preview-svg></svg>
+  </div>
+
+  <details class="dataset-preview__table-wrap">
+    <summary>Ver os dados deste gráfico</summary>
+    <div class="dataset-preview__table-scroll">
+      <table data-preview-table></table>
+    </div>
+  </details>
+
+  <footer class="dataset-preview__footer">
+    <div>
+      <strong>Uma linha representa:</strong> {preview.rowUnit}.
+      {preview.note && <span> {preview.note}</span>}
+    </div>
+    <a class="btn-primary" href={`${base}analisar/?table=${encodeURIComponent(table)}&dataset=${encodeURIComponent(datasetSlug)}&preview=${encodeURIComponent(preview.id)}`}>
+      Analisar esta tabela
+    </a>
+  </footer>
+</section>
+
+<script>
+  const formatNumber = (value, decimals = 0) => Number(value).toLocaleString("pt-BR", {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  });
+
+  const escapeHtml = (value) => String(value ?? "")
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+
+  function renderLine(root, preview, measureIndex = 0) {
+    const svg = root.querySelector("[data-preview-svg]");
+    const measure = preview.data.measures[measureIndex];
+    const rows = preview.data.rows.filter((row) => row[preview.data.x] != null && row[measure.column] != null);
+    const values = rows.map((row) => Number(row[measure.column]));
+    const min = Math.min(...values, 0);
+    const max = Math.max(...values, 1);
+    const spread = max - min || 1;
+    const left = 62, right = 735, top = 24, bottom = 250;
+    const x = (index) => left + (right - left) * index / Math.max(1, rows.length - 1);
+    const y = (value) => bottom - (Number(value) - min) / spread * (bottom - top);
+    const ticks = [0, 0.5, 1].map((part) => min + spread * part);
+    const grid = ticks.map((value) => `
+      <line x1="${left}" x2="${right}" y1="${y(value)}" y2="${y(value)}" class="preview-grid" />
+      <text x="${left - 12}" y="${y(value) + 4}" text-anchor="end">${formatNumber(value, measure.decimals ?? 0)}</text>
+    `).join("");
+    const points = rows.map((row, index) => `${x(index)},${y(row[measure.column])}`).join(" ");
+    const dots = rows.map((row, index) => `
+      <circle cx="${x(index)}" cy="${y(row[measure.column])}" r="4">
+        <title>${row[preview.data.x]}: ${measure.unit} ${formatNumber(row[measure.column], measure.decimals ?? 0)}</title>
+      </circle>
+    `).join("");
+    const labels = rows.map((row, index) => {
+      if (rows.length > 8 && index !== 0 && index !== rows.length - 1 && index % 2 !== 0) return "";
+      return `<text x="${x(index)}" y="278" text-anchor="middle">${escapeHtml(row[preview.data.x])}</text>`;
+    }).join("");
+    svg.innerHTML = `${grid}<polyline points="${points}" />${dots}${labels}`;
+    const table = root.querySelector("[data-preview-table]");
+    table.innerHTML = `<thead><tr><th>${escapeHtml(preview.data.x)}</th><th>${escapeHtml(measure.label)} (${escapeHtml(measure.unit)})</th></tr></thead><tbody>${rows.map((row) => `<tr><td>${escapeHtml(row[preview.data.x])}</td><td>${formatNumber(row[measure.column], measure.decimals ?? 0)}</td></tr>`).join("")}</tbody>`;
+  }
+
+  function renderBars(root, preview) {
+    const svg = root.querySelector("[data-preview-svg]");
+    const rows = preview.data.rows;
+    const max = Math.max(...rows.map((row) => row.value), 1);
+    const left = 205, right = 700, top = 15, rowHeight = 32;
+    svg.setAttribute("viewBox", `0 0 760 ${Math.max(280, top + rows.length * rowHeight + 20)}`);
+    svg.innerHTML = rows.map((row, index) => {
+      const y = top + index * rowHeight;
+      const width = (right - left) * row.value / max;
+      return `<text x="${left - 12}" y="${y + 17}" text-anchor="end">${escapeHtml(row.category)}</text>
+        <rect x="${left}" y="${y + 5}" width="${right - left}" height="16" class="preview-track" />
+        <rect x="${left}" y="${y + 5}" width="${width}" height="16" class="preview-bar"><title>${escapeHtml(row.category)}: ${formatNumber(row.value)} ${escapeHtml(preview.data.unit)}</title></rect>
+        <text x="${right + 10}" y="${y + 17}">${formatNumber(row.value)}</text>`;
+    }).join("");
+    const table = root.querySelector("[data-preview-table]");
+    table.innerHTML = `<thead><tr><th>Tipo de obra</th><th>${escapeHtml(preview.data.unit)}</th></tr></thead><tbody>${rows.map((row) => `<tr><td>${escapeHtml(row.category)}</td><td>${formatNumber(row.value)}</td></tr>`).join("")}</tbody>`;
+  }
+
+  document.querySelectorAll("[data-preview-root]").forEach((root) => {
+    const preview = JSON.parse(root.dataset.preview);
+    const render = (measureIndex = 0) => preview.chart === "line"
+      ? renderLine(root, preview, measureIndex)
+      : renderBars(root, preview);
+    render();
+    root.querySelectorAll("[data-measure]").forEach((button) => {
+      button.addEventListener("click", () => {
+        root.querySelectorAll("[data-measure]").forEach((item) => item.classList.toggle("is-active", item === button));
+        render(Number(button.dataset.measure));
+      });
+    });
+  });
+</script>
+
+<style>
+  .dataset-preview { margin: 36px 0; padding: clamp(20px, 3vw, 34px); border: 1px solid var(--border2); border-radius: var(--r); background: var(--surface); }
+  .dataset-preview__header, .dataset-preview__footer { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
+  .dataset-preview__context { margin: 0 0 9px; color: var(--br); font-family: var(--font-m); font-size: 11px; }
+  .dataset-preview h2 { font-family: var(--font-d); font-size: clamp(25px, 3vw, 40px); line-height: 1.05; }
+  .dataset-preview__question { max-width: 650px; margin: 11px 0 0; color: var(--muted); line-height: 1.55; }
+  .dataset-preview__measure { display: flex; flex-wrap: wrap; padding: 3px; border: 1px solid var(--border); border-radius: var(--r); background: var(--bg); }
+  .preview-measure { border: 0; border-radius: 3px; padding: 7px 10px; background: transparent; color: var(--muted); font-size: 12px; cursor: pointer; }
+  .preview-measure.is-active { background: var(--surface); color: var(--br); box-shadow: 0 1px 3px rgba(10,9,6,.12); }
+  .dataset-preview__chart { margin: 25px 0 5px; overflow: hidden; }
+  [data-preview-svg] { display: block; width: 100%; max-height: 360px; overflow: visible; }
+  [data-preview-svg] text { fill: var(--muted); font-family: var(--font-s); font-size: 11px; }
+  [data-preview-svg] polyline { fill: none; stroke: var(--br); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+  [data-preview-svg] circle, .preview-bar { fill: var(--br); }
+  [data-preview-svg] .preview-grid { stroke: var(--border); stroke-width: 1; }
+  [data-preview-svg] .preview-track { fill: var(--bg2); }
+  .dataset-preview__table-wrap { margin: 12px 0 22px; border-top: 1px solid var(--border); padding-top: 14px; }
+  .dataset-preview__table-wrap summary { color: var(--br); font-size: 13px; cursor: pointer; }
+  .dataset-preview__table-scroll { max-height: 320px; margin-top: 12px; overflow: auto; }
+  .dataset-preview table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .dataset-preview th, .dataset-preview td { padding: 8px 10px; border-bottom: 1px solid var(--border); text-align: left; }
+  .dataset-preview__footer { align-items: center; border-top: 1px solid var(--border); padding-top: 20px; }
+  .dataset-preview__footer > div { max-width: 760px; color: var(--muted); font-size: 12px; line-height: 1.55; }
+  @media (max-width: 720px) {
+    .dataset-preview__header, .dataset-preview__footer { flex-direction: column; }
+    .dataset-preview__measure { order: 2; }
+    .dataset-preview__footer .btn-primary { width: 100%; text-align: center; }
+    .dataset-preview__chart { overflow-x: auto; }
+    [data-preview-svg] { min-width: 650px; }
+  }
+</style>
