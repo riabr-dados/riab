@@ -3,7 +3,6 @@
 
 > Hub de inteligencia de dados do audiovisual brasileiro e internacional.
 > Dados brutos preservados, dados tratados acessiveis, consulta livre.
-> Custo de hospedagem: zero.
 
 ---
 

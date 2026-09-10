@@ -2,13 +2,14 @@
  * Carrega e normaliza o catalogo de datasets a partir do YAML.
  * Usado em tempo de build pelo Astro (Node.js).
  */
-import { readFileSync } from "fs";
+import { readFileSync, readdirSync } from "fs";
 import { resolve } from "path";
 import yaml from "js-yaml";
 
 const CATALOG_PATH = resolve("../catalog/datasets.yaml");
 const SOURCES_PATH = resolve("../catalog/sources.yaml");
 const DOWNLOADS_PATH = resolve("../catalog/downloads.json");
+const DATASETS_PATH = resolve("../datasets");
 
 export function getDownloads(table) {
   try {
@@ -44,6 +45,19 @@ export function getDatasets() {
 
 export function getDataset(slug) {
   return getDatasets().find((ds) => ds.slug === slug) ?? null;
+}
+
+export function getLatestSnapshotDate(dataset) {
+  const rawPath = (dataset.raw?.path ?? `${dataset.slug}/`).replace(/^raw\//, "").replace(/[\\/]$/, "");
+  try {
+    return readdirSync(resolve(DATASETS_PATH, rawPath, "snapshots"), { withFileTypes: true })
+      .filter((entry) => entry.isDirectory() && /^\d{4}-\d{2}-\d{2}$/.test(entry.name))
+      .map((entry) => entry.name)
+      .sort()
+      .at(-1) ?? null;
+  } catch {
+    return null;
+  }
 }
 
 /** Estatisticas agregadas para o header do portal */

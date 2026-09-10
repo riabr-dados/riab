@@ -2,7 +2,6 @@
 
 Hub de inteligencia de dados do audiovisual brasileiro e internacional.
 Dados brutos preservados. Dados tratados em 12 Parquets, livres para consulta.
-Custo de hospedagem: zero.
 
 **Portal:** https://riabr-dados.github.io/riab
 **Dados (Hugging Face):** https://huggingface.co/datasets/riabr-dados/riab

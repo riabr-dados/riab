@@ -1,10 +1,45 @@
 ---
 import Base from "../layouts/Base.astro";
 import DatasetCard from "../components/DatasetCard.astro";
-import { getDatasets, getCatalogStats } from "../lib/catalog.js";
+import { getDatasets, getCatalogStats, getDownloads, getLatestSnapshotDate } from "../lib/catalog.js";
 
 const datasets = getDatasets();
 const stats = getCatalogStats(datasets);
+
+const datasetBySlug = Object.fromEntries(datasets.map((dataset) => [dataset.slug, dataset]));
+const fmtInteger = (value) => new Intl.NumberFormat("pt-BR").format(value ?? 0);
+const fmtSnapshot = (dataset) => {
+  const iso = getLatestSnapshotDate(dataset);
+  if (!iso) return "snapshot não informado";
+  const [year, month, day] = iso.split("-");
+  return `snapshot ${day}/${month}/${year}`;
+};
+const sourceLine = (label, slug) => {
+  const dataset = datasetBySlug[slug];
+  return `${label} · cobertura ${dataset?.coverage} · ${fmtSnapshot(dataset)}`;
+};
+const highlights = [
+  {
+    value: fmtInteger(getDownloads("obras")?.rows),
+    label: "obras audiovisuais brasileiras registradas",
+    source: sourceLine("ANCINE", "ancine-obras-nao-publicitarias"),
+  },
+  {
+    value: fmtInteger(getDownloads("cnc_visas_exploitation")?.rows),
+    label: "filmes com visa de exibição na França",
+    source: sourceLine("CNC", "cnc-visas-exploitation"),
+  },
+  {
+    value: fmtInteger(getDownloads("fomento_fsa")?.rows),
+    label: "contratos de fomento FSA",
+    source: sourceLine("ANCINE", "ancine-fsa-projetos"),
+  },
+  {
+    value: fmtInteger(getDownloads("bilheteria_europa")?.rows),
+    label: "filmes brasileiros em salas europeias",
+    source: sourceLine("Observatório Europeu", "lumiere-cinemas-europa"),
+  },
+];
 
 const COUNTRIES = [
   { code: "", label: `Todos (${datasets.length})` },
@@ -168,10 +203,6 @@ const base = import.meta.env.BASE_URL;
   <div class="stat stat--uy">
     <div class="stat-v">{stats.total_fontes}</div>
     <div class="stat-l">Fontes oficiais</div>
-  </div>
-  <div class="stat stat--uk">
-    <div class="stat-v">R$&thinsp;0</div>
-    <div class="stat-l">Custo de acesso</div>
   </div>
 </div>
 
@@ -369,11 +400,13 @@ obras <span class="co">|&gt;</span> <span class="cf">count</span>(tipo_obra, sor
           <span>2026</span>
         </div>
         <div class="vtl-track">
-          <!-- CNC França: 1945-presente -->
-          <div class="vtl-bar vtl-bar--fr" style="left:0%;width:100%" title="França · CNC · 1945–2026"></div>
-          <!-- Lumière: 1996-presente -->
-          <div class="vtl-bar vtl-bar--eu" style="left:62.4%;width:37.6%" title="Europa · Lumière · 1996–2026"></div>
-          <!-- ANCINE: 2002-presente -->
+          <!-- CNC França: 1945-2025 -->
+          <div class="vtl-bar vtl-bar--fr" style="left:0%;width:98.8%" title="França · CNC · 1945–2025"></div>
+          <!-- Lumière: 1996-2026 -->
+          <div class="vtl-bar vtl-bar--eu" style="left:63%;width:37%" title="Europa · Lumière · 1996–2026"></div>
+          <!-- Série histórica nacional: 1971-2024 -->
+          <div class="vtl-bar vtl-bar--brhist" style="left:32.1%;width:65.4%" title="Brasil · série histórica complementar · 1971–2024"></div>
+          <!-- ANCINE: 2002-2026 -->
           <div class="vtl-bar vtl-bar--br" style="left:70.1%;width:29.9%" title="Brasil · ANCINE · 2002–2026"></div>
           <!-- FSA: 2008-2023 -->
           <div class="vtl-bar vtl-bar--br2" style="left:78%;width:18.5%" title="Brasil · FSA · 2008–2023"></div>
@@ -381,6 +414,7 @@ obras <span class="co">|&gt;</span> <span class="cf">count</span>(tipo_obra, sor
         <div class="vtl-legend">
           <span class="vtl-leg vtl-leg--fr">França · CNC</span>
           <span class="vtl-leg vtl-leg--eu">Europa · Lumière</span>
+          <span class="vtl-leg vtl-leg--brhist">Brasil · série histórica</span>
           <span class="vtl-leg vtl-leg--br">Brasil · ANCINE</span>
           <span class="vtl-leg vtl-leg--br2">Brasil · FSA</span>
         </div>
@@ -390,27 +424,15 @@ obras <span class="co">|&gt;</span> <span class="cf">count</span>(tipo_obra, sor
     <!-- Destaques do acervo -->
     <div class="viz-card viz-card--highlights">
       <div class="viz-card__title">Destaques do acervo</div>
+      <p class="viz-card__note">Valores calculados a partir do último snapshot disponível de cada fonte.</p>
       <div class="viz-highlights">
-        <div class="vh-item">
-          <div class="vh-v">61.335</div>
-          <div class="vh-l">obras audiovisuais brasileiras registradas</div>
-          <div class="vh-src">ANCINE · 2002–2026</div>
-        </div>
-        <div class="vh-item">
-          <div class="vh-v">95<small>mil+</small></div>
-          <div class="vh-l">filmes com visa de exibição na França</div>
-          <div class="vh-src">CNC · 1945–presente</div>
-        </div>
-        <div class="vh-item">
-          <div class="vh-v">4.588</div>
-          <div class="vh-l">contratos de fomento FSA</div>
-          <div class="vh-src">ANCINE · 2008–2023</div>
-        </div>
-        <div class="vh-item">
-          <div class="vh-v">37</div>
-          <div class="vh-l">países europeus com dados de bilheteria</div>
-          <div class="vh-src">Observatório Europeu · Lumière</div>
-        </div>
+        {highlights.map((highlight) => (
+          <div class="vh-item">
+            <div class="vh-v">{highlight.value}</div>
+            <div class="vh-l">{highlight.label}</div>
+            <div class="vh-src">{highlight.source}</div>
+          </div>
+        ))}
       </div>
     </div>
 
@@ -648,7 +670,7 @@ obras <span class="co">|&gt;</span> <span class="cf">count</span>(tipo_obra, sor
   grid-template-columns: repeat(2,1fr);
   border-bottom: 1px solid var(--border);
 }
-@media (min-width:760px) { .statstrip { grid-template-columns: repeat(5,1fr); } }
+@media (min-width:760px) { .statstrip { grid-template-columns: repeat(4,1fr); } }
 .stat {
   padding: 28px 28px 26px;
   border-right: 1px solid var(--border);
@@ -839,6 +861,12 @@ pre.code-block {
   color: var(--dim);
   margin-bottom: 20px;
 }
+.viz-card__note {
+  margin: -6px 0 18px;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.45;
+}
 
 /* Bar chart */
 .viz-bar-chart { display: flex; flex-direction: column; gap: 12px; }
@@ -886,7 +914,7 @@ pre.code-block {
 }
 .vtl-track {
   position: relative;
-  height: 56px;
+  height: 88px;
   background: var(--bg2);
   border-radius: 4px;
   overflow: hidden;
@@ -899,8 +927,9 @@ pre.code-block {
 }
 .vtl-bar--fr  { background: var(--fr); top: 6px; }
 .vtl-bar--eu  { background: var(--eu); top: 22px; opacity: .6; }
-.vtl-bar--br  { background: var(--br); top: 38px; }
-.vtl-bar--br2 { background: var(--br); top: 38px; opacity: .4; }
+.vtl-bar--brhist { background: var(--br); top: 38px; opacity: .45; }
+.vtl-bar--br  { background: var(--br); top: 54px; }
+.vtl-bar--br2 { background: var(--br); top: 70px; opacity: .65; }
 .vtl-legend {
   display: flex;
   flex-wrap: wrap;
@@ -926,6 +955,7 @@ pre.code-block {
 }
 .vtl-leg--fr::before  { background: var(--fr); }
 .vtl-leg--eu::before  { background: var(--eu); }
+.vtl-leg--brhist::before { background: var(--br); opacity: .45; }
 .vtl-leg--br::before  { background: var(--br); }
 .vtl-leg--br2::before { background: var(--br); opacity: .4; }
 

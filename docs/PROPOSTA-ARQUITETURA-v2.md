@@ -4,11 +4,11 @@
 
 Transformar o repositorio de um **arquivo de snapshots** em um **hub de inteligencia de dados**,
 inspirado no basedosdados.org, com dados brutos + dados tratados + camada de consulta,
-usando apenas infraestrutura gratuita.
+usando infraestrutura pública e serviços gerenciados.
 
 ```
 +------------------------------------------------------------------+
-|                    INFRAESTRUTURA (custo zero)                    |
+|                         INFRAESTRUTURA                            |
 |                                                                   |
 |  GitHub          Hugging Face          GitHub Pages               |
 |  (codigo +       (datasets grandes     (portal web                |
@@ -101,7 +101,7 @@ dados-audiovisual-br/
 ```
 
 ### Camada 4 — Portal Web (GitHub Pages)
-**Onde:** GitHub Pages (gratis, dominio customizavel)
+**Onde:** GitHub Pages (hospedagem estatica e dominio customizavel)
 
 - Gerado estaticamente a partir de `catalog/datasets.yaml`
 - Cada dataset tem pagina propria com:
@@ -254,7 +254,7 @@ A camada cleaned e explicitamente uma transformacao documentada e reproduzivel:
 
 | basedosdados.org | dados-audiovisual-br |
 |------------------|----------------------|
-| BigQuery (Google Cloud) | Hugging Face + DuckDB (zero custo) |
+| BigQuery (Google Cloud) | Hugging Face + DuckDB |
 | Nicho generalista | Foco no audiovisual = profundidade |
 | Depende de infra centralizada | Git + HF = descentralizado, forkavel |
 | Contribuicao via PR no BigQuery | Contribuicao via PR no GitHub + HF |
@@ -263,15 +263,15 @@ A camada cleaned e explicitamente uma transformacao documentada e reproduzivel:
 
 ## 8. Stack Tecnica
 
-| Componente | Tecnologia | Custo |
-|------------|------------|-------|
-| Codigo e metadados | GitHub | Gratis |
-| Storage de dados | Hugging Face Datasets | Gratis (ate 50 GB) |
-| Portal web | GitHub Pages | Gratis |
-| CI/CD | GitHub Actions | Gratis (2000 min/mes) |
-| Processamento | Python + pandas + pyarrow | Gratis |
-| Consulta | DuckDB + HF Hub | Gratis |
-| Busca no portal | lunr.js (client-side) | Gratis |
+| Componente | Tecnologia |
+|------------|------------|
+| Codigo e metadados | GitHub |
+| Storage de dados | Hugging Face Datasets |
+| Portal web | GitHub Pages |
+| CI/CD | GitHub Actions |
+| Processamento | Python + pandas + pyarrow |
+| Consulta | DuckDB + HF Hub |
+| Busca no portal | lunr.js (client-side) |
 
 ---
 
